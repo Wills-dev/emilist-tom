@@ -14,6 +14,8 @@ type Props = {
 };
 
 const AuthState = ({ children }: Props) => {
+  const user = readAuthCookie("sessionId");
+
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userLoading, setUserLoading] = useState<boolean>(true);
 
@@ -30,11 +32,11 @@ const AuthState = ({ children }: Props) => {
   };
 
   useEffect(() => {
-    const user = readAuthCookie("sessionId");
     if (user) {
       getCurrentUser();
+    } else {
+      setUserLoading(false);
     }
-    setUserLoading(false);
   }, []);
 
   const value = {

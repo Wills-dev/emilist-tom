@@ -4,35 +4,35 @@ import { useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 type ProfileDetail = {
-  name: string;
-  phonenumber1: string;
+  fullName: string;
+  number1: string;
   bio: string;
   language: string;
   gender: string;
-  phonenumber2: string;
-  whatsappnumber: string;
+  number2: string;
+  whatsAppNo: string;
   location: string;
   email: string;
 };
 
 export const useEditProfile = () => {
-  const { currentUser } = useContext(AuthContext);
   const router = useRouter();
+  const { currentUser } = useContext(AuthContext);
 
-  const [loading, setLoading] = useState(false);
   const [load, setLoad] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [profileDetails, setProfileDetails] = useState<ProfileDetail>({
-    name: "",
-    phonenumber1: "",
+    fullName: "",
+    number1: "",
     bio: "",
     location: "",
     language: "",
-    phonenumber2: "",
-    whatsappnumber: "",
+    number2: "",
+    whatsAppNo: "",
     gender: "",
     email: "",
   });
@@ -57,20 +57,19 @@ export const useEditProfile = () => {
   };
 
   const getUser = async () => {
-    const userId = currentUser.unique_id;
     setLoad(true);
     try {
-      const { data } = await axiosInstance.get(`/users/${userId}`);
+      const { data } = await axiosInstance.get(`/auth/current-user`);
       setProfileDetails({
-        name: data.user.name,
-        phonenumber1: data.user.phonenumber1,
-        bio: data.user.bio,
-        location: data.user.location,
-        language: data.user.language,
-        phonenumber2: data.user.phonenumber2,
-        whatsappnumber: data.user.whatsappnumber,
-        gender: data.user.gender,
-        email: data.user.email,
+        fullName: data?.data?.fullName && data?.data?.fullName,
+        number1: data?.data?.number1 && data?.data?.number1,
+        bio: data?.data?.bio && data?.data?.bio,
+        location: data?.data?.location && data?.data?.location,
+        language: data?.data?.language && data?.data?.language,
+        number2: data?.data?.number2 && data?.data?.number2,
+        whatsAppNo: data?.data?.whatsAppNo && data?.data?.whatsAppNo,
+        gender: data?.data?.gender && data?.data?.gender,
+        email: data?.data?.email && data?.data?.email,
       });
     } catch (error: any) {
       console.log("error fetching user data", error);
@@ -89,20 +88,14 @@ export const useEditProfile = () => {
       router.push("/login");
       return;
     }
-    const userId = currentUser.id;
+
     const updatedDetails = { ...profileDetails, [editingField!]: inputValue };
     setLoading(true);
     try {
-      await axiosInstance.put(
-        `/updateProfile/${userId}`,
-        { [editingField!]: inputValue },
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-
+      const data = await axiosInstance.post(`/auth/update-profile`, {
+        [editingField!]: inputValue,
+      });
+      console.log("data", data);
       toast.success(`Profile detail updated successfully`, toastOptions);
 
       setProfileDetails(updatedDetails);
@@ -127,7 +120,7 @@ export const useEditProfile = () => {
               id={field}
               value={inputValue || ""}
               onChange={handleChange}
-              className="outline-none h-8 border-b-1 border-green-300 w-full"
+              className="outline-none h-8 border-b-1 border-green-300 w-full bg-white"
             />
           );
         case "email":
@@ -138,7 +131,7 @@ export const useEditProfile = () => {
               id={field}
               value={inputValue || ""}
               onChange={handleChange}
-              className="outline-none h-8 border-b-1 border-green-300  w-full"
+              className="outline-none h-8 border-b-1 border-green-300  w-full bg-white"
             />
           );
         case "number":
@@ -149,7 +142,7 @@ export const useEditProfile = () => {
               id={field}
               value={inputValue || ""}
               onChange={handleChange}
-              className="outline-none h-8 border-b-1 border-green-300  w-full"
+              className="outline-none h-8 border-b-1 border-green-300  w-full bg-white"
             />
           );
         case "textarea":

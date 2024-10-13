@@ -19,7 +19,7 @@ const ProfileContent = () => {
   };
   return (
     <section className="padding-x py-28 bg-[#F0FDF5] w-full  relative min-h-screen">
-      <div className="bg-white w-full rounded-lg py-10 px-14 max-sm:px-0 mt-10">
+      <div className="bg-white w-full rounded-lg py-10 px-14 max-sm:px-2 mt-10">
         <div className="w-full">
           <h2 className="text-2xl font-bold  max-sm:text-lg">Profile</h2>
           <ul className="flex items-center gap-4  mt-[1rem] max-sm:hidden">
