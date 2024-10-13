@@ -5,6 +5,7 @@ import { createContext, useEffect, useState } from "react";
 import UltimateLoadingUI from "@/components/UltimateLoadingPage/UltimateLoadingUI";
 
 import { readAuthCookie } from "@/helpers";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const AuthContext = createContext<any>(null);
 
@@ -16,10 +17,22 @@ const AuthState = ({ children }: Props) => {
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userLoading, setUserLoading] = useState<boolean>(true);
 
+  const getCurrentUser = async () => {
+    try {
+      const { data } = await axiosInstance.get(`/auth/current-user`);
+      setCurrentUser(data?.data);
+    } catch (error) {
+      console.log("error getting user details", error);
+      setUserLoading(false);
+    } finally {
+      setUserLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const user = readAuthCookie("emilistUser");
+    const user = readAuthCookie("sessionId");
     if (user) {
-      setCurrentUser(user);
+      getCurrentUser();
     }
     setUserLoading(false);
   }, []);

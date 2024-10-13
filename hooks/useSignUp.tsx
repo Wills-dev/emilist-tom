@@ -1,20 +1,14 @@
 import { useRouter } from "next/navigation";
-import { ChangeEvent, FormEventHandler, useContext, useState } from "react";
+import { ChangeEvent, FormEventHandler, useState } from "react";
 
 import toast from "react-hot-toast";
 
 import { RegisterType } from "@/types";
-import {
-  createAuthCookie,
-  promiseErrorFunction,
-  toastOptions,
-} from "@/helpers";
-import { AuthContext } from "@/utils/AuthState";
+import { promiseErrorFunction, toastOptions } from "@/helpers";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useSignUp = () => {
   const router = useRouter();
-  const { setCurrentUser } = useContext(AuthContext);
 
   const [loading, setLoading] = useState<boolean>(false);
   const [inputType, setInputType] = useState<"text" | "password">("password");
@@ -48,8 +42,6 @@ export const useSignUp = () => {
         password,
       };
       const { data } = await axiosInstance.post(`/auth/sign-up`, signUpPayload);
-      createAuthCookie("user", data?.data);
-      setCurrentUser(data?.data);
       toast.success(`Registration successful`, toastOptions);
       setRegisterDetails({
         email: "",
