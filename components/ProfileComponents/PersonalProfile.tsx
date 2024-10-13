@@ -52,25 +52,31 @@ const PersonalProfile = () => {
       )}
       <div className="flex-c-b max-sm:flex-col">
         <div className="">
-          <div className="relative w-[109px] h-[109px]  max-sm:w-[90px] max-sm:h-[90px]">
-            <Image
-              src="/assets/dummyImages/profilePic.png"
-              alt="profile picuter"
-              width={109}
-              height={109}
-              className="object-cover w-full h-full min-h-full min-w-full rounded-full"
-            />
-            <Image
-              src="/assets/icons/verify.svg"
-              alt="verify icon"
-              width={20}
-              height={20}
-              className="object-contain w-6 h-6 min-h-6 min-w-6 absolute right-0 top-2 max-sm:max-h-5 max-sm:min-h-5 max-sm:max-w-5 max-sm:min-w-5"
-            />
-            <p className="bg-primary-green  text-center text-[#FCFEFD] text-sm max-sm:text-xs rounded capitalize absolute -bottom-[0.9rem] left-4 px-4 max-sm:left-2">
-              level 3
-            </p>
+          <div className="flex gap-4 items-end">
+            <div className="relative w-[109px] h-[109px]  max-sm:w-[90px] max-sm:h-[90px] bg-[#F0FDF5] rounded-full">
+              <Image
+                src="/assets/images/user-profile.svg"
+                alt="profile picuter"
+                width={109}
+                height={109}
+                className="object-cover w-full h-full min-h-full min-w-full rounded-full"
+              />
+              <Image
+                src="/assets/icons/verify.svg"
+                alt="verify icon"
+                width={20}
+                height={20}
+                className="object-contain w-6 h-6 min-h-6 min-w-6 absolute right-0 top-2 max-sm:max-h-5 max-sm:min-h-5 max-sm:max-w-5 max-sm:min-w-5"
+              />
+              <p className="bg-primary-green  text-center text-[#FCFEFD] text-sm max-sm:text-xs rounded capitalize absolute -bottom-[0.9rem] left-4 px-4 max-sm:left-2">
+                level 3
+              </p>
+            </div>
+            <button className="border-1 border-primary-green rounded-full px-4 py-1">
+              Edit
+            </button>
           </div>
+
           <div className="flex items-center gap-1 my-8">
             <StarRating rating={4} />
           </div>
