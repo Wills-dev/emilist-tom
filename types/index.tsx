@@ -4,6 +4,11 @@ export interface RegisterType {
   userName: string;
 }
 
+export interface ResetPasswordType {
+  newPassword: string;
+  otp: string;
+}
+
 export interface AboutBusinessProps {
   ownerName?: string;
   businessName?: string;

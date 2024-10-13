@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 interface PasswordType {
@@ -15,8 +15,6 @@ interface PasswordType {
 export const useChangePassword = () => {
   const { currentUser } = useContext(AuthContext);
   const router = useRouter();
-
-  console.log("currentUser", currentUser);
 
   const [loading, setLoading] = useState(false);
   const [edit, setEdit] = useState(false);
@@ -48,7 +46,7 @@ export const useChangePassword = () => {
       router.push("/login");
       return;
     }
-    const userId = currentUser.id;
+
     if (!password.old) {
       toast.error(`Please enter current password`, toastOptions);
       return;
@@ -61,19 +59,11 @@ export const useChangePassword = () => {
 
     try {
       const passwordDetails = {
-        old_password: password.old,
-        new_password: password.new,
+        oldPassword: password.old,
+        newPassword: password.new,
       };
-      await axiosInstance.post(
-        `/updatePassword?user_id=${userId}`,
-        passwordDetails,
-        {
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-        }
-      );
-      toast.success(`Password chnage successfully`, toastOptions);
+      await axiosInstance.post(`/auth/change-password`, passwordDetails);
+      toast.success(`Password change successfully`, toastOptions);
       setEdit(false);
     } catch (error: any) {
       console.error("error changing password", error);

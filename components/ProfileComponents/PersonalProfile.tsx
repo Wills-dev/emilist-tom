@@ -94,7 +94,7 @@ const PersonalProfile = () => {
               <label htmlFor="" className="font-semibold">
                 Username
               </label>
-              <p className="h-8">{currentUser?.username}</p>
+              <p className="h-8">{currentUser?.userName}</p>
             </div>
             <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
               <div className="flex-c-b">
@@ -102,17 +102,24 @@ const PersonalProfile = () => {
                   Unique ID
                 </label>{" "}
               </div>
-              <p className="h-8">{currentUser?.unique_id}</p>
+              <p className="h-8">{currentUser?.uniqueId}</p>
+            </div>
+            <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+              <div className="flex-c-b">
+                <label htmlFor="" className="font-semibold">
+                  Email
+                </label>{" "}
+              </div>
+              <p className="h-8">{currentUser?.email}</p>
             </div>
 
             {[
-              { label: "Full Name", field: "name", type: "text" },
-              { label: "Email", field: "email", type: "email" },
-              { label: "Phone Number1", field: "phonenumber1", type: "number" },
-              { label: "Phone Number2", field: "phonenumber2", type: "number" },
+              { label: "Full Name", field: "fullName", type: "text" },
+              { label: "Phone Number1", field: "number1", type: "number" },
+              { label: "Phone Number2", field: "number2", type: "number" },
               {
                 label: "Whatsapp Number",
-                field: "whatsappnumber",
+                field: "whatsAppNo",
                 type: "number",
               },
               { label: "Location", field: "location", type: "text" },
@@ -134,7 +141,7 @@ const PersonalProfile = () => {
                         onClick={handleUpdate}
                         className="text-primary-green font-semibold max-sm:text-sm"
                       >
-                        Update
+                        Save
                       </button>
                       <button onClick={handleCancel}>
                         <svg
