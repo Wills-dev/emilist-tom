@@ -1,0 +1,214 @@
+@import url("https://fonts.googleapis.com/css2?family=Exo:wght@200;300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+  font-family: "Exo", sans-serif;
+}
+body {
+  background-color: #fff;
+  min-height: 100vh;
+  color: #303632;
+}
+
+@layer components {
+  .max-container {
+    max-width: 1300px;
+    margin: 0 auto;
+  }
+}
+@layer utilities {
+  .padding {
+    @apply sm:px-30 px-8 sm:py-24 py-12;
+  }
+
+  .padding-l {
+    @apply xl:pl-[6rem] lg:pl-[4rem] sm:pl-[2rem] pl-3;
+  }
+
+  .padding-x {
+    @apply xl:px-[6rem] lg:px-[4rem] sm:px-[2rem] px-3;
+  }
+
+  .padding-y {
+    @apply sm:py-20 py-10;
+  }
+  .flex-c-b {
+    @apply flex items-center justify-between;
+  }
+  .flex-c {
+    @apply flex items-center;
+  }
+  .home-nav {
+    @apply hover:bg-primary-green hover:text-white transition-all duration-300 rounded-lg;
+  }
+
+  .view-btn {
+    @apply bg-primary-green text-white hover:bg-green-600 whitespace-nowrap transition-all duration-300 rounded-lg px-4 py-2 text-center;
+  }
+
+  .custom-btn {
+    @apply bg-primary-green text-white hover:bg-green-600 whitespace-nowrap transition-all duration-300 rounded-lg px-6 py-3 text-center;
+  }
+  .load-btn {
+    @apply bg-green-300 cursor-not-allowed h-12 rounded-lg px-6 text-white;
+  }
+  .auth-input {
+    @apply min-w-full w-full max-w-full rounded-lg sm:h-12 px-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1 h-11;
+  }
+  .auth-input-div {
+    @apply min-w-full w-full  max-w-full rounded-lg sm:h-12 px-2 bg-[#ececec] focus-within:border-primary-green focus-within:border-1  h-11 flex justify-between items-center gap-2;
+  }
+  .expert-reg-input-div {
+    @apply min-w-full w-full  max-w-full rounded-lg h-14 px-2 bg-lighter-gray focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:h-12 max-sm:text-sm;
+  }
+  .expert-reg-input {
+    @apply min-w-full w-full  max-w-full rounded-lg h-14 px-2 bg-lighter-gray focus:outline-none focus:border-primary-green focus:border-1  max-sm:h-12 max-sm:text-sm;
+  }
+  .expert-reg-title {
+    @apply text-3xl font-bold max-sm:text-2xl;
+  }
+
+  .input-label {
+    @apply text-[#5e625f] py-2 text-base font-semibold max-sm:text-sm;
+  }
+
+  .input__container {
+    @apply col-span-2 max-lg:col-span-4 max-md:col-span-2 max-sm:col-span-4;
+  }
+}
+
+::-webkit-scrollbar {
+  width: 4px !important;
+  height: 4px !important;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.no-scroll ::-webkit-scrollbar {
+  width: 0px !important;
+  height: 0px !important;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 5px rgb(220, 218, 218) !important;
+  border-radius: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: rgb(183, 171, 171) !important;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #cb9e9e;
+}
+
+.custom-auth-input input:-webkit-autofill {
+  background-color: #fff !important;
+  color: #303632 !important;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* Paginantion */
+.pagination {
+  display: flex;
+  align-items: center;
+  margin-top: 20px;
+}
+.pagination .page-item {
+  margin: 0 10px;
+  height: 30px;
+  width: 30px;
+  min-width: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pagination .page-item {
+  background-color: transparent;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #7f8d96;
+}
+
+.pagination .page-item .page-link:hover {
+  color: #25c269;
+}
+
+.pagination .active .page-link {
+  background-color: #25c269;
+  color: #ffffff !important;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px !important;
+  border: none !important;
+}
+
+.leaflet-control,
+.leaflet-pane,
+.leaflet-top {
+  z-index: 0 !important;
+}
+
+.ant-btn-primary {
+  background-color: #25c269 !important;
+}
+
+.ant-btn-default:hover {
+  border: 1px solid #25c269 !important;
+  color: #25c269 !important;
+}
+
+/* share referral code modal */
+.share-referral {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px !important;
+}
+
+.share-referral .react-share__ShareButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.share-referral button {
+  background-color: transparent;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.share-referral svg {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
