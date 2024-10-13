@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
+import { useUploadFile } from "./useUploadFile";
 
 type ProfileDetail = {
   fullName: string;
@@ -22,9 +23,11 @@ type ProfileDetail = {
 export const useEditProfile = () => {
   const router = useRouter();
   const { currentUser } = useContext(AuthContext);
+  const { loadFile, handleSubmitFile, file } = useUploadFile();
 
   const [load, setLoad] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [profileImage, setProfileImage] = useState<any>({});
   const [profileDetails, setProfileDetails] = useState<ProfileDetail>({
     fullName: "",
     number1: "",
@@ -44,6 +47,10 @@ export const useEditProfile = () => {
     setEditingField(field);
     setInputValue(value);
   };
+
+  function handleChangeFile(event: any) {
+    setProfileImage(event.target.files[0]);
+  }
 
   const handleCancel = () => {
     setEditingField(null);
@@ -176,5 +183,7 @@ export const useEditProfile = () => {
     editingField,
     loading,
     load,
+    profileImage,
+    handleChangeFile,
   };
 };

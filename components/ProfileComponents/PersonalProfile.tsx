@@ -22,7 +22,11 @@ const PersonalProfile = () => {
     editingField,
     loading,
     load,
+    profileImage,
+    handleChangeFile,
   } = useEditProfile();
+
+  console.log("profileImage", profileImage);
 
   const {
     handleChange,
@@ -56,10 +60,17 @@ const PersonalProfile = () => {
             <div className="relative w-[109px] h-[109px]  max-sm:w-[90px] max-sm:h-[90px] bg-[#F0FDF5] rounded-full">
               <Image
                 src="/assets/images/user-profile.svg"
-                alt="profile picuter"
+                alt="profile picture"
                 width={109}
                 height={109}
                 className="object-cover w-full h-full min-h-full min-w-full rounded-full"
+              />
+              <input
+                type="file"
+                name="image"
+                id="profileImage"
+                onChange={handleChangeFile}
+                className="h-0 w-0 invisible"
               />
               <Image
                 src="/assets/icons/verify.svg"
@@ -72,9 +83,12 @@ const PersonalProfile = () => {
                 level 3
               </p>
             </div>
-            <button className="border-1 border-primary-green rounded-full px-4 py-1">
+            <label
+              htmlFor="profileImage"
+              className="border-1 border-primary-green rounded-full px-4 py-1"
+            >
               Edit
-            </button>
+            </label>
           </div>
 
           <div className="flex items-center gap-1 my-8">
