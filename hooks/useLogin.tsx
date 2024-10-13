@@ -1,10 +1,9 @@
 import { useRouter } from "next/navigation";
-import { FormEventHandler, useContext, useState } from "react";
+import { FormEventHandler, useState } from "react";
 
 import toast from "react-hot-toast";
 
-import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import {
   createAuthCookie,
   promiseErrorFunction,
@@ -13,12 +12,11 @@ import {
 
 export const useLogin = () => {
   const router = useRouter();
-  const { setCurrentUser } = useContext(AuthContext);
 
-  const [loading, setLoading] = useState<boolean>(false);
-  const [inputType, setInputType] = useState<"text" | "password">("password");
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
+  const [inputType, setInputType] = useState<"text" | "password">("password");
 
   const handleLogin: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
@@ -27,13 +25,12 @@ export const useLogin = () => {
     }
     setLoading(true);
     try {
-      const data = await axiosInstance.post(
-        `/login?email=${email}&password=${password}`
-      );
-      createAuthCookie("sessionId", data.data.session_id);
-      createAuthCookie("authToken", data.data.access_token);
-      createAuthCookie("emilistUser", data?.data?.user);
-      setCurrentUser(data?.data?.user);
+      const loginPayload = {
+        email,
+        password,
+      };
+      const { data } = await axiosInstance.post(`/auth/login`, loginPayload);
+      createAuthCookie("sessionId", data.data);
       toast.success("Login successful!", toastOptions);
       router.push("/dashboard/job");
       setEmail("");

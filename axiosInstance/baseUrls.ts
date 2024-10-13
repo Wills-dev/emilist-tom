@@ -15,7 +15,7 @@ export const axiosInstance = axios.create({
 //set the Auth token for any request
 axiosInstance.interceptors.request.use(
   function (config) {
-    const token = readAuthCookie("authToken");
+    const token = readAuthCookie("sessionId");
     config.headers.Authorization = token ? `Bearer ${token}` : "";
     return config;
   },

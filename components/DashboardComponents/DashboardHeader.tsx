@@ -26,12 +26,12 @@ const DashboardHeader = () => {
     <div className="w-full bg-white p-6 rounded-lg h-60 max-sm:px-3">
       <h1 className="capitalize text-5xl font-extrabold max-sm:text-3xl leading-normal">
         {greeting}, <br />
-        {currentUser?.username}
+        {currentUser?.userName}
       </h1>
       <div className="flex-c-b mt-4">
         <p className="whitespace-nowrap  max-sm:text-sm">
-          <span className="mr-2 font-bold">Unique ID:</span>
-          Emilist{currentUser?.unique_id}
+          <span className="mr-2 font-bold">Emilist ID:</span>
+          {currentUser?.uniqueId}
         </p>
         <button className="w-full flex-c justify-end gap-1">
           <Image
