@@ -10,7 +10,7 @@ import {
   toastOptions,
 } from "@/helpers";
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useSignUp = () => {
   const router = useRouter();
@@ -41,26 +41,24 @@ export const useSignUp = () => {
     }
     setLoading(true);
     try {
-      const data =
-        await axiosInstance.post(`/signup?email=${registerDetails.email}&username=${registerDetails.userName}&password=${registerDetails.password}
-      `);
-
-      //   localStorage.setItem("sessionId", data.data.session_id);
-      //   localStorage.setItem("token", data.data.access_token);
-      //   localStorage.setItem("user", JSON.stringify(data?.data?.user));
-      createAuthCookie("sessionId", data.data.session_id);
-      createAuthCookie("authToken", data.data.access_token);
-      createAuthCookie("user", data?.data?.user);
-      setCurrentUser(data?.data?.user);
+      const { userName, email, password } = registerDetails;
+      const signUpPayload = {
+        userName,
+        email,
+        password,
+      };
+      const { data } = await axiosInstance.post(`/auth/sign-up`, signUpPayload);
+      createAuthCookie("user", data?.data);
+      setCurrentUser(data?.data);
       toast.success(`Registration successful`, toastOptions);
       setRegisterDetails({
         email: "",
         userName: "",
         password: "",
       });
-      router.push("/dashboard/jobs");
+      router.push(`/verify-email/${encodeURIComponent(data?.data?.email)}`);
     } catch (error: any) {
-      console.log(error);
+      console.log("error registering", error);
       promiseErrorFunction(error);
     } finally {
       setLoading(false);
