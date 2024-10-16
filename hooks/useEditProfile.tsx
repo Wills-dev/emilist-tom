@@ -23,11 +23,12 @@ type ProfileDetail = {
 export const useEditProfile = () => {
   const router = useRouter();
   const { currentUser } = useContext(AuthContext);
-  const { loadFile, handleSubmitFile, file } = useUploadFile();
+  const { loadFile, handleSubmitFile, file, isImageTrue } = useUploadFile();
 
   const [load, setLoad] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profileImage, setProfileImage] = useState<any>({});
+  const [currentImage, setCurrentImage] = useState<string>(file ? file : "");
   const [profileDetails, setProfileDetails] = useState<ProfileDetail>({
     fullName: "",
     number1: "",
@@ -49,7 +50,18 @@ export const useEditProfile = () => {
   };
 
   function handleChangeFile(event: any) {
-    setProfileImage(event.target.files[0]);
+    const file = event.target.files[0];
+    if (file) {
+      if (file.size > 2 * 1024 * 1024) {
+        toast.error(
+          "File size exceeds 2MB. Please select a smaller file.",
+          toastOptions
+        );
+        return;
+      }
+      setProfileImage(file);
+      setCurrentImage(URL.createObjectURL(file));
+    }
   }
 
   const handleCancel = () => {
@@ -78,6 +90,7 @@ export const useEditProfile = () => {
         gender: data?.data?.gender && data?.data?.gender,
         email: data?.data?.email && data?.data?.email,
       });
+      setCurrentImage(data?.data?.profileImage && data?.data?.profileImage);
     } catch (error: any) {
       console.log("error fetching user data", error);
       toast.error(`Internal Server Error!`, toastOptions);
@@ -98,11 +111,15 @@ export const useEditProfile = () => {
 
     const updatedDetails = { ...profileDetails, [editingField!]: inputValue };
     setLoading(true);
+    if (profileImage?.name) {
+      await handleSubmitFile(profileImage);
+    }
     try {
-      const data = await axiosInstance.post(`/auth/update-profile`, {
+      await axiosInstance.post(`/auth/update-profile`, {
         [editingField!]: inputValue,
+        profileImage: file && file,
       });
-      console.log("data", data);
+
       toast.success(`Profile detail updated successfully`, toastOptions);
 
       setProfileDetails(updatedDetails);
@@ -185,5 +202,8 @@ export const useEditProfile = () => {
     load,
     profileImage,
     handleChangeFile,
+    currentImage,
+    loadFile,
+    isImageTrue,
   };
 };
