@@ -59,7 +59,7 @@ export const useChangePassword = () => {
 
     try {
       const passwordDetails = {
-        oldPassword: password.old,
+        currentPassword: password.old,
         newPassword: password.new,
       };
       await axiosInstance.post(`/auth/change-password`, passwordDetails);

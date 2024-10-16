@@ -101,7 +101,7 @@ const PersonalProfile = () => {
                 ) : (
                   <label
                     htmlFor="profileImage"
-                    className="border-1 border-primary-green rounded-full px-4 py-1"
+                    className="border-1 border-primary-green rounded-full px-4 py-1 cursor-pointer"
                   >
                     Change profile
                   </label>

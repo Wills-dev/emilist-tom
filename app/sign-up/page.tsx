@@ -4,8 +4,10 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { useSignUp } from "@/hooks/useSignUp";
+import { useGoogleAuth } from "@/hooks/useGoogleAuth";
 
 const SignUp = () => {
+  const { googleAuth, loadGoogleAuth } = useGoogleAuth();
   const {
     handleChange,
     handleRegisterUser,
@@ -172,16 +174,28 @@ const SignUp = () => {
           <h6 className=" sm:text-lg font-semibold mx-2">OR</h6>
           <div className="flex-1 h-[1px] bg-[#8A8D8B]" />
         </div>
-        <button className="flex-c justify-center w-full border-1 rounded-lg sm:h-12 h-11 border-[#1A201B] sm:text-lg font-semibold">
-          Continue with Google{" "}
-          <Image
-            src="/assets/images/google.svg"
-            alt="google icon"
-            width={30}
-            height={30}
-            className="object-contain sm:w-6 sm:h-6 w-5 h-5 ml-3"
-          />
-        </button>
+        {loadGoogleAuth ? (
+          <button className="flex-c justify-center w-full border-1 rounded-lg sm:h-12 h-11 border-[#1A201B] sm:text-lg font-semibold">
+            <span className="loading loading-dots loading-lg"></span>
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="flex-c justify-center w-full border-1 rounded-lg sm:h-12 h-11 border-[#1A201B] sm:text-lg font-semibold"
+            onClick={googleAuth}
+          >
+            <>
+              Continue with Google{" "}
+              <Image
+                src="/assets/images/google.svg"
+                alt="google icon"
+                width={30}
+                height={30}
+                className="object-contain sm:w-6 sm:h-6 w-5 h-5 ml-3"
+              />
+            </>
+          </button>
+        )}
         <button className="flex-c justify-center w-full border-1 rounded-lg sm:h-12 h-11 border-[#1A201B] sm:text-lg font-semibold">
           Continue with facebook
           <Image
