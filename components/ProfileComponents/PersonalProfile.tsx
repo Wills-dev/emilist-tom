@@ -24,9 +24,10 @@ const PersonalProfile = () => {
     load,
     profileImage,
     handleChangeFile,
+    currentImage,
+    loadFile,
+    isImageTrue,
   } = useEditProfile();
-
-  console.log("profileImage", profileImage);
 
   const {
     handleChange,
@@ -49,182 +50,198 @@ const PersonalProfile = () => {
   return (
     <div>
       <LoadingOverlay loading={loading} />
-      {load && (
+      <LoadingOverlay loading={loadFile} />
+      {load ? (
         <div className="flex w-full min-h-[70vh] item-center justify-center text-green-500 mt-6">
           <span className="loading loading-bars loading-lg"></span>
         </div>
-      )}
-      <div className="flex-c-b max-sm:flex-col">
-        <div className="">
-          <div className="flex gap-4 items-end">
-            <div className="relative w-[109px] h-[109px]  max-sm:w-[90px] max-sm:h-[90px] bg-[#F0FDF5] rounded-full">
-              <Image
-                src="/assets/images/user-profile.svg"
-                alt="profile picture"
-                width={109}
-                height={109}
-                className="object-cover w-full h-full min-h-full min-w-full rounded-full"
-              />
-              <input
-                type="file"
-                name="image"
-                id="profileImage"
-                onChange={handleChangeFile}
-                className="h-0 w-0 invisible"
-              />
-              <Image
-                src="/assets/icons/verify.svg"
-                alt="verify icon"
-                width={20}
-                height={20}
-                className="object-contain w-6 h-6 min-h-6 min-w-6 absolute right-0 top-2 max-sm:max-h-5 max-sm:min-h-5 max-sm:max-w-5 max-sm:min-w-5"
-              />
-              <p className="bg-primary-green  text-center text-[#FCFEFD] text-sm max-sm:text-xs rounded capitalize absolute -bottom-[0.9rem] left-4 px-4 max-sm:left-2">
-                level 3
-              </p>
-            </div>
-            <label
-              htmlFor="profileImage"
-              className="border-1 border-primary-green rounded-full px-4 py-1"
-            >
-              Edit
-            </label>
-          </div>
-
-          <div className="flex items-center gap-1 my-8">
-            <StarRating rating={4} />
-          </div>
-        </div>
-
-        {/* after adding membership show this*/}
-
-        <button
-          className="bg-primary-green  text-center text-[#FCFEFD] text-sm max-sm:text-xs rounded-lg capitalize  px-10 py-3 max-sm:w-full"
-          onClick={showModal}
-        >
-          Request Verification
-        </button>
-        <VerifyModal onCancel={onCancel} isOpen={isModalOpen} />
-      </div>
-
-      <div className="flex w-full gap-20 mt-8 max-lg:flex-col max-lg:gap-10 text-[#304155]">
-        <div className="flex-1 flex-col flex gap-6 w-full">
-          <div className="flex-1 flex lg:items-center md:gap-14 gap-10 max-lg:flex-col flex-wrap">
-            <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
-              <label htmlFor="" className="font-semibold">
-                Username
-              </label>
-              <p className="h-8">{currentUser?.userName}</p>
-            </div>
-            <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
-              <div className="flex-c-b">
-                <label htmlFor="" className="font-semibold">
-                  Unique ID
-                </label>{" "}
-              </div>
-              <p className="h-8">{currentUser?.uniqueId}</p>
-            </div>
-            <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
-              <div className="flex-c-b">
-                <label htmlFor="" className="font-semibold">
-                  Email
-                </label>{" "}
-              </div>
-              <p className="h-8">{currentUser?.email}</p>
-            </div>
-
-            {[
-              { label: "Full Name", field: "fullName", type: "text" },
-              { label: "Phone Number1", field: "number1", type: "number" },
-              { label: "Phone Number2", field: "number2", type: "number" },
-              {
-                label: "Whatsapp Number",
-                field: "whatsAppNo",
-                type: "number",
-              },
-              { label: "Location", field: "location", type: "text" },
-              { label: "Gender", field: "gender", type: "text" },
-              { label: "Bio", field: "bio", type: "textarea" },
-              { label: "Language", field: "language", type: "textarea" },
-            ].map((row, index) => (
-              <div
-                key={index}
-                className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full"
-              >
-                <div className="flex-c-b">
-                  <label htmlFor={row.field} className="font-semibold">
-                    {row.label}
-                  </label>{" "}
-                  {editingField === row.field ? (
-                    <div className="flex space-x-2">
-                      <button
-                        onClick={handleUpdate}
-                        className="text-primary-green font-semibold max-sm:text-sm"
-                      >
-                        Save
-                      </button>
-                      <button onClick={handleCancel}>
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="h-4 w-4 text-red-500"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M6 18 18 6M6 6l12 12"
-                          />
-                        </svg>
-                      </button>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={() =>
-                        handleEdit(
-                          row.field,
-                          (profileDetails as any)[row.field]
-                        )
-                      }
-                      className="text-primary-green font-semibold max-sm:text-sm"
-                    >
-                      Edit
-                    </button>
-                  )}
+      ) : (
+        <>
+          <div className="flex-c-b max-sm:flex-col">
+            <div className="">
+              <div className="flex gap-4 items-end">
+                <div className="relative w-[109px] h-[109px]  max-sm:w-[90px] max-sm:h-[90px] bg-[#F0FDF5] rounded-full border-1">
+                  <Image
+                    src={
+                      currentImage
+                        ? currentImage
+                        : "/assets/images/user-profile.svg"
+                    }
+                    alt="profile picture"
+                    width={109}
+                    height={109}
+                    className="object-cover w-full h-full min-h-full min-w-full rounded-full"
+                  />
+                  <input
+                    type="file"
+                    name="image"
+                    id="profileImage"
+                    onChange={handleChangeFile}
+                    className="h-0 w-0 invisible"
+                  />
+                  <Image
+                    src="/assets/icons/verify.svg"
+                    alt="verify icon"
+                    width={20}
+                    height={20}
+                    className="object-contain w-6 h-6 min-h-6 min-w-6 absolute right-0 top-2 max-sm:max-h-5 max-sm:min-h-5 max-sm:max-w-5 max-sm:min-w-5"
+                  />
+                  <p className="bg-primary-green  text-center text-[#FCFEFD] text-sm max-sm:text-xs rounded capitalize absolute -bottom-[0.9rem] left-4 px-4 max-sm:left-2">
+                    level 3
+                  </p>
                 </div>
-                {renderInput(
-                  row.field,
-                  row.type,
-                  (profileDetails as any)[row.field]
+                {profileImage?.name && !isImageTrue ? (
+                  <button
+                    onClick={handleUpdate}
+                    type="button"
+                    className="text-white bg-primary-green rounded-full px-4 py-1"
+                  >
+                    Save
+                  </button>
+                ) : (
+                  <label
+                    htmlFor="profileImage"
+                    className="border-1 border-primary-green rounded-full px-4 py-1"
+                  >
+                    Change profile
+                  </label>
                 )}
               </div>
-            ))}
+
+              <div className="flex items-center gap-1 my-8">
+                <StarRating rating={4} />
+              </div>
+            </div>
+
+            {/* after adding membership show this*/}
+
+            <button
+              className="bg-primary-green  text-center text-[#FCFEFD] text-sm max-sm:text-xs rounded-lg capitalize  px-10 py-3 max-sm:w-full"
+              onClick={showModal}
+            >
+              Request Verification
+            </button>
+            <VerifyModal onCancel={onCancel} isOpen={isModalOpen} />
           </div>
-        </div>
-      </div>
-      <div className=" w-full">
-        <h2 className="sm:text-lg font-semibold mt-8">Membership</h2>
-        {/* before adding membership show this */}
-        <button
-          className="bg-[#DDFBE9] w-full py-3 rounded-lg font-bold  max-sm:text-sm mt-8"
-          onClick={() => setOpenModal(true)}
-        >
-          Add Membership
-        </button>
 
-        <AddMembershipModal
-          open={openModal}
-          cancel={onCancelModal}
-          membershipDetails={membershipDetails}
-          membershipLoading={membershipLoading}
-          handleChange={handleChange}
-          handleSubmitMember={handleSubmitMember}
-        />
+          <div className="flex w-full gap-20 mt-8 max-lg:flex-col max-lg:gap-10 text-[#304155]">
+            <div className="flex-1 flex-col flex gap-6 w-full">
+              <div className="flex-1 flex lg:items-center md:gap-14 gap-10 max-lg:flex-col flex-wrap">
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <label htmlFor="" className="font-semibold">
+                    Username
+                  </label>
+                  <p className="h-8">{currentUser?.userName}</p>
+                </div>
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Unique ID
+                    </label>{" "}
+                  </div>
+                  <p className="h-8">{currentUser?.uniqueId}</p>
+                </div>
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Email
+                    </label>{" "}
+                  </div>
+                  <p className="h-8">{currentUser?.email}</p>
+                </div>
 
-        {/* after adding membership show this*/}
-        {/* <div className="w-full">
+                {[
+                  { label: "Full Name", field: "fullName", type: "text" },
+                  { label: "Phone Number1", field: "number1", type: "number" },
+                  { label: "Phone Number2", field: "number2", type: "number" },
+                  {
+                    label: "Whatsapp Number",
+                    field: "whatsAppNo",
+                    type: "number",
+                  },
+                  { label: "Location", field: "location", type: "text" },
+                  { label: "Gender", field: "gender", type: "text" },
+                  { label: "Bio", field: "bio", type: "textarea" },
+                  { label: "Language", field: "language", type: "textarea" },
+                ].map((row, index) => (
+                  <div
+                    key={index}
+                    className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full"
+                  >
+                    <div className="flex-c-b">
+                      <label htmlFor={row.field} className="font-semibold">
+                        {row.label}
+                      </label>{" "}
+                      {editingField === row.field ? (
+                        <div className="flex space-x-2">
+                          <button
+                            onClick={handleUpdate}
+                            className="text-primary-green font-semibold max-sm:text-sm"
+                          >
+                            Save
+                          </button>
+                          <button onClick={handleCancel}>
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="h-4 w-4 text-red-500"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M6 18 18 6M6 6l12 12"
+                              />
+                            </svg>
+                          </button>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() =>
+                            handleEdit(
+                              row.field,
+                              (profileDetails as any)[row.field]
+                            )
+                          }
+                          className="text-primary-green font-semibold max-sm:text-sm"
+                        >
+                          Edit
+                        </button>
+                      )}
+                    </div>
+                    {renderInput(
+                      row.field,
+                      row.type,
+                      (profileDetails as any)[row.field]
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+          <div className=" w-full">
+            <h2 className="sm:text-lg font-semibold mt-8">Membership</h2>
+            {/* before adding membership show this */}
+            <button
+              className="bg-[#DDFBE9] w-full py-3 rounded-lg font-bold  max-sm:text-sm mt-8"
+              onClick={() => setOpenModal(true)}
+            >
+              Add Membership
+            </button>
+
+            <AddMembershipModal
+              open={openModal}
+              cancel={onCancelModal}
+              membershipDetails={membershipDetails}
+              membershipLoading={membershipLoading}
+              handleChange={handleChange}
+              handleSubmitMember={handleSubmitMember}
+            />
+
+            {/* after adding membership show this*/}
+            {/* <div className="w-full">
         <div className="w-full grid grid-cols-2 gap-20 max-lg:gap-10">
           <div className="col-span-1 max-lg:col-span-2 border-b-[1px] border-[#CBD5E1]">
             <div className="flex justify-between my-8">
@@ -315,7 +332,9 @@ const PersonalProfile = () => {
           </li>
         </div>
       </div> */}
-      </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };
