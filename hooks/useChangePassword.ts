@@ -62,7 +62,11 @@ export const useChangePassword = () => {
         currentPassword: password.old,
         newPassword: password.new,
       };
-      await axiosInstance.post(`/auth/change-password`, passwordDetails);
+      await axiosInstance.patch(`/auth/change-password`, passwordDetails);
+      setPassword({
+        old: "",
+        new: "",
+      });
       toast.success(`Password change successfully`, toastOptions);
       setEdit(false);
     } catch (error: any) {

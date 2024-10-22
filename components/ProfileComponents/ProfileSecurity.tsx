@@ -3,6 +3,8 @@ import { useContext } from "react";
 import { AuthContext } from "@/utils/AuthState";
 import { useDeactivateAccount } from "@/hooks/useDeactivateAccount";
 import { useChangePassword } from "@/hooks/useChangePassword";
+import { useDeactivateUser } from "@/hooks/useDeactivateUser";
+import { Popconfirm, PopconfirmProps } from "antd";
 
 const ProfileSecurity = () => {
   const { currentUser } = useContext(AuthContext);
@@ -19,14 +21,18 @@ const ProfileSecurity = () => {
     edit,
   } = useChangePassword();
 
-  const { load, handleDeactivate } = useDeactivateAccount();
+  const { handleDeactivateUser, isLoading } = useDeactivateUser();
+
+  const cancel: PopconfirmProps["onCancel"] = (e) => {
+    console.log(e);
+  };
 
   return (
     <div className="grid grid-cols-2 pt-14 pb-44 text-[#304155]">
       {loading && (
         <div className="absolute w-full min-h-screen top-0 left-0 bg-white opacity-50" />
       )}
-      {load && (
+      {isLoading && (
         <div className="absolute w-full min-h-screen top-0 left-0 bg-white opacity-50" />
       )}
       <div className="col-span-1 max-sm:col-span-2 flex-col flex gap-6">
@@ -166,12 +172,19 @@ const ProfileSecurity = () => {
           )}
         </div>
         <div className="">
-          <button
-            className="transition-all text-[#FF5D7A] hover:text-pink-600  font-semibold  max-sm:text-sm"
-            onClick={handleDeactivate}
+          <Popconfirm
+            placement="topLeft"
+            title="Deactivate account"
+            description="Are you sure you want to deactivate account?"
+            onConfirm={handleDeactivateUser}
+            onCancel={cancel}
+            okText="Yes"
+            cancelText="No"
           >
-            Deactivate
-          </button>
+            <button className="transition-all text-[#FF5D7A] hover:text-pink-600  font-semibold  max-sm:text-sm">
+              Deactivate
+            </button>
+          </Popconfirm>
         </div>
       </div>
     </div>
