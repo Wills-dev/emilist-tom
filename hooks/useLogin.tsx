@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { FormEventHandler, useState } from "react";
+import { FormEventHandler, useContext, useState } from "react";
 
 import toast from "react-hot-toast";
 
@@ -9,9 +9,12 @@ import {
   promiseErrorFunction,
   toastOptions,
 } from "@/helpers";
+import { AuthContext } from "@/utils/AuthState";
 
 export const useLogin = () => {
   const router = useRouter();
+
+  const { setCurrentUser } = useContext(AuthContext);
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -30,7 +33,8 @@ export const useLogin = () => {
         password,
       };
       const { data } = await axiosInstance.post(`/auth/login`, loginPayload);
-      createAuthCookie("sessionId", data.data);
+      setCurrentUser(data?.data?.userData);
+      createAuthCookie("sessionId", data.data.token);
       toast.success("Login successful!", toastOptions);
       router.push("/dashboard/job");
       setEmail("");

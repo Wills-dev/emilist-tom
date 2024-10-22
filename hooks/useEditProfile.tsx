@@ -115,7 +115,7 @@ export const useEditProfile = () => {
       await handleSubmitFile(profileImage);
     }
     try {
-      await axiosInstance.post(`/auth/update-profile`, {
+      await axiosInstance.patch(`/auth/update-profile`, {
         [editingField!]: inputValue,
         profileImage: file && file,
       });
