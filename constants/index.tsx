@@ -2989,10 +2989,10 @@ export const countriesAndStates = [
 ];
 
 export const levels = [
-  "Level 4 & Above",
-  "Level 3 & Above",
-  "Level 2 & Above",
-  "Level 1 & Above",
+  { level: "Level 4 & Above", number: "four" },
+  { level: "Level 3 & Above", number: "three" },
+  { level: "Level 2 & Above", number: "two" },
+  { level: "Level 1 & Above", number: "one" },
 ];
 
 export const dashboardLinks = [

@@ -1,12 +1,9 @@
 import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import toast from "react-hot-toast";
-
-import { toastOptions } from "@/helpers";
 import { promiseErrorFunction } from "@/helpers";
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useSaveJob = () => {
   const { currentUser } = useContext(AuthContext);
@@ -20,10 +17,8 @@ export const useSaveJob = () => {
     }
     try {
       setLoading(true);
-      await axiosInstance.post(
-        `/save-job?user_id=${currentUser?.unique_id}&job_id=${jobId}`
-      );
-      toast.success(`You have successfully saved this job `, toastOptions);
+      await axiosInstance.post(`/jobs/like-job/${jobId}`);
+      // toast.success(`You have successfully saved this job `, toastOptions);
       setRerender((prev) => !prev);
       setLoading(false);
     } catch (error: any) {
