@@ -16,20 +16,17 @@ import { useSaveJob } from "@/hooks/useSaveJob";
 import { useUnsaveJob } from "@/hooks/useUnSaveJob";
 import { useBlackListJob } from "@/hooks/useBlackListJob";
 import { useFetchJobs } from "@/hooks/useFetchJobs";
-import { useGetUserSavedJobs } from "@/hooks/useGetUserSavedJobs";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
+import { fetchLocationDetails } from "@/hooks/useVerifyLocation";
 
 const DashboardJobContent = () => {
   const { handleSaveJob, rerender } = useSaveJob();
   const { handleUnsaveJob, unsaveRerenderr } = useUnsaveJob();
   const { handleBlackListJob, rerenderrr } = useBlackListJob();
-  const { saveLoading, allUserSavedJobs, getAllUserSavedJobs } =
-    useGetUserSavedJobs();
 
   const {
     isLoading,
     allJobs,
-    allJobsData,
     search,
     handleChange,
     handlePageChange,
@@ -44,11 +41,7 @@ const DashboardJobContent = () => {
 
   useEffect(() => {
     getAllJobs();
-    getAllUserSavedJobs();
   }, [rerender, unsaveRerenderr, rerenderrr]);
-
-  const isSaved = (job: any) =>
-    allUserSavedJobs?.some((savedJob: any) => savedJob.id === job.Id);
 
   return (
     <div className="col-span-7 max-lg:col-span-10 w-full bg-white p-6 rounded-lg max-sm:px-3">
@@ -87,7 +80,7 @@ const DashboardJobContent = () => {
         </div>
       </div>
       <>
-        {isLoading || saveLoading ? (
+        {isLoading ? (
           <div className="flex item-center justify-center text-green-500 mt-6 h-[30vh]">
             <span className="loading loading-bars loading-lg"></span>
           </div>
@@ -97,13 +90,13 @@ const DashboardJobContent = () => {
               <p className="py-2">No job listed</p>
             ) : (
               <>
-                {allJobs?.length > 0 && allJobsData.length < 1 ? (
+                {allJobs?.length < 0 && search ? (
                   <p className="py-2">
                     No result found, try searching for something else
                   </p>
                 ) : (
                   <>
-                    {allJobsData?.map((job: any, index: number) => (
+                    {allJobs?.map((job: any, index: number) => (
                       <div
                         className="w-full py-4  border-b-1 border-[#B8B9B8]"
                         key={index}
@@ -112,36 +105,37 @@ const DashboardJobContent = () => {
                           <h5 className="hover:text-primary-green transition-all sm:text-xl  font-semibold ">
                             <Link
                               href={
-                                job?.jobType === "biddable"
-                                  ? `/dashboard/job/info/biddable/${job.Id}`
-                                  : `/dashboard/job/info/regular/${job.Id}`
+                                job?.type === "biddable"
+                                  ? `/dashboard/job/info/biddable/${job._id}`
+                                  : `/dashboard/job/info/regular/${job._id}`
                               }
                             >
-                              {job?.jobTitle && Capitalize(job?.jobTitle)}
+                              {job?.title && Capitalize(job?.title)}
                             </Link>
                           </h5>
                         </div>
                         <div className="flex-c-b flex-wrap">
                           <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs">
-                            {job?.jobType === "biddable"
-                              ? "Max price"
-                              : "Budget"}
-                            : ₦{job?.Amount && numberWithCommas(job?.Amount)}
+                            {job?.type === "biddable" ? "Max price" : "Budget"}:{" "}
+                            {job?.currency}{" "}
+                            {job?.budget && numberWithCommas(job?.budget)}
+                            {job?.maximumPrice &&
+                              numberWithCommas(job?.maximumPrice)}
                           </h6>
 
                           <h6 className="text-[#737774] text-sm  font-medium max-sm:text-sm whitespace-nowrap">
-                            Date Posted:{" "}
-                            {job?.Date && formatCreatedAt(job.Date)}
+                            Posted:{" "}
+                            {job?.createdAt && formatCreatedAt(job.createdAt)}
                           </h6>
                         </div>
-                        {job?.Description && job?.Description.length > 300 ? (
+                        {job?.description && job?.description.length > 300 ? (
                           <p className="text-sm font-medium max-sm:text-sm py-2">
                             {job?.Description.slice(0, 300)}...
                             <Link
                               href={
-                                job?.jobType === "biddable"
-                                  ? `/job/info/biddable/${job.Id}`
-                                  : `/job/info/regular/${job.Id}`
+                                job?.type === "biddable"
+                                  ? `/job/info/biddable/${job._id}`
+                                  : `/job/info/regular/${job._id}`
                               }
                               className="underline text-primary-green text-xs"
                             >
@@ -150,34 +144,26 @@ const DashboardJobContent = () => {
                           </p>
                         ) : (
                           <p className="text-sm font-medium max-sm:text-sm py-2">
-                            {job?.Description}
+                            {job?.description}
                           </p>
                         )}
-                        <div className="flex-c gap-10 max-sm:gap-5 ">
+                        <div className="flex-c-b gap-10 max-sm:gap-5 ">
                           <h6 className="text-[#737774] text-sm  font-medium max-sm:text-sm max-sm:hidden">
-                            Job duration: {job.projectDuration}
+                            Job duration: {job?.duration?.number}{" "}
+                            {job?.duration?.period}
                           </h6>
-                        </div>
-                        <div className="flex-c-b gap-8">
-                          <p className="flex-c text-[#737774] font-medium max-sm:text-sm py-2 flex-1 truncate">
-                            {" "}
-                            <span className="block text-xl mr-1">
-                              <IoLocationSharp />
-                            </span>
-                            {job.Location && Capitalize(job.Location)}
-                          </p>
                           <div className="flex-c justify-end gap-10 max-sm:gap-4 ">
-                            {isSaved(job) ? (
+                            {job?.liked ? (
                               <span
-                                className="block text-xl text-pink-500 cursor-pointer"
-                                onClick={() => handleUnsaveJob(job.Id)}
+                                className="block text-xl text-black cursor-pointer"
+                                onClick={() => handleUnsaveJob(job._id)}
                               >
                                 <FaHeart />
                               </span>
                             ) : (
                               <span
                                 className="block text-xl cursor-pointer"
-                                onClick={() => handleSaveJob(job.Id)}
+                                onClick={() => handleSaveJob(job._id)}
                               >
                                 <FaRegHeart />
                               </span>
@@ -186,7 +172,7 @@ const DashboardJobContent = () => {
                               placement="leftTop"
                               title="Block job"
                               description="Are you sure you want to block this job?"
-                              onConfirm={() => handleBlackListJob(job?.Id)}
+                              onConfirm={() => handleBlackListJob(job?._id)}
                               onCancel={cancel}
                               okText="Yes"
                               cancelText="No"
@@ -200,6 +186,15 @@ const DashboardJobContent = () => {
                               />
                             </Popconfirm>
                           </div>
+                        </div>
+                        <div className="flex-c ">
+                          <span className="block text-xl mr-1">
+                            <IoLocationSharp />
+                          </span>
+                          <p className="flex-c text-[#737774] font-medium max-sm:text-sm py-2 flex-1 truncate">
+                            {" "}
+                            {job.location && job.location}
+                          </p>
                         </div>
                       </div>
                     ))}

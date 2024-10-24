@@ -5,19 +5,20 @@ import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
 import { MilestonePer, PostJobType } from "@/types";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
 import {
   handleLoginError,
   handleInputFieldError,
   toastOptions,
   promiseErrorFunction,
 } from "@/helpers";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useListNewJob = () => {
   const router = useRouter();
   const { currentUser } = useContext(AuthContext);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [location, setLocation] = useState<string>("");
   const [postJobDetails, setPostJobDetails] = useState<PostJobType>({
     category: "",
     service: "",
@@ -28,9 +29,9 @@ export const useListNewJob = () => {
     maximumPrice: "",
     bidRange: "",
     budget: "",
-    location: "",
-    expertLevel: "Level 4 & Above",
+    expertLevel: "four",
     milestonesNumber: 1,
+    currency: "NGN",
   });
   const [projectType, setProjectType] = useState<"biddable" | "regular">(
     "biddable"
@@ -41,12 +42,10 @@ export const useListNewJob = () => {
 
   const [milestonesData, setMilestonesData] = useState<MilestonePer[]>([
     {
-      id: "",
       duration: "",
       durationType: "day",
       details: "",
       amount: 0,
-      milestoneStatus: "ongoing",
       percentage: 0,
     },
   ]);
@@ -108,12 +107,10 @@ export const useListNewJob = () => {
       const newMilestones = [...milestonesData];
       while (newMilestones.length < newMilestoneNumber) {
         newMilestones.push({
-          id: "",
           duration: "",
           durationType: "day",
           details: "",
           amount: 0,
-          milestoneStatus: "ongoing",
           percentage: 0,
         });
       }
@@ -223,7 +220,6 @@ export const useListNewJob = () => {
       !postJobDetails.projectDuration ||
       !postJobDetails.maximumPrice ||
       !postJobDetails.bidRange ||
-      !postJobDetails.location ||
       !postJobDetails.expertLevel ||
       !postJobDetails.milestonesNumber
     ) {
@@ -234,15 +230,15 @@ export const useListNewJob = () => {
 
   //modified milestone data to suit what's expected on the backend
   const transformedData = milestonesData.map((milestone, index) => ({
-    [`milestoneId`]: milestone.id,
-    [`milestoneDuration`]: `${milestone.duration} ${
-      Number(milestone.duration) > 1
-        ? milestone.durationType + "s"
-        : milestone.durationType
-    }`,
-    [`milestoneDescription`]: milestone.details,
-    [`milestoneAmount`]: milestone.amount,
-    [`milestoneStatus`]: milestone.milestoneStatus,
+    [`timeFrame`]: {
+      number: Number(milestone.duration),
+      period:
+        Number(milestone.duration) > 1
+          ? milestone.durationType + "s"
+          : milestone.durationType,
+    },
+    [`achievement`]: milestone.details,
+    [`amount`]: milestone.amount,
   }));
 
   const handleErrorCheckForRegular = () => {
@@ -253,7 +249,6 @@ export const useListNewJob = () => {
       !postJobDetails.description ||
       !postJobDetails.projectDuration ||
       !postJobDetails.budget ||
-      !postJobDetails.location ||
       !postJobDetails.expertLevel ||
       !postJobDetails.milestonesNumber
     ) {
@@ -294,6 +289,8 @@ export const useListNewJob = () => {
       return handleInputFieldError();
     } else if (isAllMilestoneFilled()) {
       return handleMilestoneFieldError();
+    } else if (!location) {
+      toast.error("Please enter address", toastOptions);
     } else if (!isValid) {
       return handleMilestoneDurationError();
     } else if (selectedImages.length === 0 || selectedImageFiles.length === 0) {
@@ -315,6 +312,25 @@ export const useListNewJob = () => {
         toastOptions
       );
     } else {
+      const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+      if (!googleMapsApiKey) {
+        throw new Error("Google Maps API key is not defined.");
+      }
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          location
+        )}&key=${googleMapsApiKey}`
+      );
+      const data = await response.json();
+
+      if (data.status !== "OK") {
+        toast.error(
+          `Please enter a valid address from the suggestions.`,
+          toastOptions
+        );
+        return;
+      }
       setLoading(true);
       try {
         const {
@@ -326,154 +342,119 @@ export const useListNewJob = () => {
           projectDurationType,
           maximumPrice,
           bidRange,
-          location,
           expertLevel,
-          milestonesNumber,
           budget,
+          currency,
         } = postJobDetails;
 
         //project duration
-        const properProjectDuration = `${projectDuration} ${
-          Number(projectDuration) > 1
-            ? projectDurationType + "s"
-            : projectDurationType
-        }`;
+
+        const properProjectDuration = {
+          number: Number(projectDuration),
+          period:
+            Number(projectDuration) > 1
+              ? projectDurationType + "s"
+              : projectDurationType,
+        };
+
+        const payload: any = {
+          title: projectTitle,
+          category: category,
+          service: service,
+          location: location,
+          description: description,
+          maximumPrice: maximumPrice,
+          bidRange: Number(bidRange),
+          currency: currency,
+          budget: budget,
+          expertLevel: expertLevel,
+          duration: properProjectDuration,
+          milestones: transformedData,
+          achievementDetails: "gg",
+        };
+
+        const formData = new FormData();
+
+        formData.append("category", payload.category);
+        formData.append("service", payload.service);
+        formData.append("title", payload.title);
+        formData.append("description", payload.description);
+        formData.append("duration[number]", payload.duration.number);
+        formData.append("duration[period]", payload.duration.period);
+        formData.append("location", payload.location);
+        formData.append("expertLevel", payload.expertLevel);
+        formData.append("achievementDetails", payload.achievementDetails);
+        formData.append("currency", payload.currency);
+
+        payload.milestones.forEach((milestone: any, index: number) => {
+          formData.append(
+            `milestones[${index}][timeFrame][number]`,
+            milestone.timeFrame.number
+          );
+          formData.append(
+            `milestones[${index}][timeFrame][period]`,
+            milestone.timeFrame.period
+          );
+          formData.append(
+            `milestones[${index}][achievement]`,
+            milestone.achievement
+          );
+          formData.append(`milestones[${index}][amount]`, milestone.amount);
+        });
 
         if (projectType === "biddable") {
-          const postJobDetails: any = {
-            jobTitle: projectTitle,
-            category: category,
-            service: service,
-            location: location,
-            description: description,
-            maxPrice: maximumPrice,
-            bidRange: bidRange,
-            jobType: "biddable",
-            expertLevel: expertLevel,
-            projectDuration: properProjectDuration,
-            jobStatus: "pending",
-            milestoneNumber: milestonesNumber,
-            milestoneDetails: JSON.stringify(transformedData),
-            userId: currentUser?.unique_id,
-            applicants: "[]",
-            invoice: "[]",
-          };
-
-          const formData = new FormData();
-
-          for (const property in postJobDetails) {
-            formData.append(property, postJobDetails[property]);
-          }
-
-          for (let i = 0; i < selectedImageFiles.length; i++) {
-            formData.append("files", selectedImageFiles[i]);
-          }
-
-          await axiosInstance.post(`/biddable`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          toast.success(`Job posted successfully `, toastOptions);
-          setLoading(false);
-          setPostJobDetails({
-            category: "",
-            service: "",
-            projectTitle: "",
-            description: "",
-            projectDuration: "",
-            projectDurationType: "",
-            maximumPrice: "",
-            bidRange: "",
-            location: "",
-            budget: "",
-            expertLevel: "Level 4 & Above",
-            milestonesNumber: 1,
-          });
-          setSelectedImageFiles([]);
-          setSelectedImages([]);
-          setMilestonesData([
-            {
-              id: "",
-              duration: "",
-              durationType: "Day",
-              details: "",
-              amount: "",
-              milestoneStatus: "ongoing",
-              percentage: 0,
-            },
-          ]);
-          router.push("/dashboard/job/my-listed-jobs");
+          formData.append("type", "biddable");
+          formData.append("maximumPrice", payload.maximumPrice);
+          formData.append("bidRange", payload.bidRange);
         } else if (projectType === "regular") {
-          const postJobDetails: any = {
-            jobTitle: projectTitle,
-            category: category,
-            service: service,
-            location: location,
-            description: description,
-            amount: budget,
-            jobType: "regular",
-            expertLevel: expertLevel,
-            projectDuration: properProjectDuration,
-            jobStatus: "pending",
-            milestoneNumber: milestonesNumber,
-            milestoneDetails: JSON.stringify(transformedData),
-            userId: currentUser?.unique_id,
-            applicants: "[]",
-            invoice: "[]",
-          };
-
-          const formData = new FormData();
-
-          for (const property in postJobDetails) {
-            formData.append(property, postJobDetails[property]);
-          }
-
-          for (let i = 0; i < selectedImageFiles.length; i++) {
-            formData.append("files", selectedImageFiles[i]);
-          }
-
-          await axiosInstance.post(`/regular`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-
-          toast.success(`Job posted successfully`, toastOptions);
-          setLoading(false);
-          setPostJobDetails({
-            category: "",
-            service: "",
-            projectTitle: "",
-            description: "",
-            projectDuration: "",
-            projectDurationType: "",
-            maximumPrice: "",
-            bidRange: "",
-            location: "",
-            budget: "",
-            expertLevel: "Level 4 & Above",
-            milestonesNumber: 1,
-          });
-          setSelectedImageFiles([]);
-          setSelectedImages([]);
-          setMilestonesData([
-            {
-              id: "",
-              duration: "",
-              durationType: "day",
-              details: "",
-              amount: "",
-              milestoneStatus: "ongoing",
-              percentage: 0,
-            },
-          ]);
-          router.push("/dashboard/job/my-listed-jobs");
+          formData.append("type", "regular");
+          formData.append("budget", payload.budget);
         }
+
+        for (let i = 0; i < selectedImageFiles.length; i++) {
+          formData.append("files", selectedImageFiles[i]);
+        }
+
+        await axiosInstance.post(`/jobs/create-job`, formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        });
+
+        toast.success(`Job posted successfully `, toastOptions);
+        setPostJobDetails({
+          category: "",
+          service: "",
+          projectTitle: "",
+          description: "",
+          projectDuration: "",
+          projectDurationType: "",
+          maximumPrice: "",
+          bidRange: "",
+          currency: "NGN",
+          budget: "",
+          expertLevel: "Level 4 & Above",
+          milestonesNumber: 1,
+        });
+        setLocation("");
+        setSelectedImageFiles([]);
+        setSelectedImages([]);
+        setMilestonesData([
+          {
+            duration: "",
+            durationType: "Day",
+            details: "",
+            amount: "",
+            percentage: 0,
+          },
+        ]);
+        router.push("/dashboard/job/my-listed-jobs");
       } catch (error: any) {
         setLoading(false);
         console.log("error listing new job", error);
         promiseErrorFunction(error);
+      } finally {
+        setLoading(false);
       }
     }
   };
@@ -493,5 +474,7 @@ export const useListNewJob = () => {
     projectType,
     setProjectType,
     updateMilestonesData,
+    location,
+    setLocation,
   };
 };

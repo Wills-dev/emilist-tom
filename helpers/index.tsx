@@ -45,6 +45,8 @@ export const toastOptions = {
 export const promiseErrorFunction = (error: any) => {
   if (error?.response?.data?.message) {
     toast.error(`${error?.response?.data?.message}`, toastOptions);
+  } else if (error?.response?.data?.errors[0]) {
+    toast.error(`${error?.response?.data?.errors[0]}`, toastOptions);
   } else {
     return toast.error(`Internal Server Error! Contact support`, toastOptions);
   }

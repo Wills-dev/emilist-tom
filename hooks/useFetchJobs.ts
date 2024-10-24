@@ -1,8 +1,11 @@
-import { ChangeEvent, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
+import { AuthContext } from "@/utils/AuthState";
 
 export const useFetchJobs = () => {
+  const { currentUser } = useContext(AuthContext);
+
   const [allJobs, setAllJobs] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -12,7 +15,6 @@ export const useFetchJobs = () => {
   const [filterLocation, setFilterLocation] = useState("");
   const [filterName, setFilterName] = useState("");
   const [filterService, setFilterService] = useState("");
-  const [loadFilter, setLoadFilter] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -24,10 +26,22 @@ export const useFetchJobs = () => {
 
   const getAllJobs = async () => {
     try {
-      const data = await axiosInstance.get(`/getjobs`);
-      setAllJobs(data?.data);
-      const totalJobs = data?.data?.length;
-      setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
+      if (currentUser) {
+        const userId = currentUser?._id;
+        const { data } = await axiosInstance.get(
+          `/jobs/fetch-all-jobs?page=${currentPage}&limit=10&userId=${userId}`
+        );
+        setAllJobs(data?.data?.jobs);
+        const totalJobs = data?.data?.totalJobs;
+        setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
+      } else {
+        const { data } = await axiosInstance.get(
+          `/jobs/fetch-all-jobs?page=${currentPage}&limit=10`
+        );
+        setAllJobs(data?.data?.jobs);
+        const totalJobs = data?.data?.totalJobs;
+        setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
+      }
     } catch (error: any) {
       console.log("error fetching all product", error);
     } finally {
@@ -35,51 +49,13 @@ export const useFetchJobs = () => {
     }
   };
 
-  const handleFilterJob = async () => {
-    setLoadFilter(true);
-    try {
-      const { data } = await axiosInstance.get(
-        `/searchJobs?jobtitle=${filterName}&location=${filterLocation}&industry=${filterService}`
-      );
-      setAllJobs(data?.jobs);
-      const totalJobs = data?.jobs?.length;
-      setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
-    } catch (error: any) {
-      console.log("error fetching search jobs", error);
-    } finally {
-      setLoadFilter(false);
-    }
-  };
-
   useEffect(() => {
     getAllJobs();
-  }, []);
-
-  const allJobsData = useMemo(() => {
-    let computedJobs = allJobs;
-
-    if (search) {
-      computedJobs = computedJobs?.filter(
-        (job: any) =>
-          job?.category?.toLowerCase().includes(search.toLowerCase()) ||
-          job?.expertLevel?.toLowerCase().includes(search.toLowerCase()) ||
-          job?.location?.toLowerCase().includes(search.toLowerCase()) ||
-          job?.jobTitle?.toLowerCase().includes(search.toLowerCase()) ||
-          job?.service?.toLowerCase().includes(search.toLowerCase()) ||
-          job?.jobType?.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    return computedJobs?.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-    );
-  }, [allJobs, currentPage, search]);
+  }, [currentPage]);
 
   return {
     isLoading,
     allJobs,
-    allJobsData,
     search,
     handleChange,
     getAllJobs,
@@ -92,7 +68,5 @@ export const useFetchJobs = () => {
     filterService,
     setFilterName,
     setFilterService,
-    handleFilterJob,
-    loadFilter,
   };
 };

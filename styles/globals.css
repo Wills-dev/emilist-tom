@@ -66,10 +66,10 @@ body {
     @apply min-w-full w-full  max-w-full rounded-lg sm:h-12 px-2 bg-[#ececec] focus-within:border-primary-green focus-within:border-1  h-11 flex justify-between items-center gap-2;
   }
   .expert-reg-input-div {
-    @apply min-w-full w-full  max-w-full rounded-lg h-14 px-2 bg-lighter-gray focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:h-12 max-sm:text-sm;
+    @apply min-w-full w-full  max-w-full rounded-lg h-10 px-2 bg-lighter-gray focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:text-sm;
   }
   .expert-reg-input {
-    @apply min-w-full w-full  max-w-full rounded-lg h-14 px-2 bg-lighter-gray focus:outline-none focus:border-primary-green focus:border-1  max-sm:h-12 max-sm:text-sm;
+    @apply min-w-full w-full  max-w-full rounded-lg h-10 px-2 bg-lighter-gray focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm;
   }
   .expert-reg-title {
     @apply text-3xl font-bold max-sm:text-2xl;

@@ -37,12 +37,10 @@ export interface HiringDetails {
 }
 
 export interface MilestonePer {
-  id: string;
   duration: string;
   durationType: string;
   details: string;
   amount: any;
-  milestoneStatus: string;
   percentage: any;
 }
 
@@ -55,10 +53,10 @@ export interface PostJobType {
   projectDurationType: string;
   maximumPrice: any;
   bidRange: number | string;
-  location: string;
   expertLevel: string;
   milestonesNumber: number;
   budget: any;
+  currency: string;
 }
 
 export interface MaterialDetailType {
