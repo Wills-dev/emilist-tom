@@ -268,10 +268,6 @@ export const useListNewJob = () => {
     );
   }
 
-  function handleImageSelectionError() {
-    return toast.error("Please select an image file", toastOptions);
-  }
-
   const handleSubmitPostJob: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
     const projectDuration = {
@@ -293,8 +289,6 @@ export const useListNewJob = () => {
       toast.error("Please enter address", toastOptions);
     } else if (!isValid) {
       return handleMilestoneDurationError();
-    } else if (selectedImages.length === 0 || selectedImageFiles.length === 0) {
-      return handleImageSelectionError();
     } else if (
       !validateMilestoneAmounts(milestonesData) &&
       projectType === "biddable"

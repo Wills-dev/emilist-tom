@@ -17,7 +17,6 @@ import { useUnsaveJob } from "@/hooks/useUnSaveJob";
 import { useBlackListJob } from "@/hooks/useBlackListJob";
 import { useFetchJobs } from "@/hooks/useFetchJobs";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
-import { fetchLocationDetails } from "@/hooks/useVerifyLocation";
 
 const DashboardJobContent = () => {
   const { handleSaveJob, rerender } = useSaveJob();

@@ -29,6 +29,7 @@ import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ApplyBiddableJobModal from "../modals/ApplyBiddableJobModal";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
+import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 
 interface BiddableJobInfoProps {
   jobId: string;
@@ -46,14 +47,12 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
   const { handleSaveJob, rerender } = useSaveJob();
   const { handleUnsaveJob, unsaveRerenderr } = useUnsaveJob();
   const { handleDeleteJob, isDeleteLoading } = useDeleteJob();
-  const { loading, getJobInfo, jobInfo } = useGetBiddableJobInfo();
+  const { loading, getJobInfo, jobInfo } = useGetJobInfo();
   const { requestQuote, requestLoading, rerenderr } = useRequestQuote();
   const { removeApplicant, loadingRemove, removeRerender } =
     useDeleteApplicant();
   const { acceptQuote, loadingAcceptQuote, acceptQuoteRerender } =
     useAcceptQuote();
-  const { saveLoading, allUserSavedJobs, getAllUserSavedJobs } =
-    useGetUserSavedJobs();
   const { acceptBiddableApplicant, loadingAccept, acceptRerender } =
     useAcceptBiddableApplicant();
   const {
@@ -116,7 +115,6 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
 
   useEffect(() => {
     getJobInfo(jobId);
-    getAllUserSavedJobs();
   }, [
     jobId,
     currentUser,
@@ -130,8 +128,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
     acceptQuoteRerender,
   ]);
 
-  const isSaved = () =>
-    allUserSavedJobs?.some((savedJob: any) => savedJob.id === jobId);
+  const isSaved = "";
 
   return (
     <section className="py-28 padding-x bg-[#F0FDF5] min-h-screen">
@@ -153,7 +150,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
         )}
       </AnimatePresence>
 
-      {loading || saveLoading ? (
+      {loading ? (
         <div className="flex-c w-full min-h-[70vh] justify-center text-green-500 mt-6">
           <span className="loading loading-bars loading-lg"></span>
         </div>
@@ -174,13 +171,11 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
               <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5">
                 <div className="flex-c-b">
                   <h5 className="text-3xl font-semibold max-sm:text-lg pb-3">
-                    {jobInfo?.jobTitle && Capitalize(jobInfo.jobTitle)}
+                    {jobInfo?.title && Capitalize(jobInfo.title)}
                   </h5>
-                  {jobInfo?.jobStatus === "pending" ||
-                  jobInfo?.jobStatus === "amended" ? (
+                  {jobInfo?.status === "pending" ? (
                     <>
-                      {currentUser.unique_id ===
-                        jobInfo?.userDetails?.userId && (
+                      {currentUser?._id === jobInfo?.userId?._id && (
                         <div className="block relative">
                           <button onClick={toggleActionButton}>
                             <Image
@@ -206,7 +201,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     </>
                   ) : null}
                 </div>
-                {currentUser?.unique_id === jobInfo?.userDetails?.userId && (
+                {currentUser?._id === jobInfo?.userId?._id && (
                   <div className="flex-c gap-3">
                     <button
                       className="text-primary-green font-medium max-sm:text-sm py-2  underline"
@@ -235,7 +230,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                   <div className="flex-c gap-10  max-sm:gap-5 max-lg:w-full">
                     <p className="text-[#5E625F] max-sm:text-xs">
                       Posted{" "}
-                      {jobInfo?.date ? formatCreatedAt(jobInfo.date) : "2 days"}
+                      {jobInfo?.createdAt && formatCreatedAt(jobInfo.createdAt)}
                     </p>
                     <div className="flex items-center gap-1">
                       <Image
@@ -256,10 +251,9 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                       {jobId && jobId}
                     </p>
                   </div>
-                  {currentUser.unique_id !== jobInfo?.userDetails?.userId && (
+                  {currentUser?._id !== jobInfo?.userId?._id && (
                     <div className="flex items-center max-lg:w-full gap-2">
-                      {jobInfo?.jobStatus === "pending" ||
-                      jobInfo?.jobStatus === "amended" ? (
+                      {jobInfo?.status === "pending" ? (
                         <>
                           {isApplied() ? (
                             <button
@@ -284,7 +278,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                         </>
                       ) : null}
 
-                      {isSaved() ? (
+                      {isSaved ? (
                         <button
                           className=" px-[20px] py-[12px] border-1 border-red-500 rounded-lg cursor-pointer font-bold font-exo whitespace-nowrap flex-c justify-center max-sm:py-[8px] max-sm:text-sm text-red-500"
                           onClick={() => handleUnsaveJob(jobId)}
@@ -354,7 +348,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     />
                     <div className="flex flex-col  gap-1">
                       <h6 className="text-lg  font-semibold max-sm:text-sm">
-                        {jobInfo?.milestoneNumber && jobInfo.milestoneNumber}
+                        {jobInfo?.milestones && jobInfo.milestones?.length}
                       </h6>
                       <p className="text-[#474C48] max-sm:text-xs">Milestone</p>
                     </div>
@@ -369,7 +363,8 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     />
                     <div className="flex flex-col  gap-1">
                       <h6 className="text-lg  font-semibold max-sm:text-sm">
-                        {jobInfo?.projectDuration && jobInfo.projectDuration}
+                        {jobInfo?.duration?.number && jobInfo.duration?.number}{" "}
+                        {jobInfo?.duration?.period && jobInfo.duration?.period}
                       </h6>
                       <p className="text-[#474C48] max-sm:text-xs">
                         Project duration
@@ -386,7 +381,15 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     />
                     <div className="flex flex-col  gap-1">
                       <h6 className="text-lg  font-semibold max-sm:text-sm">
-                        {jobInfo?.expertLevel && jobInfo.expertLevel}
+                        {jobInfo?.expertLevel && jobInfo.expertLevel === "one"
+                          ? 1
+                          : jobInfo.expertLevel === "two"
+                          ? 2
+                          : jobInfo.expertLevel === "three"
+                          ? 3
+                          : jobInfo.expertLevel === "four"
+                          ? 4
+                          : null}
                       </h6>
                       <p className="text-[#474C48] max-sm:text-xs">
                         Expert level
@@ -403,7 +406,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     />
                     <div className="flex flex-col gap-1">
                       <h6 className="text-lg  font-semibold max-sm:text-sm">
-                        ₦{" "}
+                        {jobInfo?.currency}{" "}
                         {jobInfo?.bidRange &&
                           numberWithCommas(jobInfo.bidRange)}
                       </h6>
@@ -420,9 +423,9 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     />
                     <div className="flex flex-col  gap-1">
                       <h6 className="text-lg  font-semibold max-sm:text-sm">
-                        ₦{" "}
-                        {jobInfo?.maxPrice &&
-                          numberWithCommas(jobInfo.maxPrice)}{" "}
+                        {jobInfo?.currency}{" "}
+                        {jobInfo?.maximumPrice &&
+                          numberWithCommas(jobInfo.maximumPrice)}{" "}
                       </h6>
                       <p className="text-[#474C48] max-sm:text-xs">
                         Maximum price
@@ -446,67 +449,64 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
               <h4 className="px-10 max-sm:px-5 mb-2 text-lg font-semibold max-sm:text-[16px]">
                 Milestone
               </h4>
-              {jobInfo?.milestoneDetails &&
-                jobInfo.milestoneDetails.map(
-                  (milestone: any, index: number) => (
-                    <div
-                      className=" px-10 max-sm:px-5 w-full border-t-1 border-[#B8B9B8] "
-                      key={index}
-                    >
-                      <h6 className=" my-5 font-semibold max-sm:text-xs">
-                        Milestone {index + 1}
-                      </h6>
-                      <div className="flex  gap-10 max-sm:gap-5">
-                        <div className=" flex gap-2">
-                          <Image
-                            src="/assets/icons/clock.svg"
-                            alt="menu"
-                            width={20}
-                            height={20}
-                            className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
-                          />
-                          <div className="flex flex-col  gap-1">
-                            <h6 className="text-lg font-semibold max-sm:text-sm">
-                              {milestone?.milestoneDuration &&
-                                milestone?.milestoneDuration}
-                            </h6>
-                            <p className="text-[#474C48] max-sm:text-xs">
-                              Milestone duration
-                            </p>
-                          </div>
-                        </div>
-                        <div className=" flex gap-2">
-                          <Image
-                            src="/assets/icons/empty-wallet.svg"
-                            alt="menu"
-                            width={20}
-                            height={20}
-                            className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
-                          />
-                          <div className="flex flex-col gap-1">
-                            <h6 className="text-lg font-semibold max-sm:text-sm">
-                              ₦
-                              {milestone?.milestoneAmount &&
-                                numberWithCommas(milestone?.milestoneAmount)}
-                            </h6>
-                            <p className="text-[#474C48] max-sm:text-xs">
-                              Amount
-                            </p>
-                          </div>
+              {jobInfo?.milestones &&
+                jobInfo.milestones.map((milestone: any, index: number) => (
+                  <div
+                    className=" px-10 max-sm:px-5 w-full border-t-1 border-[#B8B9B8] "
+                    key={index}
+                  >
+                    <h6 className=" my-5 font-semibold max-sm:text-xs">
+                      Milestone {index + 1}
+                    </h6>
+                    <div className="flex  gap-10 max-sm:gap-5">
+                      <div className=" flex gap-2">
+                        <Image
+                          src="/assets/icons/clock.svg"
+                          alt="menu"
+                          width={20}
+                          height={20}
+                          className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
+                        />
+                        <div className="flex flex-col  gap-1">
+                          <h6 className="text-lg font-semibold max-sm:text-sm">
+                            {milestone?.timeFrame?.number}{" "}
+                            {milestone?.timeFrame?.period}
+                          </h6>
+                          <p className="text-[#474C48] max-sm:text-xs">
+                            Milestone duration
+                          </p>
                         </div>
                       </div>
-                      <div className="py-5">
-                        <h6 className="my-5 font-semibold max-sm:text-xs">
-                          Milestone details
-                        </h6>
-                        <p className=" my-5 text-[#303632] max-sm:text-xs">
-                          {milestone?.milestoneDescription &&
-                            milestone?.milestoneDescription}
-                        </p>
+                      <div className=" flex gap-2">
+                        <Image
+                          src="/assets/icons/empty-wallet.svg"
+                          alt="menu"
+                          width={20}
+                          height={20}
+                          className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
+                        />
+                        <div className="flex flex-col gap-1">
+                          <h6 className="text-lg font-semibold max-sm:text-sm">
+                            {jobInfo?.currency}{" "}
+                            {milestone?.amount &&
+                              numberWithCommas(milestone?.amount)}
+                          </h6>
+                          <p className="text-[#474C48] max-sm:text-xs">
+                            Amount
+                          </p>
+                        </div>
                       </div>
                     </div>
-                  )
-                )}
+                    <div className="py-5">
+                      <h6 className="my-5 font-semibold max-sm:text-xs">
+                        Milestone details
+                      </h6>
+                      <p className=" my-5 text-[#303632] max-sm:text-xs">
+                        {milestone?.achievement && milestone?.achievement}
+                      </p>
+                    </div>
+                  </div>
+                ))}
             </div>
           </div>
         </>
