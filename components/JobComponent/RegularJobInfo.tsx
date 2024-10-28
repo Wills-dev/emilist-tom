@@ -24,6 +24,7 @@ import RegularApplicants from "./RegularApplicants";
 import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
+import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 
 interface RegularJobInfoProps {
   jobId: string;
@@ -39,7 +40,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { loading, getJobInfo, jobInfo } = useGetRegularJobInfo();
+  const { loading, getJobInfo, jobInfo } = useGetJobInfo();
   const { handleApplyFofJob, isLoading, rerender } = useApplyForJob();
   const { requestQuote, requestLoading, rerenderr } = useRequestQuote();
   const { acceptQuote, loadingAcceptQuote, acceptQuoteRerender } =
@@ -172,13 +173,11 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5">
               <div className="flex-c-b">
                 <h5 className="text-3xl font-semibold max-sm:text-lg">
-                  {jobInfo?.jobTitle && Capitalize(jobInfo.jobTitle)}
+                  {jobInfo?.title && Capitalize(jobInfo.title)}
                 </h5>
-                {jobInfo?.jobStatus === "pending" ||
-                jobInfo?.jobStatus === "amended" ? (
+                {jobInfo?.status === "pending" ? (
                   <>
-                    {currentUser?.unique_id ===
-                      jobInfo?.userDetails?.userId && (
+                    {currentUser?._id === jobInfo?.userId?._id && (
                       <div className="block relative" ref={dropdownRef}>
                         <button onClick={toggleActionButton}>
                           <Image
@@ -204,7 +203,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                   </>
                 ) : null}
               </div>
-              {currentUser?.unique_id === jobInfo?.userDetails?.userId && (
+              {currentUser?._id === jobInfo?.userId?._id && (
                 <div className="flex items-center gap-3">
                   <button
                     className="text-primary-green  font-medium max-sm:text-sm py-2 underline"
@@ -227,13 +226,13 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
             </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 flex flex-col gap-3">
               <h5 className="text-primary-green sm:text-lg font-medium ]">
-                {jobInfo?.Category && Capitalize(jobInfo.Category)}
+                {jobInfo?.category && Capitalize(jobInfo.category)}
               </h5>
               <div className="flex items-center justify-between gap-5 flex-wrap">
                 <div className="flex items-center flex-wrap gap-10  max-sm:gap-5 max-lg:w-full">
                   <p className="text-[#5E625F] max-sm:text-xs">
                     Posted{" "}
-                    {jobInfo?.Date ? formatCreatedAt(jobInfo.Date) : "2 days"}
+                    {jobInfo?.createdAt && formatCreatedAt(jobInfo.createdAt)}
                   </p>
                   <div className="flex items-center gap-1">
                     <Image
@@ -244,7 +243,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                       className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
                     />
                     <p className="text-[#1A201B]   max-sm:text-xs">
-                      {jobInfo?.Location && Capitalize(jobInfo?.Location)}
+                      {jobInfo?.location && Capitalize(jobInfo?.location)}
                     </p>
                   </div>
                   <p className="  max-sm:text-xs">
@@ -254,10 +253,9 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                     {jobId && jobId}
                   </p>
                 </div>
-                {currentUser?.unique_id !== jobInfo?.userDetails?.userId && (
+                {currentUser?._id !== jobInfo?.userId?._id && (
                   <>
-                    {jobInfo?.jobStatus === "pending" ||
-                    jobInfo?.jobStatus === "amended" ? (
+                    {jobInfo?.status === "pending" ? (
                       <>
                         {isApplied() ? (
                           <div className="flex items-center  max-lg:w-full gap-2">
@@ -291,7 +289,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
             </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">
               <p className="text-[#303632]   max-sm:text-xs">
-                {jobInfo?.Description && jobInfo?.Description}
+                {jobInfo?.description && jobInfo?.description}
               </p>
             </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">
@@ -306,7 +304,8 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                   />
                   <div className="flex flex-col gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      ₦{jobInfo?.Amount && numberWithCommas(jobInfo.Amount)}
+                      {jobInfo?.currency}{" "}
+                      {jobInfo?.budget && numberWithCommas(jobInfo.budget)}
                     </h6>
                     <p className="text-[#474C48]   max-sm:text-xs">
                       {jobInfo?.service && Capitalize(jobInfo?.service)}
@@ -323,7 +322,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      {jobInfo?.milestoneNumber && jobInfo.milestoneNumber}
+                      {jobInfo?.milestones && jobInfo.milestones?.length}
                     </h6>
                     <p className="text-[#474C48]   max-sm:text-xs">Milestone</p>
                   </div>
@@ -338,7 +337,15 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      {jobInfo?.expertLevel && jobInfo.expertLevel}
+                      {jobInfo?.expertLevel && jobInfo.expertLevel === "one"
+                        ? 1
+                        : jobInfo.expertLevel === "two"
+                        ? 2
+                        : jobInfo.expertLevel === "three"
+                        ? 3
+                        : jobInfo.expertLevel === "four"
+                        ? 4
+                        : null}
                     </h6>
                     <p className="text-[#474C48]   max-sm:text-xs">
                       Expert level
@@ -355,7 +362,8 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      {jobInfo?.projectDuration && jobInfo.projectDuration}
+                      {jobInfo?.duration?.number && jobInfo.duration?.number}{" "}
+                      {jobInfo?.duration?.period && jobInfo.duration?.period}
                     </h6>
                     <p className="text-[#474C48]   max-sm:text-xs">
                       Project duration
@@ -372,7 +380,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      {jobInfo?.Applicants ? jobInfo.Applicants?.length : 0}
+                      {jobInfo?.applications ? jobInfo.applications?.length : 0}
                     </h6>
                     <p className="text-[#474C48]   max-sm:text-xs">
                       Applicants
@@ -385,21 +393,17 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
               <h6 className="text-lg font-semibold max-sm:text-sm font-inter">
                 Files
               </h6>
-              <div className="flex items-center w-full gap-10 pt-4">
-                <Image
-                  src="/assets/icons/pdf.jpg"
-                  alt="menu"
-                  width={61}
-                  height={61}
-                  className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
-                />
-                <Image
-                  src="/assets/icons/mword.jpg"
-                  alt="menu"
-                  width={61}
-                  height={61}
-                  className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
-                />
+              <div className="flex items-center w-full gap-10 pt-4 flex-wrap">
+                {jobInfo?.jobFiles?.map((file: string, index: number) => (
+                  <Image
+                    key={index}
+                    src={file}
+                    alt="menu"
+                    width={61}
+                    height={61}
+                    className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -417,8 +421,8 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
             <h4 className="px-10 max-sm:px-5 mb-2 text-[#000000] text-[20px] font-semibold max-sm:text-[16px]">
               Milestone
             </h4>
-            {jobInfo?.milestoneDetails &&
-              jobInfo.milestoneDetails.map((milestone: any, index: number) => (
+            {jobInfo?.milestones &&
+              jobInfo.milestones.map((milestone: any, index: number) => (
                 <div
                   className=" px-10 max-sm:px-5 w-full border-t-[1px] border-[#B8B9B8] "
                   key={index}
@@ -437,8 +441,8 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                       />
                       <div className="flex flex-col  gap-1">
                         <h6 className="text-lg font-semibold max-sm:text-sm">
-                          {milestone?.milestoneDuration &&
-                            milestone?.milestoneDuration}
+                          {milestone?.timeFrame?.number}{" "}
+                          {milestone?.timeFrame?.period}
                         </h6>
                         <p className="text-[#474C48]   max-sm:text-xs">
                           Milestone duration
@@ -455,9 +459,9 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                       />
                       <div className="flex flex-col gap-1">
                         <h6 className="text-lg font-semibold max-sm:text-sm">
-                          ₦
-                          {milestone?.milestoneAmount &&
-                            numberWithCommas(milestone?.milestoneAmount)}
+                          {jobInfo?.currency}{" "}
+                          {milestone?.amount &&
+                            numberWithCommas(milestone?.amount)}
                         </h6>
                         <p className="text-[#474C48]   max-sm:text-xs">
                           Amount
@@ -470,8 +474,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                       Milestone details
                     </h6>
                     <p className=" my-5 text-[#303632]   max-sm:text-xs">
-                      {milestone?.milestoneDescription &&
-                        milestone?.milestoneDescription}
+                      {milestone?.achievement && milestone?.achievement}
                     </p>
                   </div>
                 </div>

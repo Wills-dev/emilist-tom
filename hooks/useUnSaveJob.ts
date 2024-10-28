@@ -1,11 +1,9 @@
 import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import toast from "react-hot-toast";
-
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
-import { promiseErrorFunction, toastOptions } from "@/helpers";
+import { promiseErrorFunction } from "@/helpers";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useUnsaveJob = () => {
   const { currentUser } = useContext(AuthContext);
@@ -19,10 +17,8 @@ export const useUnsaveJob = () => {
     }
     try {
       setIsLoading(true);
-      await axiosInstance.delete(
-        `/unsave-job?user_id=${currentUser?.unique_id}&job_id=${jobId}`
-      );
-      toast.success(`You have successfully unsaved this job `, toastOptions);
+      await axiosInstance.post(`/jobs/unlike-job/${jobId}`);
+      // toast.success(`You have successfully unsaved this job `, toastOptions);
       setRerenderr((prev) => !prev);
       setIsLoading(false);
     } catch (error: any) {

@@ -1,8 +1,8 @@
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "@/utils/AuthState";
 import { promiseErrorFunction } from "@/helpers";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useGetUserSavedJobs = () => {
   const { currentUser } = useContext(AuthContext);
@@ -11,7 +11,7 @@ export const useGetUserSavedJobs = () => {
   const [allUserSavedJobs, setAllUserSavedJobs] = useState<any>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [search, setSearch] = useState("");
+
   const ITEMS_PER_PAGE = 10;
 
   const handlePageChange = (newPage: number) => {
@@ -19,17 +19,14 @@ export const useGetUserSavedJobs = () => {
   };
 
   const getAllUserSavedJobs: any = async () => {
-    const userId = currentUser?.unique_id;
     if (currentUser) {
       try {
-        const data = await axiosInstance.get(`/saved-jobs/${userId}`);
-        if (data?.data?.message === "No saved jobs found for the user") {
-          setAllUserSavedJobs([]);
-        } else {
-          setAllUserSavedJobs(data?.data?.saved_jobs);
-          const totalJobs = data?.data?.saved_jobs?.length;
-          setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
-        }
+        const { data } = await axiosInstance.get(
+          `/jobs/fetch-liked-jobs?page=${currentPage}&limit=10`
+        );
+        setAllUserSavedJobs(data?.data?.jobs);
+        const totalJobs = data?.data?.totalLikedJobs;
+        setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
       } catch (error: any) {
         console.log("error getting user saved jobs", error);
         promiseErrorFunction(error);
@@ -43,38 +40,9 @@ export const useGetUserSavedJobs = () => {
     getAllUserSavedJobs();
   }, [currentUser]);
 
-  const allUserSavedJobsData = useMemo(() => {
-    let computedJobs = allUserSavedJobs;
-
-    if (search) {
-      computedJobs =
-        computedJobs &&
-        computedJobs?.filter(
-          (job: any) =>
-            job.category.toLowerCase().includes(search.toLowerCase()) ||
-            job.expertlevel.toLowerCase().includes(search.toLowerCase()) ||
-            job.location.toLowerCase().includes(search.toLowerCase()) ||
-            job.projecttitle.toLowerCase().includes(search.toLowerCase()) ||
-            job.projecttype.toLowerCase().includes(search.toLowerCase()) ||
-            job.service.toLowerCase().includes(search.toLowerCase()) ||
-            job.type.toLowerCase().includes(search.toLowerCase())
-        );
-    }
-
-    return (
-      computedJobs &&
-      computedJobs?.slice(
-        (currentPage - 1) * ITEMS_PER_PAGE,
-        (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-      )
-    );
-  }, [allUserSavedJobs, currentPage, search]);
-
   return {
     saveLoading,
-    allUserSavedJobsData,
     allUserSavedJobs,
-    search,
     handlePageChange,
     currentPage,
     totalPages,

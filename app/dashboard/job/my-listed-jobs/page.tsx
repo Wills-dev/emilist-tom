@@ -20,7 +20,6 @@ const MyListedJobs = () => {
   const {
     allUserJobs,
     loading,
-    allUserJobsData,
     search,
     handleChange,
     handlePageChange,
@@ -97,14 +96,14 @@ const MyListedJobs = () => {
                 ) : (
                   <>
                     {" "}
-                    {allUserJobs?.length > 0 && allUserJobsData.length < 1 ? (
+                    {allUserJobs?.length < 0 && search ? (
                       <p className="">
                         No job matched your search, Trying search for something
                         else
                       </p>
                     ) : (
                       <>
-                        {allUserJobsData?.map((job: any, index: number) => (
+                        {allUserJobs?.map((job: any, index: number) => (
                           <div
                             className="w-full p-4  shadow-md rounded-xl"
                             key={index}
@@ -115,18 +114,18 @@ const MyListedJobs = () => {
                               link={link}
                               title="Share job"
                               textToCopy={
-                                job?.jobType === "biddable"
+                                job?.type === "biddable"
                                   ? `https://emilist.com/dashboard/job/info/biddable/${job._id}`
-                                  : job?.jobType === "regular"
+                                  : job?.type === "regular"
                                   ? `https://emilist.com/dashboard/job/info/regular/${job._id}`
                                   : `https://emilist.com/dashboard/job/info/direct/${job._id}`
                               }
                             />
                             <Link
                               href={
-                                job?.jobType === "biddable"
+                                job?.type === "biddable"
                                   ? `/dashboard/job/info/biddable/${job._id}`
-                                  : job?.jobType === "regular"
+                                  : job?.type === "regular"
                                   ? `/dashboard/job/info/regular/${job._id}`
                                   : `/dashboard/job/info/direct/${job._id}`
                               }
@@ -134,11 +133,7 @@ const MyListedJobs = () => {
                             >
                               <div className="flex-c-b w-full pb-5">
                                 <h5 className="sm:text-2xl font-semibold truncate">
-                                  {job?.jobTitle
-                                    ? job?.jobTitle
-                                    : job?.projectTitle
-                                    ? job?.projectTitle
-                                    : null}
+                                  {job?.title && job?.title}
                                 </h5>
                                 <div className="flex-c justify-end gap-3 max-sm:gap-2 ">
                                   <h6 className="text-sm font-medium max-sm:text-xs">
@@ -149,36 +144,27 @@ const MyListedJobs = () => {
                                 </div>
                               </div>
                               <div className="flex-c-b">
-                                {job?.jobType === "biddable" ? (
+                                {job?.type === "biddable" ? (
                                   <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs">
                                     Max price: ₦
-                                    {job?.maxPrice
-                                      ? numberWithCommas(job.maxPrice)
-                                      : job.amount
-                                      ? numberWithCommas(job.amount)
-                                      : numberWithCommas(job?.budget)}
+                                    {job?.maximumPrice &&
+                                      numberWithCommas(job.maximumPrice)}
                                   </h6>
                                 ) : (
                                   <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs whitespace-nowrap">
                                     Budget: ₦
-                                    {job?.amount
-                                      ? numberWithCommas(job.amount)
-                                      : job.budget}
+                                    {job?.budget &&
+                                      numberWithCommas(job.budget)}
                                   </h6>
                                 )}
                                 <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs">
-                                  Job duration:{" "}
-                                  {job?.projectDuration && job?.projectDuration}{" "}
-                                  {job?.durationType && job?.durationType}
+                                  Job duration: {job?.duration?.number}{" "}
+                                  {job?.duration?.period}{" "}
                                 </h6>
                               </div>
 
                               <p className="text-[#303632] text-sm font-medium max-sm:text-xs py-2">
-                                {job?.Description
-                                  ? job?.Description.length < 450
-                                    ? job?.Description
-                                    : `${job?.Description?.slice(0, 450)}...`
-                                  : job?.description
+                                {job?.description
                                   ? job?.description?.length < 450
                                     ? job?.description
                                     : `${job.description?.slice(0, 450)}...`
@@ -187,17 +173,6 @@ const MyListedJobs = () => {
                             </Link>
 
                             <div className=" flex-c gap-8 flex-wrap max-sm:gap-4 max-sm:justify-between">
-                              <p className="flex-c text-[#737774] font-medium max-sm:text-xs py-2 whitespace-nowrap ">
-                                {" "}
-                                <Image
-                                  src="/assets/icons/location.svg"
-                                  alt="location"
-                                  width={20}
-                                  height={20}
-                                  className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 mr-2"
-                                />
-                                {job?.location && job?.location}
-                              </p>
                               <div className="flex-c justify-end gap-2 max-sm:gap-4 ">
                                 {" "}
                                 <Image
@@ -208,10 +183,8 @@ const MyListedJobs = () => {
                                   className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
                                 />
                                 <p className="text-[#303632] text-sm font-medium max-sm:text-xs whitespace-nowrap ">
-                                  {job?.applicants?.length
-                                    ? job?.applicants?.length
-                                    : job.applicants
-                                    ? job.applicants
+                                  {job?.applications
+                                    ? job?.applications?.length
                                     : 0}{" "}
                                   Applicants
                                 </p>
