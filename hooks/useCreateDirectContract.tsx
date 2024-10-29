@@ -27,12 +27,10 @@ export const useCreateDirectContract = () => {
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
   const [milestonesData, setMilestonesData] = useState<MilestonePer[]>([
     {
-      id: "",
       duration: "",
       durationType: "day",
       details: "",
       amount: 0,
-      milestoneStatus: "ongoing",
       percentage: 0,
     },
   ]);
@@ -104,12 +102,10 @@ export const useCreateDirectContract = () => {
       const newMilestones = [...milestonesData];
       while (newMilestones.length < newMilestoneNumber) {
         newMilestones.push({
-          id: "",
           duration: "",
           durationType: "day",
           details: "",
           amount: 0,
-          milestoneStatus: "ongoing",
           percentage: 0,
         });
       }
@@ -230,7 +226,6 @@ export const useCreateDirectContract = () => {
 
   //modified milestone data to suit what's expected on the backend
   const transformedData = milestonesData.map((milestone, index) => ({
-    [`milestoneId`]: milestone.id,
     [`milestoneDuration`]: `${milestone.duration} ${
       Number(milestone.duration) > 1
         ? milestone.durationType + "s"
@@ -238,7 +233,6 @@ export const useCreateDirectContract = () => {
     }`,
     [`milestoneDescription`]: milestone.details,
     [`milestoneAmount`]: milestone.amount,
-    [`milestoneStatus`]: milestone.milestoneStatus,
   }));
 
   function handleMilestoneFieldError() {
@@ -354,12 +348,10 @@ export const useCreateDirectContract = () => {
         setSelectedImages([]);
         setMilestonesData([
           {
-            id: "",
             duration: "",
             durationType: "Day",
             details: "",
             amount: "",
-            milestoneStatus: "ongoing",
             percentage: 0,
           },
         ]);
