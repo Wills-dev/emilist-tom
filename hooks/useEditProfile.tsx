@@ -6,7 +6,6 @@ import toast from "react-hot-toast";
 import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
-import { useUploadFile } from "./useUploadFile";
 
 type ProfileDetail = {
   fullName: string;
@@ -23,12 +22,12 @@ type ProfileDetail = {
 export const useEditProfile = () => {
   const router = useRouter();
   const { currentUser } = useContext(AuthContext);
-  const { loadFile, handleSubmitFile, file, isImageTrue } = useUploadFile();
 
   const [load, setLoad] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showSave, setShowSave] = useState(false);
   const [profileImage, setProfileImage] = useState<any>({});
-  const [currentImage, setCurrentImage] = useState<string>(file ? file : "");
+  const [currentImage, setCurrentImage] = useState<string>("");
   const [profileDetails, setProfileDetails] = useState<ProfileDetail>({
     fullName: "",
     number1: "",
@@ -41,12 +40,10 @@ export const useEditProfile = () => {
     email: "",
   });
 
-  const [editingField, setEditingField] = useState<string | null>(null);
-  const [inputValue, setInputValue] = useState<string | number | null>(null);
+  const [editingField, setEditingField] = useState<boolean>(false);
 
-  const handleEdit = (field: string, value: string | number) => {
-    setEditingField(field);
-    setInputValue(value);
+  const handleEdit = () => {
+    setEditingField(true);
   };
 
   function handleChangeFile(event: any) {
@@ -59,20 +56,23 @@ export const useEditProfile = () => {
         );
         return;
       }
+      setShowSave(true);
       setProfileImage(file);
       setCurrentImage(URL.createObjectURL(file));
     }
   }
 
   const handleCancel = () => {
-    setEditingField(null);
-    setInputValue(null);
+    setEditingField(false);
   };
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
-    setInputValue(e.target.value);
+    const { name, value } = e.target;
+    setProfileDetails({ ...profileDetails, [name]: value });
   };
 
   const getUser = async () => {
@@ -80,15 +80,15 @@ export const useEditProfile = () => {
     try {
       const { data } = await axiosInstance.get(`/auth/current-user`);
       setProfileDetails({
-        fullName: data?.data?.fullName && data?.data?.fullName,
-        number1: data?.data?.number1 && data?.data?.number1,
-        bio: data?.data?.bio && data?.data?.bio,
-        location: data?.data?.location && data?.data?.location,
-        language: data?.data?.language && data?.data?.language,
-        number2: data?.data?.number2 && data?.data?.number2,
-        whatsAppNo: data?.data?.whatsAppNo && data?.data?.whatsAppNo,
-        gender: data?.data?.gender && data?.data?.gender,
-        email: data?.data?.email && data?.data?.email,
+        fullName: data?.data?.fullName ? data?.data?.fullName : "",
+        number1: data?.data?.number1 ? data?.data?.number1 : "",
+        bio: data?.data?.bio ? data?.data?.bio : "",
+        location: data?.data?.location ? data?.data?.location : "",
+        language: data?.data?.language ? data?.data?.language : "",
+        number2: data?.data?.number2 ? data?.data?.number2 : "",
+        whatsAppNo: data?.data?.whatsAppNo ? data?.data?.whatsAppNo : "",
+        gender: data?.data?.gender ? data?.data?.gender : "",
+        email: data?.data?.email ? data?.data?.email : "",
       });
       setCurrentImage(data?.data?.profileImage && data?.data?.profileImage);
     } catch (error: any) {
@@ -109,22 +109,41 @@ export const useEditProfile = () => {
       return;
     }
 
-    const updatedDetails = { ...profileDetails, [editingField!]: inputValue };
     setLoading(true);
-    if (profileImage?.name) {
-      await handleSubmitFile(profileImage);
-    }
+    const {
+      fullName,
+      number1,
+      bio,
+      location,
+      language,
+      number2,
+      whatsAppNo,
+      gender,
+    } = profileDetails;
+
     try {
-      await axiosInstance.patch(`/auth/update-profile`, {
-        [editingField!]: inputValue,
-        profileImage: file && file,
+      const formData = new FormData();
+
+      if (fullName) formData.append("fullName", fullName);
+      if (number1) formData.append("number1", number1);
+      if (bio) formData.append("bio", bio);
+      if (location) formData.append("location", location);
+      if (language) formData.append("language", language);
+      if (number2) formData.append("number2", number2);
+      if (whatsAppNo) formData.append("whatsAppNo", whatsAppNo);
+      if (gender) formData.append("gender", gender);
+
+      formData.append("image", profileImage);
+
+      await axiosInstance.patch(`/auth/update-profile`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
       toast.success(`Profile detail updated successfully`, toastOptions);
-
-      setProfileDetails(updatedDetails);
-      setEditingField(null);
-      setInputValue(null);
+      setEditingField(false);
+      setShowSave(false);
     } catch (error: any) {
       console.error(error);
       promiseErrorFunction(error);
@@ -133,67 +152,8 @@ export const useEditProfile = () => {
     }
   };
 
-  const renderInput = (field: string, type: string, value: string | number) => {
-    if (editingField === field) {
-      switch (type) {
-        case "text":
-          return (
-            <input
-              type="text"
-              name={field}
-              id={field}
-              value={inputValue || ""}
-              onChange={handleChange}
-              className="outline-none h-8 border-b-1 border-green-300 w-full bg-white"
-            />
-          );
-        case "email":
-          return (
-            <input
-              type="email"
-              name={field}
-              id={field}
-              value={inputValue || ""}
-              onChange={handleChange}
-              className="outline-none h-8 border-b-1 border-green-300  w-full bg-white"
-            />
-          );
-        case "number":
-          return (
-            <input
-              type="number"
-              name={field}
-              id={field}
-              value={inputValue || ""}
-              onChange={handleChange}
-              className="outline-none h-8 border-b-1 border-green-300  w-full bg-white"
-            />
-          );
-        case "textarea":
-          return (
-            <textarea
-              name={field}
-              id={field}
-              value={inputValue || ""}
-              onChange={handleChange}
-              className="outline-none  border-b-1 border-green-300 bg-white"
-            />
-          );
-        default:
-          return null;
-      }
-    } else {
-      return (
-        <>
-          <p className="h-8">{value}</p>
-        </>
-      );
-    }
-  };
-
   return {
     profileDetails,
-    renderInput,
     handleUpdate,
     handleCancel,
     handleEdit,
@@ -203,7 +163,8 @@ export const useEditProfile = () => {
     profileImage,
     handleChangeFile,
     currentImage,
-    loadFile,
-    isImageTrue,
+    handleChange,
+    showSave,
+    setProfileDetails,
   };
 };
