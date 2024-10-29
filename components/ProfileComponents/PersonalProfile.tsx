@@ -15,7 +15,6 @@ const PersonalProfile = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const {
     profileDetails,
-    renderInput,
     handleUpdate,
     handleCancel,
     handleEdit,
@@ -25,8 +24,8 @@ const PersonalProfile = () => {
     profileImage,
     handleChangeFile,
     currentImage,
-    loadFile,
-    isImageTrue,
+    showSave,
+    setProfileDetails,
   } = useEditProfile();
 
   const {
@@ -50,7 +49,6 @@ const PersonalProfile = () => {
   return (
     <div>
       <LoadingOverlay loading={loading} />
-      <LoadingOverlay loading={loadFile} />
       {load ? (
         <div className="flex w-full min-h-[70vh] item-center justify-center text-green-500 mt-6">
           <span className="loading loading-bars loading-lg"></span>
@@ -90,7 +88,7 @@ const PersonalProfile = () => {
                     level 3
                   </p>
                 </div>
-                {profileImage?.name && !isImageTrue ? (
+                {profileImage?.name && showSave ? (
                   <button
                     onClick={handleUpdate}
                     type="button"
@@ -124,6 +122,12 @@ const PersonalProfile = () => {
             <VerifyModal onCancel={onCancel} isOpen={isModalOpen} />
           </div>
 
+          <div className="flex-c justify-end py-4">
+            <button className="custom-btn" onClick={handleEdit}>
+              Edit profile
+            </button>
+          </div>
+
           <div className="flex w-full gap-20 mt-8 max-lg:flex-col max-lg:gap-10 text-[#304155]">
             <div className="flex-1 flex-col flex gap-6 w-full">
               <div className="flex-1 flex lg:items-center md:gap-14 gap-10 max-lg:flex-col flex-wrap">
@@ -149,78 +153,240 @@ const PersonalProfile = () => {
                   </div>
                   <p className="h-8">{currentUser?.email}</p>
                 </div>
-
-                {[
-                  { label: "Full Name", field: "fullName", type: "text" },
-                  { label: "Phone Number1", field: "number1", type: "number" },
-                  { label: "Phone Number2", field: "number2", type: "number" },
-                  {
-                    label: "Whatsapp Number",
-                    field: "whatsAppNo",
-                    type: "number",
-                  },
-                  { label: "Location", field: "location", type: "text" },
-                  { label: "Gender", field: "gender", type: "text" },
-                  { label: "Bio", field: "bio", type: "textarea" },
-                  { label: "Language", field: "language", type: "textarea" },
-                ].map((row, index) => (
-                  <div
-                    key={index}
-                    className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full"
-                  >
-                    <div className="flex-c-b">
-                      <label htmlFor={row.field} className="font-semibold">
-                        {row.label}
-                      </label>{" "}
-                      {editingField === row.field ? (
-                        <div className="flex space-x-2">
-                          <button
-                            onClick={handleUpdate}
-                            className="text-primary-green font-semibold max-sm:text-sm"
-                          >
-                            Save
-                          </button>
-                          <button onClick={handleCancel}>
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={1.5}
-                              stroke="currentColor"
-                              className="h-4 w-4 text-red-500"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M6 18 18 6M6 6l12 12"
-                              />
-                            </svg>
-                          </button>
-                        </div>
-                      ) : (
-                        <button
-                          onClick={() =>
-                            handleEdit(
-                              row.field,
-                              (profileDetails as any)[row.field]
-                            )
-                          }
-                          className="text-primary-green font-semibold max-sm:text-sm"
-                        >
-                          Edit
-                        </button>
-                      )}
-                    </div>
-                    {renderInput(
-                      row.field,
-                      row.type,
-                      (profileDetails as any)[row.field]
-                    )}
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Full Name
+                    </label>{" "}
                   </div>
-                ))}
+                  {editingField ? (
+                    <input
+                      type="text"
+                      name="fullName"
+                      id="fullName"
+                      value={profileDetails.fullName}
+                      onChange={(e) =>
+                        setProfileDetails({
+                          ...profileDetails,
+                          fullName: e.target.value,
+                        })
+                      }
+                      className="outline-none h-8 border-b-1 border-green-300 w-full  px-2 bg-green-50"
+                    />
+                  ) : (
+                    <p className="h-8">
+                      {profileDetails?.fullName ? profileDetails?.fullName : ""}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Phone Number1
+                    </label>{" "}
+                  </div>
+                  {editingField ? (
+                    <input
+                      type="number"
+                      name="number1"
+                      id="number1"
+                      value={profileDetails.number1}
+                      onChange={(e) =>
+                        setProfileDetails({
+                          ...profileDetails,
+                          number1: e.target.value,
+                        })
+                      }
+                      className="outline-none h-8 border-b-1 border-green-300 w-full  px-2 bg-green-50"
+                    />
+                  ) : (
+                    <p className="h-8">
+                      {profileDetails?.number1 ? profileDetails?.number1 : ""}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Phone Number2
+                    </label>{" "}
+                  </div>
+                  {editingField ? (
+                    <input
+                      type="number"
+                      name="number2"
+                      id="number2"
+                      value={profileDetails?.number2}
+                      onChange={(e) =>
+                        setProfileDetails({
+                          ...profileDetails,
+                          number2: e.target.value,
+                        })
+                      }
+                      className="outline-none h-8 border-b-1 border-green-300 w-full  px-2 bg-green-50"
+                    />
+                  ) : (
+                    <p className="h-8">
+                      {profileDetails?.number2 ? profileDetails?.number2 : ""}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Whatsapp Number
+                    </label>{" "}
+                  </div>
+                  {editingField ? (
+                    <input
+                      type="number"
+                      name="whatsAppNo"
+                      id="whatsAppNo"
+                      value={profileDetails?.whatsAppNo}
+                      onChange={(e) =>
+                        setProfileDetails({
+                          ...profileDetails,
+                          whatsAppNo: e.target.value,
+                        })
+                      }
+                      className="outline-none h-8 border-b-1 border-green-300 w-full  px-2 bg-green-50"
+                    />
+                  ) : (
+                    <p className="h-8">
+                      {profileDetails?.whatsAppNo
+                        ? profileDetails?.whatsAppNo
+                        : ""}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Location
+                    </label>{" "}
+                  </div>
+                  {editingField ? (
+                    <input
+                      type="text"
+                      name="location"
+                      id="location"
+                      value={profileDetails.location}
+                      onChange={(e) =>
+                        setProfileDetails({
+                          ...profileDetails,
+                          location: e.target.value,
+                        })
+                      }
+                      className="outline-none h-8 border-b-1 border-green-300 w-full  px-2 bg-green-50"
+                    />
+                  ) : (
+                    <p className="h-8">
+                      {profileDetails?.location ? profileDetails?.location : ""}
+                    </p>
+                  )}
+                </div>
+
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Gender
+                    </label>{" "}
+                  </div>
+                  {editingField ? (
+                    <input
+                      type="text"
+                      name="gender"
+                      id="gender"
+                      value={profileDetails.gender}
+                      onChange={(e) =>
+                        setProfileDetails({
+                          ...profileDetails,
+                          gender: e.target.value,
+                        })
+                      }
+                      className="outline-none h-8 border-b-1 border-green-300 w-full  px-2 bg-green-50"
+                    />
+                  ) : (
+                    <p className="h-8">
+                      {profileDetails?.gender ? profileDetails?.gender : ""}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Bio
+                    </label>{" "}
+                  </div>
+                  {editingField ? (
+                    <textarea
+                      name="bio"
+                      id="bio"
+                      value={profileDetails?.bio}
+                      onChange={(e) =>
+                        setProfileDetails({
+                          ...profileDetails,
+                          bio: e.target.value,
+                        })
+                      }
+                      className="outline-none  border-b-1 border-green-300 px-2 bg-green-50"
+                    ></textarea>
+                  ) : (
+                    <p className="h-8">
+                      {profileDetails?.bio && profileDetails?.bio}
+                    </p>
+                  )}
+                </div>
+                <div className="flex flex-col gap-2 border-b-1 border-[#CBD5E1] focus-within:border-primary-green lg:w-[47%] w-full">
+                  <div className="flex-c-b">
+                    <label htmlFor="" className="font-semibold">
+                      Language
+                    </label>{" "}
+                  </div>
+                  {editingField ? (
+                    <input
+                      type="text"
+                      name="language"
+                      id="language"
+                      value={profileDetails.language}
+                      onChange={(e) =>
+                        setProfileDetails({
+                          ...profileDetails,
+                          language: e.target.value,
+                        })
+                      }
+                      className="outline-none h-8 border-b-1 border-green-300 w-full  px-2 bg-green-50"
+                    />
+                  ) : (
+                    <p className="h-8">
+                      {profileDetails?.language && profileDetails?.language}
+                    </p>
+                  )}
+                </div>
               </div>
             </div>
           </div>
+
+          <div className="flex gap-10 w-full py-8">
+            {editingField ? (
+              <>
+                <button className="custom-btn flex-1" onClick={handleUpdate}>
+                  Save changes
+                </button>
+                <button
+                  className="bg-slate-200 text-primary-green whitespace-nowrap transition-all duration-300 rounded-lg px-6 py-3 text-center flex-1"
+                  onClick={handleCancel}
+                >
+                  Cancel
+                </button>
+              </>
+            ) : (
+              <button className="custom-btn flex-1" onClick={handleEdit}>
+                Edit profile
+              </button>
+            )}
+          </div>
+
           <div className=" w-full">
             <h2 className="sm:text-lg font-semibold mt-8">Membership</h2>
             {/* before adding membership show this */}
