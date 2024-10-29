@@ -232,10 +232,7 @@ export const useListNewJob = () => {
   const transformedData = milestonesData.map((milestone, index) => ({
     [`timeFrame`]: {
       number: Number(milestone.duration),
-      period:
-        Number(milestone.duration) > 1
-          ? milestone.durationType + "s"
-          : milestone.durationType,
+      period: milestone.durationType + "s",
     },
     [`achievement`]: milestone.details,
     [`amount`]: milestone.amount,
@@ -345,10 +342,7 @@ export const useListNewJob = () => {
 
         const properProjectDuration = {
           number: Number(projectDuration),
-          period:
-            Number(projectDuration) > 1
-              ? projectDurationType + "s"
-              : projectDurationType,
+          period: projectDurationType + "s",
         };
 
         const payload: any = {

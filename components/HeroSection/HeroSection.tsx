@@ -66,11 +66,11 @@ const HeroSection = ({ currentLink }: Props) => {
           />
         ) : (
           <Image
-            src="/assets/images/heroImg.png"
+            src="/assets/dummyImages/emi.jpg"
             alt="menu"
             width={773}
             height={67}
-            className="object-contain w-full h-full"
+            className="object-contain w-full h-[300px]"
             priority
           />
         )}
