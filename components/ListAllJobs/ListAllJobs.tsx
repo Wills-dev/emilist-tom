@@ -20,7 +20,6 @@ const ListAllJobs = () => {
   const {
     isLoading,
     allJobs,
-    allJobsData,
     search,
     handleChange,
     getAllJobs,
@@ -33,8 +32,6 @@ const ListAllJobs = () => {
     filterService,
     setFilterName,
     setFilterService,
-    handleFilterJob,
-    loadFilter,
   } = useFetchJobs();
 
   return (
@@ -104,42 +101,46 @@ const ListAllJobs = () => {
           ) : (
             <>
               <div className="w-full flex flex-col border-1">
-                {allJobsData.map((job: any) => (
+                {allJobs?.map((job: any) => (
                   <div
-                    key={job.Id}
+                    key={job._id}
                     className="w-full p-4 border-b-1 hover:bg-gray-100 transition-all duration-300"
                   >
                     <Link href={`/jobs/info/`}>
                       <div className="flex-c-b w-full ">
                         <h5 className="sm:text-lg font-semibold">
-                          {job?.jobTitle && Capitalize(job?.jobTitle)}
+                          {job?.title && Capitalize(job?.title)}
                         </h5>
                         <div className="flex-c justify-end gap-3 max-sm:gap-2 ">
                           <h6 className="text-sm font-msdium max-sm:text-xs">
-                            {job?.Date && formatCreatedAt(job.Date)}
+                            {job?.createdAt && formatCreatedAt(job.createdAt)}
                           </h6>
                         </div>
                       </div>
 
                       <div className="flex-c-b pt-5 text-[#737774]">
                         <h6 className=" text-sm font-medium max-sm:text-xs">
-                          Budget: ₦
-                          {job?.Amount && numberWithCommas(job?.Amount)}
+                          {job?.type === "biddable" ? "Max price" : "Budget"}:{" "}
+                          {job?.currency}{" "}
+                          {job?.budget && numberWithCommas(job?.budget)}
+                          {job?.maximumPrice &&
+                            numberWithCommas(job?.maximumPrice)}
                         </h6>
                         <h6 className="text-sm font-medium max-sm:text-xs">
-                          Duration: {job?.projectDuration}
+                          Duration: {job?.duration?.number}{" "}
+                          {job?.duration?.period}
                         </h6>
                       </div>
-                      {job?.Description && job?.Description.length > 300 ? (
+                      {job?.description && job?.description.length > 300 ? (
                         <p className="font-medium text-sm py-2">
-                          {job?.Description.slice(0, 300)}...
+                          {job?.description.slice(0, 300)}...
                           <span className="underline text-primary-green">
                             Read more
                           </span>
                         </p>
                       ) : (
                         <p className="font-medium text-sm py-2">
-                          {job?.Description}
+                          {job?.description}
                         </p>
                       )}
                     </Link>
@@ -149,16 +150,16 @@ const ListAllJobs = () => {
                         <span className="text-xl">
                           <MdLocationOn />
                         </span>
-                        {job?.Location}
+                        {job?.location}
                       </p>
                       <div className="flex-c justify-end gap-1  ">
                         <span className="text-lg">
                           <HiUser />
                         </span>
                         <p className=" whitespace-nowrap ">
-                          {job?.noOfApplicants &&
-                            numberWithCommas(job?.noOfApplicants)}{" "}
-                          {job?.noOfApplicants > 1 ? "Applicants" : "Applicant"}
+                          {job?.applications &&
+                            numberWithCommas(job?.applications?.lenght)}{" "}
+                          {job?.applications > 1 ? "Applicants" : "Applicant"}
                         </p>
                       </div>
                       <button className="flex-c gap-1  whitespace-nowrap cursor-pointer hover:text-primary-green transition-all duration-300">

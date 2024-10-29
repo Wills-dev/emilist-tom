@@ -89,7 +89,7 @@ const DashboardJobContent = () => {
               <p className="py-2">No job listed</p>
             ) : (
               <>
-                {allJobs?.length < 0 && search ? (
+                {allJobs?.length < 1 && search ? (
                   <p className="py-2">
                     No result found, try searching for something else
                   </p>

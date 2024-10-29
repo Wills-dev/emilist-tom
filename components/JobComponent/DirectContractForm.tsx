@@ -375,20 +375,20 @@ const DirectContractForm = () => {
                   <div
                     key={index}
                     className={`flex items-center ${
-                      createDirectContractJob.expertLevel === level
+                      createDirectContractJob.expertLevel === level.number
                         ? "active-level"
                         : ""
                     }`}
                     onClick={() =>
                       setCreateDirectContractJob({
                         ...createDirectContractJob,
-                        expertLevel: level,
+                        expertLevel: level.number,
                       })
                     }
                   >
                     <Image
                       src={
-                        createDirectContractJob.expertLevel === level
+                        createDirectContractJob.expertLevel === level.number
                           ? "/assets/icons/circle-color.svg"
                           : "/assets/icons/circle.svg"
                       }
@@ -397,8 +397,8 @@ const DirectContractForm = () => {
                       height={25}
                       className="object-contain w-6 h-6"
                     />
-                    <label htmlFor={level} className="ml-3">
-                      {level}
+                    <label htmlFor={level.level} className="ml-3">
+                      {level.level}
                     </label>
                   </div>
                 ))}

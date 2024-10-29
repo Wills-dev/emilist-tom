@@ -265,27 +265,29 @@ const page = ({ params }: any) => {
                     <div
                       key={index}
                       className={`flex items-center ${
-                        editJobDetails.expertLevel === level
+                        editJobDetails.expertLevel === level.number
                           ? "active-level"
                           : ""
                       }`}
                       onClick={() =>
                         setEditJobDetails({
                           ...editJobDetails,
-                          expertLevel: level,
+                          expertLevel: level.number,
                         })
                       }
                     >
                       <div
                         className={`circle-icon ${
-                          editJobDetails.expertLevel === level ? "filled" : ""
+                          editJobDetails.expertLevel === level.number
+                            ? "filled"
+                            : ""
                         }`}
                       />
                       <label
-                        htmlFor={level}
+                        htmlFor={level.level}
                         className="ml-3 text-base text-[#303632]"
                       >
-                        {level}
+                        {level.level}
                       </label>
                     </div>
                   ))}
