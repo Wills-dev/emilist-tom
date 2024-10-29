@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect } from "react";
 
-import { IoLocationSharp } from "react-icons/io5";
 import { Popconfirm, PopconfirmProps } from "antd";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 import Pagination from "react-responsive-pagination";
@@ -45,8 +44,6 @@ const Lead = () => {
     getAllUserSavedJobs();
   }, [rerender, unsaveRerenderr, rerenderrr]);
 
-  const isSaved = (job: any) =>
-    allUserSavedJobs?.some((savedJob: any) => savedJob.id === job.Id);
   return (
     <JobDashboardLayout>
       <div className="grid  grid-cols-10">
