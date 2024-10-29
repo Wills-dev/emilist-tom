@@ -434,6 +434,23 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                   </div>
                 </div>
               </div>
+              <div className="px-10 max-sm:px-5 py-6 w-full">
+                <h6 className="text-lg font-semibold max-sm:text-sm font-inter">
+                  Files
+                </h6>
+                <div className="flex items-center w-full gap-10 pt-4 flex-wrap">
+                  {jobInfo?.jobFiles?.map((file: string, index: number) => (
+                    <Image
+                      key={index}
+                      src={file}
+                      alt="menu"
+                      width={61}
+                      height={61}
+                      className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
             <div className="col-span-3 max-lg:hidden max-h-max flex flex-col gap-6">
               <AboutJobOwner jobInfo={jobInfo} />
