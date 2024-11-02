@@ -10,7 +10,7 @@ import toast from "react-hot-toast";
 
 import { MilestonePer } from "@/types";
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import {
   handleInputFieldError,
   handleLoginError,
@@ -23,6 +23,7 @@ export const useCreateDirectContract = () => {
   const { currentUser } = useContext(AuthContext);
 
   const [loading, setLoading] = useState<boolean>(false);
+  const [location, setLocation] = useState<string>("");
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
   const [milestonesData, setMilestonesData] = useState<MilestonePer[]>([
@@ -43,8 +44,8 @@ export const useCreateDirectContract = () => {
     projectDuration: "",
     projectDurationType: "day",
     budget: "",
-    location: "",
-    expertLevel: "Level 4 & Above",
+    currency: "NGN",
+    expertLevel: "four",
     milestonesnumber: 1,
   });
 
@@ -215,7 +216,7 @@ export const useCreateDirectContract = () => {
       !createDirectContractJob.description ||
       !createDirectContractJob.projectDuration ||
       !createDirectContractJob.budget ||
-      !createDirectContractJob.location ||
+      !location ||
       !createDirectContractJob.expertLevel ||
       !createDirectContractJob.milestonesnumber
     ) {
@@ -226,13 +227,12 @@ export const useCreateDirectContract = () => {
 
   //modified milestone data to suit what's expected on the backend
   const transformedData = milestonesData.map((milestone, index) => ({
-    [`milestoneDuration`]: `${milestone.duration} ${
-      Number(milestone.duration) > 1
-        ? milestone.durationType + "s"
-        : milestone.durationType
-    }`,
-    [`milestoneDescription`]: milestone.details,
-    [`milestoneAmount`]: milestone.amount,
+    [`timeFrame`]: {
+      number: Number(milestone.duration),
+      period: milestone.durationType + "s",
+    },
+    [`achievement`]: milestone.details,
+    [`amount`]: milestone.amount,
   }));
 
   function handleMilestoneFieldError() {
@@ -244,10 +244,6 @@ export const useCreateDirectContract = () => {
       "Total milestones duration can't exceed project duration!",
       toastOptions
     );
-  }
-
-  function handleImageSelectionError() {
-    return toast.error("Please select an image file", toastOptions);
   }
 
   const handleSubmitPostJob: FormEventHandler<HTMLFormElement> = async (e) => {
@@ -265,16 +261,35 @@ export const useCreateDirectContract = () => {
       return handleInputFieldError();
     } else if (isAllMilestoneFilled()) {
       return handleMilestoneFieldError();
+    } else if (!location) {
+      toast.error("Please enter address", toastOptions);
     } else if (!isValid) {
       return handleMilestoneDurationError();
-    } else if (selectedImages.length === 0 || selectedImageFiles.length === 0) {
-      return handleImageSelectionError();
     } else if (!validateMilestoneAmounts(milestonesData)) {
       return toast.error(
         "Total milestone amount can't exceed or be below budget",
         toastOptions
       );
     } else {
+      const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+      if (!googleMapsApiKey) {
+        throw new Error("Google Maps API key is not defined.");
+      }
+      const response = await fetch(
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+          location
+        )}&key=${googleMapsApiKey}`
+      );
+      const data = await response.json();
+
+      if (data.status !== "OK") {
+        toast.error(
+          `Please enter a valid address from the suggestions.`,
+          toastOptions
+        );
+        return;
+      }
       setLoading(true);
       try {
         const {
@@ -285,46 +300,77 @@ export const useCreateDirectContract = () => {
           description,
           projectDuration,
           projectDurationType,
-          location,
           expertLevel,
-          milestonesnumber,
           budget,
+          currency,
         } = createDirectContractJob;
 
         //project duration
-        const properProjectDuration = ` ${
-          Number(projectDuration) > 1
-            ? projectDurationType + "s"
-            : projectDurationType
-        }`;
+        const properProjectDuration = {
+          number: Number(projectDuration),
+          period: projectDurationType + "s",
+        };
 
-        const createDirectContractJobData: any = {
+        const payload: any = {
           invite,
           projectTitle,
-          category,
-          narrow,
-          location,
-          description,
-          expertLevel,
-          projectDuration,
-          budget,
-          durationType: properProjectDuration,
-          milestonesNumber: milestonesnumber,
-          milestoneDetails: JSON.stringify(transformedData),
-          userId: currentUser?.unique_id,
+          title: projectTitle,
+          category: category,
+          service: narrow,
+          location: location,
+          description: description,
+          currency: currency,
+          budget: budget,
+          expertLevel: expertLevel,
+          duration: properProjectDuration,
+          milestones: transformedData,
+          achievementDetails: "gg",
         };
 
         const formData = new FormData();
 
-        for (const property in createDirectContractJobData) {
-          formData.append(property, createDirectContractJobData[property]);
+        formData.append("category", payload.category);
+        formData.append("service", payload.service);
+        formData.append("title", payload.title);
+        formData.append("description", payload.description);
+        formData.append("duration[number]", payload.duration.number);
+        formData.append("duration[period]", payload.duration.period);
+        formData.append("location", payload.location);
+        formData.append("expertLevel", payload.expertLevel);
+        formData.append("budget", payload.budget);
+        formData.append("type", "direct");
+        formData.append("achievementDetails", payload.achievementDetails);
+        formData.append("currency", payload.currency);
+
+        const emailPattern = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
+
+        if (emailPattern.test(payload.invite)) {
+          formData.append("email", payload?.invite);
+        } else {
+          formData.append("userName", payload?.invite);
         }
+
+        payload.milestones.forEach((milestone: any, index: number) => {
+          formData.append(
+            `milestones[${index}][timeFrame][number]`,
+            milestone.timeFrame.number
+          );
+          formData.append(
+            `milestones[${index}][timeFrame][period]`,
+            milestone.timeFrame.period
+          );
+          formData.append(
+            `milestones[${index}][achievement]`,
+            milestone.achievement
+          );
+          formData.append(`milestones[${index}][amount]`, milestone.amount);
+        });
 
         for (let i = 0; i < selectedImageFiles.length; i++) {
           formData.append("files", selectedImageFiles[i]);
         }
 
-        await axiosInstance.post(`/directcontract`, formData, {
+        await axiosInstance.post(`/jobs/create-job`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -339,11 +385,12 @@ export const useCreateDirectContract = () => {
           description: "",
           projectDuration: "",
           projectDurationType: "",
-          location: "",
           budget: "",
-          expertLevel: "Level 4 & Above",
+          currency: "NGN",
+          expertLevel: "four",
           milestonesnumber: 1,
         });
+        setLocation("");
         setSelectedImageFiles([]);
         setSelectedImages([]);
         setMilestonesData([
@@ -355,7 +402,7 @@ export const useCreateDirectContract = () => {
             percentage: 0,
           },
         ]);
-        router.push("/job/my-listed-jobs");
+        router.push("/dashboard/job/my-listed-jobs");
       } catch (error: any) {
         setLoading(false);
         console.log("error creating direct contract", error);
@@ -376,5 +423,7 @@ export const useCreateDirectContract = () => {
     selectedImages,
     setSelectedImages,
     updateMilestonesData,
+    location,
+    setLocation,
   };
 };

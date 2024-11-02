@@ -16,7 +16,6 @@ export const useGetJobInfo = () => {
       const { data } = await axiosInstance.get(
         `/jobs/fetch-job-by-id?id=${jobId}`
       );
-      console.log("data helloooooooo", data);
       setJobInfo(data?.data?.job);
       setAnalytics(data?.data);
       setCurrentMilestone(data?.data?.job?.milestones[0]);
