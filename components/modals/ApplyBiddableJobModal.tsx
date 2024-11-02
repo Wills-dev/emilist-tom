@@ -3,42 +3,55 @@ import React, { useEffect } from "react";
 import { Toaster } from "react-hot-toast";
 import { Modal } from "antd";
 
+interface Milestone {
+  milestoneId: string;
+  achievement: string;
+  amount: number;
+}
+
 interface Props {
   applyForBiddableJob: any;
   bidLoading: boolean;
-  setAmount: React.Dispatch<React.SetStateAction<number | string>>;
-  amount: number | string;
-  milestoneAmounts: number[];
-  milestonePercentage: number[];
-  handleMilestonePercentageChange: any;
+  setMaxPrice: React.Dispatch<React.SetStateAction<number | string>>;
+  maxPrice: number | string;
+  milestones: Milestone[];
   handleCancelBidModal: () => void;
   openBidModal: boolean;
   jobInfo: any;
-  handleBlur: () => void;
-  inputCount: number;
-  setInputCount: React.Dispatch<React.SetStateAction<number>>;
+  handleSetPercentage: (index: number, value: number) => void;
+  handleAchievementChange: (index: number, newAchievement: string) => void;
+  setMilestones: React.Dispatch<React.SetStateAction<Milestone[]>>;
+  setPercentage: React.Dispatch<React.SetStateAction<number[]>>;
+  percentage: number[];
 }
 
 const ApplyBiddableJobModal = ({
   applyForBiddableJob,
   bidLoading,
-  setAmount,
-  amount,
-  milestoneAmounts,
-  milestonePercentage,
-  handleMilestonePercentageChange,
+  setMaxPrice,
+  maxPrice,
+  handleSetPercentage,
+  handleAchievementChange,
+  setMilestones,
+  setPercentage,
+  percentage,
+  milestones,
   handleCancelBidModal,
   openBidModal,
   jobInfo,
-  handleBlur,
-  setInputCount,
 }: Props) => {
   useEffect(() => {
-    if (jobInfo?.milestoneDetails?.length > 0) {
-      const count = jobInfo?.milestoneDetails?.length;
-      setInputCount(count);
+    if (jobInfo?.milestones?.length > 0) {
+      setMilestones(
+        jobInfo?.milestones?.map((milestone: any) => ({
+          milestoneId: milestone._id,
+          achievement: milestone.achievement,
+          amount: 0,
+        }))
+      );
+      setPercentage(new Array(jobInfo?.milestones?.length).fill(0));
     }
-  }, [jobInfo?.milestoneDetails?.length]);
+  }, [jobInfo?.milestones?.length]);
 
   return (
     <Modal
@@ -46,11 +59,12 @@ const ApplyBiddableJobModal = ({
       onCancel={handleCancelBidModal}
       centered
       width={650}
+      footer={null}
     >
       <Toaster />
       <form
         className="w-full px-6 max-sm:px-1 py-3 max-sm:py-2 max-h-[80vh] h-[80vh] overflow-y-auto"
-        onSubmit={(e) => applyForBiddableJob(e, jobInfo?.Id)}
+        onSubmit={(e) => applyForBiddableJob(e, jobInfo?._id)}
       >
         <h2 className="text-[20px] font-[700] leading-[32px] max-sm:text-[16px] max-sm:leading-[20px] pb-5 ">
           Job Application
@@ -61,14 +75,15 @@ const ApplyBiddableJobModal = ({
               Project duration
             </p>
 
-            <p className=" min-w-full w-full  max-w-full rounded-lg h-12 px-4 bg-[#ececec] py-5 max-sm:text-[14px]">
-              {jobInfo?.projectDuration && jobInfo?.projectDuration}{" "}
+            <p className="expert-reg-input-div flex-c">
+              {jobInfo?.duration.number && jobInfo?.duration.number}{" "}
+              {jobInfo?.duration.period && jobInfo?.duration.period}
             </p>
           </div>
           <div className="w-full">
             <div className="py-2">
               <p className="text-[#5e625f]  text-[16px] font-[500] max-sm:text-[14px]">
-                Price
+                Total amount ({jobInfo?.currency})
               </p>
               <p className="text-xs text-primary-green">
                 Please enter your total amount for this job
@@ -78,9 +93,9 @@ const ApplyBiddableJobModal = ({
             <div className="w-full">
               <input
                 type="number"
-                className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-[14px] text-[#5e625f]"
-                value={amount}
-                onChange={(e) => setAmount(e.target.value)}
+                className="expert-reg-input"
+                value={maxPrice}
+                onChange={(e) => setMaxPrice(e.target.value)}
                 required
               />
             </div>
@@ -90,13 +105,13 @@ const ApplyBiddableJobModal = ({
               Milestone
             </p>
             <div className="w-full">
-              <p className="col-span-3 min-w-full w-full  max-w-full rounded-lg h-12 px-4 bg-[#ececec] py-5 max-sm:text-[14px]">
-                {jobInfo?.milestoneNumber && jobInfo?.milestoneNumber}{" "}
+              <p className="expert-reg-input-div flex-c">
+                {jobInfo?.milestones?.length && jobInfo?.milestones?.length}{" "}
               </p>
             </div>
           </div>
 
-          {jobInfo?.milestoneDetails?.map((mileStone: any, index: number) => (
+          {jobInfo?.milestones?.map((mileStone: any, index: number) => (
             <div key={index}>
               <div className="w-full">
                 <h2 className="text-[20px] font-[600] leading-[32px] max-sm:text-[16px] max-sm:leading-[20px] py-5 ">
@@ -105,18 +120,27 @@ const ApplyBiddableJobModal = ({
                 <p className="text-[#5e625f] py-2 text-[16px] font-[500] max-sm:text-[14px]">
                   Milestone duration
                 </p>
-                <p className=" min-w-full w-full  max-w-full rounded-lg h-12 px-4 bg-[#ececec] py-5 max-sm:text-[14px]">
-                  {mileStone?.milestoneDuration && mileStone?.milestoneDuration}{" "}
+                <p className="expert-reg-input-div flex-c">
+                  {mileStone?.timeFrame?.number && mileStone?.timeFrame?.number}{" "}
+                  {mileStone?.timeFrame?.period && mileStone?.timeFrame?.period}
                 </p>
               </div>
               <div className="w-full">
-                <p className="text-[#5e625f] py-2 text-[16px] font-[500] max-sm:text-[14px]">
-                  Details of whats to be achieved
+                <p className="text-[#5e625f] pt-4 text-[16px] font-[500] max-sm:text-[14px]">
+                  Details of what is to be achieved
                 </p>
-                <p className=" min-w-full w-full  max-w-full rounded-lg h-12 px-4 bg-[#ececec] py-5 max-sm:text-[14px]">
-                  {mileStone?.milestoneDescription &&
-                    mileStone?.milestoneDescription}{" "}
+                <p className="text-xs text-primary-green pb-3">
+                  Please type in what you intend to achieve on each milestone.
                 </p>
+                <textarea
+                  className=" min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1  max-sm:text-sm"
+                  rows={4}
+                  name="description"
+                  value={milestones[index]?.achievement}
+                  onChange={(e) =>
+                    handleAchievementChange(index, e.target.value)
+                  }
+                ></textarea>
               </div>
               <div className="w-full">
                 <div className="py-2">
@@ -125,34 +149,28 @@ const ApplyBiddableJobModal = ({
                   </p>
                   <p className="text-xs text-primary-green">
                     Please enter how many percentage (%) from the total amount
-                    you're collecting for this milestone.` `
+                    you're collecting for this milestone.
                   </p>
                 </div>
                 <div className="w-full">
                   <input
-                    className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-[14px] text-[#5e625f]"
-                    placeholder="20"
+                    className="expert-reg-input"
                     type="number"
-                    id={`milestonePercentage${index + 1}`}
-                    value={milestonePercentage[index]?.toString()}
+                    value={percentage[index]}
                     onChange={(e) =>
-                      handleMilestonePercentageChange(
-                        index,
-                        parseFloat(e.target.value) || 0
-                      )
+                      handleSetPercentage(index, Number(e.target.value))
                     }
-                    onBlur={handleBlur}
                     required
                   />
                 </div>
               </div>
               <div className="w-full">
                 <p className="text-[#5e625f] py-2 text-[16px] font-[500] max-sm:text-[14px]">
-                  Amount
+                  Amount ({jobInfo?.currency})
                 </p>
                 <div className="w-full">
-                  <p className=" min-w-full w-full  max-w-full rounded-lg min-h-12 px-4 bg-[#ececec] py-5 max-sm:text-[14px]">
-                    {milestoneAmounts[index] || 0}
+                  <p className="expert-reg-input-div flex-c">
+                    {milestones[index]?.amount || 0}
                   </p>
                 </div>
               </div>
@@ -161,11 +179,11 @@ const ApplyBiddableJobModal = ({
         </div>
         <div className="flex justify-center mt-5">
           {!bidLoading ? (
-            <button type="submit" className="proceed-btn">
+            <button type="submit" className="custom-btn">
               Proceed
             </button>
           ) : (
-            <button className=" text-primary-green">
+            <button className=" load-btn">
               <span className="loading loading-dots loading-lg"></span>
             </button>
           )}

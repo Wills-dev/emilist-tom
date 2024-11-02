@@ -45,7 +45,12 @@ export const toastOptions = {
 export const promiseErrorFunction = (error: any) => {
   if (error?.response?.data?.message) {
     toast.error(`${error?.response?.data?.message}`, toastOptions);
-  } else if (error?.response?.data?.errors[0]) {
+  } else if (error?.response?.data?.detail) {
+    toast.error(`${error?.response?.data?.detail}`, toastOptions);
+  } else if (
+    error?.response?.data?.errors &&
+    error?.response?.data?.errors?.length > 0
+  ) {
     toast.error(`${error?.response?.data?.errors[0]}`, toastOptions);
   } else {
     return toast.error(`Internal Server Error! Contact support`, toastOptions);
@@ -94,9 +99,9 @@ export const formatCreatedAt = (date: Date): string => {
     if (minutesDiff < 1) {
       return "Just now";
     } else if (minutesDiff < 2 && minutesDiff >= 1) {
-      return `${minutesDiff} m`;
+      return `${minutesDiff}m`;
     } else {
-      return `${minutesDiff} m`;
+      return `${minutesDiff}m`;
     }
   } else if (hoursDiff < 24) {
     return `${hoursDiff}h`;

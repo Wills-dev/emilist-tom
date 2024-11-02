@@ -431,9 +431,7 @@ const ListNewJobForm = () => {
                           })
                         }
                       >
-                        <option defaultValue="Bricklayer">
-                          Select currency
-                        </option>
+                        <option defaultValue="">Select currency</option>
 
                         <option value="NGN" className="capitalize">
                           NGN

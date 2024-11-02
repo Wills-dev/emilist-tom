@@ -146,13 +146,13 @@ const MyListedJobs = () => {
                               <div className="flex-c-b">
                                 {job?.type === "biddable" ? (
                                   <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs">
-                                    Max price: ₦
+                                    Max price: {job?.currency}{" "}
                                     {job?.maximumPrice &&
                                       numberWithCommas(job.maximumPrice)}
                                   </h6>
                                 ) : (
                                   <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs whitespace-nowrap">
-                                    Budget: ₦
+                                    Budget: {job?.currency}{" "}
                                     {job?.budget &&
                                       numberWithCommas(job.budget)}
                                   </h6>

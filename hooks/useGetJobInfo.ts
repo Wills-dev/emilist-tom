@@ -9,6 +9,7 @@ export const useGetJobInfo = () => {
   const [jobInfo, setJobInfo] = useState<any>({});
   const [loading, setLoading] = useState<boolean>(true);
   const [currentMilestone, setCurrentMilestone] = useState<any>({});
+  const [analytics, setAnalytics] = useState<any>({});
 
   const getJobInfo = async (jobId: string) => {
     try {
@@ -17,9 +18,10 @@ export const useGetJobInfo = () => {
       );
       console.log("data helloooooooo", data);
       setJobInfo(data?.data?.job);
+      setAnalytics(data?.data);
       setCurrentMilestone(data?.data?.job?.milestones[0]);
     } catch (error: any) {
-      console.log("error getting biddable jobs", error);
+      console.log("error getting job info", error);
       toast.error("Network error", toastOptions);
     } finally {
       setLoading(false);
@@ -31,5 +33,6 @@ export const useGetJobInfo = () => {
     jobInfo,
     currentMilestone,
     setCurrentMilestone,
+    analytics,
   };
 };
