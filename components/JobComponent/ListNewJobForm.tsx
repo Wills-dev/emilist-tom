@@ -1,7 +1,6 @@
 "use client";
 
 import { useRef } from "react";
-
 import Image from "next/image";
 
 import { useJsApiLoader, StandaloneSearchBox } from "@react-google-maps/api";
@@ -141,22 +140,6 @@ const ListNewJobForm = () => {
             </p>
           </div>
         </div>
-        {/* <div className="w-full">
-          <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
-            Amount
-          </p>
-          <div className="w-full">
-            <input
-              type="number"
-              onKeyDown={handleKeyDown}
-                onWheel={handleWheel}
-              className="min-w-full w-full max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm text-[#282828]"
-              placeholder=""
-              value={milestone.amount}
-              onChange={(e) => handleInputChange(e, index, "amount")}
-            />
-          </div>
-        </div> */}
       </div>
     );
   });
