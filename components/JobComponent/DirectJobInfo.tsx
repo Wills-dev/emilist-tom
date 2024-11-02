@@ -279,7 +279,7 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
             </div>
           </div>
           <div className="col-span-3 max-lg:hidden max-h-max flex flex-col gap-6">
-            <AboutJobOwner jobInfo={jobInfo} />
+            {/* <AboutJobOwner jobInfo={jobInfo} analytics={analytics} /> */}
           </div>
           <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-[10px] py-10 ">
             <h4 className="px-10 max-sm:px-5 mb-2 text-[#000000] text-[20px] leading-[28px] font-semibold max-sm:text-[16px]">
