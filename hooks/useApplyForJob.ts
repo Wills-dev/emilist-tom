@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useApplyForJob = () => {
@@ -20,18 +20,13 @@ export const useApplyForJob = () => {
     }
     setIsLoading(true);
     try {
-      const userId = currentUser?.unique_id;
-      const applyDetails = {
-        userId,
-        isRequestQuote: false,
-        quote: "",
+      const payload = {
+        jobId,
+        type: "regular",
       };
-      await axiosInstance.post(`/applyRegularJob/${jobId}`, applyDetails);
+      await axiosInstance.post(`/jobs/apply-job`, payload);
       setRerender((prev) => !prev);
-      toast.success(
-        `You have successfully applied for this job `,
-        toastOptions
-      );
+      toast.success(`Application submitted!`, toastOptions);
     } catch (error: any) {
       console.log("error applying for regular job", error);
       promiseErrorFunction(error);

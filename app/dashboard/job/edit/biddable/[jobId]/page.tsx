@@ -1,16 +1,24 @@
 "use client";
 
-import { useContext, useEffect } from "react";
+import Image from "next/image";
+import { useContext, useEffect, useRef } from "react";
 
-import DashboardNav from "@/components/DashboardComponents/DashboardNav";
+import { useJsApiLoader, StandaloneSearchBox } from "@react-google-maps/api";
 
 import { AuthContext } from "@/utils/AuthState";
-import { levels } from "@/constants";
+import { category, levels, serviceList } from "@/constants";
+import { useDeleteJobImage } from "@/hooks/useDeleteJobImage";
 import { useEditBiddableJob } from "@/hooks/useEditBiddableJob";
+
+import DashboardNav from "@/components/DashboardComponents/DashboardNav";
+import LoadingOverlay from "@/components/LoadingOverlay/LoadingOverlay";
 
 const page = ({ params }: any) => {
   const { currentUser } = useContext(AuthContext);
   const jobId = params.jobId;
+
+  const { handleDeleteFetchedJobImage, isLoading, rerender } =
+    useDeleteJobImage();
 
   const {
     editJobDetails,
@@ -22,72 +30,131 @@ const page = ({ params }: any) => {
     handleMilestoneNumberChange,
     handleSubmit,
     setEditJobDetails,
+    handleMilestoneInputChange,
+    fetchedImages,
+    onSelectFile,
+    selectedImages,
+    setSelectedImages,
+    handleImageDelete,
   } = useEditBiddableJob();
+  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+  const autocompleteRef: any = useRef(null);
+
+  if (!googleMapsApiKey) {
+    throw new Error("Google Maps API key is not defined.");
+  }
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: googleMapsApiKey,
+    libraries: ["places"],
+  });
+
+  const handlePlacesChanged = () => {
+    // Access the Autocomplete instance using refs
+    const autocomplete = autocompleteRef.current;
+
+    if (autocomplete) {
+      const places = autocomplete.getPlaces();
+      if (places && places.length > 0) {
+        const selectedPlace = places[0];
+        setEditJobDetails((prevJob) => ({
+          ...prevJob,
+          location: selectedPlace.formatted_address || "",
+        }));
+      }
+    }
+  };
 
   useEffect(() => {
     getJobInfo(jobId);
-  }, [jobId, currentUser]);
+  }, [jobId, currentUser, rerender]);
 
-  const milestones = editJobDetails.milestoneDetails?.map(
-    (milestone, index) => {
-      return (
-        <div key={index} className="w-full">
-          <div className="w-full">
-            <h2 className="text-[20px] font-[600] leading-[32px] max-sm:text-base max-sm:leading-[20px] py-5 ">
-              Milestone {index + 1}
-            </h2>
-            <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
-              Milestone duration
-            </p>
-            <div className="w-full">
-              <input
-                type="text"
-                className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm text-[#282828]"
-                placeholder="20 days"
-                name="milestoneDuration"
-                value={milestone.milestoneDuration}
-                onChange={(e) => handleMilestoneChange(index, e)}
-              />
-            </div>
-          </div>
-          <div className="w-full">
-            <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
-              Details of what's to be achieved
-            </p>
-            <div className="w-full">
-              <textarea
-                className="min-w-full w-full max-w-full rounded-[10px]  px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:text-sm text-[#282828] py-2"
-                rows={8}
-                name="milestoneDescription"
-                value={milestone.milestoneDescription}
-                onChange={(e) => handleMilestoneChange(index, e)}
-              ></textarea>
-            </div>
-          </div>
-          <div className="w-full">
-            <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
-              Amount
-            </p>
-            <div className="w-full">
-              <input
-                type="number"
-                className="min-w-full w-full max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm text-[#282828]"
-                placeholder=""
-                name="milestoneAmount"
-                value={milestone.milestoneAmount}
-                onChange={(e) => handleMilestoneChange(index, e)}
-              />
+  const milestones = editJobDetails.milestones?.map((milestone, index) => {
+    return (
+      <div key={index} className="w-full">
+        <div className="w-full">
+          <h2 className="text-[20px] font-[600] leading-[32px] max-sm:text-base max-sm:leading-[20px] py-5 ">
+            Milestone {index + 1}
+          </h2>
+          <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
+            Milestone duration
+          </p>
+          <div className="w-full grid grid-cols-3 gap-4">
+            <input
+              type="number"
+              className="col-span-2 expert-reg-input"
+              placeholder="1"
+              name="number"
+              value={milestone?.timeFrame?.number}
+              onChange={(e) =>
+                handleMilestoneInputChange(
+                  index,
+                  "timeFrame",
+                  "number",
+                  e.target.value
+                )
+              }
+            />
+            <div className="col-span-1 expert-reg-input-div">
+              <select
+                className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
+                name="period"
+                value={milestone?.timeFrame?.period}
+                onChange={(e) =>
+                  handleMilestoneInputChange(
+                    index,
+                    "timeFrame",
+                    "period",
+                    e.target.value
+                  )
+                }
+              >
+                <option value="days">Day</option>
+                <option value="weeks">Week</option>
+                <option value="months">Month</option>
+              </select>
             </div>
           </div>
         </div>
-      );
-    }
-  );
+        <div className="w-full">
+          <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
+            Details of what's to be achieved
+          </p>
+          <div className="w-full">
+            <textarea
+              className="min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm"
+              rows={4}
+              name="achievement"
+              value={milestone.achievement}
+              onChange={(e) => handleMilestoneChange(index, e)}
+            ></textarea>
+          </div>
+        </div>
+        <div className="w-full">
+          <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
+            Amount
+          </p>
+          <div className="w-full">
+            <input
+              type="number"
+              className="expert-reg-input"
+              placeholder=""
+              name="amount"
+              value={milestone.amount}
+              onChange={(e) => handleMilestoneChange(index, e)}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  });
 
   return (
     <main className="relative">
+      <LoadingOverlay loading={isLoading} />
       <DashboardNav />
-      {loading ? (
+      {loading || !isLoaded ? (
         <div className="flex w-full min-h-[80vh] item-center justify-center text-green-500 mt-6">
           <span className="loading loading-bars loading-lg"></span>
         </div>
@@ -104,42 +171,24 @@ const page = ({ params }: any) => {
                     Select work industry
                   </p>
                   <div className="w-full">
-                    <div className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus-within:border-primary-green focus-within:border-[1px]  max-sm:h-[46px] text-[#282828]">
+                    <div className="expert-reg-input-div">
                       <select
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="category"
                         value={editJobDetails.category}
                         onChange={handleInputChange}
                       >
-                        <option defaultValue="Bricklayer">
-                          Select industry
-                        </option>
+                        <option defaultValue="">Select industry</option>
 
-                        <option value="Artisan">Artisan</option>
-                        <option value="Construction">Construction</option>
-                        <option value="Education">Education</option>
-                        <option value="Entertainment">Entertainment</option>
-                        <option value="Event Management">
-                          Event Management
-                        </option>
-                        <option value="Information Management">
-                          Information Management
-                        </option>
-                        <option value="Manufacturing">Manufacturing</option>
-                        <option value="Medical">Medical</option>
-                        <option value="Minning">Minning</option>
-                        <option value="Professional service">
-                          Professional service
-                        </option>
-                        <option value="Real Estate">Real Estate</option>
-                        <option value=" Food/restaurant">
-                          {" "}
-                          Food/restaurant
-                        </option>
-                        <option value="Utility">Utility</option>
-                        <option value="Waste Management">
-                          Waste Management
-                        </option>
+                        {category?.map((category, index) => (
+                          <option
+                            key={index}
+                            value={category}
+                            className="capitalize"
+                          >
+                            {category}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -149,29 +198,23 @@ const page = ({ params }: any) => {
                     Narrow down to a service
                   </p>
                   <div className="w-full">
-                    <div className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus-within:border-primary-green focus-within:border-[1px]  max-sm:h-[46px] text-[#282828]">
+                    <div className="expert-reg-input-div">
                       <select
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="service"
                         value={editJobDetails.service}
                         onChange={handleInputChange}
                       >
-                        <option defaultValue="Bricklayer">
-                          Select service
-                        </option>
-                        <option value="Bricklayer">Bricklayer</option>
-                        <option value="building materials">
-                          building materials
-                        </option>
-                        <option value=" plumbing materials">
-                          plumbing materials
-                        </option>
-                        <option value="computer">computer</option>
-                        <option value="computer assesories">
-                          computer assesories
-                        </option>
-                        <option value="Clothing">Clothing</option>
-                        <option value="Others">Others</option>
+                        <option defaultValue="">Select service</option>
+                        {serviceList?.map((service, index) => (
+                          <option
+                            key={index}
+                            value={service}
+                            className="capitalize"
+                          >
+                            {service}
+                          </option>
+                        ))}
                       </select>
                     </div>
                   </div>
@@ -183,10 +226,10 @@ const page = ({ params }: any) => {
                   <div className="w-full">
                     <input
                       type="text"
-                      className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm text-[#282828]"
+                      className=" expert-reg-input"
                       placeholder=""
                       name="jobTitle"
-                      value={editJobDetails.jobTitle}
+                      value={editJobDetails.title}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -197,32 +240,158 @@ const page = ({ params }: any) => {
                   </p>
                   <div className="w-full">
                     <textarea
-                      className=" min-w-full w-full  max-w-full rounded-[10px]  px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:text-sm text-[#282828] py-2"
-                      rows={8}
+                      className=" min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1  max-sm:text-sm"
+                      rows={4}
                       name="description"
                       value={editJobDetails.description}
                       onChange={handleInputChange}
                     ></textarea>
                   </div>
                 </div>
-
+                <div className="w-full">
+                  <label
+                    className=" flex-c gap-1 text-primary-green py-2 font-medium max-sm:text-sm cursor-pointer max-w-fit"
+                    htmlFor="attach-file"
+                  >
+                    <Image
+                      src="/assets/icons/add.svg"
+                      alt="logo"
+                      width={130}
+                      height={30}
+                      className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5"
+                    />
+                    Attach a file
+                  </label>
+                  <input
+                    type="file"
+                    id="attach-file"
+                    className="h-0 w-0 invisible"
+                    name="files"
+                    accept="image/*"
+                    onChange={onSelectFile}
+                  />
+                  <div className="flex-c gap-2 w-full flex-wrap">
+                    {selectedImages &&
+                      selectedImages.map((image, index) => {
+                        return (
+                          <div className="relative w-20 h-20" key={index}>
+                            <img
+                              src={image}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4 absolute bottom-0 right-0 text-red-600 font-bold bg-white border-gray-100 cursor-pointer"
+                              onClick={() => {
+                                setSelectedImages(
+                                  selectedImages?.filter((e) => e !== image)
+                                );
+                                handleImageDelete(index);
+                              }}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                              />
+                            </svg>
+                          </div>
+                        );
+                      })}
+                    {fetchedImages?.length > 0 &&
+                      fetchedImages.map((image: any, index: number) => {
+                        return (
+                          <div className="relative w-20 h-20" key={index}>
+                            <img
+                              src={image?.url}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4 absolute bottom-0 right-0 text-red-600 font-bold bg-white border-gray-100 cursor-pointer"
+                              onClick={() => {
+                                handleDeleteFetchedJobImage(image?.id);
+                              }}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                              />
+                            </svg>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
                 <div className="w-full">
                   <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
                     Project duration
                   </p>
-                  <div className="w-full">
+                  <div className="w-full grid grid-cols-3 gap-4">
                     <input
-                      type="text"
-                      className="min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm text-[#282828]"
-                      placeholder="1"
-                      name="projectDuration"
-                      value={editJobDetails.projectDuration}
+                      type="number"
+                      className="col-span-2 expert-reg-input"
+                      name="duration"
+                      value={editJobDetails?.duration?.number}
                       onChange={handleInputChange}
                     />
+                    <div className="col-span-1 expert-reg-input-div">
+                      <select
+                        className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
+                        name="period"
+                        value={editJobDetails?.duration?.period}
+                        onChange={handleInputChange}
+                      >
+                        <option value="days">Day</option>
+                        <option value="weeks">Week</option>
+                        <option value="months">Month</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 
                 <>
+                  <div className="w-full">
+                    <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
+                      Currency
+                    </p>
+                    <div className="w-full">
+                      <div className="expert-reg-input-div">
+                        <select
+                          className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
+                          name="currency"
+                          value={editJobDetails.currency}
+                          onChange={handleInputChange}
+                        >
+                          <option defaultValue="">Select currency</option>
+
+                          <option value="NGN" className="capitalize">
+                            NGN
+                          </option>
+                          <option value="USD" className="capitalize">
+                            USD
+                          </option>
+                          <option value="GBP" className="capitalize">
+                            GBP
+                          </option>
+                          <option value="EUR" className="capitalize">
+                            EUR
+                          </option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
                   <div className="w-full">
                     <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
                       Maxinum price
@@ -230,10 +399,9 @@ const page = ({ params }: any) => {
                     <div className="w-full">
                       <input
                         type="number"
-                        className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm text-[#282828]"
-                        placeholder="₦250,000"
-                        name="maxPrice"
-                        value={editJobDetails.maxPrice}
+                        className="expert-reg-input"
+                        name="maximumPrice"
+                        value={editJobDetails.maximumPrice}
                         onChange={handleInputChange}
                       />
                     </div>
@@ -246,8 +414,7 @@ const page = ({ params }: any) => {
                     <div className="w-full">
                       <input
                         type="text"
-                        className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm text-[#282828]"
-                        placeholder="₦5,000"
+                        className="expert-reg-input"
                         name="bidRange"
                         value={editJobDetails.bidRange}
                         onChange={handleInputChange}
@@ -257,18 +424,25 @@ const page = ({ params }: any) => {
                 </>
 
                 <div className="w-full">
-                  <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
+                  <p className="text-[#5e625f] pt-2 font-medium max-sm:text-sm">
                     Location
                   </p>
+                  <p className="text-xs text-primary-green pb-2">
+                    Please enter a valid address from the suggestions.
+                  </p>
                   <div className="w-full">
-                    <input
-                      type="text"
-                      className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm text-[#282828]"
-                      placeholder="Lagos, Nigeria"
-                      name="location"
-                      value={editJobDetails.location}
-                      onChange={handleInputChange}
-                    />
+                    <StandaloneSearchBox
+                      onLoad={(ref) => (autocompleteRef.current = ref)}
+                      onPlacesChanged={handlePlacesChanged}
+                    >
+                      <input
+                        type="text"
+                        className="expert-reg-input"
+                        name="location"
+                        value={editJobDetails.location}
+                        onChange={handleInputChange}
+                      />
+                    </StandaloneSearchBox>
                   </div>
                 </div>
               </div>
@@ -292,12 +466,16 @@ const page = ({ params }: any) => {
                         })
                       }
                     >
-                      <div
-                        className={`circle-icon ${
+                      <Image
+                        src={
                           editJobDetails.expertLevel === level.number
-                            ? "filled"
-                            : ""
-                        }`}
+                            ? "/assets/icons/circle-color.svg"
+                            : "/assets/icons/circle.svg"
+                        }
+                        alt="menu"
+                        width={25}
+                        height={25}
+                        className="object-contain w-6 h-6"
                       />
                       <label
                         htmlFor={level.level}
@@ -312,7 +490,7 @@ const page = ({ params }: any) => {
                   <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
                     Milestone
                   </p>
-                  <div className="min-w-full w-full max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus-within:border-primary-green focus-within:border-[1px] max-sm:h-[46px] text-[#282828]">
+                  <div className="expert-reg-input-div">
                     <select
                       className="bg-[#ececec] outline-none min-w-full w-full h-full max-w-full max-sm:text-sm"
                       name="milestoneNumber"

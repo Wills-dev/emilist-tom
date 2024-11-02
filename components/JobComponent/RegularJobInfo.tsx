@@ -8,14 +8,13 @@ import { AnimatePresence } from "framer-motion";
 
 import { AuthContext } from "@/utils/AuthState";
 import { useDeleteJob } from "@/hooks/useDeleteJob";
+import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 import { useApplyForJob } from "@/hooks/useApplyForJob";
 import { useAcceptQuote } from "@/hooks/useAcceptQuote";
 import { useRequestQuote } from "@/hooks/useRequestQuote";
-import { useDeleteApplicant } from "@/hooks/useDeleteApplicant";
-import { useGetRegularJobInfo } from "@/hooks/useGetRegularJobInfo";
 import { useWithdrawApplication } from "@/hooks/useWithdrawApplication";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
-import { useAcceptRegularApplicant } from "@/hooks/useAcceptRegularApplicant";
+import { useUpdateApplicationStatus } from "@/hooks/useUpdateApplicationStatus";
 
 import AboutJobOwner from "./AboutJobOwner";
 import QuoteModal from "../modals/QuoteModal";
@@ -24,7 +23,7 @@ import RegularApplicants from "./RegularApplicants";
 import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
-import { useGetJobInfo } from "@/hooks/useGetJobInfo";
+import { getStatusClass } from "@/constants";
 
 interface RegularJobInfoProps {
   jobId: string;
@@ -40,7 +39,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const { loading, getJobInfo, jobInfo } = useGetJobInfo();
+  const { loading, getJobInfo, jobInfo, analytics } = useGetJobInfo();
   const { handleApplyFofJob, isLoading, rerender } = useApplyForJob();
   const { requestQuote, requestLoading, rerenderr } = useRequestQuote();
   const { acceptQuote, loadingAcceptQuote, acceptQuoteRerender } =
@@ -51,11 +50,9 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
     handleWithdrawApplicationFofJob,
   } = useWithdrawApplication();
 
-  const { acceptRegularApplicant, loadingAccept, acceptRerender } =
-    useAcceptRegularApplicant();
+  const { updateApplicationStatus, loadingAccept, acceptRerender } =
+    useUpdateApplicationStatus();
   const { handleDeleteJob, isDeleteLoading } = useDeleteJob();
-  const { removeApplicant, loadingRemove, removeRerender } =
-    useDeleteApplicant();
 
   const toggleActionButton = () => {
     setShowActionDropdown((prev) => !prev);
@@ -81,9 +78,13 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
   });
 
   const isApplied = () =>
-    jobInfo?.Applicants?.some(
-      (userApplied: any) => userApplied?.applicantId === currentUser?.unique_id
+    jobInfo?.applications?.some(
+      (userApplied: any) => userApplied?.user?._id === currentUser?._id
     );
+
+  const currentUserApplication = jobInfo?.applications?.find(
+    (applicant: any) => applicant?.user?._id === currentUser?._id
+  );
 
   const onCancelPromoModal = () => {
     setIsPromoModalOpen(false);
@@ -98,7 +99,6 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
     rerenderr,
     rerenderWithdraw,
     acceptRerender,
-    removeRerender,
     acceptQuoteRerender,
   ]);
 
@@ -124,7 +124,6 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
       <LoadingOverlay loading={isLoading} />
       <LoadingOverlay loading={isWithdrawLoading} />
       <LoadingOverlay loading={loadingAccept} />
-      <LoadingOverlay loading={loadingRemove} />
       <LoadingOverlay loading={requestLoading} />
       <LoadingOverlay loading={loadingAcceptQuote} />
 
@@ -169,7 +168,16 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
               </div>
             </div>
           )}
-          <div className="col-span-9 max-lg:col-span-12 flex flex-col w-full bg-white rounded-lg py-10 ">
+          <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg pb-10 max-h-fit">
+            <div className="flex justify-end pt-4 pb-10  px-10 max-sm:px-5">
+              <p
+                className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                  jobInfo.status
+                )} `}
+              >
+                {jobInfo?.status}
+              </p>
+            </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5">
               <div className="flex-c-b">
                 <h5 className="text-3xl font-semibold max-sm:text-lg">
@@ -224,7 +232,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                 </div>
               )}
             </div>
-            <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 flex flex-col gap-3">
+            <div className="w-full px-10 max-sm:px-5 py-6 flex flex-col gap-3">
               <h5 className="text-primary-green sm:text-lg font-medium ]">
                 {jobInfo?.category && Capitalize(jobInfo.category)}
               </h5>
@@ -234,18 +242,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                     Posted{" "}
                     {jobInfo?.createdAt && formatCreatedAt(jobInfo.createdAt)}
                   </p>
-                  <div className="flex items-center gap-1">
-                    <Image
-                      src="/assets/icons/location.svg"
-                      alt="menu"
-                      width={20}
-                      height={20}
-                      className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
-                    />
-                    <p className="text-[#1A201B]   max-sm:text-xs">
-                      {jobInfo?.location && Capitalize(jobInfo?.location)}
-                    </p>
-                  </div>
+
                   <p className="  max-sm:text-xs">
                     <span className="text-[#1A201B] font-semibold">
                       Job ID:
@@ -263,8 +260,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                               className="bg-[#FF5D7A] px-[20px] py-[12px] text-[#FCFEFD] rounded-lg cursor-pointer font-bold whitespace-nowrap flex-c justify-center  max-sm:py-[8px] max-sm:text-sm"
                               onClick={() =>
                                 handleWithdrawApplicationFofJob(
-                                  jobId,
-                                  "regular"
+                                  currentUserApplication?._id
                                 )
                               }
                             >
@@ -285,6 +281,20 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                     ) : null}
                   </>
                 )}
+              </div>
+            </div>
+            <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">
+              <div className="flex items-center gap-1">
+                <Image
+                  src="/assets/icons/location.svg"
+                  alt="location"
+                  width={20}
+                  height={20}
+                  className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5"
+                />
+                <p className="text-[#1A201B] max-sm:text-xs">
+                  {jobInfo?.location && Capitalize(jobInfo?.location)}
+                </p>
               </div>
             </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">
@@ -389,31 +399,32 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                 </div>
               </div>
             </div>
-            <div className="px-10 max-sm:px-5 py-6 w-full">
-              <h6 className="text-lg font-semibold max-sm:text-sm font-inter">
-                Files
-              </h6>
-              <div className="flex items-center w-full gap-10 pt-4 flex-wrap">
-                {jobInfo?.jobFiles?.map((file: string, index: number) => (
-                  <Image
-                    key={index}
-                    src={file}
-                    alt="menu"
-                    width={61}
-                    height={61}
-                    className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
-                  />
-                ))}
+            {jobInfo?.jobFiles?.length > 0 && (
+              <div className="px-10 max-sm:px-5 py-6 w-full">
+                <h6 className="text-lg font-semibold max-sm:text-sm font-inter">
+                  Files
+                </h6>
+                <div className="flex items-center w-full gap-2 pt-4 flex-wrap">
+                  {jobInfo?.jobFiles?.map((file: any, index: number) => (
+                    <Image
+                      key={index}
+                      src={file?.url}
+                      alt="menu"
+                      width={61}
+                      height={61}
+                      className="object-cover w-[61px] h-[70px] max-sm:w-[40px] max-sm:h-[40px]"
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <div className="col-span-3 max-lg:hidden max-h-max flex flex-col gap-6">
-            <AboutJobOwner jobInfo={jobInfo} />
+            <AboutJobOwner jobInfo={jobInfo} analytics={analytics} />
             <RegularApplicants
               jobInfo={jobInfo}
               requestQuote={requestQuote}
-              acceptRegularApplicant={acceptRegularApplicant}
-              removeApplicant={removeApplicant}
+              updateApplicationStatus={updateApplicationStatus}
               acceptQuote={acceptQuote}
             />
           </div>
@@ -427,9 +438,18 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                   className=" px-10 max-sm:px-5 w-full border-t-[1px] border-[#B8B9B8] "
                   key={index}
                 >
-                  <h6 className=" my-5  font-semibold max-sm:text-[13px]">
-                    Milestone {index + 1}
-                  </h6>
+                  <div className="flex-c-b">
+                    <h6 className=" my-5 font-semibold max-sm:text-xs">
+                      Milestone {index + 1}
+                    </h6>
+                    <p
+                      className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                        milestone.status
+                      )} `}
+                    >
+                      {milestone?.status}
+                    </p>
+                  </div>
                   <div className="flex  gap-10 max-sm:gap-5">
                     <div className=" flex gap-2">
                       <Image
@@ -479,6 +499,15 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                   </div>
                 </div>
               ))}
+          </div>
+          <div className="max-lg:col-span-12 lg:hidden max-h-max flex flex-col gap-6">
+            <AboutJobOwner jobInfo={jobInfo} analytics={analytics} />
+            <RegularApplicants
+              jobInfo={jobInfo}
+              requestQuote={requestQuote}
+              updateApplicationStatus={updateApplicationStatus}
+              acceptQuote={acceptQuote}
+            />
           </div>
         </div>
       )}

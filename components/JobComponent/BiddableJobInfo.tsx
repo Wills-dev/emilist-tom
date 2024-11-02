@@ -6,19 +6,16 @@ import { useContext, useEffect, useState } from "react";
 
 import { AnimatePresence } from "framer-motion";
 
+import { getStatusClass } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
-import { useSaveJob } from "@/hooks/useSaveJob";
-import { useUnsaveJob } from "@/hooks/useUnSaveJob";
 import { useDeleteJob } from "@/hooks/useDeleteJob";
 import { useAcceptQuote } from "@/hooks/useAcceptQuote";
+import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 import { useRequestQuote } from "@/hooks/useRequestQuote";
-import { useDeleteApplicant } from "@/hooks/useDeleteApplicant";
-import { useGetUserSavedJobs } from "@/hooks/useGetUserSavedJobs";
-import { useGetBiddableJobInfo } from "@/hooks/useGetBiddableJobInfo";
-import { useWithdawApplication } from "@/hooks/useWithdawApplication";
+import { useWithdrawApplication } from "@/hooks/useWithdrawApplication";
 import { useApplyForBiddableJob } from "@/hooks/useApplyForBiddableJob";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
-import { useAcceptBiddableApplicant } from "@/hooks/useAcceptBiddableApplicant";
+import { useUpdateApplicationStatus } from "@/hooks/useUpdateApplicationStatus";
 
 import AddQoute from "./AddQoute";
 import Applicants from "./Applicants";
@@ -29,7 +26,6 @@ import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ApplyBiddableJobModal from "../modals/ApplyBiddableJobModal";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
-import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 
 interface BiddableJobInfoProps {
   jobId: string;
@@ -44,37 +40,33 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
   const [isPromoModalOpen, setIsPromoModalOpen] = useState<boolean>(false);
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
 
-  const { handleSaveJob, rerender } = useSaveJob();
-  const { handleUnsaveJob, unsaveRerenderr } = useUnsaveJob();
   const { handleDeleteJob, isDeleteLoading } = useDeleteJob();
-  const { loading, getJobInfo, jobInfo } = useGetJobInfo();
+  const { loading, getJobInfo, jobInfo, analytics } = useGetJobInfo();
   const { requestQuote, requestLoading, rerenderr } = useRequestQuote();
-  const { removeApplicant, loadingRemove, removeRerender } =
-    useDeleteApplicant();
   const { acceptQuote, loadingAcceptQuote, acceptQuoteRerender } =
     useAcceptQuote();
-  const { acceptBiddableApplicant, loadingAccept, acceptRerender } =
-    useAcceptBiddableApplicant();
+  const { updateApplicationStatus, loadingAccept, acceptRerender } =
+    useUpdateApplicationStatus();
   const {
     rerenderWithdraw,
     isWithdrawLoading,
     handleWithdrawApplicationFofJob,
-  } = useWithdawApplication();
+  } = useWithdrawApplication();
   const {
     applyForBiddableJob,
     bidLoading,
-    setAmount,
-    amount,
-    milestoneAmounts,
-    milestonePercentage,
-    inputCount,
-    setInputCount,
-    handleMilestonePercentageChange,
+    handleSetPercentage,
+    setMaxPrice,
+    maxPrice,
+    milestones,
     handleCancelBidModal,
     openBidModal,
     setOpenBidModal,
     applyRerender,
-    handleBlur,
+    handleAchievementChange,
+    setMilestones,
+    setPercentage,
+    percentage,
   } = useApplyForBiddableJob();
 
   const toggleActionButton = () => {
@@ -101,9 +93,13 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
   });
 
   const isApplied = () =>
-    jobInfo?.applicants?.some(
-      (userApplied: any) => userApplied?.applicantId === currentUser?.unique_id
+    jobInfo?.applications?.some(
+      (userApplied: any) => userApplied?.user?._id === currentUser?._id
     );
+
+  const currentUserApplication = jobInfo?.applications?.find(
+    (applicant: any) => applicant?.user?._id === currentUser?._id
+  );
 
   const onCancelPromoModal = () => {
     setIsPromoModalOpen(false);
@@ -119,23 +115,17 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
     jobId,
     currentUser,
     rerenderr,
-    rerender,
-    unsaveRerenderr,
     applyRerender,
     acceptRerender,
     rerenderWithdraw,
-    removeRerender,
     acceptQuoteRerender,
   ]);
-
-  const isSaved = "";
 
   return (
     <section className="py-28 padding-x bg-[#F0FDF5] min-h-screen">
       <LoadingOverlay loading={requestLoading} />
       <LoadingOverlay loading={loadingAccept} />
       <LoadingOverlay loading={isWithdrawLoading} />
-      <LoadingOverlay loading={loadingRemove} />
       <LoadingOverlay loading={loadingAcceptQuote} />
 
       {/* confirm if you want to delete material */}
@@ -167,7 +157,16 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
               openModal={openModal}
               setOpenModal={setOpenModal}
             />
-            <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg py-10  max-h-fit">
+            <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg pb-10 max-h-fit">
+              <div className="flex justify-end pt-4 pb-10  px-10 max-sm:px-5">
+                <p
+                  className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                    jobInfo.status
+                  )} `}
+                >
+                  {jobInfo?.status}
+                </p>
+              </div>
               <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5">
                 <div className="flex-c-b">
                   <h5 className="text-3xl font-semibold max-sm:text-lg pb-3">
@@ -232,18 +231,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                       Posted{" "}
                       {jobInfo?.createdAt && formatCreatedAt(jobInfo.createdAt)}
                     </p>
-                    <div className="flex items-center gap-1">
-                      <Image
-                        src="/assets/icons/location.svg"
-                        alt="location"
-                        width={20}
-                        height={20}
-                        className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5"
-                      />
-                      <p className="text-[#1A201B] max-sm:text-xs">
-                        {jobInfo?.location && Capitalize(jobInfo?.location)}
-                      </p>
-                    </div>
+
                     <p className="max-sm:text-xs">
                       <span className="text-[#1A201B] font-semibold">
                         Job ID:
@@ -260,8 +248,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                               className="bg-[#FF5D7A] px-[20px] py-[12px] text-[#FCFEFD] rounded-lg cursor-pointer font-bold whitespace-nowrap flex-c justify-center max-sm:py-[8px] max-sm:text-sm"
                               onClick={() =>
                                 handleWithdrawApplicationFofJob(
-                                  jobId,
-                                  "biddable"
+                                  currentUserApplication?._id
                                 )
                               }
                             >
@@ -278,21 +265,6 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                         </>
                       ) : null}
 
-                      {isSaved ? (
-                        <button
-                          className=" px-[20px] py-[12px] border-1 border-red-500 rounded-lg cursor-pointer font-bold font-exo whitespace-nowrap flex-c justify-center max-sm:py-[8px] max-sm:text-sm text-red-500"
-                          onClick={() => handleUnsaveJob(jobId)}
-                        >
-                          Unsave
-                        </button>
-                      ) : (
-                        <button
-                          className=" px-[20px] py-[12px] border-1 rounded-lg cursor-pointer font-bold font-exo whitespace-nowrap flex-c justify-center max-sm:py-[8px] max-sm:text-sm"
-                          onClick={() => handleSaveJob(jobId)}
-                        >
-                          Save
-                        </button>
-                      )}
                       <button
                         className="bg-primary-green px-[20px] py-[12px] text-[#fcfefd] rounded-lg cursor-pointer font-bold font-exo whitespace-nowrap flex justify-center items-center  max-sm:py-[8px] max-sm:text-sm"
                         onClick={handleOpen}
@@ -310,25 +282,37 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                       <ApplyBiddableJobModal
                         applyForBiddableJob={applyForBiddableJob}
                         bidLoading={bidLoading}
-                        setAmount={setAmount}
-                        amount={amount}
-                        milestoneAmounts={milestoneAmounts}
-                        milestonePercentage={milestonePercentage}
-                        handleMilestonePercentageChange={
-                          handleMilestonePercentageChange
-                        }
+                        milestones={milestones}
+                        handleSetPercentage={handleSetPercentage}
+                        setMaxPrice={setMaxPrice}
+                        maxPrice={maxPrice}
                         handleCancelBidModal={handleCancelBidModal}
                         openBidModal={openBidModal}
                         jobInfo={jobInfo}
-                        handleBlur={handleBlur}
-                        inputCount={inputCount}
-                        setInputCount={setInputCount}
+                        handleAchievementChange={handleAchievementChange}
+                        setMilestones={setMilestones}
+                        setPercentage={setPercentage}
+                        percentage={percentage}
                       />
 
                       {/* chat modal */}
                       {openChat && <ChatModal handleOpen={handleOpen} />}
                     </div>
                   )}
+                </div>
+              </div>
+              <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">
+                <div className="flex items-center gap-1">
+                  <Image
+                    src="/assets/icons/location.svg"
+                    alt="location"
+                    width={20}
+                    height={20}
+                    className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5"
+                  />
+                  <p className="text-[#1A201B] max-sm:text-xs">
+                    {jobInfo?.location && Capitalize(jobInfo?.location)}
+                  </p>
                 </div>
               </div>
               <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">
@@ -434,31 +418,32 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                   </div>
                 </div>
               </div>
-              <div className="px-10 max-sm:px-5 py-6 w-full">
-                <h6 className="text-lg font-semibold max-sm:text-sm font-inter">
-                  Files
-                </h6>
-                <div className="flex items-center w-full gap-10 pt-4 flex-wrap">
-                  {jobInfo?.jobFiles?.map((file: string, index: number) => (
-                    <Image
-                      key={index}
-                      src={file}
-                      alt="menu"
-                      width={61}
-                      height={61}
-                      className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
-                    />
-                  ))}
+              {jobInfo?.jobFiles?.length > 0 && (
+                <div className="px-10 max-sm:px-5 py-6 w-full">
+                  <h6 className="text-lg font-semibold max-sm:text-sm font-inter">
+                    Files
+                  </h6>
+                  <div className="flex items-center w-full gap-2 pt-4 flex-wrap">
+                    {jobInfo?.jobFiles?.map((file: any, index: number) => (
+                      <Image
+                        key={index}
+                        src={file?.url}
+                        alt="menu"
+                        width={61}
+                        height={61}
+                        className="object-cover w-[61px] h-[70px] max-sm:w-[40px] max-sm:h-[40px] "
+                      />
+                    ))}
+                  </div>
                 </div>
-              </div>
+              )}
             </div>
             <div className="col-span-3 max-lg:hidden max-h-max flex flex-col gap-6">
-              <AboutJobOwner jobInfo={jobInfo} />
+              <AboutJobOwner jobInfo={jobInfo} analytics={analytics} />
               <Applicants
                 jobInfo={jobInfo}
                 requestQuote={requestQuote}
-                acceptBiddableApplicant={acceptBiddableApplicant}
-                removeApplicant={removeApplicant}
+                updateApplicationStatus={updateApplicationStatus}
                 acceptQuote={acceptQuote}
               />
             </div>
@@ -472,9 +457,19 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     className=" px-10 max-sm:px-5 w-full border-t-1 border-[#B8B9B8] "
                     key={index}
                   >
-                    <h6 className=" my-5 font-semibold max-sm:text-xs">
-                      Milestone {index + 1}
-                    </h6>
+                    <div className="flex-c-b">
+                      <h6 className=" my-5 font-semibold max-sm:text-xs">
+                        Milestone {index + 1}
+                      </h6>
+                      <p
+                        className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                          milestone.status
+                        )} `}
+                      >
+                        {milestone?.status}
+                      </p>
+                    </div>
+
                     <div className="flex  gap-10 max-sm:gap-5">
                       <div className=" flex gap-2">
                         <Image
@@ -524,6 +519,15 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     </div>
                   </div>
                 ))}
+            </div>
+            <div className="col-span-12 lg:hidden max-h-max flex flex-col gap-6">
+              <AboutJobOwner jobInfo={jobInfo} analytics={analytics} />
+              <Applicants
+                jobInfo={jobInfo}
+                requestQuote={requestQuote}
+                updateApplicationStatus={updateApplicationStatus}
+                acceptQuote={acceptQuote}
+              />
             </div>
           </div>
         </>

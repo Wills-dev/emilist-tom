@@ -144,3 +144,40 @@ export interface MembershipProps {
   startDate: string;
   endDate: string;
 }
+
+export type LevelType = "four" | "three" | "two" | "one";
+
+export type Milestone = {
+  timeFrame: {
+    number: number;
+    period: string;
+  };
+  achievement: string;
+  amount: number;
+};
+
+export type JobDetails = {
+  category: string;
+  service: string;
+  title: string;
+  description: string;
+  duration: {
+    number: number;
+    period: string;
+  };
+  type?: string;
+  location?: string;
+  expertLevel?: string;
+  milestones: Milestone[];
+  achievementDetails: string;
+  currency: string;
+  maximumPrice?: number;
+  bidRange?: number;
+  budget: number;
+  milestoneNumber: number;
+};
+
+export type TimeFrame = {
+  number: number;
+  period: string;
+};

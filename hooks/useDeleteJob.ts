@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useDeleteJob = () => {
@@ -20,8 +20,8 @@ export const useDeleteJob = () => {
     }
     setIsDeleteLoading(true);
     try {
-      await axiosInstance.delete(`/deleteJob/${jobId}`);
-      toast.success(`You have successfully removed job `, toastOptions);
+      await axiosInstance.delete(`/jobs/delete-job/${jobId}`);
+      toast.success(`Job deleted!`, toastOptions);
       router.push("/dashboard/job/my-listed-jobs");
     } catch (error: any) {
       setIsDeleteLoading(false);

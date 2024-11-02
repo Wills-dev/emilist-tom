@@ -1,3 +1,5 @@
+import { LevelType } from "@/types";
+
 export const category = [
   "Agriculture",
   "Artisan",
@@ -2995,6 +2997,14 @@ export const levels = [
   { level: "Level 1 & Above", number: "one" },
 ];
 
+export const levelCount: Record<LevelType, { level: string; rating: number }> =
+  {
+    four: { level: "Level 4", rating: 4 },
+    three: { level: "Level 3", rating: 3 },
+    two: { level: "Level 2", rating: 2 },
+    one: { level: "Level 1", rating: 1 },
+  };
+
 export const dashboardLinks = [
   { id: 1, name: "jobs", link: "/dashboard/job" },
 
@@ -3191,3 +3201,24 @@ export const profileLinks = [
     name: "Message & Notification",
   },
 ];
+
+export const getStatusClass = (status: string) => {
+  switch (status) {
+    case "pending":
+      return "text-yellow-400 bg-yellow-100";
+    case "accepted":
+      return "text-green-400 bg-green-100";
+    case "rejected":
+      return "text-red-400 bg-red-100";
+    case "active":
+      return "text-green-400 bg-green-100";
+    case "paused":
+      return "text-yellow-400 bg-yellow-100";
+    case "completed":
+      return "text-green-400 bg-green-100";
+    case "overdue":
+      return "text-[#FF5D7A] bg-[#FFF1F2]";
+    default:
+      return "";
+  }
+};

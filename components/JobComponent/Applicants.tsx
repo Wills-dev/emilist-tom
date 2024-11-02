@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useMemo, useState } from "react";
 
 import { AuthContext } from "@/utils/AuthState";
 import StarRating from "../StarRating/StarRating";
@@ -8,229 +8,189 @@ import { numberWithCommas } from "@/helpers";
 import BiddableApplicationDetails from "./BiddableApplicationDetails";
 import QuoteDetails from "./QuoteDetails";
 import ConfirmRemoveModal from "../modals/ConfirmRemovalModal";
+import { getStatusClass, levelCount } from "@/constants";
+import { LevelType } from "@/types";
+import BiddableJobApplicantActionDropdown from "./BiddableJobApplicantActionDropdown";
 
 interface Props {
   jobInfo: any;
   requestQuote: any;
-  acceptBiddableApplicant: any;
-  removeApplicant: any;
+  updateApplicationStatus: (
+    applicationId: string,
+    status: string
+  ) => Promise<void>;
   acceptQuote: any;
 }
 
 const Applicants = ({
   jobInfo,
   requestQuote,
-  acceptBiddableApplicant,
-  removeApplicant,
+  updateApplicationStatus,
   acceptQuote,
 }: Props) => {
   const { currentUser } = useContext(AuthContext);
 
   const [isOpen, setIsOpen] = useState(false);
-  const [openUserDropdown, setOpenUserDropdown] = useState(false);
-  const [isAnyAccepted, setIsAnyAccepted] = useState<boolean>(false);
-  const [openQuoteDetailsModal, setOpenQuoteDetailsModal] = useState(false);
-  const [applicantIndex, setAppllicantIndex] = useState<number | null>(null);
   const [openApplicationDetailsModal, setOpenApplicationDetailsModal] =
     useState(false);
-  const [acceptedApplicantId, setAcceptedApplicantId] = useState<string | null>(
-    null
-  );
-
-  const handleCancel = () => {
-    setOpenQuoteDetailsModal(false);
-  };
+  const [openUserDropdown, setOpenUserDropdown] = useState<{
+    isOpen: boolean;
+    applicantIndex: number | null;
+  }>({ isOpen: false, applicantIndex: null });
+  const [openQuoteDetailsModal, setOpenQuoteDetailsModal] = useState(false);
 
   const handleCancelApplicationModal = () => {
     setOpenApplicationDetailsModal(false);
   };
 
-  const onCancel = () => {
-    setIsOpen(false);
+  const onCancel = () => setIsOpen(false);
+  const handleCancel = () => setOpenQuoteDetailsModal(false);
+
+  const toggleUserDropdown = (index: number) => {
+    setOpenUserDropdown((prev) => ({
+      isOpen: !prev.isOpen,
+      applicantIndex: prev.isOpen ? null : index,
+    }));
   };
 
-  useEffect(() => {
-    const checkIsAccepted = jobInfo?.applicants?.some(
-      (applicant: any) => applicant?.isAccepted
+  const { isAnyAccepted, acceptedApplicantId } = useMemo(() => {
+    const acceptedApplicant = jobInfo?.applications?.find(
+      (applicant: any) => applicant.status === "accepted"
     );
-    const foundApplicant = jobInfo?.applicants?.find(
-      (applicant: any) => applicant?.isAccepted
-    );
-    if (foundApplicant) {
-      setAcceptedApplicantId(foundApplicant?.applicantId);
-    }
-    setIsAnyAccepted(checkIsAccepted);
-  }, [jobInfo?.applicants]);
+    return {
+      isAnyAccepted: Boolean(acceptedApplicant),
+      acceptedApplicantId: acceptedApplicant?.user?._id || null,
+    };
+  }, [jobInfo?.applications]);
 
   return (
     <>
-      {jobInfo?.applicants?.length > 0 && (
+      {jobInfo?.applications?.length > 0 && (
         <div className=" bg-white w-full rounded-lg py-10">
           <h5 className="sm:text-lg font-semibold mb-5 px-5">Applicants</h5>
-          <div className=" flex flex-col gap-2 ">
-            {jobInfo?.applicants?.map((applicant: any, index: number) => (
-              <div
-                className="w-full flex hover:bg-gray-50 transition-all duration-300 py-4 px-5"
-                key={index}
-              >
-                <Link
-                  href={`/experts/details/${applicant?.applicantId}`}
-                  className={`flex-1 flex w-full  ${
-                    acceptedApplicantId === applicant?.applicantId &&
-                    isAnyAccepted
-                      ? ""
-                      : acceptedApplicantId !== applicant?.applicantId &&
-                        isAnyAccepted
-                      ? "opacity-30"
-                      : ""
-                  }`}
+          <div className="flex lg:flex-col flex-row overflow-x-scroll gap-2">
+            {jobInfo?.applications?.map((applicant: any, index: number) => {
+              const applicationLength = jobInfo?.applications?.length;
+              const { level, rating } = levelCount[
+                applicant?.user?.level as LevelType
+              ] || {
+                level: "Level 5",
+                rating: 5,
+              };
+              return (
+                <div
+                  className="lg:w-full max-lg:min-w-[300px] w-[300px] flex max-lg:shadow-md px-5 max-lg:px-3 py-6 hover:bg-gray-50 transition-all duration-300 group"
+                  key={index}
                 >
-                  {" "}
-                  <Image
-                    src="/assets/dummyImages/profilePic.png"
-                    alt="menu"
-                    width={44}
-                    height={44}
-                    className="object-cover w-[44px] h-[44px] max-sm:w-[18px] max-sm:h-[18px] rounded-full mr-2"
-                  />
-                  <div className="flex-1 flex flex-col gap-1">
-                    <div className="flex items-center justify-between">
-                      <h6 className="text-[18px] leading-[24px] font-[500] max-sm:text-[14px]">
-                        {applicant?.firstName
-                          ? applicant?.firstName + " " + applicant?.lastName
-                          : applicant?.userName
-                          ? applicant?.userName
-                          : "No name"}
-                      </h6>
-                    </div>
-
-                    {applicant?.Level === "Level 4" ? (
-                      <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs">
-                        Level 4 | <StarRating rating={4} />
-                      </div>
-                    ) : applicant?.Level === "Level 3" ? (
-                      <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs">
-                        Level 3 | <StarRating rating={3} />
-                      </div>
-                    ) : applicant?.Level === "Level 2" ? (
-                      <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs">
-                        Level 2 | <StarRating rating={2} />
-                      </div>
-                    ) : applicant?.Level === "Level 1" ? (
-                      <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs">
-                        Level 1 | <StarRating rating={1} />
-                      </div>
+                  <Link
+                    href={`/experts/details/${applicant?.user?._id}`}
+                    className={`flex-1 flex w-full ${
+                      isAnyAccepted &&
+                      acceptedApplicantId !== applicant?.user?._id
+                        ? "opacity-30"
+                        : ""
+                    }`}
+                  >
+                    {applicant?.user?.profileImage ? (
+                      <Image
+                        src={applicant?.user?.profileImage}
+                        alt="menu"
+                        width={44}
+                        height={44}
+                        className="object-cover w-[44px] h-[44px] max-sm:w-[18px] max-sm:h-[18px] rounded-full mr-2"
+                      />
                     ) : (
-                      <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs">
-                        Level 5 | <StarRating rating={5} />
-                      </div>
+                      <p className="w-[44px] h-[44px] max-sm:w-[18px] max-sm:h-[18px] rounded-full bg-slate-200 mr-2 flex-c justify-center font-bold">
+                        {applicant?.user?.userName?.[0]?.toUpperCase()}
+                      </p>
                     )}
-                    <div className="flex-c gap-2">
-                      <h6 className="text-sm font-medium max-sm:text-xs">
-                        Bid price:
-                      </h6>
-                      <h6 className="text-sm font-medium max-sm:text-xs">
-                        ₦
-                        {applicant?.bidAmount &&
-                          numberWithCommas(applicant.bidAmount)}
-                      </h6>
+                    <div className="flex-1 flex flex-col gap-1">
+                      <div className="flex items-center justify-between">
+                        <h6 className="text-lg font-medium max-sm:text-sm truncate group-hover:text-primary-green duration-300 transition-all">
+                          {applicant?.user?.fullName
+                            ? applicant.user.fullName
+                            : applicant?.user?.userName}
+                        </h6>
+                      </div>
+                      <div className="flex items-center text-[#5E625F] text-sm whitespace-nowrap">
+                        {level} | <StarRating rating={rating} />
+                      </div>
+                      <div className="flex-c gap-2">
+                        <h6 className="text-sm font-medium max-sm:text-xs">
+                          Bid price:
+                        </h6>
+                        <h6 className="text-sm font-medium max-sm:text-xs">
+                          {jobInfo?.currency}{" "}
+                          {applicant?.biddableDetails?.maximumPrice &&
+                            numberWithCommas(
+                              applicant?.biddableDetails?.maximumPrice
+                            )}
+                        </h6>
+                      </div>
+                      {currentUser?._id === applicant?.user?._id ? (
+                        <p
+                          className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                            applicant.status
+                          )}`}
+                        >
+                          {applicant?.status}
+                        </p>
+                      ) : currentUser?._id === jobInfo?.userId?._id ? (
+                        <p
+                          className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                            applicant.status
+                          )}`}
+                        >
+                          {applicant?.status}
+                        </p>
+                      ) : null}
                     </div>
-                  </div>
-                </Link>
-                {currentUser.unique_id === jobInfo?.userDetails?.userId && (
-                  <div className="relative ">
-                    <Image
-                      src="/assets/icons/Menu.svg"
-                      height={20}
-                      width={20}
-                      alt="menu-dot"
-                      className="object-contain h-5 w-5 cursor-pointer"
-                      onClick={() => {
-                        setOpenUserDropdown((prev) => !prev);
-                        setAppllicantIndex(index);
-                      }}
-                    />
-                    {/* the user action dropdown */}
-                    {openUserDropdown && applicantIndex === index && (
-                      <div className="absolute top-8 -right-3/4 shadow-md rounded-md bg-white flex flex-col gap-3 px-6 max-sm:px-3 py-6 items-start z-10 text-[#282828]">
-                        <>
-                          <button
-                            className=" whitespace-nowrap max-sm:text-xs hover:text-primary-green transition-all"
-                            onClick={() => setOpenApplicationDetailsModal(true)}
-                          >
-                            View application
-                          </button>
-                          <BiddableApplicationDetails
-                            handleCancelApplicationModal={
-                              handleCancelApplicationModal
-                            }
-                            openApplicationDetailsModal={
-                              openApplicationDetailsModal
-                            }
-                            acceptBiddableApplicant={acceptBiddableApplicant}
-                            applicant={applicant}
-                            jobInfo={jobInfo}
-                            isAnyAccepted={isAnyAccepted}
-                          />
-                        </>
-                        {applicant?.isRequestQuote === false ? (
-                          <button
-                            className="whitespace-nowrap max-sm:text-xs hover:text-primary-green transition-all duration-300"
-                            onClick={() =>
-                              requestQuote(applicant?.applicantId, jobInfo?.Id)
-                            }
-                          >
-                            Request for Quote
-                          </button>
-                        ) : applicant?.isRequestQuote === true &&
-                          applicant?.Quote?.amount ? (
-                          <>
-                            <button
-                              className="whitespace-nowrap max-sm:text-xs hover:text-primary-green transition-all duration-300"
-                              onClick={() => setOpenQuoteDetailsModal(true)}
-                            >
-                              View Quote
-                            </button>
-                            <QuoteDetails
-                              openQuoteDetailsModal={openQuoteDetailsModal}
-                              handleCancel={handleCancel}
-                              Quote={applicant?.Quote}
-                              acceptQuote={acceptQuote}
-                              applicantId={applicant?.applicantId}
-                              jobId={jobInfo.Id}
-                            />
-                          </>
-                        ) : null}
-
-                        {acceptedApplicantId !== applicant?.applicantId && (
-                          <button
-                            className="whitespace-nowrap max-sm:text-xs hover:text-primary-green transition-all"
-                            onClick={() => setIsOpen(true)}
-                          >
-                            Remove
-                          </button>
-                        )}
-                        <ConfirmRemoveModal
-                          question={`Are you sure you want to remove ${
-                            applicant?.firstName
-                              ? applicant?.firstName + " " + applicant?.lastName
-                              : applicant?.userName
-                              ? applicant?.userName
-                              : "this applicant"
-                          } from this Job?`}
-                          isOpen={isOpen}
-                          onCancel={onCancel}
-                          removeApplicant={removeApplicant}
-                          applicantId={applicant?.applicantId}
-                          jobId={jobInfo?.Id}
-                        />
-                      </div>
-                    )}
-                    {/* end user of action dropdown */}
-                  </div>
-                )}
-              </div>
-            ))}
+                  </Link>
+                  {currentUser._id === jobInfo?.userId?._id && (
+                    <div className="relative h-fit">
+                      <Image
+                        src="/assets/icons/Menu.svg"
+                        alt="menu"
+                        width={20}
+                        height={20}
+                        className=" object-contain w-5 h-5 cursor-pointer"
+                        onClick={() => toggleUserDropdown(index)}
+                      />
+                      {/* the user action dropdown */}
+                      <BiddableJobApplicantActionDropdown
+                        openUserDropdown={openUserDropdown.isOpen}
+                        index={index}
+                        applicantIndex={openUserDropdown.applicantIndex}
+                        isAnyAccepted={isAnyAccepted}
+                        updateApplicationStatus={updateApplicationStatus}
+                        jobId={jobInfo?._id}
+                        applicant={applicant}
+                        requestQuote={requestQuote}
+                        setOpenQuoteDetailsModal={setOpenQuoteDetailsModal}
+                        openQuoteDetailsModal={openQuoteDetailsModal}
+                        handleCancel={handleCancel}
+                        acceptQuote={acceptQuote}
+                        setIsOpen={setIsOpen}
+                        isOpen={isOpen}
+                        onCancel={onCancel}
+                        applicationLength={applicationLength}
+                        setOpenApplicationDetailsModal={
+                          setOpenApplicationDetailsModal
+                        }
+                        handleCancelApplicationModal={
+                          handleCancelApplicationModal
+                        }
+                        openApplicationDetailsModal={
+                          openApplicationDetailsModal
+                        }
+                        jobInfo={jobInfo}
+                      />
+                      {/* end user of action dropdown */}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </div>
         </div>
       )}

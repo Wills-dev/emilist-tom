@@ -4,18 +4,19 @@ type Props = {
   isOpen: boolean;
   question: string;
   onCancel: () => void;
-  removeApplicant: any;
-  applicantId: string;
-  jobId: string;
+  updateApplicationStatus: (
+    applicationId: string,
+    status: string
+  ) => Promise<void>;
+  applicationId: string;
 };
 
 const ConfirmRemoveModal = ({
   isOpen,
   question,
   onCancel,
-  removeApplicant,
-  applicantId,
-  jobId,
+  updateApplicationStatus,
+  applicationId,
 }: Props) => {
   return (
     <Modal open={isOpen} onCancel={onCancel} centered width={400} footer={null}>
@@ -26,7 +27,7 @@ const ConfirmRemoveModal = ({
         <div className="flex items-center mt-6 gap-4">
           <button
             className="bg-primary-green rounded-lg text-white py-2 px-3 hover:bg-green-600 transition-all duration-300"
-            onClick={() => removeApplicant(applicantId, jobId)}
+            onClick={() => updateApplicationStatus(applicationId, "rejected")}
           >
             yes
           </button>

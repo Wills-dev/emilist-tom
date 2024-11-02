@@ -4,10 +4,11 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
-export const useAcceptBiddableApplicant = () => {
+export const useUpdateApplicationStatus = () => {
   const router = useRouter();
 
   const { currentUser } = useContext(AuthContext);
@@ -15,9 +16,9 @@ export const useAcceptBiddableApplicant = () => {
   const [acceptRerender, setRerender] = useState(false);
   const [loadingAccept, setLoadingAceept] = useState(false);
 
-  const acceptBiddableApplicant = async (
-    applicantId: string,
-    jobId: string
+  const updateApplicationStatus = async (
+    applicationId: string,
+    status: string
   ) => {
     if (!currentUser) {
       return router.push("/login");
@@ -25,24 +26,24 @@ export const useAcceptBiddableApplicant = () => {
     setLoadingAceept(true);
     try {
       const acceptDetails = {
-        applicantId,
-        jobId,
+        status,
       };
-      await axiosInstance.post(`/acceptBiddableJob`, acceptDetails);
-      toast.success(
-        `You have successfully accepted this applicant`,
-        toastOptions
+
+      await axiosInstance.patch(
+        `/jobs/update-application-status/${applicationId}`,
+        acceptDetails
       );
+      toast.success(`Applicant accepted!`, toastOptions);
       setRerender((prev) => !prev);
     } catch (error: any) {
-      console.log("error accepting biddable applicant", error);
+      console.log("error accepting regular job application", error);
       promiseErrorFunction(error);
     } finally {
       setLoadingAceept(false);
     }
   };
   return {
-    acceptBiddableApplicant,
+    updateApplicationStatus,
     loadingAccept,
     acceptRerender,
   };
