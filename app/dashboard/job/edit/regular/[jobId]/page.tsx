@@ -318,7 +318,7 @@ const page = ({ params }: any) => {
                               stroke="currentColor"
                               className="w-4 h-4 absolute bottom-0 right-0 text-red-600 font-bold bg-white border-gray-100 cursor-pointer"
                               onClick={() => {
-                                handleDeleteFetchedJobImage(image?.id);
+                                handleDeleteFetchedJobImage(jobId, image?.id);
                               }}
                             >
                               <path
