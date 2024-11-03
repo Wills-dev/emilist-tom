@@ -10,7 +10,7 @@ import ShareLink from "@/components/modals/ShareLink";
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 
 import { useGetAllJobByAUser } from "@/hooks/useGetAllJobByAUser";
-import { formatCreatedAt, numberWithCommas } from "@/helpers";
+import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 import { CiSearch } from "react-icons/ci";
 
 const MyListedJobs = () => {
@@ -173,6 +173,9 @@ const MyListedJobs = () => {
                             </Link>
 
                             <div className=" flex-c gap-8 flex-wrap max-sm:gap-4 max-sm:justify-between">
+                              <h6 className="text-sm font-medium max-sm:text-xs capitalize">
+                                Job type: {job?.type && job?.type}
+                              </h6>
                               <div className="flex-c justify-end gap-2 max-sm:gap-4 ">
                                 {" "}
                                 <Image

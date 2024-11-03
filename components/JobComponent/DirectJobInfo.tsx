@@ -156,6 +156,12 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                     </span>{" "}
                     {jobId && jobId}
                   </p>
+                  <p className="max-sm:text-xs">
+                    <span className="text-[#1A201B] font-semibold">
+                      Job Type:
+                    </span>{" "}
+                    {jobInfo?.type && jobInfo?.type}
+                  </p>
                 </div>
               </div>
             </div>

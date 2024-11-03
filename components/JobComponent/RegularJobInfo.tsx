@@ -249,6 +249,12 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                     </span>{" "}
                     {jobId && jobId}
                   </p>
+                  <p className="max-sm:text-xs">
+                    <span className="text-[#1A201B] font-semibold">
+                      Job Type:
+                    </span>{" "}
+                    {jobInfo?.type && jobInfo?.type}
+                  </p>
                 </div>
                 {currentUser?._id !== jobInfo?.userId?._id && (
                   <>

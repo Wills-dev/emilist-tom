@@ -35,7 +35,6 @@ export const useGetAllJobByAUser = () => {
       const { data } = await axiosInstance(
         `/jobs/fetch-listed-jobs?page=${currentPage}&limit=10`
       );
-      console.log("data", data);
       setAllUserJobs(data?.data?.jobs);
       const totalJobs = data?.data?.totalJobs;
       setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
