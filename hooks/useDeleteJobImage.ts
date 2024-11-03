@@ -9,11 +9,13 @@ export const useDeleteJobImage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [rerender, setRerender] = useState(false);
 
-  const handleDeleteFetchedJobImage = async (imageId: string) => {
+  const handleDeleteFetchedJobImage = async (
+    jobId: string,
+    imageId: string
+  ) => {
     setIsLoading(true);
     try {
-      const { data } = await axiosInstance.delete(`/job/${imageId}`);
-      console.log("data deleting job image", data);
+      await axiosInstance.delete(`/jobs/remove-job/${jobId}/file/${imageId}`);
       setRerender((prev) => !prev);
       toast.success("Image deleted", toastOptions);
     } catch (error) {

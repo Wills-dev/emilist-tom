@@ -6,14 +6,15 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import { AnimatePresence } from "framer-motion";
 
-import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 import { AuthContext } from "@/utils/AuthState";
 import { useDeleteJob } from "@/hooks/useDeleteJob";
-import { useGetDirectJobInfo } from "@/hooks/useGetDirectJobInfo";
+import { useGetJobInfo } from "@/hooks/useGetJobInfo";
+import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 
 import AboutJobOwner from "./AboutJobOwner";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
+import { getStatusClass } from "@/constants";
 
 interface DirectJobInfoProps {
   jobId: string;
@@ -28,7 +29,7 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
 
   const { handleDeleteJob, isDeleteLoading } = useDeleteJob();
-  const { loading, getJobInfo, jobInfo } = useGetDirectJobInfo();
+  const { loading, getJobInfo, jobInfo, analytics } = useGetJobInfo();
 
   const toggleActionButton = () => {
     setShowActionDropdown((prev) => !prev);
@@ -84,17 +85,24 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
         </div>
       ) : (
         <div className="grid grid-cols-12 py-10 gap-6">
-          <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-[10px] py-10 ">
+          <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg pb-10 max-h-fit">
+            <div className="flex justify-end pt-4 pb-10  px-10 max-sm:px-5">
+              <p
+                className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                  jobInfo.status
+                )} `}
+              >
+                {jobInfo?.status}
+              </p>
+            </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5">
               <div className="flex items-center justify-between">
-                <h5 className="text-[#000000] text-[30px] leading-[36px] font-semibold max-sm:text-[20px]">
-                  {jobInfo?.projectTitle && Capitalize(jobInfo.projectTitle)}
+                <h5 className="text-3xl font-semibold max-sm:text-lg">
+                  {jobInfo?.title && Capitalize(jobInfo.title)}
                 </h5>
-                {jobInfo?.status === "pending" ||
-                jobInfo?.status === "amended" ? (
+                {jobInfo?.status === "pending" ? (
                   <>
-                    {currentUser?.unique_id ===
-                      jobInfo?.userDetails?.userId && (
+                    {currentUser?._id === jobInfo?.userId?._id && (
                       <div className="block relative" ref={dropdownRef}>
                         <button onClick={toggleActionButton}>
                           <Image
@@ -121,18 +129,18 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                   </>
                 ) : null}
               </div>
-              {currentUser?.unique_id === jobInfo?.userId && (
+              {currentUser?._id === jobInfo?.userId?._id && (
                 <div className="flex items-center gap-3">
                   <Link
-                    href="/reports/insights"
-                    className="text-primary-green font-[500] max-sm:text-sm py-2  underline"
+                    href="/dashboard/report/insights"
+                    className="text-primary-green  font-medium max-sm:text-sm py-2 underline"
                   >
                     Insight
                   </Link>
                 </div>
               )}
             </div>
-            <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 flex flex-col gap-3">
+            <div className="w-full  px-10 max-sm:px-5 py-6 flex flex-col gap-3">
               <h5 className="text-primary-green text-[20px] leading-[28px] font-[500] max-sm:text-[16px]">
                 {jobInfo?.category && Capitalize(jobInfo.category)}
               </h5>
@@ -140,22 +148,8 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                 <div className="flex items-center flex-wrap gap-10  max-sm:gap-5 max-lg:w-full">
                   <p className="text-[#5E625F] max-sm:text-xs">
                     Posted{" "}
-                    {jobInfo?.createdAt
-                      ? formatCreatedAt(jobInfo.createdAt)
-                      : "2 days"}
+                    {jobInfo?.createdAt && formatCreatedAt(jobInfo.createdAt)}
                   </p>
-                  <div className="flex items-center gap-1">
-                    <Image
-                      src="/assets/icons/location.svg"
-                      alt="menu"
-                      width={20}
-                      height={20}
-                      className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
-                    />
-                    <p className="text-[#1A201B] max-sm:text-xs">
-                      {jobInfo?.location && Capitalize(jobInfo?.location)}
-                    </p>
-                  </div>
                   <p className="max-sm:text-xs">
                     <span className="text-[#1A201B] font-semibold">
                       Job ID:
@@ -163,6 +157,20 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                     {jobId && jobId}
                   </p>
                 </div>
+              </div>
+            </div>
+            <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">
+              <div className="flex items-center gap-1">
+                <Image
+                  src="/assets/icons/location.svg"
+                  alt="location"
+                  width={20}
+                  height={20}
+                  className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5"
+                />
+                <p className="text-[#1A201B] max-sm:text-xs">
+                  {jobInfo?.location && Capitalize(jobInfo?.location)}
+                </p>
               </div>
             </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">
@@ -182,10 +190,11 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                   />
                   <div className="flex flex-col gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      ₦{jobInfo?.budget && numberWithCommas(jobInfo.budget)}
+                      {jobInfo?.currency}{" "}
+                      {jobInfo?.budget && numberWithCommas(jobInfo.budget)}
                     </h6>
                     <p className="text-[#474C48] max-sm:text-xs">
-                      {jobInfo?.narrow && Capitalize(jobInfo?.narrow)}
+                      {jobInfo?.service && Capitalize(jobInfo?.service)}
                     </p>
                   </div>
                 </div>
@@ -199,7 +208,7 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      {jobInfo?.milestonesNumber && jobInfo.milestonesNumber}
+                      {jobInfo?.milestones && jobInfo.milestones?.length}
                     </h6>
                     <p className="text-[#474C48] max-sm:text-xs">Milestone</p>
                   </div>
@@ -214,7 +223,15 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      {jobInfo?.expertLevel && jobInfo.expertLevel}
+                      {jobInfo?.expertLevel && jobInfo.expertLevel === "one"
+                        ? 1
+                        : jobInfo.expertLevel === "two"
+                        ? 2
+                        : jobInfo.expertLevel === "three"
+                        ? 3
+                        : jobInfo.expertLevel === "four"
+                        ? 4
+                        : null}
                     </h6>
                     <p className="text-[#474C48] max-sm:text-xs">
                       Expert level
@@ -231,8 +248,8 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      {jobInfo?.projectDuration && jobInfo.projectDuration}{" "}
-                      {jobInfo?.DurationType && jobInfo.DurationType}
+                      {jobInfo?.duration?.number && jobInfo.duration?.number}{" "}
+                      {jobInfo?.duration?.period && jobInfo.duration?.period}
                     </h6>
                     <p className="text-[#474C48] max-sm:text-xs">
                       Project duration
@@ -251,49 +268,56 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                     <h6 className="text-lg font-semibold max-sm:text-sm">
                       {jobInfo?.invite}
                     </h6>
-                    <p className="text-[#474C48] max-sm:text-xs">Assignee Id</p>
+                    <p className="text-[#474C48] max-sm:text-xs">Assignee</p>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="px-10 max-sm:px-5 py-6 w-full">
-              <h6 className="text-lg font-semibold max-sm:text-sm font-inter">
-                Files
-              </h6>
-              <div className="flex items-center w-full gap-10 pt-4">
-                <Image
-                  src="/assets/icons/pdf.jpg"
-                  alt="menu"
-                  width={61}
-                  height={61}
-                  className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
-                />
-                <Image
-                  src="/assets/icons/mword.jpg"
-                  alt="menu"
-                  width={61}
-                  height={61}
-                  className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
-                />
+            {jobInfo?.jobFiles?.length > 0 && (
+              <div className="px-10 max-sm:px-5 py-6 w-full">
+                <h6 className="text-lg font-semibold max-sm:text-sm font-inter">
+                  Files
+                </h6>
+                <div className="flex items-center w-full gap-2 pt-4 flex-wrap">
+                  {jobInfo?.jobFiles?.map((file: any, index: number) => (
+                    <Image
+                      key={index}
+                      src={file?.url}
+                      alt="menu"
+                      width={61}
+                      height={61}
+                      className="object-cover w-[61px] h-[70px] max-sm:w-[40px] max-sm:h-[40px]"
+                    />
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <div className="col-span-3 max-lg:hidden max-h-max flex flex-col gap-6">
-            {/* <AboutJobOwner jobInfo={jobInfo} analytics={analytics} /> */}
+            <AboutJobOwner jobInfo={jobInfo} analytics={analytics} />
           </div>
           <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-[10px] py-10 ">
             <h4 className="px-10 max-sm:px-5 mb-2 text-[#000000] text-[20px] leading-[28px] font-semibold max-sm:text-[16px]">
               Milestone
             </h4>
-            {jobInfo?.milestoneDetails &&
-              jobInfo.milestoneDetails.map((milestone: any, index: number) => (
+            {jobInfo?.milestones &&
+              jobInfo.milestones.map((milestone: any, index: number) => (
                 <div
                   className=" px-10 max-sm:px-5 w-full border-t-[1px] border-[#B8B9B8] "
                   key={index}
                 >
-                  <h6 className=" my-5 font-semibold max-sm:text-xs">
-                    Milestone {index + 1}
-                  </h6>
+                  <div className="flex-c-b">
+                    <h6 className=" my-5 font-semibold max-sm:text-xs">
+                      Milestone {index + 1}
+                    </h6>
+                    <p
+                      className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                        milestone.status
+                      )} `}
+                    >
+                      {milestone?.status}
+                    </p>
+                  </div>
                   <div className="flex  gap-10 max-sm:gap-5">
                     <div className=" flex gap-2">
                       <Image
@@ -305,10 +329,10 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                       />
                       <div className="flex flex-col  gap-1">
                         <h6 className="text-lg font-semibold max-sm:text-sm">
-                          {milestone?.milestoneDuration &&
-                            milestone?.milestoneDuration}
+                          {milestone?.timeFrame?.number}{" "}
+                          {milestone?.timeFrame?.period}
                         </h6>
-                        <p className="text-[#474C48] max-sm:text-xs">
+                        <p className="text-[#474C48]   max-sm:text-xs">
                           Milestone duration
                         </p>
                       </div>
@@ -323,25 +347,29 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                       />
                       <div className="flex flex-col gap-1">
                         <h6 className="text-lg font-semibold max-sm:text-sm">
-                          ₦
-                          {milestone?.milestoneAmount &&
-                            numberWithCommas(milestone?.milestoneAmount)}
+                          {jobInfo?.currency}{" "}
+                          {milestone?.amount &&
+                            numberWithCommas(milestone?.amount)}
                         </h6>
-                        <p className="text-[#474C48] max-sm:text-xs">Amount</p>
+                        <p className="text-[#474C48]   max-sm:text-xs">
+                          Amount
+                        </p>
                       </div>
                     </div>
                   </div>
                   <div className="py-5">
-                    <h6 className=" my-5 font-semibold max-sm:text-xs">
+                    <h6 className=" my-5  font-semibold max-sm:text-[13px]">
                       Milestone details
                     </h6>
-                    <p className=" my-5 text-[#303632] max-sm:text-xs">
-                      {milestone?.milestoneDescription &&
-                        milestone?.milestoneDescription}
+                    <p className=" my-5 text-[#303632]   max-sm:text-xs">
+                      {milestone?.achievement && milestone?.achievement}
                     </p>
                   </div>
                 </div>
               ))}
+          </div>
+          <div className="max-lg:col-span-12 lg:hidden max-h-max flex flex-col gap-6">
+            <AboutJobOwner jobInfo={jobInfo} analytics={analytics} />
           </div>
         </div>
       )}
