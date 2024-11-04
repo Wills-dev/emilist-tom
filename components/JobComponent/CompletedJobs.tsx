@@ -12,7 +12,6 @@ const CompletedJobs = () => {
   const {
     isLoading,
     allJobs,
-    allJobsData,
     search,
     handleChange,
     getAllJobsByStatus,
@@ -23,7 +22,7 @@ const CompletedJobs = () => {
 
   useEffect(() => {
     if (currentUser) {
-      getAllJobsByStatus(currentUser.unique_id, "paused");
+      getAllJobsByStatus("completed");
     }
   }, [currentUser]);
 
@@ -35,7 +34,7 @@ const CompletedJobs = () => {
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-5 mt-10">
-          {allJobs.length < 1 ? (
+          {allJobs?.length < 1 ? (
             <div className="">
               <h6 className="sm:text-xl"> No completed job</h6>
               <p className="max-sm:text-sm">

@@ -13,7 +13,6 @@ const NewJobs = () => {
   const {
     isLoading,
     allJobs,
-    allJobsData,
     search,
     handleChange,
     getAllJobsByStatus,
@@ -24,7 +23,7 @@ const NewJobs = () => {
 
   useEffect(() => {
     if (currentUser) {
-      getAllJobsByStatus(currentUser.unique_id, "pending");
+      getAllJobsByStatus("pending");
     }
   }, [currentUser]);
 
@@ -36,7 +35,7 @@ const NewJobs = () => {
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-5 mt-10">
-          {allJobs.length < 1 ? (
+          {allJobs?.length < 1 ? (
             <div className="">
               <h6 className="sm:text-xl"> No pending or amended job</h6>
               <p className="max-sm:text-sm">
@@ -54,13 +53,13 @@ const NewJobs = () => {
             </div>
           ) : (
             <>
-              {allJobsData?.map((job: any, index: string) => (
+              {allJobs?.map((job: any, index: string) => (
                 <Link
                   key={index}
                   href={
-                    job?.jobType === "biddable"
+                    job?.type === "biddable"
                       ? `/dashboard/job/info/biddable/${job._id}`
-                      : job?.jobType === "regular"
+                      : job?.type === "regular"
                       ? `/dashboard/job/info/regular/${job._id} `
                       : `/dashboard/job/info/direct/${job._id}`
                   }
@@ -71,38 +70,44 @@ const NewJobs = () => {
                       Statement of work{" "}
                     </p>
                     <h6 className="sm:text-xl font-semibold">
-                      {job?.jobTitle && job?.jobTitle}
+                      {job?.title && job?.title}
                     </h6>
+                    <p className="text-[#737774] max-sm:text-sm">
+                      Job type:{" "}
+                      <span className="font-semibold capitalize">
+                        {job?.type}
+                      </span>
+                    </p>
                   </div>
                   <div
                     className={` rounded-xl flex-c justify-center h-[34px] max-sm:h-[30px] px-3 ${
-                      job?.jobStatus === "pending"
+                      job?.status === "pending"
                         ? "bg-[#ECECEC]"
                         : "bg-[#FFF6E5]"
                     }`}
                   >
                     <p
                       className={`  font-semibold max-sm:text-sm whitespace-nowrap ${
-                        job?.jobStatus === "pending"
+                        job?.status === "pending"
                           ? "text-[#303632]"
                           : "text-[#FF9933]"
                       }`}
                     >
-                      {job?.jobStatus && job?.jobStatus}
+                      {job?.status && job?.status}
                     </p>
                   </div>
                 </Link>
               ))}
-              <div className="md:w-2/3 w-full">
-                <Pagination
-                  current={currentPage}
-                  total={totalPages}
-                  onPageChange={handlePageChange}
-                  extraClassName="justify-content-start"
-                />
-              </div>
             </>
           )}
+          <div className="col-span-2 w-full min-w-full max-md:col-span-3">
+            <Pagination
+              current={currentPage}
+              total={totalPages}
+              onPageChange={handlePageChange}
+              extraClassName="justify-content-start"
+            />
+          </div>
         </div>
       )}{" "}
     </>
