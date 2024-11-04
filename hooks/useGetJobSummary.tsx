@@ -21,7 +21,7 @@ export const useGetJobSummary = () => {
     setLoadingAnalytics(true);
     try {
       const { data } = await axiosInstance.post(`/jobAnalytics`, {
-        userId: currentUser.unique_id,
+        userId: currentUser._id,
       });
       setJobAnalytics(data);
     } catch (error: any) {

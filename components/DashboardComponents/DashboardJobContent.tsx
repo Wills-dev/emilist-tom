@@ -129,7 +129,7 @@ const DashboardJobContent = () => {
                         </div>
                         {job?.description && job?.description.length > 300 ? (
                           <p className="text-sm font-medium max-sm:text-sm py-2">
-                            {job?.Description.slice(0, 300)}...
+                            {job?.description?.slice(0, 300)}...
                             <Link
                               href={
                                 job?.type === "biddable"

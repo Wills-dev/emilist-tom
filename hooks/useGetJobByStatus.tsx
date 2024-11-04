@@ -3,7 +3,7 @@ import { ChangeEvent, useMemo, useState } from "react";
 import toast from "react-hot-toast";
 
 import { toastOptions } from "@/helpers";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useGetJobByStatus = () => {
   const ITEMS_PER_PAGE = 10;
@@ -22,13 +22,14 @@ export const useGetJobByStatus = () => {
     setCurrentPage(newPage);
   };
 
-  const getAllJobsByStatus = async (userId: string, status: string) => {
+  const getAllJobsByStatus = async (status: string) => {
     try {
       setIsLoading(true);
       const { data } = await axiosInstance.get(
-        `/user-jobs/${userId}/status?status=${status}`
+        `/jobs/fetch-jobs-by-status?status=${status}`
       );
-      setAllJobs(data);
+      console.log("data", data);
+      setAllJobs(data?.data);
       const totalJobs = data?.data?.length || 0;
       setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
     } catch (error: any) {
@@ -39,32 +40,9 @@ export const useGetJobByStatus = () => {
     }
   };
 
-  const allJobsData = useMemo(() => {
-    let computedJobs = allJobs;
-
-    if (search) {
-      computedJobs = computedJobs?.filter(
-        (job: any) =>
-          job.category.toLowerCase().includes(search.toLowerCase()) ||
-          job.expertlevel.toLowerCase().includes(search.toLowerCase()) ||
-          job.location.toLowerCase().includes(search.toLowerCase()) ||
-          job.projecttitle.toLowerCase().includes(search.toLowerCase()) ||
-          job.projecttype.toLowerCase().includes(search.toLowerCase()) ||
-          job.service.toLowerCase().includes(search.toLowerCase()) ||
-          job.type.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    return computedJobs?.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-    );
-  }, [allJobs, currentPage, search]);
-
   return {
     isLoading,
     allJobs,
-    allJobsData,
     search,
     handleChange,
     getAllJobsByStatus,

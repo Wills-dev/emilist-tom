@@ -14,7 +14,6 @@ const OverdueJobs = () => {
   const {
     isLoading,
     allJobs,
-    allJobsData,
     search,
     handleChange,
     getAllJobsByStatus,
@@ -25,32 +24,32 @@ const OverdueJobs = () => {
 
   useEffect(() => {
     if (currentUser) {
-      getAllJobsByStatus(currentUser.unique_id, "overdue");
+      getAllJobsByStatus("overdue");
     }
   }, [currentUser]);
 
   return (
     <>
-      {isLoading || userLoading ? (
+      {isLoading ? (
         <div className="flex item-center justify-center text-green-500 mt-6 h-[40vh] w-full">
           <span className="loading loading-bars loading-lg"></span>
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-5 mt-10">
-          {allJobs.length < 1 ? (
+          {allJobs?.length < 1 ? (
             <div className="text-gray-500">
               <h6 className="sm:text-xl"> You do not have any overdue job</h6>
               <p className="max-sm:text-sm">Keep track of overdue jobs here.</p>
             </div>
           ) : (
             <>
-              {allJobsData?.map((job: any, index: number) => (
+              {allJobs?.map((job: any, index: number) => (
                 <Link
                   key={index}
                   href={
-                    job?.jobType === "biddable"
+                    job?.type === "biddable"
                       ? `/dashboard/job/info/biddable/${job._id}`
-                      : job?.jobType === "regular"
+                      : job?.type === "regular"
                       ? `/dashboard/job/info/regular/${job._id} `
                       : `/dashboard/job/info/direct/${job._id}`
                   }
@@ -58,7 +57,7 @@ const OverdueJobs = () => {
                 >
                   <div className="flex ">
                     <h6 className="sm:text-xl font-semibold">
-                      {job?.jobTitle && job?.jobTitle}
+                      {job?.title && job?.title}
                     </h6>
                   </div>
                   <div className="rounded-xl flex-c justify-end gap-8 max-sm:gap-3">
@@ -67,8 +66,7 @@ const OverdueJobs = () => {
                         Milestone
                       </p>
                       <h6 className="font-bold  max-sm:text-sm  whitespace-nowrap">
-                        {job?.milestoneDetails &&
-                          countCompleteMilestones(job?.milestoneDetails)}
+                        {job?.milestoneProgress && job?.milestoneProgress}
                       </h6>
                     </div>
                     <div className="flex flex-col gap-2">

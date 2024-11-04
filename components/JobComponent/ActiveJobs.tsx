@@ -7,18 +7,13 @@ import Pagination from "react-responsive-pagination";
 
 import { AuthContext } from "@/utils/AuthState";
 import { useGetJobByStatus } from "@/hooks/useGetJobByStatus";
-import {
-  countCompleteMilestones,
-  formatDueDate,
-  formatStartDate,
-} from "@/helpers";
+import { formatDueDate, formatStartDate } from "@/helpers";
 
 const ActiveJobs = () => {
-  const { currentUser, userLoading } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const {
     isLoading,
     allJobs,
-    allJobsData,
     search,
     handleChange,
     getAllJobsByStatus,
@@ -29,19 +24,19 @@ const ActiveJobs = () => {
 
   useEffect(() => {
     if (currentUser) {
-      getAllJobsByStatus(currentUser.unique_id, "active");
+      getAllJobsByStatus("active");
     }
   }, [currentUser]);
 
   return (
     <>
-      {isLoading || userLoading ? (
+      {isLoading ? (
         <div className="flex-c justify-center text-green-500 mt-6 h-[40vh] w-full">
           <span className="loading loading-bars loading-lg"></span>
         </div>
       ) : (
         <div className="grid grid-cols-3 gap-5 mt-10">
-          {allJobs.length < 1 ? (
+          {allJobs?.length < 1 ? (
             <div className="">
               <h6 className="sm:text-xl"> No active job</h6>
               <p className="max-sm:text-xs">
@@ -59,13 +54,13 @@ const ActiveJobs = () => {
             </div>
           ) : (
             <>
-              {allJobsData?.map((job: any, index: number) => (
+              {allJobs?.map((job: any, index: number) => (
                 <Link
                   key={index}
                   href={
-                    job?.jobType === "biddable"
+                    job?.type === "biddable"
                       ? `/dashboard/job/active/info/biddable/${job._id}`
-                      : job?.jobType === "regular"
+                      : job?.type === "regular"
                       ? `/dashboard/job/active/info/regular/${job._id}`
                       : `/dashboard/job/active/info/direct/${job._id}`
                   }
@@ -73,7 +68,7 @@ const ActiveJobs = () => {
                 >
                   <div className="flex ">
                     <h6 className="sm:text-xl font-semibold">
-                      {job?.jobTitle && job?.jobTitle}
+                      {job?.title && job?.title}
                     </h6>
                   </div>
                   <div className="rounded-xl flex-c justify-end gap-8 max-sm:gap-3">
@@ -82,8 +77,7 @@ const ActiveJobs = () => {
                         Milestone
                       </p>
                       <h6 className="font-bold max-sm:text-sm whitespace-nowrap">
-                        {job?.milestoneDetails &&
-                          countCompleteMilestones(job?.milestoneDetails)}
+                        {job?.milestoneProgress && job?.milestoneProgress}
                       </h6>
                     </div>
                     <div className="flex flex-col gap-2">
@@ -107,7 +101,7 @@ const ActiveJobs = () => {
                   </div>
                 </Link>
               ))}
-              <div className="md:w-2/3 w-full">
+              <div className="col-span-2 w-full min-w-full max-md:col-span-3">
                 <Pagination
                   current={currentPage}
                   total={totalPages}
