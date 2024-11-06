@@ -12,12 +12,14 @@ import {
   toastOptions,
 } from "@/helpers";
 import { JobDetails, Milestone, TimeFrame } from "@/types";
+import { validateMilestoneTimeFrames } from "@/types/validateTimeFrame";
 
 export const useEditDirectJob = () => {
   const { currentUser } = useContext(AuthContext);
 
   const [loading, setLoading] = useState<boolean>(true);
   const [load, setLoad] = useState<boolean>(false);
+  const [percentage, setPercentage] = useState<number[]>([]);
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [fetchedImages, setFetchedImages] = useState<any>([]);
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
@@ -55,6 +57,11 @@ export const useEditDirectJob = () => {
         ...prevJob,
         milestoneNumber: milestoneLength,
       }));
+      const initialPercentages = jobData.milestones.map(
+        (milestone: Milestone) => (milestone.amount / jobData.budget) * 100
+      );
+
+      setPercentage(initialPercentages);
       setLoading(false);
     } catch (error: any) {
       console.log("error getting job info", error);
@@ -100,6 +107,56 @@ export const useEditDirectJob = () => {
         milestones: newMilestones,
       };
     });
+  };
+
+  let debounceTimeout: NodeJS.Timeout;
+
+  const validatePercentages = () => {
+    const totalPercentage = percentage.reduce((sum, p) => sum + p, 0);
+    if (totalPercentage > 100) {
+      toast.error("Total percentage cannot exceed 100", toastOptions);
+    }
+  };
+
+  // Call this function after percentage change to debounce
+  const debounceValidation = () => {
+    if (debounceTimeout) clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(validatePercentages, 1000);
+  };
+
+  const handlePercentageChange = (index: number, newPercentage: number) => {
+    // Ensure total percentage does not exceed 100
+    const totalPercentage = percentage.reduce(
+      (sum, p, i) => (i === index ? sum + newPercentage : sum + p),
+      0
+    );
+    if (totalPercentage > 100) {
+      toast.error("Total percentage cannot exceed 100", toastOptions);
+      return;
+    }
+
+    setPercentage((prevPercentages) => {
+      const updatedPercentages = [...prevPercentages];
+      updatedPercentages[index] = newPercentage;
+      return updatedPercentages;
+    });
+
+    // Calculate new milestone amount based on updated percentage
+    setEditJobDetails((prevJob) => {
+      const updatedMilestones = [...prevJob.milestones];
+      const budget = prevJob.budget ?? 0;
+      updatedMilestones[index] = {
+        ...updatedMilestones[index],
+        amount: (newPercentage / 100) * budget,
+      };
+      return {
+        ...prevJob,
+        milestones: updatedMilestones,
+      };
+    });
+
+    // Trigger the debounce for validation
+    debounceValidation();
   };
 
   const handleMilestoneChange = (
@@ -202,10 +259,16 @@ export const useEditDirectJob = () => {
 
   const handleSubmit = async (e: React.FormEvent, jobId: string) => {
     e.preventDefault();
+
+    const totalPercentage = percentage.reduce((sum, p) => sum + p, 0);
+
     if (!currentUser) {
       return handleLoginError();
     } else if (handleErrorCheck()) {
       return handleInputFieldError();
+    } else if (totalPercentage > 100) {
+      toast.error("Total percentage cannot exceed 100", toastOptions);
+      return;
     }
 
     const {
@@ -220,6 +283,16 @@ export const useEditDirectJob = () => {
       milestones,
       currency,
     } = editJobDetails;
+
+    try {
+      validateMilestoneTimeFrames(milestones, duration.number, duration.period);
+    } catch (error: any) {
+      toast.error(
+        error.message || "Milestone duration validation failed",
+        toastOptions
+      );
+      return;
+    }
 
     const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -324,5 +397,8 @@ export const useEditDirectJob = () => {
     selectedImages,
     setSelectedImages,
     handleImageDelete,
+    handlePercentageChange,
+    debounceValidation,
+    percentage,
   };
 };

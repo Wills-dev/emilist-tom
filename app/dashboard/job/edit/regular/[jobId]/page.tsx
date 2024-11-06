@@ -36,6 +36,9 @@ const page = ({ params }: any) => {
     selectedImages,
     setSelectedImages,
     handleImageDelete,
+    handlePercentageChange,
+    debounceValidation,
+    percentage,
   } = useEditRegularJob();
 
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -132,19 +135,46 @@ const page = ({ params }: any) => {
             ></textarea>
           </div>
         </div>
+        <div className="w-full my-3">
+          <div className="py-2">
+            <p className="text-[#5e625f] font-medium max-sm:text-sm">
+              Percentage for Milestone
+            </p>
+            <p className="text-xs text-primary-green">
+              Please enter how many percentage from the total amount you're
+              paying for this milestone.` `
+            </p>
+          </div>
+          <div className="w-full">
+            <input
+              type="number"
+              className="expert-reg-input"
+              placeholder=""
+              value={percentage[index] || 0}
+              onChange={(e) => {
+                handlePercentageChange(index, Number(e.target.value));
+                debounceValidation();
+              }}
+            />
+          </div>
+        </div>
+
         <div className="w-full">
           <p className="text-[#5e625f] py-2 text-base font-[500] max-sm:text-sm">
             Amount
           </p>
           <div className="w-full">
-            <input
+            <p className=" min-w-full w-full  max-w-full rounded-lg min-h-10 px-2 bg-[#ececec] h-10 max-sm:text-sm flex items-center ">
+              {milestone.amount || 0}
+            </p>
+            {/* <input
               type="number"
               className="expert-reg-input"
               placeholder=""
               name="amount"
               value={milestone.amount}
               onChange={(e) => handleMilestoneChange(index, e)}
-            />
+            /> */}
           </div>
         </div>
       </div>
