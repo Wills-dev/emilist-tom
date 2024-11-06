@@ -1,15 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useContext, useEffect } from "react";
+
+import Pagination from "react-responsive-pagination";
 
 import { AuthContext } from "@/utils/AuthState";
 import { useGetProjectByStatus } from "@/hooks/useGetProjectByStatus useGetProjectByStatus";
-import {
-  countCompleteMilestones,
-  formatDueDate,
-  formatStartDate,
-} from "@/helpers";
-import Link from "next/link";
+import { formatDueDate, formatStartDate } from "@/helpers";
 
 const ActiveProjects = () => {
   const { currentUser, userLoading } = useContext(AuthContext);
@@ -17,7 +15,6 @@ const ActiveProjects = () => {
   const {
     isLoading,
     allProjects,
-    allProjectsData,
     search,
     handleChange,
     getAllProjectsByStatus,
@@ -28,7 +25,7 @@ const ActiveProjects = () => {
 
   useEffect(() => {
     if (currentUser) {
-      getAllProjectsByStatus(currentUser.unique_id, "active");
+      getAllProjectsByStatus("active");
     }
   }, [currentUser]);
 
@@ -50,19 +47,21 @@ const ActiveProjects = () => {
             </div>
           ) : (
             <>
-              {allProjectsData?.map((project: any, index: number) => (
+              {allProjects?.map((project: any, index: number) => (
                 <Link
                   key={index}
                   href={
-                    project?.jobType === "biddable"
-                      ? `/dashboard/project/info/biddable/${project?.jobId}`
-                      : `/dashboard/project/info/regular/${project?.jobId}`
+                    project?.type === "biddable"
+                      ? `/dashboard/project/info/biddable/${project?._id}`
+                      : project?.type === "regular"
+                      ? `/dashboard/project/info/regular/${project?._id}`
+                      : `/dashboard/project/info/direct/${project?._id}`
                   }
                   className="col-span-2 w-full min-w-full max-md:col-span-3 border-[1px] border-[#D0CFCF] rounded-[10px] p-6 max-sm:px-3 flex justify-between items-center max-md:flex-col gap-4 max-md:justify-start max-md:items-start"
                 >
                   <div className="flex ">
                     <h6 className="text-[#030A05]  text-[20px] font-[600] leading-[28px] max-sm:text-[16px] max-sm:leading-[20px]">
-                      {project?.jobTitle && project?.jobTitle}
+                      {project?.title && project?.title}
                     </h6>
                   </div>
                   <div className="rounded-[20px] flex justify-end items-center gap-8 max-sm:gap-3">
@@ -71,8 +70,8 @@ const ActiveProjects = () => {
                         Milestone
                       </p>
                       <h6 className="text-[#303632]  text-[16px] font-[700] leading-[24px] max-sm:text-[13px]  whitespace-nowrap">
-                        {project?.milestoneDetails &&
-                          countCompleteMilestones(project?.milestoneDetails)}
+                        {project?.milestoneProgress &&
+                          project?.milestoneProgress}
                       </h6>
                     </div>
                     <div className="flex flex-col gap-2">
@@ -97,6 +96,14 @@ const ActiveProjects = () => {
                   </div>
                 </Link>
               ))}
+              <div className="col-span-2 w-full min-w-full max-md:col-span-3">
+                <Pagination
+                  current={currentPage}
+                  total={totalPages}
+                  onPageChange={handlePageChange}
+                  extraClassName="justify-content-start"
+                />
+              </div>
             </>
           )}
         </div>

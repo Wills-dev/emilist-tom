@@ -6,15 +6,17 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import { AnimatePresence } from "framer-motion";
 
+import { getStatusClass } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
 import { useDeleteJob } from "@/hooks/useDeleteJob";
+import { useAcceptDirectJob } from "@/hooks/useAcceptDirectJob";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 
 import AboutJobOwner from "./AboutJobOwner";
+import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
-import { getStatusClass } from "@/constants";
 
 interface DirectJobInfoProps {
   jobId: string;
@@ -30,6 +32,7 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
 
   const { handleDeleteJob, isDeleteLoading } = useDeleteJob();
   const { loading, getJobInfo, jobInfo, analytics } = useGetJobInfo();
+  const { handleAcceptDirectJob, isLoad, rerender } = useAcceptDirectJob();
 
   const toggleActionButton = () => {
     setShowActionDropdown((prev) => !prev);
@@ -46,7 +49,7 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
 
   useEffect(() => {
     getJobInfo(jobId);
-  }, [jobId, currentUser]);
+  }, [jobId, currentUser, rerender]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -67,6 +70,8 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
 
   return (
     <section className="py-28 padding-x bg-[#F0FDF5] w-full min-h-screen">
+      <div className="text-yellow-400 bg-yellow-100 text-green-400 bg-green-100 text-red-400 bg-red-100 text-[#FF5D7A] bg-[#FFF1F2]"></div>
+      <LoadingOverlay loading={isLoad} />
       {/* confirm if you want to delete material */}
       <AnimatePresence>
         {openConfirmActionModal && (
@@ -88,15 +93,15 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
           <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg pb-10 max-h-fit">
             <div className="flex justify-end pt-4 pb-10  px-10 max-sm:px-5">
               <p
-                className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
-                  jobInfo.status
-                )} `}
+                className={`px-4 py-1 rounded-full w-fit text-xs ${
+                  jobInfo.status && getStatusClass(jobInfo.status)
+                } `}
               >
                 {jobInfo?.status}
               </p>
             </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between gap-10">
                 <h5 className="text-3xl font-semibold max-sm:text-lg">
                   {jobInfo?.title && Capitalize(jobInfo.title)}
                 </h5>
@@ -128,6 +133,37 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                     )}
                   </>
                 ) : null}
+                {jobInfo?.applications?.length > 0 &&
+                  currentUser?._id === jobInfo?.applications[0]?.user?._id && (
+                    <>
+                      {jobInfo?.status === "pending" && (
+                        <div className="flex gap-2 flex-wrap">
+                          <button
+                            className="text-sm bg-primary-green text-white hover:bg-green-600 whitespace-nowrap transition-all duration-300 rounded-lg px-4 py-2 text-center mb-4"
+                            onClick={() =>
+                              handleAcceptDirectJob(
+                                jobInfo?.applications[0]?._id,
+                                "accepted"
+                              )
+                            }
+                          >
+                            Accept job
+                          </button>
+                          <button
+                            className="bg-red-500 text-white hover:bg-red-600 whitespace-nowrap transition-all duration-300 rounded-lg px-4 py-2 text-center mb-4 text-sm"
+                            onClick={() =>
+                              handleAcceptDirectJob(
+                                jobInfo?.applications[0]?._id,
+                                "rejected"
+                              )
+                            }
+                          >
+                            Reject job
+                          </button>
+                        </div>
+                      )}
+                    </>
+                  )}
               </div>
               {currentUser?._id === jobInfo?.userId?._id && (
                 <div className="flex items-center gap-3">

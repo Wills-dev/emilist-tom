@@ -3133,7 +3133,7 @@ export const JobLinks = [
 ];
 
 export const ProjectLinks = [
-  { id: 1, name: "new", link: "/dahboard/project/new" },
+  { id: 1, name: "new", link: "/dashboard/project/new" },
 
   {
     id: 2,
@@ -3203,7 +3203,8 @@ export const profileLinks = [
 ];
 
 export const getStatusClass = (status: string) => {
-  switch (status) {
+  const normalizedStatus = status?.trim()?.toLowerCase();
+  switch (normalizedStatus) {
     case "pending":
       return "text-yellow-400 bg-yellow-100";
     case "accepted":

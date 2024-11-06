@@ -21,6 +21,7 @@ export const useEditBiddableJob = () => {
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [fetchedImages, setFetchedImages] = useState<any>([]);
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
+  const [percentage, setPercentage] = useState<number[]>([]);
   const [editJobDetails, setEditJobDetails] = useState<JobDetails>({
     title: "",
     category: "",
@@ -51,6 +52,14 @@ export const useEditBiddableJob = () => {
       setEditJobDetails(jobData);
       setFetchedImages(jobData?.jobFiles);
       const milestoneLength = jobData?.milestones?.length || 0;
+
+      const initialPercentages = jobData.milestones.map(
+        (milestone: Milestone) =>
+          (milestone.amount / jobData.maximumPrice) * 100
+      );
+
+      setPercentage(initialPercentages);
+
       setEditJobDetails((prevJob) => ({
         ...prevJob,
         milestoneNumber: milestoneLength,
@@ -70,6 +79,9 @@ export const useEditBiddableJob = () => {
     >
   ) => {
     const { name, value } = e.target;
+
+    console.log("name", name);
+    console.log("value", value);
     setEditJobDetails((prevJob: any) => ({
       ...prevJob,
       [name]: value,
@@ -100,6 +112,56 @@ export const useEditBiddableJob = () => {
         milestones: newMilestones,
       };
     });
+  };
+
+  let debounceTimeout: NodeJS.Timeout;
+
+  const validatePercentages = () => {
+    const totalPercentage = percentage.reduce((sum, p) => sum + p, 0);
+    if (totalPercentage > 100) {
+      toast.error("Total percentage cannot exceed 100", toastOptions);
+    }
+  };
+
+  // Call this function after percentage change to debounce
+  const debounceValidation = () => {
+    if (debounceTimeout) clearTimeout(debounceTimeout);
+    debounceTimeout = setTimeout(validatePercentages, 1000);
+  };
+
+  const handlePercentageChange = (index: number, newPercentage: number) => {
+    // Ensure total percentage does not exceed 100
+    const totalPercentage = percentage.reduce(
+      (sum, p, i) => (i === index ? sum + newPercentage : sum + p),
+      0
+    );
+    if (totalPercentage > 100) {
+      toast.error("Total percentage cannot exceed 100", toastOptions);
+      return;
+    }
+
+    setPercentage((prevPercentages) => {
+      const updatedPercentages = [...prevPercentages];
+      updatedPercentages[index] = newPercentage;
+      return updatedPercentages;
+    });
+
+    // Calculate new milestone amount based on updated percentage
+    setEditJobDetails((prevJob) => {
+      const updatedMilestones = [...prevJob.milestones];
+      const maximumPrice = prevJob.maximumPrice ?? 0;
+      updatedMilestones[index] = {
+        ...updatedMilestones[index],
+        amount: (newPercentage / 100) * maximumPrice,
+      };
+      return {
+        ...prevJob,
+        milestones: updatedMilestones,
+      };
+    });
+
+    // Trigger the debounce for validation
+    debounceValidation();
   };
 
   const handleMilestoneChange = (
@@ -201,12 +263,54 @@ export const useEditBiddableJob = () => {
     return false;
   };
 
+  function convertToDays(value: number, unit: string): number {
+    switch (unit) {
+      case "days":
+        return value;
+      case "weeks":
+        return value * 7;
+      case "months":
+        return value * 30;
+      default:
+        throw new Error(`Unknown period unit: ${unit}`);
+    }
+  }
+
+  function validateMilestoneTimeFrames(
+    milestones: Milestone[],
+    duration: number,
+    period: string
+  ): true | never {
+    const durationInDays = convertToDays(duration, period);
+
+    const totalMilestoneDays = milestones.reduce((total, milestone) => {
+      const timeFrameInDays = convertToDays(
+        milestone.timeFrame.number,
+        milestone.timeFrame.period
+      );
+      return total + timeFrameInDays;
+    }, 0);
+
+    if (totalMilestoneDays > durationInDays) {
+      throw new Error(
+        `Total milestone duration exceeds the ${duration} ${period} project duration.`
+      );
+    }
+
+    return true;
+  }
+
   const handleSubmit = async (e: React.FormEvent, jobId: string) => {
     e.preventDefault();
+    const totalPercentage = percentage.reduce((sum, p) => sum + p, 0);
+
     if (!currentUser) {
       return handleLoginError();
     } else if (handleErrorCheck()) {
       return handleInputFieldError();
+    } else if (totalPercentage > 100) {
+      toast.error("Total percentage cannot exceed 100", toastOptions);
+      return;
     }
 
     const {
@@ -222,6 +326,17 @@ export const useEditBiddableJob = () => {
       milestones,
       currency,
     } = editJobDetails;
+
+    try {
+      console.log("duration", duration);
+      validateMilestoneTimeFrames(milestones, duration.number, duration.period);
+    } catch (error: any) {
+      toast.error(
+        error.message || "Milestone duration validation failed",
+        toastOptions
+      );
+      return;
+    }
 
     const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
 
@@ -306,6 +421,7 @@ export const useEditBiddableJob = () => {
     } catch (error: any) {
       console.log("error editing biddable job", error);
       setLoad(false);
+      toast.error((error as Error).message, toastOptions);
       promiseErrorFunction(error);
     } finally {
       setLoad(false);
@@ -328,5 +444,8 @@ export const useEditBiddableJob = () => {
     selectedImages,
     setSelectedImages,
     handleImageDelete,
+    handlePercentageChange,
+    debounceValidation,
+    percentage,
   };
 };
