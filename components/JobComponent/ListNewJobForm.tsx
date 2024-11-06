@@ -113,7 +113,7 @@ const ListNewJobForm = () => {
             </p>
             <p className="text-xs text-primary-green">
               Please enter how many percentage from the total amount you're
-              collecting for this milestone.` `
+              paying for this milestone.` `
             </p>
           </div>
           <div className="w-full">

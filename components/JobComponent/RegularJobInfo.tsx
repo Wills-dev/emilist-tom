@@ -121,6 +121,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
 
   return (
     <section className="py-28 padding-x bg-[#F0FDF5] w-full min-h-screen">
+      <div className="text-yellow-400 bg-yellow-100 text-green-400 bg-green-100 text-red-400 bg-red-100 text-[#FF5D7A] bg-[#FFF1F2]"></div>
       <LoadingOverlay loading={isLoading} />
       <LoadingOverlay loading={isWithdrawLoading} />
       <LoadingOverlay loading={loadingAccept} />

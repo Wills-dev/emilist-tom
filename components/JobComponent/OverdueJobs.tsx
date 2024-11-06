@@ -7,7 +7,7 @@ import Pagination from "react-responsive-pagination";
 
 import { AuthContext } from "@/utils/AuthState";
 import { useGetJobByStatus } from "@/hooks/useGetJobByStatus";
-import { countCompleteMilestones, formatOverDueDate } from "@/helpers";
+import { formatOverDueDate } from "@/helpers";
 
 const OverdueJobs = () => {
   const { currentUser, userLoading } = useContext(AuthContext);

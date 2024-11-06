@@ -3,6 +3,8 @@
 import Link from "next/link";
 import React, { useContext, useEffect } from "react";
 
+import Pagination from "react-responsive-pagination";
+
 import { AuthContext } from "@/utils/AuthState";
 import { useGetProjectByStatus } from "@/hooks/useGetProjectByStatus useGetProjectByStatus";
 
@@ -12,7 +14,6 @@ const NewProjects = () => {
   const {
     isLoading,
     allProjects,
-    allProjectsData,
     search,
     handleChange,
     getAllProjectsByStatus,
@@ -23,7 +24,7 @@ const NewProjects = () => {
 
   useEffect(() => {
     if (currentUser) {
-      getAllProjectsByStatus(currentUser.unique_id, "pending");
+      getAllProjectsByStatus("pending");
     }
   }, [currentUser]);
   return (
@@ -44,13 +45,15 @@ const NewProjects = () => {
             </div>
           ) : (
             <>
-              {allProjectsData.map((project: any, index: number) => (
+              {allProjects.map((project: any, index: number) => (
                 <Link
                   key={index}
                   href={
-                    project?.jobType === "biddable"
-                      ? `/dashboard/project/info/biddable/${project?.jobId}`
-                      : `/dashboard/project/info/regular/${project?.jobId}`
+                    project?.type === "biddable"
+                      ? `/dashboard/project/info/biddable/${project?._id}`
+                      : project?.type === "regular"
+                      ? `/dashboard/project/info/regular/${project?._id}`
+                      : `/dashboard/project/info/direct/${project?._id}`
                   }
                   className="col-span-2 w-full min-w-full max-md:col-span-3 border-1 border-[#D0CFCF] rounded-lg p-6 max-sm:px-3 flex justify-between items-center"
                 >
@@ -59,7 +62,7 @@ const NewProjects = () => {
                       Statement of work{" "}
                     </p>
                     <h6 className="sm:text-lg font-semibold">
-                      {project?.jobTitle && project?.jobTitle}
+                      {project?.title && project?.title}
                     </h6>
                   </div>
 
@@ -70,6 +73,14 @@ const NewProjects = () => {
                   </div>
                 </Link>
               ))}
+              <div className="col-span-2 w-full min-w-full max-md:col-span-3">
+                <Pagination
+                  current={currentPage}
+                  total={totalPages}
+                  onPageChange={handlePageChange}
+                  extraClassName="justify-content-start"
+                />
+              </div>
             </>
           )}
         </div>
