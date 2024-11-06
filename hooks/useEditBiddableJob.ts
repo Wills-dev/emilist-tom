@@ -12,6 +12,7 @@ import {
   toastOptions,
 } from "@/helpers";
 import { JobDetails, Milestone, TimeFrame } from "@/types";
+import { validateMilestoneTimeFrames } from "@/types/validateTimeFrame";
 
 export const useEditBiddableJob = () => {
   const { currentUser } = useContext(AuthContext);
@@ -80,12 +81,21 @@ export const useEditBiddableJob = () => {
   ) => {
     const { name, value } = e.target;
 
-    console.log("name", name);
-    console.log("value", value);
-    setEditJobDetails((prevJob: any) => ({
-      ...prevJob,
-      [name]: value,
-    }));
+    setEditJobDetails((prevJob) => {
+      if (name === "number" || name === "period") {
+        return {
+          ...prevJob,
+          duration: {
+            ...prevJob.duration,
+            [name]: name === "number" ? parseInt(value) : value,
+          },
+        };
+      }
+      return {
+        ...prevJob,
+        [name]: value,
+      };
+    });
   };
 
   const handleMilestoneInputChange = (
@@ -263,43 +273,6 @@ export const useEditBiddableJob = () => {
     return false;
   };
 
-  function convertToDays(value: number, unit: string): number {
-    switch (unit) {
-      case "days":
-        return value;
-      case "weeks":
-        return value * 7;
-      case "months":
-        return value * 30;
-      default:
-        throw new Error(`Unknown period unit: ${unit}`);
-    }
-  }
-
-  function validateMilestoneTimeFrames(
-    milestones: Milestone[],
-    duration: number,
-    period: string
-  ): true | never {
-    const durationInDays = convertToDays(duration, period);
-
-    const totalMilestoneDays = milestones.reduce((total, milestone) => {
-      const timeFrameInDays = convertToDays(
-        milestone.timeFrame.number,
-        milestone.timeFrame.period
-      );
-      return total + timeFrameInDays;
-    }, 0);
-
-    if (totalMilestoneDays > durationInDays) {
-      throw new Error(
-        `Total milestone duration exceeds the ${duration} ${period} project duration.`
-      );
-    }
-
-    return true;
-  }
-
   const handleSubmit = async (e: React.FormEvent, jobId: string) => {
     e.preventDefault();
     const totalPercentage = percentage.reduce((sum, p) => sum + p, 0);
@@ -328,7 +301,6 @@ export const useEditBiddableJob = () => {
     } = editJobDetails;
 
     try {
-      console.log("duration", duration);
       validateMilestoneTimeFrames(milestones, duration.number, duration.period);
     } catch (error: any) {
       toast.error(
