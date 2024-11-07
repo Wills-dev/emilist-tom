@@ -25,7 +25,7 @@ export const useGetProjectByStatus = () => {
     try {
       setIsLoading(true);
       const { data } = await axiosInstance.get(
-        `/jobs/fetch-applications-by-status?=limit=10&page=${currentPage}&status=${status}`
+        `/jobs/fetch-applied-jobs-by-status?limit=10&page=${currentPage}&status=${status}`
       );
 
       setAllProjects(data?.data?.applications);

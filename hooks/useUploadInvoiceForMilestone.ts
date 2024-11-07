@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from "react";
 
 import toast from "react-hot-toast";
 
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useUploadInvoiceForMilestone = () => {
@@ -23,15 +23,14 @@ export const useUploadInvoiceForMilestone = () => {
     const { name, value } = e.target;
     setInvoiceDetails({
       ...invoiceDetails,
-      [name]: name === "milestoneAmount" ? Number(value) : value,
+      [name]: name === "amount" ? Number(value) : value,
     });
   };
 
   const uploadInvoice = async (
     e: React.FormEvent<HTMLFormElement>,
     jobId: string,
-    milestoneId: string,
-    milestoneAmount: number
+    milestoneId: string
   ) => {
     e.preventDefault();
 
@@ -48,23 +47,21 @@ export const useUploadInvoiceForMilestone = () => {
       setLoadInvoice(true);
       const { paymentMethod, bankName, accountName, accountNumber, note } =
         invoiceDetails;
+
       const innvoicePayload = {
-        jobId,
-        milestoneId,
-        milestoneAmount,
-        paymentMethod,
-        bankName,
+        status: "completed",
+        bank: bankName,
         accountNumber,
         accountName,
-        note,
       };
-      const data = await axiosInstance.post(
-        `/uploadInvoiceForMilestone`,
+      const { data } = await axiosInstance.post(
+        `/jobs/update-milestone-status/${jobId}/milestone/${milestoneId}`,
         innvoicePayload
       );
-      setOpenInvoice(false);
-      toast.success(`You have successfully uploaded invoice`, toastOptions);
 
+      console.log("data", data);
+      setOpenInvoice(false);
+      toast.success(`Invoice sent!`, toastOptions);
       setRerender((prev) => !prev);
     } catch (error: any) {
       console.log("error uploading invoice for  milestone", error);

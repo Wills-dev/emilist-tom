@@ -6,34 +6,56 @@ import React, { useContext, useEffect } from "react";
 import { numberWithCommas } from "@/helpers";
 import { AuthContext } from "@/utils/AuthState";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
+import { useConfirmPayment } from "@/hooks/useConfirmPayment";
+import { useUpdateApplicationStatus } from "@/hooks/useUpdateApplicationStatus";
 
+import PaymentModal from "../modals/PaymentModal";
 import ActiveJobInfoDetails from "./ActiveJobInfoDetails";
+import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 
 const ActiveJobInfo = ({ jobId }: any) => {
   const { currentUser } = useContext(AuthContext);
+
+  const { updateApplicationStatus, loadingAccept, acceptRerender } =
+    useUpdateApplicationStatus();
+
+  const {
+    confirmPayment,
+    loadingPayment,
+    paymentRerender,
+    onCancelPayment,
+    paymentDetails,
+    handlePaymentChange,
+    openPaymentModal,
+    setOpenPaymentModal,
+  } = useConfirmPayment();
 
   const {
     loading,
     getJobInfo,
     jobInfo,
-    analytics,
     currentMilestone,
     setCurrentMilestone,
   } = useGetJobInfo();
 
   useEffect(() => {
     getJobInfo(jobId);
-  }, [jobId, currentUser]);
+  }, [jobId, currentUser, paymentRerender, acceptRerender]);
 
   return (
     <section className="py-28 padding-x bg-[#F0FDF5]">
+      <LoadingOverlay loading={loadingAccept} />
       {loading ? (
         <div className="flex w-full min-h-[70vh] item-center justify-center text-green-500 mt-6">
           <span className="loading loading-bars loading-lg"></span>
         </div>
       ) : (
         <div className="grid grid-cols-12 py-10 gap-6">
-          <ActiveJobInfoDetails jobInfo={jobInfo} jobId={jobId} />
+          <ActiveJobInfoDetails
+            jobInfo={jobInfo}
+            jobId={jobId}
+            updateApplicationStatus={updateApplicationStatus}
+          />
 
           <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-[10px] py-10 ">
             <ul className="flex items-center flex-wrap gap-4   px-10 max-sm:px-5">
@@ -44,7 +66,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
                     milestoneInfo._id === currentMilestone?._id
                       ? "text-primary-green  border-b-primary-green border-b-2"
                       : "text-[#737774]"
-                  }  font-exo text-base font-[600] capitalize cursor-pointer max-sm:text-[14px]`}
+                  }   font-semibold capitalize cursor-pointer max-sm:text-[14px]`}
                   onClick={() => setCurrentMilestone(milestoneInfo)}
                 >
                   Milestone {i + 1}
@@ -57,7 +79,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
                   Details
                 </h6>
               </div>
-              <p className=" text-[#030A05] text-[16px] leading-[24px] font-[400] max-sm:text-[12px]">
+              <p className="max-sm:text-sm">
                 {currentMilestone?.achievement && currentMilestone?.achievement}
               </p>
             </div>
@@ -72,9 +94,9 @@ const ActiveJobInfo = ({ jobId }: any) => {
                     className="object-contain w-[20px] h-[20px] max-sm:w-[14px] max-sm:h-[14px] "
                   />
                   <div className="flex flex-col  gap-1">
-                    <h6 className="text-[#030A05] text-[18px] leading-[24px] font-[600] max-sm:text-[14px]">
-                      {currentMilestone?.milestoneDuration &&
-                        currentMilestone?.milestoneDuration}
+                    <h6 className="text-lg font-[600] max-sm:text-sm">
+                      {currentMilestone?.timeFrame?.number}{" "}
+                      {currentMilestone?.timeFrame?.period}
                     </h6>
                     <p className="text-[#474C48] text-[16px] leading-[24px] font-[400] max-sm:text-[12px]">
                       Milestone duration
@@ -90,22 +112,20 @@ const ActiveJobInfo = ({ jobId }: any) => {
                     className="object-contain w-[20px] h-[20px] max-sm:w-[14px] max-sm:h-[14px] "
                   />
                   <div className="flex flex-col gap-1">
-                    <h6 className="text-[#030A05] text-[18px] leading-[24px] font-[600] max-sm:text-[14px]">
-                      ₦
-                      {currentMilestone?.milestoneAmount &&
-                        numberWithCommas(currentMilestone?.milestoneAmount)}
+                    <h6 className="sm:text-lg font-semibold">
+                      {jobInfo?.currency}{" "}
+                      {currentMilestone?.amount &&
+                        numberWithCommas(currentMilestone?.amount)}
                     </h6>
-                    <p className="text-[#474C48] text-[16px] leading-[24px] font-[400] max-sm:text-[12px]">
-                      Amount
-                    </p>
+                    <p className="text-[#474C48] max-sm:text-sm">Amount</p>
                   </div>
                 </div>
               </div>
             </div>
-            {currentMilestone.status === "active" ? (
+            {currentMilestone.status !== "completed" ? (
               <div className="flex flex-col  px-10 max-sm:px-5 w-full py-6">
                 <div className="flex items-center gap-2">
-                  <p className=" text-[#303632] text-[16px] leading-[24px] font-[500] max-sm:text-[12px]">
+                  <p className="font-medium max-sm:text-sm">
                     Milestone completed
                   </p>
                   <Image
@@ -117,7 +137,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
                   />
                 </div>
                 <div className="py-8">
-                  <button className="bg-[#A2A4A2] rounded-[10px] w-[148px] h-[52px] text-[#FCFEFD] font-[700] max-sm:w-[120px] max-sm:h-[38px] max-sm:text-[14px] ">
+                  <button className="bg-[#A2A4A2] rounded-lg w-[148px] h-[52px] text-[#FCFEFD] font-bold max-sm:w-[120px] max-sm:h-[38px] max-sm:text-sm">
                     Payment
                   </button>
                 </div>
@@ -125,7 +145,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
             ) : (
               <div className="flex flex-col  px-10 max-sm:px-5 w-full py-6">
                 <div className="flex items-center gap-2">
-                  <p className=" text-[#303632] text-[16px] leading-[24px] font-[500] max-sm:text-[12px]">
+                  <p className="font-medium max-sm:text-sm">
                     Milestone completed
                   </p>
                   <Image
@@ -172,13 +192,13 @@ const ActiveJobInfo = ({ jobId }: any) => {
                     <div className="py-8">
                       <button
                         className="bg-primary-green rounded-[10px] w-[148px] h-[52px] text-[#FCFEFD] font-[700] max-sm:w-[120px] max-sm:h-[38px] max-sm:text-[14px]"
-                        // onClick={() => setOpenPaymentModal(true)}
+                        onClick={() => setOpenPaymentModal(true)}
                       >
                         Payment
                       </button>
 
                       {/* payment input modal */}
-                      {/* <PaymentModal
+                      <PaymentModal
                         isOpen={openPaymentModal}
                         onCancel={onCancelPayment}
                         confirmPayment={confirmPayment}
@@ -186,7 +206,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
                         paymentDetails={paymentDetails}
                         handlePaymentChange={handlePaymentChange}
                         milestoneId={currentMilestone.milestoneId}
-                      /> */}
+                      />
                     </div>
                   )}
                 </>

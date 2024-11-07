@@ -10,6 +10,7 @@ type Props = {
   jobId: string;
   milestoneId: string;
   milestoneAmount: number;
+  currency: string;
 };
 
 const MilestonInputInvoice = ({
@@ -22,12 +23,13 @@ const MilestonInputInvoice = ({
   jobId,
   milestoneId,
   milestoneAmount,
+  currency,
 }: Props) => {
   return (
-    <Modal open={isOpen} onCancel={onCancel} centered width={720}>
+    <Modal open={isOpen} onCancel={onCancel} centered width={720} footer={null}>
       <form
         className="  px-6 max-sm:px-3 py-10"
-        onSubmit={(e) => uploadInvoice(e, jobId, milestoneId, milestoneAmount)}
+        onSubmit={(e) => uploadInvoice(e, jobId, milestoneId)}
       >
         <h2 className="sm:text-lg font-bold mb-4">Milestone Invoice</h2>
         <div className="grid grid-cols-2 w-full gap-4">
@@ -36,8 +38,8 @@ const MilestonInputInvoice = ({
               Amount
             </p>
             <div className="w-full">
-              <p className=" min-w-full w-full flex items-center  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm">
-                ₦{milestoneAmount}
+              <p>
+                {currency && currency} {milestoneAmount && milestoneAmount}
               </p>
             </div>
           </div>
@@ -116,7 +118,7 @@ const MilestonInputInvoice = ({
                 name="note"
                 value={invoiceDetails.note}
                 onChange={handleChange}
-                rows={8}
+                rows={4}
               ></textarea>
             </div>
           </div>
