@@ -54,10 +54,10 @@ const PausedProjects = () => {
                     <Link
                       href={
                         project?.type === "biddable"
-                          ? `/dashboard/project/active/info/biddable/${project._id}`
+                          ? `/dashboard/project/info/biddable/${project?._id}`
                           : project?.type === "regular"
-                          ? `/dashboard/project/active/info/regular/${project._id}`
-                          : `/dashboard/project/active/info/direct/${project._id}`
+                          ? `/dashboard/project/info/regular/${project?._id}`
+                          : `/dashboard/project/info/direct/${project?._id}`
                       }
                       className="sm:text-xl font-semibold hover:text-primary-green transition-all duration-300"
                     >
