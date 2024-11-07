@@ -45,8 +45,8 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
     setUpdateStatus((prev) => !prev);
   };
 
-  const hasInvoice = jobInfo?.milestoneDetails?.some((obj: any) =>
-    obj.hasOwnProperty("invoice")
+  const hasInvoice = jobInfo?.milestones?.some((obj: any) =>
+    obj.hasOwnProperty("accountDetails")
   );
 
   const handleOpenInvoiceDetails = (invoiceDetails: any) => {
@@ -75,14 +75,12 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
                   Invoice
                 </h5>
                 <div className=" flex flex-col  gap-4 ">
-                  {jobInfo?.milestones.map((milestone: any, index: number) => (
+                  {jobInfo?.milestones?.map((milestone: any, index: number) => (
                     <div key={index}>
-                      {milestone?.invoice?.accountNumber && (
+                      {milestone?.accountDetails && (
                         <button
-                          className="w-full flex items-center justify-between bg-[#054753] rounded-lg h-[48px] px-4 text-[#FCFEFD] text-sm font-medium"
-                          onClick={() =>
-                            handleOpenInvoiceDetails(milestone.invoice)
-                          }
+                          className="w-full flex-c-b bg-[#054753] rounded-lg h-[48px] px-4 text-[#FCFEFD] text-sm font-medium"
+                          onClick={() => handleOpenInvoiceDetails(milestone)}
                         >
                           Milestone {index + 1} invoice
                           <Image
@@ -96,17 +94,11 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
                       )}
                     </div>
                   ))}
-
-                  <MilestoneInvoiceModal
-                    isOpen={isOpenModal}
-                    onCancel={() => setOpenModal(false)}
-                    invoiceDetails={currentInvoiceDetails}
-                  />
                 </div>
               </div>
             </div>
           )}
-          <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg py-10 ">
+          <div className="col-span-9 max-lg:col-span-12 flex flex-col w-full bg-white rounded-lg py-10 ">
             <ul className="flex items-center flex-wrap gap-4   px-10 max-sm:px-5">
               {jobInfo?.milestones?.map((milestoneInfo: any, i: number) => (
                 <li
@@ -180,7 +172,7 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
               </div>
             </div>
 
-            {!updateStatus ? (
+            {!updateStatus && currentMilestone?.status !== "completed" ? (
               <div className="flex flex-col  px-10 max-sm:px-5 w-full py-6">
                 <div className="flex items-center gap-2">
                   <p className=" text-[#303632] font-medium max-sm:text-xs">
@@ -218,12 +210,14 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
                 </div>
 
                 <div className="py-8">
-                  <button
-                    className="bg-primary-green rounded-lg w-[148px] h-[52px] text-[#FCFEFD] font-bold max-sm:w-[120px] max-sm:h-[38px] max-sm:text-sm"
-                    onClick={() => setOpenInvoice(true)}
-                  >
-                    Enter Invoice
-                  </button>
+                  {!currentMilestone?.accountDetails && (
+                    <button
+                      className="bg-primary-green rounded-lg w-[148px] h-[52px] text-[#FCFEFD] font-bold max-sm:w-[120px] max-sm:h-[38px] max-sm:text-sm"
+                      onClick={() => setOpenInvoice(true)}
+                    >
+                      Enter Invoice
+                    </button>
+                  )}
 
                   {/* invoice input modal */}
                   <MilestonInputInvoice
@@ -245,7 +239,7 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
 
           {/* invoice mobile view */}
           {hasInvoice && (
-            <div className="col-span-3 max-lg:col-span-5 max-md:col-span-8 max-sm:col-span-12 lg:hidden max-h-max">
+            <div className="col-span-9 max-lg:col-span-12 lg:hidden max-h-max">
               <div className=" bg-white w-full rounded-lg py-10 px-5">
                 <h5
                   className="text-lg font-semibold max-sm:t
@@ -254,37 +248,33 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
                   Invoice
                 </h5>
                 <div className=" flex flex-col  gap-4 ">
-                  {jobInfo?.milestoneDetails.map(
-                    (milestone: any, index: number) => (
-                      <div key={index}>
-                        {milestone?.invoice?.accountNumber && (
-                          <button
-                            className="w-full flex-c-b bg-[#054753] rounded-lg h-[48px] px-4 text-[#FCFEFD] text-sm font-medium"
-                            onClick={() =>
-                              handleOpenInvoiceDetails(milestone.invoice)
-                            }
-                          >
-                            Milestone {index + 1} invoice
-                            <Image
-                              src="/assets/icons/arrow-right-2.svg"
-                              alt="menu"
-                              width={20}
-                              height={20}
-                              className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
-                            />
-                          </button>
-                        )}
-                      </div>
-                    )
-                  )}
-
-                  <MilestoneInvoiceModal
-                    isOpen={isOpenModal}
-                    onCancel={() => setOpenModal(false)}
-                    invoiceDetails={currentInvoiceDetails}
-                  />
+                  {jobInfo?.milestones?.map((milestone: any, index: number) => (
+                    <div key={index}>
+                      {milestone?.accountDetails && (
+                        <button
+                          className="w-full flex-c-b bg-[#054753] rounded-lg h-[48px] px-4 text-[#FCFEFD] text-sm font-medium"
+                          onClick={() => handleOpenInvoiceDetails(milestone)}
+                        >
+                          Milestone {index + 1} invoice
+                          <Image
+                            src="/assets/icons/arrow-right-2.svg"
+                            alt="menu"
+                            width={20}
+                            height={20}
+                            className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
+                          />
+                        </button>
+                      )}
+                    </div>
+                  ))}
                 </div>
               </div>
+              <MilestoneInvoiceModal
+                isOpen={isOpenModal}
+                onCancel={() => setOpenModal(false)}
+                invoiceDetails={currentInvoiceDetails}
+                currency={jobInfo?.currency}
+              />
             </div>
           )}
         </div>

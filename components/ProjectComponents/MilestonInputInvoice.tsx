@@ -32,7 +32,7 @@ const MilestonInputInvoice = ({
         onSubmit={(e) => uploadInvoice(e, jobId, milestoneId)}
       >
         <h2 className="sm:text-lg font-bold mb-4">Milestone Invoice</h2>
-        <div className="grid grid-cols-2 w-full gap-4">
+        <div className="grid grid-cols-2 w-full gap-2">
           <div className="w-full col-span-2   ">
             <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
               Amount
@@ -123,14 +123,17 @@ const MilestonInputInvoice = ({
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-center">
+        <p className="text-xs text-primary-green">
+          Note: Please confirm account details before submitting.
+        </p>
+        <div className="flex items-center justify-center mt-5">
           {loadInvoice ? (
             <button className="load-btn">
               <span className="loading loading-dots loading-lg"></span>
             </button>
           ) : (
             <button type="submit" className="custom-btn">
-              send
+              Submit
             </button>
           )}
         </div>
