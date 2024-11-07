@@ -1,40 +1,106 @@
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
-import { Capitalize, numberWithCommas } from "@/helpers";
+import { AnimatePresence, motion } from "framer-motion";
 
 import ChatModal from "../modals/ChatModal";
-import StarRating from "../StarRating/StarRating";
 
-const ActiveJobInfoDetails = ({ jobInfo, jobId }: any) => {
+import { getStatusClass } from "@/constants";
+import { Capitalize, numberWithCommas } from "@/helpers";
+
+const ActiveJobInfoDetails = ({
+  jobInfo,
+  jobId,
+  updateApplicationStatus,
+}: any) => {
   const [openChat, setOpenChat] = useState(false);
-  const [acceptedApplicant, setAcceptedApplicant] = useState<any>(null);
+  const [showActionDropdown, setShowActionDropdown] = useState(false);
 
   const handleOpen = () => {
     setOpenChat((prev) => !prev);
   };
 
-  useEffect(() => {
-    const foundApplicant = jobInfo?.applicants?.find(
-      (applicant: any) => applicant.isAccepted
-    );
+  const toggleActionButton = () => {
+    setShowActionDropdown((prev) => !prev);
+  };
 
-    if (foundApplicant) {
-      setAcceptedApplicant(foundApplicant);
-    }
-  }, [jobInfo?.applicants]);
+  const acceptedApplication = jobInfo?.applications?.find(
+    (applicant: any) => applicant?._id === jobInfo?.acceptedApplicationId
+  );
 
   return (
     <>
       {openChat && (
         <div className="absolute w-full h-full top-0 bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.2)]"></div>
       )}
-      <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-[10px] py-10 ">
+      <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg pb-10 max-h-fit">
+        <div className="flex justify-end pt-4 pb-10  px-10 max-sm:px-5">
+          <p
+            className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+              jobInfo.status
+            )} `}
+          >
+            {jobInfo?.status}
+          </p>
+        </div>
         <div className="w-full  px-10 max-sm:px-5 pb-4">
-          <div className="flex items-center justify-between">
+          <div className="flex-c-b">
             <h5 className=" text-3xl font-semibold max-sm:text-lg">
-              {jobInfo?.jobTitle && Capitalize(jobInfo.jobTitle)}
+              {jobInfo?.title && Capitalize(jobInfo.title)}
             </h5>
+            <div className="block relative">
+              <button onClick={toggleActionButton}>
+                <Image
+                  src="/assets/icons/Menu.svg"
+                  height={20}
+                  width={20}
+                  alt="menu-dot"
+                  className="object-contain h-8 w-6"
+                />
+              </button>
+
+              {/* the action dropdown */}
+              <AnimatePresence>
+                {showActionDropdown && (
+                  <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.3 }}
+                    className="p-6 min-w-fit absolute right-0 top-full z-10 bg-white rounded-lg shadow flex flex-col gap-3 items-start"
+                  >
+                    {jobInfo?.status === "paused" ? (
+                      <button
+                        className="max-sm:text-sm whitespace-nowrap"
+                        onClick={async () => {
+                          await updateApplicationStatus(
+                            jobInfo?.acceptedApplicationId,
+                            "unpause"
+                          );
+                          toggleActionButton();
+                        }}
+                      >
+                        Resume Job
+                      </button>
+                    ) : (
+                      <button
+                        className="max-sm:text-sm whitespace-nowrap"
+                        onClick={async () => {
+                          await updateApplicationStatus(
+                            jobInfo?.acceptedApplicationId,
+                            "pause"
+                          );
+                          toggleActionButton();
+                        }}
+                      >
+                        Pause Job
+                      </button>
+                    )}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              {/* end of action dropdown */}
+            </div>
           </div>
           <p className=" max-sm:text-xs py-2">
             <span className="text-[#1A201B] font-semibold">Job ID:</span>{" "}
@@ -53,31 +119,32 @@ const ActiveJobInfoDetails = ({ jobInfo, jobId }: any) => {
               />
               <div className="flex flex-col  gap-1">
                 <h6 className=" text-lg font-semibold max-sm:text-[14px]">
-                  {jobInfo?.projectDuration && jobInfo.projectDuration}
+                  {jobInfo?.duration?.number && jobInfo.duration?.number}{" "}
+                  {jobInfo?.duration?.period && jobInfo.duration?.period}
                 </h6>
                 <p className="text-[#474C48] max-sm:text-xs">
                   Project duration
                 </p>
               </div>
             </div>
-            <div className=" flex gap-2">
-              <Image
-                src="/assets/icons/empty-wallet.svg"
-                alt="menu"
-                width={20}
-                height={20}
-                className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
-              />
-              <div className="flex flex-col gap-1">
-                <h6 className=" text-lg font-semibold max-sm:text-[14px]">
-                  ₦{" "}
-                  {jobInfo?.bidRange
-                    ? numberWithCommas(jobInfo.bidRange)
-                    : numberWithCommas(jobInfo.Amount)}
-                </h6>
-                <p className="text-[#474C48] max-sm:text-xs">Price</p>
+            {jobInfo?.bidRange && (
+              <div className=" flex gap-2">
+                <Image
+                  src="/assets/icons/empty-wallet.svg"
+                  alt="menu"
+                  width={20}
+                  height={20}
+                  className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
+                />
+                <div className="flex flex-col gap-1">
+                  <h6 className=" text-lg font-semibold max-sm:text-[14px]">
+                    {jobInfo?.currency}{" "}
+                    {jobInfo?.bidRange && numberWithCommas(jobInfo.bidRange)}
+                  </h6>
+                  <p className="text-[#474C48] max-sm:text-xs">Bid range</p>
+                </div>
               </div>
-            </div>
+            )}
             <div className="flex gap-2">
               <Image
                 src="/assets/icons/dollar-circle.svg"
@@ -88,10 +155,10 @@ const ActiveJobInfoDetails = ({ jobInfo, jobId }: any) => {
               />
               <div className="flex flex-col  gap-1">
                 <h6 className=" text-lg font-semibold max-sm:text-[14px]">
-                  ₦{" "}
-                  {jobInfo?.bidRange
-                    ? numberWithCommas(jobInfo.bidRange)
-                    : numberWithCommas(jobInfo.Amount)}
+                  {jobInfo?.currency}{" "}
+                  {jobInfo?.maximumPrice
+                    ? numberWithCommas(jobInfo.maximumPrice)
+                    : jobInfo?.budget && numberWithCommas(jobInfo.budget)}{" "}
                 </h6>
                 <p className="text-[#474C48] max-sm:text-xs">Actual Amount</p>
               </div>
@@ -115,49 +182,30 @@ const ActiveJobInfoDetails = ({ jobInfo, jobId }: any) => {
           </div>
         </div>
         <div className="w-full px-10 max-sm:px-5 py-6 flex justify-between">
-          {acceptedApplicant ? (
-            <div className="flex ">
-              <Image
-                src="/assets/dummyImages/profilePic.png"
-                alt="menu"
-                width={44}
-                height={44}
-                className="object-cover w-[44px] h-[44px] max-sm:w-[25px] max-sm:h-[25px] rounded-full mr-2"
-              />
+          {acceptedApplication ? (
+            <div className="flex-c ">
+              {" "}
+              {acceptedApplication?.user?.profileImage ? (
+                <Image
+                  src={acceptedApplication?.user?.profileImage}
+                  alt="menu"
+                  width={44}
+                  height={44}
+                  className="object-cover w-[44px] h-[44px] max-sm:w-[25px] max-sm:h-[25px] rounded-full mr-2"
+                />
+              ) : (
+                <p className="w-[44px] h-[44px] max-sm:w-[25px] max-sm:h-[25px] rounded-full bg-slate-200 mr-2 flex-c justify-center font-bold">
+                  {acceptedApplication?.user?.userName?.[0]?.toUpperCase()}
+                </p>
+              )}
               <div className="flex-1 flex flex-col gap-1">
                 <div className="flex items-center justify-between">
                   <h6 className=" text-lg font-[500] max-sm:text-[14px]">
-                    {acceptedApplicant?.firstName
-                      ? acceptedApplicant?.firstName +
-                        " " +
-                        acceptedApplicant?.lastName
-                      : acceptedApplicant?.userName
-                      ? acceptedApplicant?.userName
-                      : "No name"}
+                    {acceptedApplication?.user?.fullName
+                      ? acceptedApplication?.user?.fullName
+                      : acceptedApplication?.user?.userName}
                   </h6>
                 </div>
-
-                {acceptedApplicant?.Level === "Level 4" ? (
-                  <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs ">
-                    Level 4 | <StarRating rating={4} />
-                  </div>
-                ) : acceptedApplicant?.Level === "Level 3" ? (
-                  <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs ">
-                    Level 3 | <StarRating rating={3} />
-                  </div>
-                ) : acceptedApplicant?.Level === "Level 2" ? (
-                  <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs ">
-                    Level 2 | <StarRating rating={2} />
-                  </div>
-                ) : acceptedApplicant?.Level === "Level 1" ? (
-                  <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs ">
-                    Level 1 | <StarRating rating={1} />
-                  </div>
-                ) : (
-                  <div className="flex-c text-[#5E625F] text-sm max-sm:text-xs ">
-                    Level 5 | <StarRating rating={5} />
-                  </div>
-                )}
               </div>
             </div>
           ) : null}
@@ -196,33 +244,31 @@ const ActiveJobInfoDetails = ({ jobInfo, jobId }: any) => {
             </div>
           </div>
           <p className="  max-sm:text-xs">
-            {jobInfo?.Description ? jobInfo?.Description : jobInfo?.description}
-            <button className="text-[#25C269]  text-[14px] font-[500] leading-[16px] max-sm:text-xs whitespace-nowrap">
+            {jobInfo?.description && jobInfo?.description}
+            {/* <button className="text-[#25C269]  text-[14px] font-[500] leading-[16px] max-sm:text-xs whitespace-nowrap">
               see more
-            </button>
+            </button> */}
           </p>
         </div>
-        <div className="px-10 max-sm:px-5 py-6 w-full">
-          <h6 className=" text-lg font-semibold max-sm:text-[14px] font-inter">
-            Files
-          </h6>
-          <div className="flex items-center w-full gap-10 pt-4">
-            <Image
-              src="/assets/icons/pdf.jpg"
-              alt="menu"
-              width={61}
-              height={61}
-              className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
-            />
-            <Image
-              src="/assets/icons/mword.jpg"
-              alt="menu"
-              width={61}
-              height={61}
-              className="object-contain w-[61px] h-[61px] max-sm:w-[40px] max-sm:h-[40px] "
-            />
+        {jobInfo?.jobFiles?.length > 0 && (
+          <div className="px-10 max-sm:px-5 py-6 w-full">
+            <h6 className="text-lg font-semibold max-sm:text-sm font-inter">
+              Files
+            </h6>
+            <div className="flex items-center w-full gap-2 pt-4 flex-wrap">
+              {jobInfo?.jobFiles?.map((file: any, index: number) => (
+                <Image
+                  key={index}
+                  src={file?.url}
+                  alt="menu"
+                  width={61}
+                  height={61}
+                  className="object-cover w-[61px] h-[70px] max-sm:w-[40px] max-sm:h-[40px] "
+                />
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

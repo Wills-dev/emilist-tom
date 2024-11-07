@@ -26,7 +26,7 @@ const PaymentModal = ({
   milestoneId,
 }: Props) => {
   return (
-    <Modal open={isOpen} onCancel={onCancel} centered width={600}>
+    <Modal open={isOpen} onCancel={onCancel} centered width={600} footer={null}>
       <form
         className="flex-c justify-center flex-col gap-4 px-6 max-sm:px-3 py-10"
         onSubmit={(e) => confirmPayment(e, milestoneId)}
@@ -48,7 +48,7 @@ const PaymentModal = ({
           </div>
         </div>
         <div className="w-full  ">
-          <p className="text-[#5e625f] py-2 text-[16px] font-medium max-sm:text-sm">
+          <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
             Payment method
           </p>
           <div className="w-full">
@@ -69,9 +69,7 @@ const PaymentModal = ({
           </div>
         </div>
         <div className="w-full ">
-          <p className="text-[#5e625f] py-2 text-[16px] font-medium max-sm:text-sm">
-            State Date
-          </p>
+          <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">Date</p>
           <div className="w-full">
             <input
               type="date"

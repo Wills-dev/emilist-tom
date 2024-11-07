@@ -131,7 +131,7 @@ const BiddableJobApplicantActionDropdown = ({
             isOpen={isOpen}
             onCancel={onCancel}
             updateApplicationStatus={updateApplicationStatus}
-            applicationId={applicant?.applicantId}
+            applicationId={applicant?._id}
           />
         </div>
       )}

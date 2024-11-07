@@ -33,7 +33,7 @@ export const useUpdateApplicationStatus = () => {
         `/jobs/update-application-status/${applicationId}`,
         acceptDetails
       );
-      toast.success(`Applicant accepted!`, toastOptions);
+      toast.success(`Successful!`, toastOptions);
       setRerender((prev) => !prev);
     } catch (error: any) {
       console.log("error accepting regular job application", error);
