@@ -158,7 +158,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
                 </div>
 
                 <>
-                  {currentMilestone.invoice.paymentStatus === "paid" ? (
+                  {currentMilestone.accountDetails.paymentStatus === "paid" ? (
                     <div className=" flex gap-4 py-6 text-[#282828]">
                       <div className="flex gap-4">
                         <img
@@ -205,7 +205,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
                         loadingPayment={loadingPayment}
                         paymentDetails={paymentDetails}
                         handlePaymentChange={handlePaymentChange}
-                        milestoneId={currentMilestone.milestoneId}
+                        milestoneId={currentMilestone?._id}
                       />
                     </div>
                   )}

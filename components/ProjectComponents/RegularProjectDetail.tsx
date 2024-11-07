@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
 import { numberWithCommas } from "@/helpers";
+import { getStatusClass } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 import { useUploadInvoiceForMilestone } from "@/hooks/useUploadInvoiceForMilestone";
@@ -117,14 +118,25 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
             <div className="w-full px-10 max-sm:px-5 py-6">
               <div className="w-full flex-c-b">
                 <h6 className=" my-5 font-semibold max-sm:font-xs">Details</h6>
-                <div className="flex gap-1 items-center">
-                  <p className="text-[#5E625F]  text-sm font-medium max-sm:text-xs whitespace-nowrap">
-                    Due date
-                  </p>
-                  <div className=" flex items-center justify-center bg-[#F0FDF5] w-[74px] h-[30px] max-sm:h-[25px] max-sm:w-[55px] rounded-[20px]">
-                    <p className="text-[#25C269]  text-sm font-medium max-sm:text-xs whitespace-nowrap">
-                      3 days
+                <div className="flex flex-col gap-2 ">
+                  <div className="flex justify-end">
+                    <p
+                      className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                        currentMilestone.status
+                      )} `}
+                    >
+                      {currentMilestone?.status}
                     </p>
+                  </div>
+                  <div className="flex gap-1 items-center">
+                    <p className="text-[#5E625F] text-sm font-medium max-sm:text-xs whitespace-nowrap">
+                      Due date
+                    </p>
+                    <div className=" flex items-center justify-center bg-[#F0FDF5] w-[74px] h-[30px] max-sm:h-[25px] max-sm:w-[55px] rounded-[20px]">
+                      <p className="text-[#25C269]  text-sm font-medium max-sm:text-xs whitespace-nowrap">
+                        3 days
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
