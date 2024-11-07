@@ -1,9 +1,6 @@
-import { ChangeEvent, useMemo, useState } from "react";
-
-import toast from "react-hot-toast";
+import { ChangeEvent, useState } from "react";
 
 import { axiosInstance } from "@/axiosInstance/baseUrls";
-import { toastOptions } from "@/helpers";
 
 export const useGetProjectByStatus = () => {
   const [allProjects, setAllProjects] = useState<any>([]);

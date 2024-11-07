@@ -6,6 +6,7 @@ import Image from "next/image";
 import ChatModal from "../modals/ChatModal";
 
 import { Capitalize, numberWithCommas } from "@/helpers";
+import { getStatusClass } from "@/constants";
 
 interface ActiveProjectInfoProps {
   jobInfo: any;
@@ -28,7 +29,16 @@ const ActiveProjectInfo = ({ jobInfo, jobId }: ActiveProjectInfoProps) => {
       {openChat && (
         <div className="absolute w-full h-full top-0 bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.2)]"></div>
       )}
-      <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-[10px] py-10 ">
+      <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg pb-10 max-h-fit">
+        <div className="flex justify-end pt-4 pb-10  px-10 max-sm:px-5">
+          <p
+            className={`px-4 py-1 rounded-full w-fit text-xs ${
+              jobInfo.status && getStatusClass(jobInfo.status)
+            } `}
+          >
+            {jobInfo?.status}
+          </p>
+        </div>
         <div className="w-full  px-10 max-sm:px-5 pb-4">
           <div className="flex items-center justify-between">
             <h5 className=" text-[30px]  font-semibold max-sm:text-[20px]">

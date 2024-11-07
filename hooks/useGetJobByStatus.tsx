@@ -28,7 +28,6 @@ export const useGetJobByStatus = () => {
       const { data } = await axiosInstance.get(
         `/jobs/fetch-jobs-by-status?status=${status}`
       );
-      console.log("data", data);
       setAllJobs(data?.data);
       const totalJobs = data?.data?.length || 0;
       setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));

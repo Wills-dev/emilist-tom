@@ -50,10 +50,10 @@ const NewProjects = () => {
                   key={index}
                   href={
                     project?.type === "biddable"
-                      ? `/dashboard/project/info/biddable/${project?._id}`
+                      ? `/dashboard/job/info/biddable/${project?._id}`
                       : project?.type === "regular"
-                      ? `/dashboard/project/info/regular/${project?._id}`
-                      : `/dashboard/project/info/direct/${project?._id}`
+                      ? `/dashboard/job/info/regular/${project?._id}`
+                      : `/dashboard/job/info/direct/${project?._id}`
                   }
                   className="col-span-2 w-full min-w-full max-md:col-span-3 border-1 border-[#D0CFCF] rounded-lg p-6 max-sm:px-3 flex justify-between items-center"
                 >
