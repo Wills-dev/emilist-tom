@@ -54,12 +54,10 @@ export const useUploadInvoiceForMilestone = () => {
         accountNumber,
         accountName,
       };
-      const { data } = await axiosInstance.post(
+      await axiosInstance.patch(
         `/jobs/update-milestone-status/${jobId}/milestone/${milestoneId}`,
         innvoicePayload
       );
-
-      console.log("data", data);
       setOpenInvoice(false);
       toast.success(`Invoice sent!`, toastOptions);
       setRerender((prev) => !prev);
