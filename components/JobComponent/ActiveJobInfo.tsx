@@ -12,6 +12,7 @@ import { useUpdateApplicationStatus } from "@/hooks/useUpdateApplicationStatus";
 import PaymentModal from "../modals/PaymentModal";
 import ActiveJobInfoDetails from "./ActiveJobInfoDetails";
 import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
+import { getStatusClass } from "@/constants";
 
 const ActiveJobInfo = ({ jobId }: any) => {
   const { currentUser } = useContext(AuthContext);
@@ -78,10 +79,18 @@ const ActiveJobInfo = ({ jobId }: any) => {
             </ul>
             <div className="w-full px-10 max-sm:px-5 py-6">
               <div className="w-full flex items-center justify-between">
-                <h6 className=" my-5 text-[#030A05] text-[16px] leading-[24px] font-[600] max-sm:text-[13px]">
-                  Details
-                </h6>
+                <h6 className=" my-5 font-semibold max-sm:text-sm">Details</h6>
+                <div className="flex justify-end">
+                  <p
+                    className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
+                      currentMilestone.status
+                    )} `}
+                  >
+                    {currentMilestone?.status}
+                  </p>
+                </div>
               </div>
+
               <p className="max-sm:text-sm">
                 {currentMilestone?.achievement && currentMilestone?.achievement}
               </p>
