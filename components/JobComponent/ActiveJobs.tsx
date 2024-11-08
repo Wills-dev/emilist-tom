@@ -94,7 +94,8 @@ const ActiveJobs = () => {
                       </p>
                       <div className=" flex-c justify-center bg-[#F0FDF5] h-[30px] max-sm:h-[25px]  rounded-[20px]">
                         <p className="text-[#25C269]  sm:text-sm font-medium text-xs whitespace-nowrap px-4">
-                          {job?.dueDate && formatDueDate(job?.dueDate)}
+                          {job?.currentMilestoneDueDate &&
+                            formatDueDate(job?.currentMilestoneDueDate)}
                         </p>
                       </div>
                     </div>

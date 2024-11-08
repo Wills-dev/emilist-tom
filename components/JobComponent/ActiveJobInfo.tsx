@@ -15,6 +15,8 @@ import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import { getStatusClass } from "@/constants";
 import { useRequestQuote } from "@/hooks/useRequestQuote";
 import { useAcceptQuote } from "@/hooks/useAcceptQuote";
+import CloseContractModal from "../modals/CloseContractModal";
+import { useCloseContract } from "@/hooks/useCloseContract";
 
 const ActiveJobInfo = ({ jobId }: any) => {
   const { currentUser } = useContext(AuthContext);
@@ -42,12 +44,33 @@ const ActiveJobInfo = ({ jobId }: any) => {
   } = useConfirmPayment();
 
   const {
+    closeContract,
+    loadingContract,
+    contractRerender,
+    onCancel,
+    contractDetails,
+    handleContractChange,
+    openContractModal,
+    setOpenContractModal,
+    setRateServiceRendered,
+    setRateServiceProvider,
+    rateServiceProvider,
+    rateServiceRendered,
+  } = useCloseContract();
+
+  const {
     loading,
     getJobInfo,
     jobInfo,
     currentMilestone,
     setCurrentMilestone,
   } = useGetJobInfo();
+
+  const isAllMilestoneCompleted = jobInfo?.milestones?.every(
+    (milestone: any) => milestone.status === "completed"
+  );
+
+  console.log("isAllMilestoneCompleted", isAllMilestoneCompleted);
 
   useEffect(() => {
     getJobInfo(jobId);
@@ -58,6 +81,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
     acceptRerender,
     rerenderr,
     acceptQuoteRerender,
+    contractRerender,
   ]);
 
   return (
@@ -249,7 +273,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
               </div>
             )}
 
-            {/* {allPaid && (
+            {isAllMilestoneCompleted && (
               <div className="flex items-center justify-center">
                 {jobInfo?.contractStatus &&
                 jobInfo?.contractStatus === "closed" ? (
@@ -276,14 +300,11 @@ const ActiveJobInfo = ({ jobId }: any) => {
                       loadingContract={loadingContract}
                       rateServiceRendered={rateServiceRendered}
                       jobId={jobId}
-                      noOfMilestones={jobInfo?.milestoneNumber}
-                      budget={Number(jobInfo?.maxPrice)}
-                      totalAmount={totalAmountPaid}
                     />
                   </>
                 )}
               </div>
-            )} */}
+            )}
           </div>
         </div>
       )}

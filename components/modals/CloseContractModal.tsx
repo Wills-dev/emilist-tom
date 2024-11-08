@@ -1,15 +1,11 @@
 import { Modal } from "antd";
 
 import { ContractType } from "@/types";
-import { numberWithCommas } from "@/helpers";
 
 type Props = {
   isOpen: boolean;
   onCancel: () => void;
   jobId: string;
-  noOfMilestones: number;
-  budget: number;
-  totalAmount: number;
   setRateServiceRendered: React.Dispatch<React.SetStateAction<number>>;
   setRateServiceProvider: React.Dispatch<React.SetStateAction<number>>;
   rateServiceProvider: number;
@@ -18,13 +14,7 @@ type Props = {
   handleContractChange: React.ChangeEventHandler<
     HTMLSelectElement | HTMLTextAreaElement
   >;
-  closeContract: (
-    e: React.FormEvent<HTMLFormElement>,
-    jobId: string,
-    noOfMilestones: number | string,
-    budget: number,
-    sumOfAmountPaidForAllMilestone: number
-  ) => void;
+  closeContract: (e: React.FormEvent<HTMLFormElement>, jobId: string) => void;
   loadingContract: boolean;
 };
 
@@ -39,9 +29,6 @@ const CloseContractModal = ({
   handleContractChange,
   closeContract,
   jobId,
-  noOfMilestones,
-  budget,
-  totalAmount,
   loadingContract,
 }: Props) => {
   const handleRating = (index: number) => {
@@ -77,9 +64,7 @@ const CloseContractModal = ({
   return (
     <Modal open={isOpen} onCancel={onCancel} centered width={620}>
       <form
-        onSubmit={(e) =>
-          closeContract(e, jobId, noOfMilestones, budget, totalAmount)
-        }
+        onSubmit={(e) => closeContract(e, jobId)}
         className="flex-c justify-center flex-col gap-4 px-6 max-sm:px-3 py-4"
       >
         <div className="w-full   ">
@@ -89,36 +74,6 @@ const CloseContractModal = ({
           <div className="w-full">
             <p className=" min-w-full w-full  max-w-full rounded-lg h-[62px] px-4 bg-[#ececec]   max-sm:h-[46px] max-sm:text-sm  flex items-center">
               {jobId && jobId}
-            </p>
-          </div>
-        </div>
-        <div className="w-full   ">
-          <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
-            Milestones
-          </p>
-          <div className="w-full">
-            <p className=" min-w-full w-full  max-w-full rounded-lg h-[62px] px-4 bg-[#ececec]   max-sm:h-[46px] max-sm:text-sm  flex items-center">
-              {noOfMilestones && noOfMilestones}
-            </p>
-          </div>
-        </div>
-        <div className="w-full   ">
-          <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
-            Budget
-          </p>
-          <div className="w-full">
-            <p className=" min-w-full w-full  max-w-full rounded-lg h-[62px] px-4 bg-[#ececec]   max-sm:h-[46px] max-sm:text-sm  flex items-center">
-              ₦ {budget && numberWithCommas(budget)}
-            </p>
-          </div>
-        </div>
-        <div className="w-full   ">
-          <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
-            Actual Amount
-          </p>
-          <div className="w-full">
-            <p className=" min-w-full w-full  max-w-full rounded-lg h-[62px] px-4 bg-[#ececec]   max-sm:h-[46px] max-sm:text-sm  flex items-center">
-              ₦ {totalAmount && numberWithCommas(totalAmount)}
             </p>
           </div>
         </div>
