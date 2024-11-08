@@ -12,6 +12,7 @@ import { useUploadInvoiceForMilestone } from "@/hooks/useUploadInvoiceForMilesto
 import ActiveProjectInfo from "./ActiveProjectInfo";
 import MilestonInputInvoice from "./MilestonInputInvoice";
 import MilestoneInvoiceModal from "../modals/MilestoneInvoiceModal";
+import AddQoute from "../JobComponent/AddQoute";
 
 interface ProjectProjectDetailProps {
   jobId: string;
@@ -20,6 +21,7 @@ interface ProjectProjectDetailProps {
 const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
   const { currentUser } = useContext(AuthContext);
 
+  const [openModal, setIsOpenModal] = useState(false);
   const [isOpenModal, setOpenModal] = useState(false);
   const [updateStatus, setUpdateStatus] = useState(false);
   const [currentInvoiceDetails, setCurrentInvoiceDetails] = useState<any>({});
@@ -50,6 +52,15 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
     obj.hasOwnProperty("accountDetails")
   );
 
+  const showQuoteComponent = jobInfo?.applications?.some((applicant: any) => {
+    if (
+      applicant?.user?._id === currentUser?._id &&
+      jobInfo?.isRequestForQuote
+    ) {
+      return true;
+    } else return false;
+  });
+
   const handleOpenInvoiceDetails = (invoiceDetails: any) => {
     setCurrentInvoiceDetails(invoiceDetails);
     setOpenModal(true);
@@ -67,6 +78,13 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
         </div>
       ) : (
         <div className="grid grid-cols-12 py-10 gap-6">
+          <AddQoute
+            showQuoteComponent={showQuoteComponent}
+            jobInfo={jobInfo}
+            getJobInfo={getJobInfo}
+            openModal={openModal}
+            setOpenModal={setIsOpenModal}
+          />
           <ActiveProjectInfo jobInfo={jobInfo} jobId={jobId} />
           {/* invoice web view */}
           {hasInvoice && (

@@ -12,6 +12,7 @@ import MilestonInputInvoice from "./MilestonInputInvoice";
 import MilestoneInvoiceModal from "../modals/MilestoneInvoiceModal";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 import { getStatusClass } from "@/constants";
+import AddQoute from "../JobComponent/AddQoute";
 
 interface BiddableProjectDetailProps {
   jobId: string;
@@ -20,6 +21,7 @@ interface BiddableProjectDetailProps {
 const BiddableProjectDetail = ({ jobId }: BiddableProjectDetailProps) => {
   const { currentUser } = useContext(AuthContext);
 
+  const [openModal, setIsOpenModal] = useState(false);
   const [isOpenModal, setOpenModal] = useState(false);
   const [updateStatus, setUpdateStatus] = useState(false);
   const [currentInvoiceDetails, setCurrentInvoiceDetails] = useState<any>({});
@@ -50,6 +52,15 @@ const BiddableProjectDetail = ({ jobId }: BiddableProjectDetailProps) => {
     obj.hasOwnProperty("accountDetails")
   );
 
+  const showQuoteComponent = jobInfo?.applications?.some((applicant: any) => {
+    if (
+      applicant?.user?._id === currentUser?._id &&
+      jobInfo?.isRequestForQuote
+    ) {
+      return true;
+    } else return false;
+  });
+
   const handleOpenInvoiceDetails = (invoiceDetails: any) => {
     setCurrentInvoiceDetails(invoiceDetails);
     setOpenModal(true);
@@ -67,6 +78,13 @@ const BiddableProjectDetail = ({ jobId }: BiddableProjectDetailProps) => {
         </div>
       ) : (
         <div className="grid grid-cols-12 py-10 gap-6">
+          <AddQoute
+            showQuoteComponent={showQuoteComponent}
+            jobInfo={jobInfo}
+            getJobInfo={getJobInfo}
+            openModal={openModal}
+            setOpenModal={setIsOpenModal}
+          />
           <ActiveProjectInfo jobInfo={jobInfo} jobId={jobId} />
           {/* invoice web view */}
           {hasInvoice && (

@@ -13,9 +13,16 @@ import PaymentModal from "../modals/PaymentModal";
 import ActiveJobInfoDetails from "./ActiveJobInfoDetails";
 import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import { getStatusClass } from "@/constants";
+import { useRequestQuote } from "@/hooks/useRequestQuote";
+import { useAcceptQuote } from "@/hooks/useAcceptQuote";
 
 const ActiveJobInfo = ({ jobId }: any) => {
   const { currentUser } = useContext(AuthContext);
+
+  const { requestQuote, requestLoading, rerenderr } = useRequestQuote();
+
+  const { acceptQuote, loadingAcceptQuote, acceptQuoteRerender } =
+    useAcceptQuote();
 
   const { updateApplicationStatus, loadingAccept, acceptRerender } =
     useUpdateApplicationStatus();
@@ -44,11 +51,20 @@ const ActiveJobInfo = ({ jobId }: any) => {
 
   useEffect(() => {
     getJobInfo(jobId);
-  }, [jobId, currentUser, paymentRerender, acceptRerender]);
+  }, [
+    jobId,
+    currentUser,
+    paymentRerender,
+    acceptRerender,
+    rerenderr,
+    acceptQuoteRerender,
+  ]);
 
   return (
     <section className="py-28 padding-x bg-[#F0FDF5]">
       <LoadingOverlay loading={loadingAccept} />
+      <LoadingOverlay loading={requestLoading} />
+      <LoadingOverlay loading={loadingAcceptQuote} />
       {loading ? (
         <div className="flex w-full min-h-[70vh] item-center justify-center text-green-500 mt-6">
           <span className="loading loading-bars loading-lg"></span>
@@ -59,6 +75,8 @@ const ActiveJobInfo = ({ jobId }: any) => {
             jobInfo={jobInfo}
             jobId={jobId}
             updateApplicationStatus={updateApplicationStatus}
+            requestQuote={requestQuote}
+            acceptQuote={acceptQuote}
           />
 
           <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-[10px] py-10 ">

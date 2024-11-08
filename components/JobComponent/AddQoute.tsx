@@ -20,7 +20,7 @@ const AddQoute = ({
   return (
     <>
       {" "}
-      {showQuoteComponent && (
+      {showQuoteComponent && jobInfo?.status !== "completed" && (
         <div className="col-span-12 ">
           <div className="flex-c-b bg-[#DDFBE9] border-primary-green border-1 px-[3rem] py-2 rounded-lg max-sm:flex-col max-md:px-[1rem] max-sm:px-[0.5rem]  gap-2 text-center w-full">
             {" "}
