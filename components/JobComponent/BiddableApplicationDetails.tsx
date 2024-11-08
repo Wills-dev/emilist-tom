@@ -51,9 +51,10 @@ const BiddableApplicationDetails = ({
             (milestone: any, index: number) => (
               <div
                 className={`flex flex-col  ${
-                  application?.biddableDetails?.milestones > 1 &&
-                  application?.biddableDetails?.milestones.length !== index &&
-                  "border-1 py-3"
+                  application?.biddableDetails?.milestones.length > 1 &&
+                  application?.biddableDetails?.milestones.length - 1 !==
+                    index &&
+                  "border-b-1 py-3"
                 }`}
               >
                 <div
@@ -80,15 +81,26 @@ const BiddableApplicationDetails = ({
           )}
         </div>
         {!isAnyAccepted && (
-          <button
-            className="custom-btn mt-8"
-            onClick={async () => {
-              await updateApplicationStatus(application?._id, "accepted");
-              handleCancelApplicationModal();
-            }}
-          >
-            Accept Application
-          </button>
+          <div className="flex gap-2 flex-wrap">
+            <button
+              className="custom-btn mt-8"
+              onClick={async () => {
+                await updateApplicationStatus(application?._id, "accepted");
+                handleCancelApplicationModal();
+              }}
+            >
+              Accept Application
+            </button>
+            <button
+              className="bg-red-500 text-white hover:bg-red-600 whitespace-nowrap transition-all duration-300 rounded-lg px-6 py-3 text-center mt-8"
+              onClick={async () => {
+                await updateApplicationStatus(application?._id, "rejected");
+                handleCancelApplicationModal();
+              }}
+            >
+              Reject Application
+            </button>
+          </div>
         )}
       </div>
     </Modal>

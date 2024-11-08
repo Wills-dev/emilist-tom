@@ -1,69 +1,92 @@
 import { useRouter } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
+
+interface Milestone {
+  milestoneId: string;
+  achievement: string;
+  amount: number;
+}
 
 export const useRespondQuote = () => {
   const router = useRouter();
 
+  const hasMounted = useRef(false);
+
   const { currentUser } = useContext(AuthContext);
 
   const [rerenderrr, setRerenderrr] = useState(false);
-  const [inputCount, setInputCount] = useState<number>(0);
   const [amount, setAmount] = useState<number | string>(0);
+  const [percentage, setPercentage] = useState<number[]>([]);
   const [respondQuoteLoading, setRespondQuoteLoading] = useState(false);
-  const [milestoneAmounts, setMilestoneAmounts] = useState<string[]>([]);
-  const [milestonePercentage, setMilestonePercentage] = useState<number[]>([]);
+  const [milestones, setMilestones] = useState<Milestone[]>([
+    {
+      milestoneId: "",
+      achievement: "",
+      amount: 0,
+    },
+  ]);
 
-  const handleMilestonePercentageChange = (index: number, value: number) => {
+  // Debounce check function
+  useEffect(() => {
+    if (!hasMounted.current) {
+      hasMounted.current = true;
+      return;
+    }
+
+    const debounceCheck = setTimeout(() => {
+      if (percentage.length > 0 && percentage[0] !== 0) {
+        validateTotalPercentage();
+      }
+    }, 2000);
+
+    return () => clearTimeout(debounceCheck);
+  }, [percentage]);
+
+  // Validate that total percentage equals 100%
+  const validateTotalPercentage = () => {
+    const totalPercentage = percentage.reduce((sum, p) => sum + p, 0);
+    if (totalPercentage !== 100) {
+      toast.error("Total percentage must equal 100%.", toastOptions);
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  const updateAmounts = (newPercentages: number[]) => {
     if (!amount) {
-      toast.error(`Price can't be empty!`, toastOptions);
-      return;
-    }
-    const newValues = [...milestonePercentage];
-    newValues[index] = value;
-
-    const sum = newValues.reduce((acc, val) => acc + val, 0);
-
-    if (sum > 100) {
-      toast.error("All milestones percentage must sum to 100%!", toastOptions);
+      toast.error("Please enter total amount.", toastOptions);
       return;
     }
 
-    if (index === inputCount - 1) {
-      // Ensure the last value is adjusted to fit the total of 100
-      newValues[index] =
-        100 - newValues.slice(0, -1).reduce((acc, val) => acc + val, 0);
-    }
+    const updatedMilestones = newPercentages.map((percent, index) => ({
+      ...milestones[index],
+      amount: (percent / 100) * Number(amount),
+    }));
 
-    if (newValues[index] < 0) {
-      newValues[index] = 0;
-    }
-
-    setMilestonePercentage(newValues);
-    updateAmounts(newValues);
+    setMilestones(updatedMilestones);
+    setPercentage(newPercentages);
   };
 
-  const handleBlur = () => {
-    const sum = milestonePercentage.reduce((acc, val) => acc + val, 0);
-    if (sum > 100) {
-      toast.error("All milestones percentage must sum to 100%!", toastOptions);
-    }
+  // Handler to update a specific percentage
+  const handleSetPercentage = (index: number, value: number) => {
+    const updatedPercentages = [...percentage];
+    updatedPercentages[index] = value;
+    updateAmounts(updatedPercentages);
   };
 
-  const updateAmounts = (newValues: number[]) => {
-    const newAmounts = newValues.map((value) => getProportionateAmount(value));
-    setMilestoneAmounts(newAmounts);
-  };
-
-  const getProportionateAmount = (value: number): any => {
-    const totalAmount = Number(amount);
-    const percentage = (value / 100) * totalAmount;
-    return percentage?.toFixed(2);
+  // Handler to update achievement text
+  const handleAchievementChange = (index: number, newAchievement: string) => {
+    const updatedMilestones = milestones.map((milestone, i) =>
+      i === index ? { ...milestone, achievement: newAchievement } : milestone
+    );
+    setMilestones(updatedMilestones);
   };
 
   const respondQuote = async (e: any, jobId: string) => {
@@ -76,22 +99,17 @@ export const useRespondQuote = () => {
       return toast.error(`Price can't be empty!`, toastOptions);
     }
 
-    const newValues = [...milestonePercentage];
-
-    const sum = newValues.reduce((acc, val) => acc + val, 0);
-
-    if (sum !== 100) {
-      toast.error("All milestones percentage must sum to 100%!", toastOptions);
+    if (!validateTotalPercentage()) {
       return;
     }
     setRespondQuoteLoading(true);
     try {
-      await axiosInstance.post(`/respondQuote/${jobId}`, {
-        amount: amount.toString(),
-        milestoneAmounts: milestoneAmounts,
-        userId: currentUser?.unique_id,
+      await axiosInstance.patch(`/jobs/post-quote`, {
+        jobId,
+        totalAmount: amount,
+        milestones,
       });
-      toast.success("Quote response sent successfully!", toastOptions);
+      toast.success("Quote sent!", toastOptions);
       setRerenderrr((prev) => !prev);
     } catch (error) {
       console.log("error responding to quote", error);
@@ -105,13 +123,13 @@ export const useRespondQuote = () => {
     respondQuoteLoading,
     amount,
     setAmount,
-    milestoneAmounts,
-    milestonePercentage,
-    handleMilestonePercentageChange,
+    milestones,
     respondQuote,
     rerenderrr,
-    handleBlur,
-    inputCount,
-    setInputCount,
+    handleAchievementChange,
+    setMilestones,
+    setPercentage,
+    percentage,
+    handleSetPercentage,
   };
 };

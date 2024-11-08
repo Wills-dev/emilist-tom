@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useAcceptQuote = () => {
@@ -14,18 +14,20 @@ export const useAcceptQuote = () => {
   const [acceptQuoteRerender, setRerender] = useState(false);
   const [loadingAcceptQuote, setLoadingAceeptQuote] = useState(false);
 
-  const acceptQuote = async (applicantId: string, jobId: string) => {
+  const acceptQuote = async (quoteId: string, status: string) => {
     if (!currentUser) {
       return router.push("/login");
     }
     setLoadingAceeptQuote(true);
     try {
       const acceptQuotePayload = {
-        applicantId,
-        jobId,
+        status,
       };
 
-      await axiosInstance.post(`/acceptQuote`, acceptQuotePayload);
+      await axiosInstance.patch(
+        `/jobs/update-quote-status/${quoteId}`,
+        acceptQuotePayload
+      );
       toast.success(`Quote accepted successfully`, toastOptions);
       setLoadingAceeptQuote(false);
       setRerender((prev) => !prev);

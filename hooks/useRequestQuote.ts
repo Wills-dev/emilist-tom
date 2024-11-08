@@ -4,7 +4,7 @@ import { useContext, useState } from "react";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useRequestQuote = () => {
@@ -15,19 +15,15 @@ export const useRequestQuote = () => {
   const [rerenderr, setRerender] = useState(false);
   const [requestLoading, setRequestLoading] = useState(false);
 
-  const requestQuote = async (applicantId: string, jobId: string) => {
+  const requestQuote = async (jobId: string) => {
     if (!currentUser) {
       return router.push("/login");
     }
 
     setRequestLoading(true);
     try {
-      const requestDetails = {
-        applicantId,
-        jobId,
-      };
-      await axiosInstance.post(`/requestQuote`, requestDetails);
-      toast.success(`You have successfully requested for quote`, toastOptions);
+      await axiosInstance.patch(`/jobs/request-for-quote/${jobId}`);
+      toast.success(`You have requested for quote!`, toastOptions);
       setRerender((prev) => !prev);
     } catch (error: any) {
       console.log("error requesting for quote", error);

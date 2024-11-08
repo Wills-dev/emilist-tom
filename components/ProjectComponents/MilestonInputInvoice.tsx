@@ -84,7 +84,7 @@ const MilestonInputInvoice = ({
             </p>
             <div className="w-full">
               <input
-                type="number"
+                type="text"
                 name="accountNumber"
                 value={invoiceDetails.accountNumber}
                 onChange={handleChange}
