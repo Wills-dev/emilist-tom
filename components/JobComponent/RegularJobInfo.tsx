@@ -6,6 +6,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 
 import { AnimatePresence } from "framer-motion";
 
+import { getStatusClass } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
 import { useDeleteJob } from "@/hooks/useDeleteJob";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
@@ -23,14 +24,14 @@ import RegularApplicants from "./RegularApplicants";
 import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
-import { getStatusClass } from "@/constants";
+import AddQoute from "./AddQoute";
 
 interface RegularJobInfoProps {
   jobId: string;
 }
 
 const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
-  const { currentUser, userLoading } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
 
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
@@ -67,11 +68,10 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
     handleDeleteJob(jobId);
   };
 
-  const showQuoteComponent = jobInfo?.Applicants?.some((applicant: any) => {
+  const showQuoteComponent = jobInfo?.applications?.some((applicant: any) => {
     if (
-      applicant.applicantId === currentUser.unique_id &&
-      applicant.isRequestQuote &&
-      !applicant?.Quote?.amount
+      applicant?.user?._id === currentUser?._id &&
+      jobInfo?.isRequestForQuote
     ) {
       return true;
     } else return false;
@@ -121,7 +121,6 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
 
   return (
     <section className="py-28 padding-x bg-[#F0FDF5] w-full min-h-screen">
-      <div className="text-yellow-400 bg-yellow-100 text-green-400 bg-green-100 text-red-400 bg-red-100 text-[#FF5D7A] bg-[#FFF1F2]"></div>
       <LoadingOverlay loading={isLoading} />
       <LoadingOverlay loading={isWithdrawLoading} />
       <LoadingOverlay loading={loadingAccept} />
@@ -140,35 +139,19 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
         )}
       </AnimatePresence>
 
-      {loading || userLoading ? (
+      {loading ? (
         <div className="flex w-full min-h-[70vh] item-center justify-center text-green-500 mt-6">
           <span className="loading loading-bars loading-lg"></span>
         </div>
       ) : (
         <div className="grid grid-cols-12 py-10 gap-6">
-          {showQuoteComponent && (
-            <div className="col-span-12 ">
-              <div className="flex justify-between items-center bg-[#DDFBE9] border-primary-green border-1 px-[3rem] py-2 rounded-lg max-sm:flex-col max-md:px-[1rem] max-sm:px-[0.5rem]  gap-2 text-center w-full">
-                {" "}
-                <p className="max-sm:text-xs">
-                  The Job Posted requested for a quote
-                </p>{" "}
-                <button
-                  className="bg-primary-green px-[18px] py-[5px] text-[#f6fdf9] rounded cursor-pointer whitespace-nowrap max-sm:text-xs"
-                  onClick={() => setOpenModal(true)}
-                >
-                  Add Quote
-                </button>
-                {/* quote modal */}
-                <QuoteModal
-                  isOpen={openModal}
-                  onCancel={() => setOpenModal(false)}
-                  jobInfo={jobInfo}
-                  getJobInfo={getJobInfo}
-                />
-              </div>
-            </div>
-          )}
+          <AddQoute
+            showQuoteComponent={showQuoteComponent}
+            jobInfo={jobInfo}
+            getJobInfo={getJobInfo}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+          />
           <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg pb-10 max-h-fit">
             <div className="flex justify-end pt-4 pb-10  px-10 max-sm:px-5">
               <p

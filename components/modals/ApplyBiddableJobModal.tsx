@@ -66,9 +66,7 @@ const ApplyBiddableJobModal = ({
         className="w-full px-6 max-sm:px-1 py-3 max-sm:py-2 max-h-[80vh] h-[80vh] overflow-y-auto"
         onSubmit={(e) => applyForBiddableJob(e, jobInfo?._id)}
       >
-        <h2 className="text-[20px] font-[700] leading-[32px] max-sm:text-[16px] max-sm:leading-[20px] pb-5 ">
-          Job Application
-        </h2>
+        <h2 className="text-lg font-bold pb-5">Job Application</h2>
         <div className="flex flex-col gap-4">
           <div className="w-full">
             <p className="text-[#5e625f] py-2 text-[16px] font-[500] max-sm:text-[14px]">
@@ -92,7 +90,7 @@ const ApplyBiddableJobModal = ({
 
             <div className="w-full">
               <input
-                type="number"
+                type="text"
                 className="expert-reg-input"
                 value={maxPrice}
                 onChange={(e) => setMaxPrice(e.target.value)}
@@ -155,7 +153,7 @@ const ApplyBiddableJobModal = ({
                 <div className="w-full">
                   <input
                     className="expert-reg-input"
-                    type="number"
+                    type="text"
                     value={percentage[index]}
                     onChange={(e) =>
                       handleSetPercentage(index, Number(e.target.value))
@@ -177,10 +175,10 @@ const ApplyBiddableJobModal = ({
             </div>
           ))}
         </div>
-        <div className="flex justify-center mt-5">
+        <div className="flex gap-2 justify-center mt-5">
           {!bidLoading ? (
             <button type="submit" className="custom-btn">
-              Proceed
+              Submit application
             </button>
           ) : (
             <button className=" load-btn">

@@ -53,6 +53,8 @@ export const useUploadInvoiceForMilestone = () => {
         bank: bankName,
         accountNumber,
         accountName,
+        paymentMethod,
+        note,
       };
       await axiosInstance.patch(
         `/jobs/update-milestone-status/${jobId}/milestone/${milestoneId}`,

@@ -1,15 +1,13 @@
 import Link from "next/link";
 import Image from "next/image";
-import { useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 
-import { AuthContext } from "@/utils/AuthState";
-import StarRating from "../StarRating/StarRating";
-import { numberWithCommas } from "@/helpers";
-import BiddableApplicationDetails from "./BiddableApplicationDetails";
-import QuoteDetails from "./QuoteDetails";
-import ConfirmRemoveModal from "../modals/ConfirmRemovalModal";
-import { getStatusClass, levelCount } from "@/constants";
 import { LevelType } from "@/types";
+import { numberWithCommas } from "@/helpers";
+import { AuthContext } from "@/utils/AuthState";
+import { getStatusClass, levelCount } from "@/constants";
+
+import StarRating from "../StarRating/StarRating";
 import BiddableJobApplicantActionDropdown from "./BiddableJobApplicantActionDropdown";
 
 interface Props {

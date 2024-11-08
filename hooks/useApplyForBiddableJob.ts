@@ -57,7 +57,9 @@ export const useApplyForBiddableJob = () => {
     const totalPercentage = percentage.reduce((sum, p) => sum + p, 0);
     if (totalPercentage !== 100) {
       toast.error("Total percentage must equal 100%.", toastOptions);
-      return;
+      return true;
+    } else {
+      false;
     }
   };
 
@@ -94,10 +96,15 @@ export const useApplyForBiddableJob = () => {
   const applyForBiddableJob = async (e: any, jobId: string) => {
     e.preventDefault();
 
+    console.log("first");
+
     if (!currentUser) {
       return router.push("/login");
     }
-    validateTotalPercentage();
+    if (validateTotalPercentage()) {
+      return;
+    }
+
     setBidLoading(true);
     try {
       const applyJobPayload = {

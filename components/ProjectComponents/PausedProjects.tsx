@@ -8,6 +8,7 @@ import Pagination from "react-responsive-pagination";
 
 import { AuthContext } from "@/utils/AuthState";
 import { useGetProjectByStatus } from "@/hooks/useGetProjectByStatus useGetProjectByStatus";
+import { formatCreatedAt } from "@/helpers";
 
 const PausedProjects = () => {
   const { currentUser } = useContext(AuthContext);
@@ -74,6 +75,15 @@ const PausedProjects = () => {
                           project?.milestoneProgress}
                       </h6>
                     </div>
+                    <div className="flex flex-col gap-2">
+                      <p className="text-[#5E625F]  sm:text-sm font-medium max-sm:text-xs whitespace-nowrap">
+                        Date
+                      </p>
+                      <h6 className="font-bold max-sm:text-sm  whitespace-nowrap">
+                        {project?.pausedDate &&
+                          formatCreatedAt(project?.pausedDate)}
+                      </h6>
+                    </div>
 
                     <div className="flex-c flex-col gap-2">
                       <p className="text-[#5E625F]  sm:text-sm font-medium text-xs whitespace-nowrap">
@@ -92,16 +102,16 @@ const PausedProjects = () => {
                   </div>
                 </div>
               ))}
+              <div className="col-span-2 w-full min-w-full max-md:col-span-3">
+                <Pagination
+                  current={currentPage}
+                  total={totalPages}
+                  onPageChange={handlePageChange}
+                  extraClassName="justify-content-start"
+                />
+              </div>
             </>
           )}
-          <div className="md:w-2/3 w-full">
-            <Pagination
-              current={currentPage}
-              total={totalPages}
-              onPageChange={handlePageChange}
-              extraClassName="justify-content-start"
-            />
-          </div>
         </div>
       )}
     </>

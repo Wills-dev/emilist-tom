@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
-import { numberWithCommas } from "@/helpers";
+import { convertDateFormat, numberWithCommas } from "@/helpers";
 import { getStatusClass } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
@@ -221,30 +221,62 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
                   />
                 </div>
 
-                <div className="py-8">
-                  {!currentMilestone?.accountDetails && (
+                {!currentMilestone?.accountDetails && (
+                  <div className="py-8">
                     <button
                       className="bg-primary-green rounded-lg w-[148px] h-[52px] text-[#FCFEFD] font-bold max-sm:w-[120px] max-sm:h-[38px] max-sm:text-sm"
                       onClick={() => setOpenInvoice(true)}
                     >
                       Enter Invoice
                     </button>
-                  )}
-
-                  {/* invoice input modal */}
-                  <MilestonInputInvoice
-                    isOpen={openInvoice}
-                    onCancel={() => setOpenInvoice(false)}
-                    uploadInvoice={uploadInvoice}
-                    loadInvoice={loadInvoice}
-                    handleChange={handleChange}
-                    invoiceDetails={invoiceDetails}
-                    milestoneId={currentMilestone._id}
-                    milestoneAmount={currentMilestone.amount}
-                    jobId={jobId}
-                    currency={jobInfo?.currency}
-                  />
-                </div>
+                    {/* invoice input modal */}
+                    <MilestonInputInvoice
+                      isOpen={openInvoice}
+                      onCancel={() => setOpenInvoice(false)}
+                      uploadInvoice={uploadInvoice}
+                      loadInvoice={loadInvoice}
+                      handleChange={handleChange}
+                      invoiceDetails={invoiceDetails}
+                      milestoneId={currentMilestone._id}
+                      milestoneAmount={currentMilestone.amount}
+                      jobId={jobId}
+                      currency={jobInfo?.currency}
+                    />
+                  </div>
+                )}
+                {currentMilestone?.paymentStatus === "paid" && (
+                  <div className=" flex gap-4 py-6 text-[#282828]">
+                    <div className="flex gap-4">
+                      <img
+                        src="/assets/icons/tick-circle.svg"
+                        alt=""
+                        className="w-8 h-8"
+                      />
+                      <div className="">
+                        <h6 className="text-2xl font-bold">Paid</h6>
+                        <p className="py-3">
+                          {jobInfo?.currency}{" "}
+                          {numberWithCommas(
+                            currentMilestone?.paymentInfo?.amountPaid
+                          )}{" "}
+                          ({currentMilestone?.paymentInfo?.paymentMethod})
+                        </p>
+                        <p className="flex items-center">
+                          {" "}
+                          <img
+                            src="/assets/icons/calendar-2.svg"
+                            alt="calendar"
+                            className="w-5 h-5 mr-1"
+                          />{" "}
+                          {currentMilestone?.paymentInfo?.date &&
+                            convertDateFormat(
+                              currentMilestone?.paymentInfo?.date
+                            )}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

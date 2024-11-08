@@ -55,9 +55,7 @@ const BiddableJobApplicantActionDropdown = ({
   const isNotRejected = applicant?.status !== "rejected";
   const shouldShowRejectButton = isNotAccepted && isNotRejected;
 
-  const canRequestQuote = applicant?.isRequestQuote === false;
-  const canViewQuote =
-    applicant?.isRequestQuote === true && applicant?.Quote?.amount;
+  const canViewQuote = applicant?.quote && applicant?.quote?.totalAmount;
 
   return (
     <>
@@ -75,7 +73,7 @@ const BiddableJobApplicantActionDropdown = ({
               className=" whitespace-nowrap max-sm:text-xs hover:text-primary-green transition-all"
               onClick={() => setOpenApplicationDetailsModal(true)}
             >
-              View application
+              View
             </button>
             <BiddableApplicationDetails
               handleCancelApplicationModal={handleCancelApplicationModal}
@@ -86,10 +84,18 @@ const BiddableJobApplicantActionDropdown = ({
               jobInfo={jobInfo}
             />
           </>
-          {canRequestQuote && (
+          {shouldShowRejectButton && (
+            <button
+              className="whitespace-nowrap text-red-500 max-sm:text-sm hover:text-red-600 transition-all"
+              onClick={() => setIsOpen(true)}
+            >
+              Reject
+            </button>
+          )}
+          {jobInfo?.isRequestForQuote === false && (
             <button
               className="whitespace-nowrap text-[16px] max-sm:text-[13px] hover:text-primary-green transition-all"
-              onClick={() => requestQuote(applicant?.applicantId, jobId)}
+              onClick={() => requestQuote(jobId)}
             >
               Request for Quote
             </button>
@@ -106,22 +112,14 @@ const BiddableJobApplicantActionDropdown = ({
               <QuoteDetails
                 openQuoteDetailsModal={openQuoteDetailsModal}
                 handleCancel={handleCancel}
-                Quote={applicant?.Quote}
+                Quote={applicant?.quote}
                 acceptQuote={acceptQuote}
                 applicantId={applicant?._id}
-                jobId={jobId}
+                jobInfo={jobInfo}
               />
             </>
           )}
 
-          {shouldShowRejectButton && (
-            <button
-              className="whitespace-nowrap text-red-500 max-sm:text-sm hover:text-red-600 transition-all"
-              onClick={() => setIsOpen(true)}
-            >
-              Reject
-            </button>
-          )}
           <ConfirmRemoveModal
             question={`Are you sure you want to reject ${
               applicant?.user?.firstName && applicant?.user?.lastName

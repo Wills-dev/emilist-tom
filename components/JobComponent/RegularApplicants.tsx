@@ -154,6 +154,7 @@ const RegularApplicants = ({
                         isOpen={isOpen}
                         onCancel={onCancel}
                         applicationLength={applicationLength}
+                        jobInfo={jobInfo}
                       />
 
                       {/* end user of action dropdown */}

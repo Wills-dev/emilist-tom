@@ -70,7 +70,6 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
 
   return (
     <section className="py-28 padding-x bg-[#F0FDF5] w-full min-h-screen">
-      <div className="text-yellow-400 bg-yellow-100 text-green-400 bg-green-100 text-red-400 bg-red-100 text-[#FF5D7A] bg-[#FFF1F2]"></div>
       <LoadingOverlay loading={isLoad} />
       {/* confirm if you want to delete material */}
       <AnimatePresence>
@@ -352,6 +351,7 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                     <h6 className=" my-5 font-semibold max-sm:text-xs">
                       Milestone {index + 1}
                     </h6>
+
                     <p
                       className={`px-4 py-1 rounded-full w-fit text-xs ${getStatusClass(
                         milestone.status

@@ -3,7 +3,7 @@
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 
-import { numberWithCommas } from "@/helpers";
+import { convertDateFormat, numberWithCommas } from "@/helpers";
 import { AuthContext } from "@/utils/AuthState";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 import { useConfirmPayment } from "@/hooks/useConfirmPayment";
@@ -28,6 +28,9 @@ const ActiveJobInfo = ({ jobId }: any) => {
     handlePaymentChange,
     openPaymentModal,
     setOpenPaymentModal,
+    currentFile,
+    handleChangeFile,
+    handleImageDelete,
   } = useConfirmPayment();
 
   const {
@@ -158,32 +161,34 @@ const ActiveJobInfo = ({ jobId }: any) => {
                 </div>
 
                 <>
-                  {currentMilestone.accountDetails.paymentStatus === "paid" ? (
+                  {currentMilestone?.paymentStatus === "paid" ? (
                     <div className=" flex gap-4 py-6 text-[#282828]">
                       <div className="flex gap-4">
                         <img
-                          src="/assets/icons/tick-circle.jpg"
+                          src="/assets/icons/tick-circle.svg"
                           alt=""
                           className="w-8 h-8"
                         />
                         <div className="">
                           <h6 className="text-2xl font-bold">Paid</h6>
                           <p className="py-3">
-                            {" "}
-                            ₦
+                            {jobInfo?.currency}{" "}
                             {numberWithCommas(
-                              currentMilestone?.invoice?.amountpaid
+                              currentMilestone?.paymentInfo?.amountPaid
                             )}{" "}
-                            ({currentMilestone?.invoice?.paymentmethod})
+                            ({currentMilestone?.paymentInfo?.paymentMethod})
                           </p>
                           <p className="flex items-center">
                             {" "}
                             <img
-                              src="/assets/icons/calendar-2.jpg"
+                              src="/assets/icons/calendar-2.svg"
                               alt="calendar"
-                              className="w-4 h-4 mr-1"
+                              className="w-5 h-5 mr-1"
                             />{" "}
-                            {currentMilestone?.invoice?.paymentmethod}
+                            {currentMilestone?.paymentInfo?.date &&
+                              convertDateFormat(
+                                currentMilestone?.paymentInfo?.date
+                              )}
                           </p>
                         </div>
                       </div>
@@ -206,6 +211,10 @@ const ActiveJobInfo = ({ jobId }: any) => {
                         paymentDetails={paymentDetails}
                         handlePaymentChange={handlePaymentChange}
                         milestoneId={currentMilestone?._id}
+                        currentFile={currentFile}
+                        handleChangeFile={handleChangeFile}
+                        jobId={jobId}
+                        handleImageDelete={handleImageDelete}
                       />
                     </div>
                   )}

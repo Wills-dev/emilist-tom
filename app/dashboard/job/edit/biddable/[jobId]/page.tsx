@@ -258,7 +258,7 @@ const page = ({ params }: any) => {
                       type="text"
                       className=" expert-reg-input"
                       placeholder=""
-                      name="jobTitle"
+                      name="title"
                       value={editJobDetails.title}
                       onChange={handleInputChange}
                     />
