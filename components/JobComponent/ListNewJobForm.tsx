@@ -66,7 +66,7 @@ const ListNewJobForm = () => {
           </p>
           <div className="w-full grid grid-cols-3 gap-4">
             <input
-              type="number"
+              type="text"
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
               className="col-span-2 expert-reg-input"
@@ -118,7 +118,7 @@ const ListNewJobForm = () => {
           </div>
           <div className="w-full">
             <input
-              type="number"
+              type="text"
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
               className="expert-reg-input"
@@ -320,7 +320,7 @@ const ListNewJobForm = () => {
                   </p>
                   <div className="w-full grid grid-cols-3 gap-4">
                     <input
-                      type="number"
+                      type="text"
                       onKeyDown={handleKeyDown}
                       onWheel={handleWheel}
                       className="col-span-2 expert-reg-input"
@@ -440,7 +440,7 @@ const ListNewJobForm = () => {
                       </p>
                       <div className="w-full">
                         <input
-                          type="number"
+                          type="text"
                           onKeyDown={handleKeyDown}
                           onWheel={handleWheel}
                           className="expert-reg-input"
@@ -475,7 +475,7 @@ const ListNewJobForm = () => {
                     </p>
                     <div className="w-full">
                       <input
-                        type="number"
+                        type="text"
                         onKeyDown={handleKeyDown}
                         onWheel={handleWheel}
                         className="expert-reg-input"

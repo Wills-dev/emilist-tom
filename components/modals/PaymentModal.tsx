@@ -48,7 +48,7 @@ const PaymentModal = ({
           </p>
           <div className="w-full">
             <input
-              type="number"
+              type="text"
               name="amountpaid"
               value={paymentDetails.amountpaid}
               onChange={handlePaymentChange}

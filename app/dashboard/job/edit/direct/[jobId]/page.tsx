@@ -86,7 +86,7 @@ const page = ({ params }: any) => {
           </p>
           <div className="w-full grid grid-cols-3 gap-4">
             <input
-              type="number"
+              type="text"
               className="col-span-2 expert-reg-input"
               placeholder="1"
               name="number"
@@ -147,7 +147,7 @@ const page = ({ params }: any) => {
           </div>
           <div className="w-full">
             <input
-              type="number"
+              type="text"
               className="expert-reg-input"
               placeholder=""
               value={percentage[index] || 0}
@@ -168,7 +168,7 @@ const page = ({ params }: any) => {
               {milestone.amount || 0}
             </p>
             {/* <input
-              type="number"
+              type="text"
               className="expert-reg-input"
               placeholder=""
               name="amount"
@@ -368,7 +368,7 @@ const page = ({ params }: any) => {
                   </p>
                   <div className="w-full grid grid-cols-3 gap-4">
                     <input
-                      type="number"
+                      type="text"
                       className="col-span-2 expert-reg-input"
                       name="duration"
                       value={editJobDetails?.duration?.number}
@@ -426,7 +426,7 @@ const page = ({ params }: any) => {
                     </p>
                     <div className="w-full">
                       <input
-                        type="number"
+                        type="text"
                         className="expert-reg-input"
                         name="budget"
                         value={editJobDetails.budget}

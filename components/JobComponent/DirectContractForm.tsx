@@ -64,7 +64,7 @@ const DirectContractForm = () => {
           </p>
           <div className="w-full grid grid-cols-3 gap-4">
             <input
-              type="number"
+              type="text"
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
               className="col-span-2 expert-reg-input"
@@ -116,7 +116,7 @@ const DirectContractForm = () => {
           </div>
           <div className="w-full">
             <input
-              type="number"
+              type="text"
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
               className="expert-reg-input"
@@ -334,7 +334,7 @@ const DirectContractForm = () => {
                   </p>
                   <div className="w-full grid grid-cols-3 gap-4">
                     <input
-                      type="number"
+                      type="text"
                       onKeyDown={handleKeyDown}
                       onWheel={handleWheel}
                       className="col-span-2 expert-reg-input"
@@ -403,7 +403,7 @@ const DirectContractForm = () => {
                   </p>
                   <div className="w-full">
                     <input
-                      type="number"
+                      type="text"
                       className="expert-reg-input"
                       placeholder="₦1,000"
                       name="budget"
