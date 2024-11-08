@@ -70,6 +70,10 @@ const ActiveJobInfo = ({ jobId }: any) => {
     (milestone: any) => milestone.status === "completed"
   );
 
+  const isAllMilestonePaid = jobInfo?.milestones?.every(
+    (milestone: any) => milestone.paymentStatus === "paid"
+  );
+
   console.log("isAllMilestoneCompleted", isAllMilestoneCompleted);
 
   useEffect(() => {
@@ -273,17 +277,16 @@ const ActiveJobInfo = ({ jobId }: any) => {
               </div>
             )}
 
-            {isAllMilestoneCompleted && (
+            {isAllMilestoneCompleted && isAllMilestonePaid && (
               <div className="flex items-center justify-center">
-                {jobInfo?.contractStatus &&
-                jobInfo?.contractStatus === "closed" ? (
+                {jobInfo?.isClosed ? (
                   <p className="text-primary-green font-bold uppercase">
-                    Contract finished & closed
+                    Congratulations, Contract finished & closed
                   </p>
                 ) : (
                   <>
                     <button
-                      className="proceed-btn"
+                      className="custom-btn"
                       onClick={() => setOpenContractModal(true)}
                     >
                       Close Contract

@@ -20,6 +20,10 @@ import {
 import { useGetJobStatistics } from "@/hooks/useGetJobStatistics";
 import { useEffect } from "react";
 
+interface MultipleLineChartProps {
+  chartData: any;
+}
+
 export const description = "A multiple line chart";
 
 const chartData = [
@@ -89,7 +93,7 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-export function MultipleLineChart() {
+export function MultipleLineChart({ chartData }: MultipleLineChartProps) {
   const { loadStat, statisticInfo, getStat } = useGetJobStatistics();
 
   useEffect(() => {
