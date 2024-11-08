@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { ContractType } from "@/types";
 import { AuthContext } from "@/utils/AuthState";
 
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useCloseContract = () => {
@@ -40,10 +40,7 @@ export const useCloseContract = () => {
 
   const closeContract = async (
     e: React.FormEvent<HTMLFormElement>,
-    jobId: string,
-    noOfMilestones: number | string,
-    budget: number | string,
-    sumOfAmountPaidForAllMilestone: number
+    jobId: string
   ) => {
     e.preventDefault();
     if (!currentUser) {
@@ -58,20 +55,12 @@ export const useCloseContract = () => {
     setLoaingContract(true);
     try {
       const contractData = {
-        jobId,
-        noOfMilestones,
-        budget,
-        sumOfAmountPaidForAllMilestone,
         recommendVendor,
         rateServiceProvider,
         rateServiceRendered,
         review,
       };
-      await axiosInstance.post(`/closeContract`, contractData, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
+      await axiosInstance.post(`/jobs/close-contract/${jobId}`, contractData);
       toast.success(`Contract closed successfully`, toastOptions);
       setRerender((prev) => !prev);
       setOpenContractModal(false);
@@ -82,6 +71,7 @@ export const useCloseContract = () => {
       setLoaingContract(false);
     }
   };
+
   return {
     closeContract,
     loadingContract,

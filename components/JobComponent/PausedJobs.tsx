@@ -98,16 +98,16 @@ const PausedJobs = () => {
                   </div>
                 </div>
               ))}
+              <div className="col-span-2 w-full min-w-full max-md:col-span-3">
+                <Pagination
+                  current={currentPage}
+                  total={totalPages}
+                  onPageChange={handlePageChange}
+                  extraClassName="justify-content-start"
+                />
+              </div>
             </>
           )}
-          <div className="md:w-2/3 w-full">
-            <Pagination
-              current={currentPage}
-              total={totalPages}
-              onPageChange={handlePageChange}
-              extraClassName="justify-content-start"
-            />
-          </div>
         </div>
       )}
     </>
