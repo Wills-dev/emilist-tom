@@ -55,13 +55,16 @@ export const useCloseContract = () => {
     setLoaingContract(true);
     try {
       const contractData = {
-        recommendVendor,
-        rateServiceProvider,
-        rateServiceRendered,
-        review,
+        isRecommendVendor: recommendVendor,
+        rating: rateServiceProvider,
+        rateCommunication: rateServiceRendered,
+        note: review,
       };
-      await axiosInstance.post(`/jobs/close-contract/${jobId}`, contractData);
-      toast.success(`Contract closed successfully`, toastOptions);
+      await axiosInstance.patch(`/jobs/close-contract/${jobId}`, contractData);
+      toast.success(
+        `Congrats 🎊🎊, Contract closed successfully`,
+        toastOptions
+      );
       setRerender((prev) => !prev);
       setOpenContractModal(false);
     } catch (error: any) {

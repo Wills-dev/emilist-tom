@@ -7,6 +7,7 @@ const page = ({ params }: any) => {
   return (
     <main className="relavie">
       <DashboardNav />
+
       <ActiveJobInfo jobId={jobId} />
     </main>
   );
