@@ -4,21 +4,27 @@ import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 
 import ChatModal from "../modals/ChatModal";
+import QuoteDetails from "./QuoteDetails";
 
 import { getStatusClass } from "@/constants";
-import { Capitalize, numberWithCommas } from "@/helpers";
+import { Capitalize, formatDueDate, numberWithCommas } from "@/helpers";
 
 const ActiveJobInfoDetails = ({
   jobInfo,
   jobId,
   updateApplicationStatus,
+  requestQuote,
+  acceptQuote,
 }: any) => {
   const [openChat, setOpenChat] = useState(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
+  const [openQuoteDetailsModal, setOpenQuoteDetailsModal] = useState(false);
 
   const handleOpen = () => {
     setOpenChat((prev) => !prev);
   };
+
+  const handleCancel = () => setOpenQuoteDetailsModal(false);
 
   const toggleActionButton = () => {
     setShowActionDropdown((prev) => !prev);
@@ -27,6 +33,9 @@ const ActiveJobInfoDetails = ({
   const acceptedApplication = jobInfo?.applications?.find(
     (applicant: any) => applicant?._id === jobInfo?.acceptedApplicationId
   );
+
+  const canViewQuote =
+    acceptedApplication?.quote && acceptedApplication?.quote?.totalAmount;
 
   return (
     <>
@@ -95,6 +104,32 @@ const ActiveJobInfoDetails = ({
                       >
                         Pause Job
                       </button>
+                    )}
+                    {jobInfo?.isRequestForQuote === false && (
+                      <button
+                        className="whitespace-nowrap text-[16px] max-sm:text-[13px] hover:text-primary-green transition-all"
+                        onClick={() => requestQuote(jobId)}
+                      >
+                        Request for Quote
+                      </button>
+                    )}
+                    {canViewQuote && (
+                      <>
+                        <button
+                          className="whitespace-nowrap max-sm:text-sm hover:text-primary-green transition-all"
+                          onClick={() => setOpenQuoteDetailsModal(true)}
+                        >
+                          View Quote
+                        </button>
+                        <QuoteDetails
+                          openQuoteDetailsModal={openQuoteDetailsModal}
+                          handleCancel={handleCancel}
+                          Quote={acceptedApplication?.quote}
+                          acceptQuote={acceptQuote}
+                          applicantId={acceptedApplication?._id}
+                          jobInfo={jobInfo}
+                        />
+                      </>
                     )}
                   </motion.div>
                 )}
@@ -236,9 +271,9 @@ const ActiveJobInfoDetails = ({
               <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-xs whitespace-nowrap">
                 Due date
               </p>
-              <div className=" flex items-center justify-center bg-[#F0FDF5] w-[74px] h-[30px] max-sm:h-[25px] max-sm:w-[55px] rounded-[20px]">
-                <p className="text-[#25C269]  text-[14px] font-[500] leading-[16px] max-sm:text-xs whitespace-nowrap">
-                  6 days
+              <div className=" flex-c justify-center bg-[#F0FDF5] px-4 py-1 rounded-full">
+                <p className="text-[#25C269] font-[500]  max-sm:text-xs whitespace-nowrap">
+                  {jobInfo?.dueDate && formatDueDate(jobInfo?.dueDate)}
                 </p>
               </div>
             </div>
