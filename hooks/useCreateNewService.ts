@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
 import { useRouter } from "next/navigation";
 
-import { axiosInstance } from "@/axiosInstance/baseUrl";
 import { AuthContext } from "@/utils/AuthState";
-import { promiseErrorFunction } from "@/helpers";
+import { dataURLtoFile, promiseErrorFunction } from "@/helpers";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
+import { clearCookie, readCookie } from "@/helpers/cookieHelper";
 
 export const useCreateNewService = () => {
   const { currentUser } = useContext(AuthContext);
@@ -38,306 +39,260 @@ export const useCreateNewService = () => {
     return selectedLocations.includes(state);
   };
 
-  const location = () => {
-    const selectedLocation = localStorage.getItem("EmilistLocation");
-    if (selectedLocation) {
-      return selectedLocation;
-    } else return;
+  const expertServices: string[] = readCookie("expertServices");
+  const expertProfile = readCookie("EmilistExpertProfile");
+  const language = readCookie("EmilistSelectedLanguage");
+  const country = readCookie("EmilistSelectedCountry");
+
+  const profilePicFile = localStorage.getItem("EmilistExpertProfilePicture");
+  const aboutBusiness = localStorage.getItem("EmilistExpertAboutBusiness");
+  const businessCountry = localStorage.getItem(
+    "EmilistSelectedBusinessCountry"
+  );
+  const bizFiles = localStorage.getItem("EmilistExpertBusinessPictures");
+  const bisDescription = localStorage.getItem(
+    "EmilistExpertBusinessDescription"
+  );
+  const certificateFile = localStorage.getItem("EmilistExpertCertPic");
+  const verifyCert = localStorage.getItem("VerifyCert");
+  const membershipData = localStorage.getItem("EmilistExpertMembership");
+  const certificateData = localStorage.getItem("EmilistExpertCertificates");
+  const insurance = localStorage.getItem("EmilistExpertInsurance");
+
+  const profilePicture = () => {
+    if (profilePicFile) {
+      const file = dataURLtoFile(profilePicFile);
+      return file;
+    } else return "";
   };
 
-  const lineofwork = () => {
-    const lineOfWork = localStorage.getItem("EmilistLineOfWork");
-    if (lineOfWork) {
-      return lineOfWork;
-    } else {
-      return;
-    }
-  };
-
-  const expertProfile: any = () => {
-    const emilistExpertProfile = localStorage.getItem("EmilistExpertProfile");
-    if (emilistExpertProfile) {
-      const data = JSON.parse(emilistExpertProfile);
+  const businessProfile = () => {
+    if (aboutBusiness) {
+      const data = JSON.parse(aboutBusiness);
       return data;
-    } else {
-      return;
-    }
+    } else return "";
   };
 
-  const country = () => {
-    const selectedCountryy = localStorage.getItem("EmilistSelectedCountry");
-    if (selectedCountryy) {
-      return selectedCountryy;
-    } else {
-      return;
-    }
+  const bizCountry = () => {
+    if (businessCountry) {
+      return businessCountry;
+    } else return "";
   };
 
-  const language = () => {
-    const emilistSelectedLanguages = localStorage.getItem(
-      "EmilistSelectedLanguage"
-    );
-    if (emilistSelectedLanguages) {
-      const language = JSON.parse(emilistSelectedLanguages);
-      return language.join(", ");
-    } else {
-      return;
-    }
+  const businessPicture = () => {
+    if (bizFiles) {
+      const storedFiles = JSON.parse(bizFiles);
+      if (storedFiles.length > 0) {
+        const fileArray = storedFiles.map((dataURL: string) =>
+          dataURLtoFile(dataURL)
+        );
+        return fileArray;
+      }
+    } else return [];
   };
 
-  const profilepic = () => {
-    const storedFile = localStorage.getItem("EmilistExpertProfilePicture");
-    if (storedFile) {
-      return storedFile;
-    } else {
-      return;
-    }
-  };
-
-  const service = () => {
-    const EmilistExpertService = localStorage.getItem("EmilistExpertService");
-    if (EmilistExpertService) {
-      return EmilistExpertService;
-    } else {
-      return;
-    }
-  };
-
-  const aboutBusiness: any = () => {
-    const emilistExpertAboutBusiness = localStorage.getItem(
-      "EmilistExpertAboutBusiness"
-    );
-    if (emilistExpertAboutBusiness) {
-      const data = JSON.parse(emilistExpertAboutBusiness);
+  const certficateDetails = () => {
+    if (certificateData) {
+      const data = JSON.parse(certificateData);
       return data;
-    } else {
-      return;
     }
   };
 
-  const businessCountry = () => {
-    const selectedCountryy = localStorage.getItem(
-      "EmilistSelectedBusinessCountry"
-    );
-    if (selectedCountryy) {
-      return selectedCountryy;
-    } else {
-      return;
-    }
-  };
-
-  const businessDescription = () => {
-    const bisDescription = localStorage.getItem(
-      "EmilistExpertBusinessDescription"
-    );
-    if (bisDescription) {
-      return bisDescription;
-    } else {
-      return;
-    }
-  };
-
-  const businessDescriptionPic = () => {
-    const storedFile = localStorage.getItem("EmilistExpertBusinessPicture");
-    if (storedFile) {
-      return storedFile;
-    } else {
-      return;
-    }
-  };
-
-  const certificateMembership: any = () => {
-    const formDataLocalStorage = localStorage.getItem(
-      "EmilistExpertMembership"
-    );
-    if (formDataLocalStorage) {
-      const data = JSON.parse(formDataLocalStorage);
+  const membershipDetails = () => {
+    if (membershipData) {
+      const data = JSON.parse(membershipData);
       return data;
-    } else {
-      return;
     }
   };
 
-  const doesMembershipExpire = () => {
-    const dontExpire = localStorage.getItem("EmilistExpertExpire");
-    if (dontExpire) {
-      const data = JSON.parse(dontExpire);
-      return data;
-    } else {
-      return;
+  const Cerficate = () => {
+    if (certificateFile) {
+      const file = dataURLtoFile(certificateFile);
+      return file;
     }
   };
 
-  const doesMembershipEnd = () => {
-    const noEndDate = localStorage.getItem("EmilistExpertNoEndDate");
-    if (noEndDate) {
-      const data = JSON.parse(noEndDate);
-      return data;
-    } else {
-      return;
-    }
-  };
-
-  const doYouWantToVerifyCert = () => {
-    const verifyCert = localStorage.getItem("VerifyCert");
+  const isWantVerification = () => {
     if (verifyCert) {
       const data = JSON.parse(verifyCert);
       return data;
-    } else {
-      return null;
     }
   };
 
-  const certificateFile = () => {
-    const storedFile = localStorage.getItem("EmilistExpertCertPic");
-    if (storedFile) {
-      return storedFile;
-    } else {
-      return;
-    }
-  };
-
-  const insurance = () => {
-    const addInsurance = localStorage.getItem("EmilistExpertInsurance");
-    if (addInsurance) {
-      const data = JSON.parse(addInsurance);
+  const InsuranceData = () => {
+    if (insurance) {
+      const data = JSON.parse(insurance);
       return data;
-    } else {
-      return;
     }
   };
-
-  function base64ToBlob(base64Image: any): Blob {
-    const [prefix, base64Data] = base64Image.split(",");
-    const contentType =
-      prefix.match(/data:(.*);base64/)?.[1] || "application/octet-stream";
-    const byteCharacters = atob(base64Data);
-    const byteNumbers = new Array(byteCharacters.length);
-    for (let i = 0; i < byteCharacters.length; i++) {
-      byteNumbers[i] = byteCharacters.charCodeAt(i);
-    }
-    const byteArray = new Uint8Array(byteNumbers);
-    return new Blob([byteArray], { type: contentType });
-  }
 
   const handleSubmit = async () => {
     if (!currentUser) {
       router.push("/login");
     }
+    const { firstName, lastName, phoneNumber, city, address, bio, state } =
+      expertProfile;
+    const {
+      businessAddress,
+      businessName,
+      employees,
+      noticePeriod,
+      startPrice,
+      currency,
+      statee,
+      yearFounded,
+    } = businessProfile();
+    const businessCountry = bizCountry();
+    const certificateArray = certficateDetails();
+    const membershipArray = membershipDetails();
+    const insuranceArray = InsuranceData();
+
+    const certificateFilee = Cerficate();
+    const businessPictures = businessPicture();
+    const profilePics = profilePicture();
+
     setLoading(true);
     try {
-      const { firstName, lastName, phoneNumber, city, address, bio, state } =
-        expertProfile();
-      const { insuringOrganization, typeOfCover, description } = insurance();
-      const {
-        issuingOrganization,
-        verificationNumber,
-        issuingDate,
-        expiringDate,
-        organization,
-        position,
-        startDate,
-        endDate,
-      } = certificateMembership();
-
-      const profileImageBlob = base64ToBlob(profilepic());
-      const businessdescriptionimagesBlob = base64ToBlob(
-        businessDescriptionPic()
-      );
-      const certificateFileBlob =
-        certificateFile() && base64ToBlob(certificateFile());
-      const {
-        ownerName,
-        businessName,
-        yearFounded,
-        employees,
-        businessAddress,
-        startPrice,
-        statee,
-        noticePeriod,
-        contactPersonName,
-        contactPersonPhone,
-        contactPersonEmail,
-      } = aboutBusiness();
-
       const expertData: any = {
-        location: location(),
-        lineofwork: lineofwork(),
-        firstname: firstName,
-        lastname: lastName,
-        phonenumber: phoneNumber,
-        language: language(),
+        services: expertServices ? expertServices : [],
+        firstName,
+        lastName,
+        phoneNumber,
+        language,
         address,
         city,
         state,
-        country: country(),
+        country: country ? country : "",
         bio,
-        owner: ownerName,
-        // profilepic: profilepic(),
-        businessname: businessName,
-        service: service(),
-        yearfounded: yearFounded,
-        numberofemployee: employees,
-        businessaddress: businessAddress,
-        businessstate: statee ? statee : state,
-        businesscountry: businessCountry(),
-        startingprice: startPrice,
-        noticeperiod: `${noticePeriod} days`,
-        contactpersonName: contactPersonName,
-        contactpersonPhone: contactPersonPhone,
-        contactpersonEmail: contactPersonEmail,
-        businessdescription: businessDescription(),
-        issuingorganisation: issuingOrganization,
-        verificationnumber: verificationNumber,
-        issuingdate: issuingDate,
-        expiringdate: expiringDate,
-        organization: organization,
-        positionheld: position,
-        startdate: startDate,
-        enddate: endDate,
-        insuringorganisation: insuringOrganization,
-        typeofcover: typeOfCover ? typeOfCover : "none",
-        userid: currentUser.unique_id,
-        coverdescription: description,
-        coveragearea: JSON.stringify(selectedLocations),
+        businessName,
+        yearFounded,
+        numberOfEmployee: employees,
+        businessAddress,
+        businessCity: "woo",
+        businessState: statee,
+        businessCountry,
+        startingPrice: startPrice,
+        currency,
+        noticePeriod,
+        businessDescription: bisDescription ? bisDescription : "",
+        certification: certificateArray,
+        membership: membershipArray,
+        insurance: insuranceArray,
+        coverageArea: selectedLocations,
       };
 
       const formData = new FormData();
+
+      formData.append("firstName", expertData.firstName);
+      formData.append("lastName", expertData.lastName);
+      formData.append("phoneNumber", expertData.phoneNumber);
+      formData.append("address", expertData.address);
+      formData.append("city", expertData.city);
+      formData.append("state", expertData.state);
+      formData.append("country", expertData.country || "");
+      formData.append("bio", expertData.bio);
+      formData.append("businessName", expertData.businessName);
+      formData.append("yearFounded", expertData.yearFounded.toString());
       formData.append(
-        "profilepic",
-        profileImageBlob,
-        `image.${profileImageBlob.type.split("/")[1]}`
+        "numberOfEmployee",
+        expertData.numberOfEmployee.toString()
+      );
+      formData.append("businessAddress", expertData.businessAddress);
+      formData.append("businessCity", expertData.businessCity || "");
+      formData.append("businessState", expertData.businessState);
+      formData.append("businessCountry", expertData.businessCountry);
+      formData.append("currency", expertData.currency);
+      formData.append("startingPrice", expertData.startingPrice.toString());
+      formData.append("noticePeriod", expertData.noticePeriod);
+      formData.append(
+        "businessDescription",
+        expertData.businessDescription || ""
       );
 
-      formData.append(
-        "businessdescriptionimages",
-        businessdescriptionimagesBlob,
-        `image.${businessdescriptionimagesBlob.type.split("/")[1]}`
-      );
+      expertData.services.forEach((service: string, index: number) => {
+        formData.append(`services[${index}]`, service);
+      });
 
-      if (certificateFileBlob) {
+      expertData?.languages?.forEach((language: string, index: number) => {
+        formData.append(`languages[${index}]`, language);
+      });
+
+      expertData?.coverageArea?.forEach((area: string, index: number) => {
+        formData.append(`coverageArea[${index}]`, area);
+      });
+
+      expertData?.certification?.forEach((cert: any, index: number) => {
         formData.append(
-          "certificate",
-          certificateFileBlob,
-          `image.${certificateFileBlob.type.split("/")[1]}`
+          `certification[${index}][issuingOrganisation]`,
+          cert.issuingOrganisation
         );
+        formData.append(
+          `certification[${index}][verificationNumber]`,
+          cert.verificationNumber
+        );
+        formData.append(
+          `certification[${index}][issuingDate]`,
+          cert.issuingDate
+        );
+        formData.append(
+          `certification[${index}][expiringDate]`,
+          cert.expiringDate
+        );
+        formData.append(
+          `certification[${index}][isCertificateExpire]`,
+          cert.doesNotExpire.toString()
+        );
+      });
+
+      expertData?.renderedServices?.forEach((service: any, index: number) => {
+        formData.append(`renderedServices[${index}][name]`, service.name);
+        formData.append(`renderedServices[${index}][status]`, service.status);
+      });
+
+      expertData?.membership?.forEach((member: any, index: number) => {
+        formData.append(
+          `membership[${index}][organisation]`,
+          member.organization
+        );
+        formData.append(`membership[${index}][positionHeld]`, member.position);
+        formData.append(`membership[${index}][startDate]`, member.startDate);
+        formData.append(`membership[${index}][endDate]`, member.endDate);
+        formData.append(
+          `membership[${index}][isMembershipExpire]`,
+          member.doesNotEnd.toString()
+        );
+      });
+
+      expertData?.insurance?.forEach((insurance: any, index: number) => {
+        formData.append(
+          `insurance[${index}][issuingOrganisation]`,
+          insurance.insuringOrganization
+        );
+        formData.append(`insurance[${index}][coverage]`, insurance.typeOfCover);
+        formData.append(
+          `insurance[${index}][description]`,
+          insurance.description
+        );
+      });
+
+      for (let i = 0; i < businessPictures.length; i++) {
+        formData.append("businessImages", businessPictures[i]);
+      }
+      formData.append("profileImage", profilePics);
+      if (certificateFilee) {
+        formData.append("certificate", certificateFilee);
       }
 
-      for (const property in expertData) {
-        formData.append(property, expertData[property]);
-      }
-
-      await axiosInstance.post(`/expert`, formData, {
+      await axiosInstance.post(`/business/register-business`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       router.push("/expert/register/congrats");
-      localStorage.removeItem("EmilistLocation");
-      localStorage.removeItem("EmilistLineOfWork");
-      localStorage.removeItem("EmilistExpertProfile");
-      localStorage.removeItem("EmilistSelectedCountry");
-      localStorage.removeItem("EmilistSelectedLanguage");
+      clearCookie("expertServices");
+      clearCookie("EmilistExpertProfile");
+      clearCookie("EmilistSelectedCountry");
+      clearCookie("EmilistSelectedLanguage");
       localStorage.removeItem("EmilistExpertProfilePicture");
       localStorage.removeItem("EmilistExpertService");
       localStorage.removeItem("EmilistExpertAboutBusiness");

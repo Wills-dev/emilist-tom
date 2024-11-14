@@ -8,6 +8,7 @@ import toast from "react-hot-toast";
 
 import { toastOptions } from "@/helpers";
 import { countries, languages } from "@/constants";
+import { createCookie, readCookie } from "@/helpers/cookieHelper";
 
 interface Option {
   label: string;
@@ -66,21 +67,16 @@ const RegistrationFormTwo = () => {
   );
 
   useEffect(() => {
-    const emilistExpertProfile = localStorage.getItem("EmilistExpertProfile");
-    const emilistSelectedLanguages = localStorage.getItem(
-      "EmilistSelectedLanguage"
-    );
-    const selectedCountryy = localStorage.getItem("EmilistSelectedCountry");
+    const emilistExpertProfile = readCookie("EmilistExpertProfile");
+    const emilistSelectedLanguages = readCookie("EmilistSelectedLanguage");
+    const selectedCountryy = readCookie("EmilistSelectedCountry");
 
     if (emilistExpertProfile) {
-      const data = JSON.parse(emilistExpertProfile);
-      setFormData(data);
+      setFormData(emilistExpertProfile);
     }
     if (emilistSelectedLanguages) {
-      const language = JSON.parse(emilistSelectedLanguages);
-      setSelectedLanguage(language);
+      setSelectedLanguage(emilistSelectedLanguages);
     }
-
     setSelectedCountry(selectedCountryy || "");
   }, []);
 
@@ -98,11 +94,9 @@ const RegistrationFormTwo = () => {
     ) {
       return toast.error("Please fill all fields", toastOptions);
     }
-    const emilistExpertProfile = JSON.stringify(formData);
-    const emilistSelectedLanguages = JSON.stringify(selectedLanguage);
-    localStorage.setItem("EmilistExpertProfile", emilistExpertProfile);
-    localStorage.setItem("EmilistSelectedCountry", selectedCountry);
-    localStorage.setItem("EmilistSelectedLanguage", emilistSelectedLanguages);
+    createCookie("EmilistExpertProfile", formData);
+    createCookie("EmilistSelectedCountry", selectedCountry);
+    createCookie("EmilistSelectedLanguage", selectedLanguage);
     router.push("/expert/register/upload-profile-picture");
   };
 
@@ -165,7 +159,7 @@ const RegistrationFormTwo = () => {
                   <button
                     onClick={toggleLangDropdown}
                     type="button"
-                    className="min-w-full w-full max-w-full rounded-lg h-14 px-2 bg-[#ececec] focus:outline-none focus-within:border-primary-green focus-within:border-1 max-sm:h-12 flex-c-b"
+                    className="expert-reg-input-div flex-c-b"
                   >
                     <div className="flex-c gap-2">
                       {" "}
@@ -235,7 +229,7 @@ const RegistrationFormTwo = () => {
                   <button
                     onClick={toggleDropdown}
                     type="button"
-                    className="min-w-full w-full max-w-full rounded-lg h-14 px-2 bg-[#ececec] focus:outline-none focus-within:border-primary-green focus-within:border-1 max-sm:h-12 flex-c-b"
+                    className="expert-reg-input-div flex-c-b"
                   >
                     <p>
                       {selectedCountry ? selectedCountry : "Select an option"}
@@ -339,7 +333,7 @@ const RegistrationFormTwo = () => {
               <div className="w-full">
                 <textarea
                   className=" min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1  max-sm:text-sm"
-                  rows={6}
+                  rows={3}
                   name="bio"
                   value={formData.bio}
                   onChange={handleChange}

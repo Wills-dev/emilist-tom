@@ -18,6 +18,10 @@ const Report = () => {
     setStateDate,
     startDate,
     endDate,
+    setMonth,
+    setYear,
+    month,
+    year,
     handleGetJobAnalytics,
   } = useJobAnalytics();
 
@@ -29,7 +33,13 @@ const Report = () => {
     <main className="relative">
       <DashboardNav />{" "}
       <section className="padding-x py-28 bg-[#F6FDF9] min-h-screen ">
-        <ReportHeader currentLink={1} />
+        <ReportHeader
+          setMonth={setMonth}
+          setYear={setYear}
+          month={month}
+          year={year}
+          currentLink={1}
+        />
         <JobSummaryCards />
         <MultipleLineChart chartData={jobAnalytics} />
       </section>

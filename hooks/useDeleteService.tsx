@@ -4,13 +4,13 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useDeleteService = () => {
   const router = useRouter();
 
-  const { currentUser } = useContext(AuthContext);
+  const { currentUser, setRerender } = useContext(AuthContext);
 
   const [isDeleteLoading, setIsDeleteLoading] = useState<boolean>(false);
 
@@ -21,9 +21,10 @@ export const useDeleteService = () => {
     }
     setIsDeleteLoading(true);
     try {
-      await axiosInstance.delete(`/deleteexpert/${expertId}`);
-      toast.success(`You have successfully deleted service `, toastOptions);
+      await axiosInstance.delete(`/business/delete-business/${expertId}`);
+      toast.success(`Business deleted!`, toastOptions);
       router.push("/dashboard/job");
+      setRerender((prev: boolean) => !prev);
     } catch (error: any) {
       console.log("error deleting service", error);
       promiseErrorFunction(error);

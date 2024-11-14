@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useGetJobSummary = () => {
   const router = useRouter();
@@ -20,10 +20,8 @@ export const useGetJobSummary = () => {
 
     setLoadingAnalytics(true);
     try {
-      const { data } = await axiosInstance.post(`/jobAnalytics`, {
-        userId: currentUser._id,
-      });
-      setJobAnalytics(data);
+      const { data } = await axiosInstance.get(`/jobs/fetch-job-count-creator`);
+      setJobAnalytics(data?.data);
     } catch (error: any) {
       console.log("error fetching user job analytics", error);
     } finally {

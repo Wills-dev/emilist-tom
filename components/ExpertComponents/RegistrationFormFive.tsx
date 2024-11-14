@@ -21,7 +21,6 @@ const RegistrationFormFive = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [formData, setFormData] = useState<AboutBusinessProps>({
-    ownerName: "",
     businessName: "",
     yearFounded: "",
     employees: "",
@@ -29,9 +28,7 @@ const RegistrationFormFive = () => {
     statee: "",
     startPrice: "",
     noticePeriod: "",
-    contactPersonName: "",
-    contactPersonPhone: "",
-    contactPersonEmail: "",
+    currency: "NGN",
   });
 
   const toggleDropdown = () => {
@@ -77,19 +74,13 @@ const RegistrationFormFive = () => {
 
   const handleProceed = () => {
     if (
-      !formData.ownerName ||
       !formData.businessName ||
       !formData.yearFounded ||
       !selectedCountry ||
       !formData.employees ||
-      !formData.businessName ||
       !formData.statee ||
-      !formData.businessAddress ||
       !formData.startPrice ||
-      !formData.noticePeriod ||
-      !formData.contactPersonEmail ||
-      !formData.contactPersonName ||
-      !formData.contactPersonPhone
+      !formData.noticePeriod
     ) {
       return toast.error("Please fill all fields", toastOptions);
     }
@@ -115,20 +106,8 @@ const RegistrationFormFive = () => {
             </p>
             <div className="grid grid-cols-5 gap-6 w-full ">
               <div className="flex flex-col gap-6 col-span-3 max-lg:col-span-5 max-md:col-span-3 max-sm:col-span-5">
-                <div className="input__container">
-                  <p className="input-label">Owner Name</p>
-                  <div className="w-full">
-                    <input
-                      type="text"
-                      className="expert-reg-input"
-                      value={formData.ownerName}
-                      onChange={handleChange}
-                      name="ownerName"
-                    />
-                  </div>
-                </div>
                 <div className="w-full">
-                  <p className="input-label">Business Name</p>
+                  <p className="input-label">Business name</p>
                   <div className="w-full">
                     <input
                       type="text"
@@ -164,7 +143,7 @@ const RegistrationFormFive = () => {
                   </div>
                 </div>
                 <div className="w-full">
-                  <p className="input-label">Business Address</p>
+                  <p className="input-label">Business address (Optional)</p>
                   <div className="w-full">
                     <input
                       type="text"
@@ -195,7 +174,7 @@ const RegistrationFormFive = () => {
                     <button
                       onClick={toggleDropdown}
                       type="button"
-                      className="min-w-full w-full max-w-full rounded-lg h-14 px-2 bg-[#ececec] focus:outline-none focus-within:border-primary-green focus-within:border-1 max-sm:h-12 flex-c-b"
+                      className="expert-reg-input-div flex-c-b"
                     >
                       <p>
                         {selectedCountry ? selectedCountry : "Select an option"}
@@ -253,6 +232,34 @@ const RegistrationFormFive = () => {
                   </div>
                 </div>
                 <div className="w-full">
+                  <p className="input-label">Currency</p>
+                  <div className="w-full">
+                    <div className="expert-reg-input-div">
+                      <select
+                        className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
+                        name="currency"
+                        value={formData.currency}
+                        onChange={handleChange}
+                      >
+                        <option defaultValue="">Select currency</option>
+
+                        <option value="NGN" className="capitalize">
+                          NGN
+                        </option>
+                        <option value="USD" className="capitalize">
+                          USD
+                        </option>
+                        <option value="GBP" className="capitalize">
+                          GBP
+                        </option>
+                        <option value="EUR" className="capitalize">
+                          EUR
+                        </option>
+                      </select>
+                    </div>
+                  </div>
+                </div>
+                <div className="w-full">
                   <p className="input-label">Your Start Price</p>
                   <div className="w-full">
                     <input
@@ -267,7 +274,7 @@ const RegistrationFormFive = () => {
                 <div className="w-full">
                   <p className="input-label">Notice Period</p>
                   <div className="w-full">
-                    <div className=" min-w-full w-full  max-w-full rounded-lg h-14 px-2 bg-[#ececec] focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:h-12 flex-c-b">
+                    <div className="expert-reg-input-div flex-c-b">
                       <input
                         type="number"
                         name="noticePeriod"
@@ -278,43 +285,6 @@ const RegistrationFormFive = () => {
                       <p className="border-l-1 border-primary-green px-3">
                         days
                       </p>
-                    </div>
-                  </div>
-                  <div className="w-full mt-3">
-                    <p className="input-label">Contact Person Name</p>
-                    <div className="w-full">
-                      <input
-                        type="text"
-                        className="expert-reg-input"
-                        name="contactPersonName"
-                        value={formData.contactPersonName}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full mt-3">
-                    <p className="input-label">Contact Person Phone</p>
-                    <div className="w-full">
-                      <input
-                        type="number"
-                        className="expert-reg-input"
-                        placeholder="+234xxxxxx45"
-                        name="contactPersonPhone"
-                        value={formData.contactPersonPhone}
-                        onChange={handleChange}
-                      />
-                    </div>
-                  </div>
-                  <div className="w-full mt-3">
-                    <p className="input-label">Contact Person Email</p>
-                    <div className="w-full">
-                      <input
-                        type="email"
-                        className="expert-reg-input"
-                        name="contactPersonEmail"
-                        value={formData.contactPersonEmail}
-                        onChange={handleChange}
-                      />
                     </div>
                   </div>
                 </div>

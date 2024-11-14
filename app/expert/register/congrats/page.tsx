@@ -13,15 +13,15 @@ const Congrats = () => {
           <h1 className=" text-4xl font-bold mb-3  max-sm:text-2xl ">
             Congratulations!!!
           </h1>
-          <p>You have successfully set up a service</p>
+          <p>You have successfully set up a business</p>
           <div className="flex gap-4 pt-10 max-md:flex-col max-md:w-full px-8">
             <Link
               href="/expert/register"
               className=" px-6 text-center rounded-lg font-medium  mt-15 whitespace-nowrap max-sm:text-sm max-sm:px-5  border-1 border-[#303632] py-3"
             >
-              Set up another service
+              Set up another business
             </Link>
-            <Link href="/dashboard/jobs" className="custom-btn ">
+            <Link href="/dashboard/job" className="custom-btn ">
               Proceed to Dashboard
             </Link>
           </div>

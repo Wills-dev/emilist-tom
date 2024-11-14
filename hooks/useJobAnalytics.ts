@@ -7,11 +7,16 @@ export const useJobAnalytics = () => {
   const [startDate, setStateDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [period, setPeriod] = useState("day");
+  const [month, setMonth] = useState<undefined | number>(undefined);
+  const [year, setYear] = useState(new Date().getFullYear());
+
+  console.log("new Date().getFullYear()", new Date().getFullYear());
 
   const handleGetJobAnalytics = async () => {
     try {
+      const monthQuery = month ? `&month=${month}` : "";
       const { data } = await axiosInstance.get(
-        `/jobs/user-job-analytics?filterBy=${period}&startDate=2024-10-20&endDate=2024-11-07`
+        `/jobs/user-job-analytics?year=${year}${monthQuery}`
       );
       setJobAnalytics(data?.data);
       console.log("data", data);
@@ -30,5 +35,9 @@ export const useJobAnalytics = () => {
     startDate,
     endDate,
     handleGetJobAnalytics,
+    setMonth,
+    setYear,
+    month,
+    year,
   };
 };

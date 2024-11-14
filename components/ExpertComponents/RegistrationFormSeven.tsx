@@ -8,32 +8,39 @@ import { CgCloseR } from "react-icons/cg";
 import toast from "react-hot-toast";
 
 import { dataURLtoFile, toastOptions } from "@/helpers";
+import { Certificate, Membership } from "@/types";
 
 const RegistrationFormSeven = () => {
   const router = useRouter();
 
-  const [verify, setVerify] = useState(false);
+  const [isVerified, setIsVerified] = useState(false);
   const [files, setFiles] = useState<File | null>(null);
-  const [isEndChecked, setIsEndChecked] = useState<boolean>(false);
-  const [isExpireChecked, setIsExpireChecked] = useState<boolean>(false);
+  const [certificates, setCertificates] = useState<Certificate[]>([
+    {
+      issuingOrganization: "",
+      verificationNumber: "",
+      issuingDate: "",
+      expiringDate: "",
+      doesNotExpire: false,
+    },
+  ]);
 
-  const [formData, setFormData] = useState({
-    issuingOrganization: "",
-    verificationNumber: "",
-    issuingDate: "",
-    expiringDate: "",
-    organization: "",
-    position: "",
-    startDate: "",
-    endDate: "",
-  });
+  const [memberships, setMemberships] = useState<Membership[]>([
+    {
+      organization: "",
+      position: "",
+      startDate: "",
+      endDate: "",
+      doesNotEnd: false,
+    },
+  ]);
 
   const handleFileChange: React.ChangeEventHandler<HTMLInputElement> = (e) => {
     const file = e.target.files?.[0];
     if (file) {
       // Allowed file types
       const validExtensions = ["image/jpeg", "image/jpg", "image/png"];
-      const maxSizeInMB = 3 * 1024 * 1024; // 3MB
+      const maxSizeInMB = 2 * 1024 * 1024; // 2MB
 
       // Check file size
       if (file.size > maxSizeInMB) {
@@ -54,10 +61,90 @@ const RegistrationFormSeven = () => {
     }
   };
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  const handleCertificateChange = (
+    index: number,
+    field: keyof Certificate,
+    value: string | boolean
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setCertificates((prevCertificates) => {
+      return prevCertificates.map((cert, i) => {
+        if (i === index) {
+          return {
+            ...cert,
+            [field]: value,
+            ...(field === "doesNotExpire" && value === true
+              ? { expiringDate: "" }
+              : {}),
+          };
+        }
+        return cert;
+      });
+    });
+  };
+
+  // Generic handleChange for memberships
+  const handleMembershipChange = (
+    index: number,
+    field: keyof Membership,
+    value: string | boolean
+  ) => {
+    setMemberships((prevMembership) => {
+      return prevMembership.map((memb, i) => {
+        if (i === index) {
+          return {
+            ...memb,
+            [field]: value,
+            ...(field === "doesNotEnd" && value === true
+              ? { endDate: "" }
+              : {}),
+          };
+        }
+        return memb;
+      });
+    });
+  };
+
+  // Function to handle certificate verification
+  const handleVerifyCertificate = () => {
+    if (!files) {
+      toast.error("Please upload a certificate image");
+      return;
+    }
+    setTimeout(() => {
+      toast.success(
+        "Your certification will be reviewed for verification!",
+        toastOptions
+      );
+    }, 1000);
+    setIsVerified(true);
+  };
+
+  // Function to add a new certificate form
+  const addCertificate = () => {
+    setCertificates([
+      ...certificates,
+      {
+        issuingOrganization: "",
+        verificationNumber: "",
+        issuingDate: "",
+        expiringDate: "",
+        doesNotExpire: false,
+      },
+    ]);
+  };
+
+  // Function to add a new membership form
+  const addMembership = () => {
+    setMemberships([
+      ...memberships,
+      {
+        organization: "",
+        position: "",
+        startDate: "",
+        endDate: "",
+        doesNotEnd: false,
+      },
+    ]);
   };
 
   const handleDelete = () => {
@@ -65,18 +152,8 @@ const RegistrationFormSeven = () => {
     localStorage.removeItem("EmilistExpertCertPic");
   };
 
-  const handleVerify = () => {
-    setVerify(true);
-    setTimeout(() => {
-      toast.success(
-        "Your certification will be reviewed for verification!",
-        toastOptions
-      );
-    }, 2000);
-  };
-
-  const handleCancelVerify = () => {
-    setVerify(false);
+  const handleCancelVerifyCertificate = () => {
+    setIsVerified(false);
     setTimeout(() => {
       toast.success("Your certificate won't be verified!", toastOptions);
     }, 2000);
@@ -84,16 +161,18 @@ const RegistrationFormSeven = () => {
 
   useEffect(() => {
     const storedFile = localStorage.getItem("EmilistExpertCertPic");
-    const noEndDate = localStorage.getItem("EmilistExpertNoEndDate");
-    const dontExpire = localStorage.getItem("EmilistExpertExpire");
     const verifyCert = localStorage.getItem("VerifyCert");
-    const formDataLocalStorage = localStorage.getItem(
-      "EmilistExpertMembership"
-    );
+    const membershipData = localStorage.getItem("EmilistExpertMembership");
+    const certificateData = localStorage.getItem("EmilistExpertCertificates");
 
-    if (formDataLocalStorage) {
-      const data = JSON.parse(formDataLocalStorage);
-      setFormData(data);
+    if (certificateData) {
+      const data = JSON.parse(certificateData);
+      setCertificates(data);
+    }
+
+    if (membershipData) {
+      const data = JSON.parse(membershipData);
+      setMemberships(data);
     }
 
     if (storedFile) {
@@ -101,19 +180,9 @@ const RegistrationFormSeven = () => {
       setFiles(file);
     }
 
-    if (noEndDate) {
-      const data = JSON.parse(noEndDate);
-      setIsEndChecked(data);
-    }
-
-    if (dontExpire) {
-      const data = JSON.parse(dontExpire);
-      setIsExpireChecked(data);
-    }
-
     if (verifyCert) {
       const data = JSON.parse(verifyCert);
-      setVerify(data);
+      setIsVerified(data);
     }
   }, []);
 
@@ -133,17 +202,14 @@ const RegistrationFormSeven = () => {
 
     // reader.readAsBinaryString(files)
 
-    const verifyCert = JSON.stringify(verify);
+    const verifyCert = JSON.stringify(isVerified);
     localStorage.setItem("VerifyCert", verifyCert);
 
-    const emilistExpertMembership = JSON.stringify(formData);
+    const emilistExpertCertificate = JSON.stringify(certificates);
+    localStorage.setItem("EmilistExpertCertificates", emilistExpertCertificate);
+
+    const emilistExpertMembership = JSON.stringify(memberships);
     localStorage.setItem("EmilistExpertMembership", emilistExpertMembership);
-
-    const emilistExpertExpire = JSON.stringify(isExpireChecked);
-    localStorage.setItem("EmilistExpertExpire", emilistExpertExpire);
-
-    const emilistExpertEnd = JSON.stringify(isEndChecked);
-    localStorage.setItem("EmilistExpertNoEndDate", emilistExpertEnd);
 
     router.push("/expert/register/insurance");
   };
@@ -200,94 +266,165 @@ const RegistrationFormSeven = () => {
                   </label>
                 </div>
                 <div className="flex  mt-6 justify-center max-lg:hidden  ">
-                  {verify ? (
-                    <button className="custom-btn" onClick={handleCancelVerify}>
+                  {isVerified ? (
+                    <button
+                      className="custom-btn"
+                      onClick={handleCancelVerifyCertificate}
+                    >
                       Cancel Verification
                     </button>
                   ) : (
-                    <button className="custom-btn" onClick={handleVerify}>
+                    <button
+                      className="custom-btn"
+                      onClick={handleVerifyCertificate}
+                    >
                       Request Verification
                     </button>
                   )}
                 </div>
               </div>
               <div className="col-span-2  max-lg:col-span-4  flex flex-col gap-5">
-                <div className="w-full">
-                  <p className="input-label">Issuing Organisation</p>
-                  <div className="w-full">
-                    <input
-                      type="text"
-                      className=" expert-reg-input"
-                      name="issuingOrganization"
-                      value={formData.issuingOrganization}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <p className="input-label">Verification Number</p>
-                  <div className="w-full">
-                    <input
-                      type="text"
-                      className=" expert-reg-input"
-                      name="verificationNumber"
-                      value={formData.verificationNumber}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <p className="input-label">Issuing Date</p>
-                  <div className="w-full">
-                    <input
-                      type="date"
-                      className=" expert-reg-input"
-                      name="issuingDate"
-                      value={formData.issuingDate}
-                      onChange={handleChange}
-                    />
-                  </div>
-                </div>
-                <div className="w-full">
-                  <p className="input-label">Expiring Date</p>
-                  <div className="w-full">
-                    <input
-                      type="date"
-                      className=" expert-reg-input"
-                      placeholder="12345678990"
-                      name="expiringDate"
-                      value={formData.expiringDate}
-                      onChange={handleChange}
-                    />
-                  </div>
-                  <div
-                    className="flex-c w-fit py-2 gap-2"
-                    onClick={() => setIsExpireChecked((prev) => !prev)}
-                  >
-                    <Image
-                      src={
-                        isExpireChecked
-                          ? "/assets/icons/checkbox-filled.svg"
-                          : "/assets/icons/checkbox.svg"
-                      }
-                      alt="arrow-left"
-                      width={30}
-                      height={30}
-                      className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 cursor-pointer"
-                    />
-                    <p className="input-label cursor-pointer">
-                      This certificate doesn't expire
-                    </p>
-                  </div>
-                </div>
+                {certificates.map((certificate, index) => (
+                  <>
+                    <div className="w-full">
+                      <p className="input-label">Issuing Organisation</p>
+                      <div className="w-full">
+                        <input
+                          type="text"
+                          className=" expert-reg-input"
+                          name="issuingOrganization"
+                          value={certificate.issuingOrganization}
+                          onChange={(e) =>
+                            handleCertificateChange(
+                              index,
+                              "issuingOrganization",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full">
+                      <p className="input-label">Verification Number</p>
+                      <div className="w-full">
+                        <input
+                          type="text"
+                          className=" expert-reg-input"
+                          name="verificationNumber"
+                          value={certificate.verificationNumber}
+                          onChange={(e) =>
+                            handleCertificateChange(
+                              index,
+                              "verificationNumber",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full">
+                      <p className="input-label">Issuing Date</p>
+                      <div className="w-full">
+                        <input
+                          type="date"
+                          className=" expert-reg-input"
+                          name="issuingDate"
+                          value={certificate.issuingDate}
+                          onChange={(e) =>
+                            handleCertificateChange(
+                              index,
+                              "issuingDate",
+                              e.target.value
+                            )
+                          }
+                        />
+                      </div>
+                    </div>
+                    <div className="w-full">
+                      <p className="input-label">Expiring Date</p>
+                      <div className="w-full">
+                        {certificate.doesNotExpire ? (
+                          <div
+                            className={`expert-reg-input-div ${
+                              certificate.doesNotExpire && "opacity-45"
+                            }`}
+                          />
+                        ) : (
+                          <input
+                            type="date"
+                            className="expert-reg-input"
+                            name="expiringDate"
+                            value={certificate.expiringDate}
+                            onChange={(e) =>
+                              handleCertificateChange(
+                                index,
+                                "expiringDate",
+                                e.target.value
+                              )
+                            }
+                          />
+                        )}
+                      </div>
+                      <label className="flex-c w-fit py-2 gap-2">
+                        <input
+                          type="checkbox"
+                          className="h-0 w-0 invisible"
+                          checked={certificate.doesNotExpire}
+                          onChange={(e) =>
+                            handleCertificateChange(
+                              index,
+                              "doesNotExpire",
+                              e.target.checked
+                            )
+                          }
+                        />
+                        <Image
+                          src={
+                            certificate.doesNotExpire
+                              ? "/assets/icons/checkbox-filled.svg"
+                              : "/assets/icons/checkbox.svg"
+                          }
+                          alt="arrow-left"
+                          width={30}
+                          height={30}
+                          className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 cursor-pointer"
+                        />
+                        <p className="input-label cursor-pointer">
+                          This certificate doesn't expire
+                        </p>
+                      </label>
+                    </div>
+                  </>
+                ))}
+                <button
+                  className="w-full flex items-center justify-end"
+                  onClick={addCertificate}
+                >
+                  <Image
+                    src="/assets/icons/add.svg"
+                    alt="logo"
+                    width={130}
+                    height={30}
+                    className="object-contain w-[24px] h-[24px] max-sm:w-[16px] max-sm:h-[16px] mr-1"
+                  />{" "}
+                  <p className="text-primary-green py-2 text-[16px] font-[500] max-sm:text-[14px]">
+                    ADD MORE
+                  </p>
+                </button>
               </div>
               <div className="flex   my-6 justify-center lg:hidden   col-span-4">
-                {verify ? (
-                  <button className="custom-btn" onClick={handleCancelVerify}>
+                {isVerified ? (
+                  <button
+                    className="custom-btn"
+                    onClick={handleCancelVerifyCertificate}
+                  >
                     Cancel Verification
                   </button>
                 ) : (
-                  <button className="custom-btn" onClick={handleVerify}>
+                  <button
+                    className="custom-btn"
+                    onClick={handleVerifyCertificate}
+                  >
                     Request Verification
                   </button>
                 )}
@@ -295,80 +432,129 @@ const RegistrationFormSeven = () => {
               <p className="  font-medium max-sm:text-sm col-span-5">
                 Add Membership
               </p>
-              <div className="w-full col-span-2   max-lg:col-span-4   ">
-                <p className="input-label">Organisation</p>
-                <div className="w-full">
-                  <input
-                    type="text"
-                    className=" expert-reg-input"
-                    name="organization"
-                    value={formData.organization}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="w-full col-span-2  max-lg:col-span-4  ">
-                <p className="input-label">Position held</p>
-                <div className="w-full">
-                  <div className="  expert-reg-input">
-                    <select
-                      className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
-                      value={formData.position}
-                      onChange={handleChange}
-                      name="position"
-                    >
-                      <option defaultValue="">Select</option>
-                      <option value="Member">Member</option>
-                      <option value="President">President</option>
-                      <option value="Chairman">Chairman</option>
-                    </select>
+
+              {memberships.map((membership, index) => (
+                <>
+                  <div className="w-full col-span-2   max-lg:col-span-4   ">
+                    <p className="input-label">Organisation</p>
+                    <div className="w-full">
+                      <input
+                        type="text"
+                        className=" expert-reg-input"
+                        name="organization"
+                        value={membership.organization}
+                        onChange={(e) =>
+                          handleMembershipChange(
+                            index,
+                            "organization",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
                   </div>
-                </div>
-              </div>
-              <div className="w-full col-span-2  max-lg:col-span-4">
-                <p className="input-label">State Date</p>
-                <div className="w-full">
-                  <input
-                    type="date"
-                    className=" expert-reg-input"
-                    placeholder="12345678990"
-                    name="startDate"
-                    value={formData.startDate}
-                    onChange={handleChange}
-                  />
-                </div>
-              </div>
-              <div className="w-full col-span-2  max-lg:col-span-4   ">
-                <p className="input-label">End Date</p>
-                <div className="w-full">
-                  <input
-                    type="date"
-                    className=" expert-reg-input"
-                    name="endDate"
-                    value={formData.endDate}
-                    onChange={handleChange}
-                  />
-                </div>
-                <div
-                  className="flex-c w-full py-2 gap-2"
-                  onClick={() => setIsEndChecked((prev) => !prev)}
-                >
-                  <Image
-                    src={
-                      isEndChecked
-                        ? "/assets/icons/checkbox-filled.svg"
-                        : "/assets/icons/checkbox.svg"
-                    }
-                    alt="arrow-left"
-                    width={30}
-                    height={30}
-                    className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 cursor-pointer"
-                  />
-                  <label className="input-label cursor-pointer">
-                    No end date
-                  </label>
-                </div>
-                {/* <button className="w-full flex items-center justify-end">
+                  <div className="w-full col-span-2  max-lg:col-span-4  ">
+                    <p className="input-label">Position held</p>
+                    <div className="w-full">
+                      <div className="  expert-reg-input">
+                        <select
+                          className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
+                          value={membership.position}
+                          onChange={(e) =>
+                            handleMembershipChange(
+                              index,
+                              "position",
+                              e.target.value
+                            )
+                          }
+                          name="position"
+                        >
+                          <option defaultValue="">Select</option>
+                          <option value="Member">Member</option>
+                          <option value="President">President</option>
+                          <option value="Chairman">Chairman</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full col-span-2  max-lg:col-span-4">
+                    <p className="input-label">State Date</p>
+                    <div className="w-full">
+                      <input
+                        type="date"
+                        className=" expert-reg-input"
+                        name="startDate"
+                        value={membership.startDate}
+                        onChange={(e) =>
+                          handleMembershipChange(
+                            index,
+                            "startDate",
+                            e.target.value
+                          )
+                        }
+                      />
+                    </div>
+                  </div>
+                  <div className="w-full col-span-2  max-lg:col-span-4   ">
+                    <p className="input-label">End Date</p>
+                    <div className="w-full">
+                      {membership.doesNotEnd ? (
+                        <div
+                          className={`expert-reg-input-div ${
+                            membership.doesNotEnd && "opacity-45"
+                          }`}
+                        />
+                      ) : (
+                        <input
+                          type="date"
+                          className=" expert-reg-input"
+                          name="endDate"
+                          value={membership.endDate}
+                          onChange={(e) =>
+                            handleMembershipChange(
+                              index,
+                              "endDate",
+                              e.target.value
+                            )
+                          }
+                        />
+                      )}
+                    </div>
+                    <label className="flex-c w-full py-2 gap-2">
+                      <input
+                        type="checkbox"
+                        className="h-0 w-0 invisible"
+                        checked={membership.doesNotEnd}
+                        onChange={(e) =>
+                          handleMembershipChange(
+                            index,
+                            "doesNotEnd",
+                            e.target.checked
+                          )
+                        }
+                      />
+                      <Image
+                        src={
+                          membership.doesNotEnd
+                            ? "/assets/icons/checkbox-filled.svg"
+                            : "/assets/icons/checkbox.svg"
+                        }
+                        alt="arrow-left"
+                        width={30}
+                        height={30}
+                        className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 cursor-pointer"
+                      />
+                      <label className="input-label cursor-pointer">
+                        No end date
+                      </label>
+                    </label>
+                  </div>
+                </>
+              ))}
+              <button
+                className="w-full flex items-center justify-end col-span-4"
+                onClick={addMembership}
+              >
                 <Image
                   src="/assets/icons/add.svg"
                   alt="logo"
@@ -379,8 +565,7 @@ const RegistrationFormSeven = () => {
                 <p className="text-primary-green py-2 text-[16px] font-[500] max-sm:text-[14px]">
                   ADD MORE
                 </p>
-              </button> */}
-              </div>
+              </button>
               <div className="flex justify-end mb-28 mt-6 max-sm:justify-center col-span-5">
                 <button className="custom-btn" onClick={handleProceed}>
                   Proceed

@@ -23,14 +23,18 @@ const JobSummaryCards = () => {
           <SummaryCard
             cardIcon="/assets/icons/newIcon.svg"
             cardLink="/dashboard/job/new"
-            cardSum={jobAnalytics?.new && numberWithCommas(jobAnalytics?.new)}
+            cardSum={
+              jobAnalytics?.totalPendingJobs &&
+              numberWithCommas(jobAnalytics?.totalPendingJobs)
+            }
             cardTitle="New"
           />
           <SummaryCard
             cardIcon="/assets/icons/activeIcon.svg"
             cardLink="/dashboard/job/active"
             cardSum={
-              jobAnalytics?.active && numberWithCommas(jobAnalytics?.active)
+              jobAnalytics?.totalActiveJobs &&
+              numberWithCommas(jobAnalytics?.totalActiveJobs)
             }
             cardTitle="Active"
           />
@@ -38,7 +42,8 @@ const JobSummaryCards = () => {
             cardIcon="/assets/icons/overdueIcon.svg"
             cardLink="/dashboard/job/overdue"
             cardSum={
-              jobAnalytics?.overdue && numberWithCommas(jobAnalytics?.overdue)
+              jobAnalytics?.totalOverdueJobs &&
+              numberWithCommas(jobAnalytics?.totalOverdueJobs)
             }
             cardTitle="Overdue"
           />
@@ -46,7 +51,8 @@ const JobSummaryCards = () => {
             cardIcon="/assets/icons/pausedIcon.svg"
             cardLink="/dashboard/job/paused"
             cardSum={
-              jobAnalytics?.paused && numberWithCommas(jobAnalytics?.paused)
+              jobAnalytics?.totalPausedJobs &&
+              numberWithCommas(jobAnalytics?.totalPausedJobs)
             }
             cardTitle="Paused"
           />
@@ -54,8 +60,8 @@ const JobSummaryCards = () => {
             cardIcon="/assets/icons/completedIcon.svg"
             cardLink="/dashboard/job/completed"
             cardSum={
-              jobAnalytics?.completed &&
-              numberWithCommas(jobAnalytics?.completed)
+              jobAnalytics?.totalCompletedJobs &&
+              numberWithCommas(jobAnalytics?.totalCompletedJobs)
             }
             cardTitle="Completed"
           />

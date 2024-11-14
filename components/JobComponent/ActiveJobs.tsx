@@ -72,7 +72,7 @@ const ActiveJobs = () => {
                     </h6>
                   </div>
                   <div className="rounded-xl flex-c justify-end gap-8 max-sm:gap-3">
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 max-sm:hidden">
                       <p className="text-[#5E625F] sm:text-sm font-medium text-xs whitespace-nowrap">
                         Milestone
                       </p>
@@ -80,7 +80,7 @@ const ActiveJobs = () => {
                         {job?.milestoneProgress && job?.milestoneProgress}
                       </h6>
                     </div>
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 max-md:hidden">
                       <p className="text-[#5E625F]  sm:text-sm font-medium text-xs whitespace-nowrap">
                         Start Date
                       </p>
@@ -96,6 +96,17 @@ const ActiveJobs = () => {
                         <p className="text-[#25C269]  sm:text-sm font-medium text-xs whitespace-nowrap px-4">
                           {job?.currentMilestoneDueDate &&
                             formatDueDate(job?.currentMilestoneDueDate)}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2 max-sm:hidden">
+                      <p className="text-[#5E625F]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
+                        Job Due date
+                      </p>
+                      <div className=" flex items-center justify-center bg-[#F0FDF5] w-[74px] h-[30px] max-sm:h-[25px] max-sm:w-[55px] rounded-[20px]">
+                        <p className="text-[#25C269]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
+                          {job?.overallDueDate &&
+                            formatDueDate(job?.overallDueDate)}
                         </p>
                       </div>
                     </div>

@@ -3,16 +3,15 @@ import Image from "next/image";
 
 import { motion } from "framer-motion";
 
-import { useGetUserServices } from "@/hooks/useGetUserServices";
-
-import ServiceDropdownLoader from "../Skeleton/ServiceDropdownLoader";
+import { useContext } from "react";
+import { AuthContext } from "@/utils/AuthState";
 
 interface ServiceDropdownProps {
   handleServiceDropDown: () => void;
 }
 
 const ServiceDropdown = ({ handleServiceDropDown }: ServiceDropdownProps) => {
-  const { services, serviceLoad } = useGetUserServices();
+  const { currentUser } = useContext(AuthContext);
 
   return (
     <motion.div
@@ -20,28 +19,23 @@ const ServiceDropdown = ({ handleServiceDropDown }: ServiceDropdownProps) => {
       animate={{ y: 0 }}
       exit={{ y: 20 }}
       transition={{ duration: 0.3 }}
-      className="absolute top-full -left-1/2 z-40 bg-white rounded-lg shadow px-4 py-6 border-1 min-w-52"
+      className="absolute top-full -left-1/2 z-40 bg-white rounded-lg shadow px-4 py-6 border-1 w-52 min-w-52 "
     >
       <ul className="flex flex-col gap-3 w-full ">
-        {serviceLoad ? (
-          <ServiceDropdownLoader />
-        ) : (
-          <>
-            {services?.map((service: any) => (
-              <li
-                className="capitalize hover:text-primary-green duration-300"
-                key={service?.id}
-              >
-                <Link
-                  href={`/dashboard/service/info/${service?.id}`}
-                  onClick={handleServiceDropDown}
-                >
-                  {service?.service}
-                </Link>
-              </li>
-            ))}
-          </>
-        )}
+        {currentUser?.businesses?.map((service: any) => (
+          <li
+            className="capitalize hover:text-primary-green duration-300 w-full truncate"
+            key={service?._id}
+          >
+            <Link
+              href={`/dashboard/service/info/${service?._id}`}
+              onClick={handleServiceDropDown}
+              className=""
+            >
+              {service?.businessName}
+            </Link>
+          </li>
+        ))}
 
         <li>
           <Link href="/expert/register" className="flex-c gap-1">

@@ -6,12 +6,12 @@ import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { CgCloseR } from "react-icons/cg";
 
-import { jobOptions } from "@/constants";
 import { toastOptions } from "@/helpers";
+import { serviceList } from "@/constants";
+import { createCookie, readCookie } from "@/helpers/cookieHelper";
 
 const RegistrationFormOne = () => {
   const [open, setOpen] = useState(false);
-  const [location, setLocation] = useState<string>("");
   const [customOption, setCustomOption] = useState("");
   const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
 
@@ -40,13 +40,10 @@ const RegistrationFormOne = () => {
   };
 
   useEffect(() => {
-    const selectedLocation = localStorage.getItem("EmilistLocation");
-    const lineOfWork = localStorage.getItem("EmilistLineOfWork");
-    if (lineOfWork) {
-      const selectedLineOfWork = JSON.parse(lineOfWork);
-      setSelectedOptions(selectedLineOfWork);
+    const expertServices: string[] = readCookie("expertServices");
+    if (expertServices) {
+      setSelectedOptions(expertServices);
     }
-    setLocation(selectedLocation || "");
 
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -65,12 +62,8 @@ const RegistrationFormOne = () => {
   const handleProceed = () => {
     if (selectedOptions?.length < 1) {
       return toast.error("Please select a line of work", toastOptions);
-    } else if (!location) {
-      return toast.error("Please enter your location", toastOptions);
     }
-    const lineOfWork = JSON.stringify(filteredSelectedOptions);
-    localStorage.setItem("EmilistLineOfWork", lineOfWork);
-    localStorage.setItem("EmilistLocation", location);
+    createCookie("expertServices", filteredSelectedOptions);
     router.push("/expert/register/personal-details");
   };
 
@@ -87,7 +80,7 @@ const RegistrationFormOne = () => {
           <div className="flex flex-col sm:gap-8 gap-5">
             <div>
               <p className="text-[#5e625f] font-medium py-2 max-sm:text-sm">
-                Whats your line of work?
+                Select your services
               </p>
 
               <div className="relative w-full" ref={dropdownRef}>
@@ -131,12 +124,12 @@ const RegistrationFormOne = () => {
                   <div className="absolute right-0 w-full mt-1 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg">
                     <div className="max-h-44 overflow-y-auto py-1">
                       <ul role="list" className=" w-full">
-                        {jobOptions.map((option: any) => (
-                          <li key={option.id} className="w-full">
+                        {serviceList.map((option: string, index: number) => (
+                          <li key={index} className="w-full">
                             <button
                               onClick={() => {
-                                toggleOption(option.label);
-                                if (option.label !== "Others") {
+                                toggleOption(option);
+                                if (option !== "Others") {
                                   setOpen(false);
                                 } else {
                                   setOpen(true);
@@ -144,7 +137,7 @@ const RegistrationFormOne = () => {
                               }}
                               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-gray-900 w-full text-left"
                             >
-                              {option.label}
+                              {option}
                             </button>
                           </li>
                         ))}
@@ -172,19 +165,6 @@ const RegistrationFormOne = () => {
                   </div>
                 )}
               </div>
-            </div>
-            <div className="">
-              <p className="text-[#5e625f] font-medium max-sm:text-sm py-2">
-                Location
-              </p>
-              <input
-                type="text"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                className="expert-reg-input"
-                placeholder="Lagos, Nigeria"
-              />
             </div>
             <div className="flex justify-end  max-sm:justify-center">
               <button className="custom-btn" onClick={handleProceed}>

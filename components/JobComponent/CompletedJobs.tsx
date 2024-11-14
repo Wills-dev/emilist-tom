@@ -9,7 +9,7 @@ import { useGetJobByStatus } from "@/hooks/useGetJobByStatus";
 import Link from "next/link";
 
 const CompletedJobs = () => {
-  const { currentUser, userLoading } = useContext(AuthContext);
+  const { currentUser } = useContext(AuthContext);
   const {
     isLoading,
     allJobs,
@@ -27,9 +27,24 @@ const CompletedJobs = () => {
     }
   }, [currentUser]);
 
+  const isAllCompleted = (jobInfo: any) => {
+    const isAllMilestoneCompleted = jobInfo?.milestones?.every(
+      (milestone: any) => milestone.status === "completed"
+    );
+
+    return isAllMilestoneCompleted;
+  };
+
+  const isAllPaid = (jobInfo: any) => {
+    const isAllMilestonePaid = jobInfo?.milestones?.every(
+      (milestone: any) => milestone.paymentStatus === "paid"
+    );
+    return isAllMilestonePaid;
+  };
+
   return (
     <>
-      {isLoading || userLoading ? (
+      {isLoading ? (
         <div className="flex item-center justify-center text-green-500 mt-6 h-[40vh] w-full">
           <span className="loading loading-bars loading-lg"></span>
         </div>
@@ -62,33 +77,59 @@ const CompletedJobs = () => {
                     </h6>
                   </div>
                   <div className="rounded-[20px] flex justify-end items-center gap-8 max-sm:gap-3">
-                    <div className="flex flex-col gap-2">
-                      <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
-                        Milestone
-                      </p>
-                      <h6 className="text-[#303632]  text-[16px] font-[700] leading-[24px] max-sm:text-[13px]  whitespace-nowrap">
-                        {job?.milestoneProgress && job?.milestoneProgress}
-                      </h6>
-                    </div>
                     <div className="flex flex-col items-center gap-2">
-                      <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                      <p className="text-[#5E625F]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
                         Task
                       </p>
-                      <div className=" flex items-center justify-center bg-[#F0FDF5] w-[85px] h-[30px] max-sm:h-[25px] max-sm:w-[70px] rounded-[20px]">
-                        <p className="text-[#25C269]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
-                          Completed
-                        </p>
-                      </div>
+                      {isAllCompleted(job) ? (
+                        <div className=" flex items-center justify-center bg-[#F0FDF5] px-3 h-[30px] max-sm:h-[25px] rounded-[20px]">
+                          <p className="text-[#25C269]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
+                            Completed
+                          </p>
+                        </div>
+                      ) : (
+                        <div className=" flex items-center justify-center bg-[#FFF1F2] px-3 h-[30px] max-sm:h-[25px] rounded-[20px]">
+                          <p className="text-[#FF5D7A]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
+                            Completed
+                          </p>
+                        </div>
+                      )}
                     </div>
                     <div className="flex flex-col items-center gap-2">
-                      <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                      <p className="text-[#5E625F]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
                         Payment status
                       </p>
-                      <div className=" flex items-center justify-center bg-[#F0FDF5] w-[85px] h-[30px] max-sm:h-[25px] max-sm:w-[70px] rounded-[20px]">
-                        <p className="text-[#25C269]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
-                          Paid
-                        </p>
-                      </div>
+                      {isAllPaid(job) ? (
+                        <div className=" flex items-center justify-center bg-[#F0FDF5] px-3 h-[30px] max-sm:h-[25px] rounded-[20px]">
+                          <p className="text-[#25C269]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
+                            Paid
+                          </p>
+                        </div>
+                      ) : (
+                        <div className=" flex items-center justify-center bg-[#FFF1F2] px-3 h-[30px] max-sm:h-[25px] rounded-[20px]">
+                          <p className="text-[#FF5D7A]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
+                            Not paid
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <p className="text-[#5E625F]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
+                        Contract
+                      </p>
+                      {job?.isClosed ? (
+                        <div className=" flex items-center justify-center bg-[#F0FDF5] px-3 h-[30px] max-sm:h-[25px] rounded-[20px]">
+                          <p className="text-[#25C269]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
+                            Closed
+                          </p>
+                        </div>
+                      ) : (
+                        <div className=" flex items-center justify-center bg-[#FFF1F2] px-3 h-[30px] max-sm:h-[25px] rounded-[20px]">
+                          <p className="text-[#FF5D7A]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
+                            Open
+                          </p>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </Link>
@@ -101,7 +142,7 @@ const CompletedJobs = () => {
                 </div>
                 <div className="rounded-[20px] flex justify-end items-center gap-8 max-sm:gap-3">
                   <div className="flex flex-col gap-2">
-                    <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                    <p className="text-[#5E625F]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
                       Milestone
                     </p>
                     <h6 className="text-[#303632]  text-[16px] font-[700] leading-[24px] max-sm:text-[13px]  whitespace-nowrap">
@@ -109,21 +150,21 @@ const CompletedJobs = () => {
                     </h6>
                   </div>
                   <div className="flex flex-col items-center gap-2">
-                    <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                    <p className="text-[#5E625F]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
                       Task
                     </p>
-                    <div className=" flex items-center justify-center bg-[#F0FDF5] w-[85px] h-[30px] max-sm:h-[25px] max-sm:w-[70px] rounded-[20px]">
-                      <p className="text-[#25C269]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                    <div className=" flex items-center justify-center bg-[#F0FDF5] px-3 h-[30px] max-sm:h-[25px] rounded-[20px]">
+                      <p className="text-[#25C269]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
                         Completed
                       </p>
                     </div>
                   </div>
                   <div className="flex flex-col items-center gap-2">
-                    <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                    <p className="text-[#5E625F]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
                       Payment status
                     </p>
-                    <div className=" flex items-center justify-center bg-[#FFF1F2] w-[85px] h-[30px] max-sm:h-[25px] max-sm:w-[70px] rounded-[20px]">
-                      <p className="text-[#FF5D7A]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                    <div className=" flex items-center justify-center bg-[#FFF1F2] px-3 h-[30px] max-sm:h-[25px] rounded-[20px]">
+                      <p className="text-[#FF5D7A]  text-[14px] font-[500]  max-sm:text-[12px] whitespace-nowrap">
                         Not Paid
                       </p>
                     </div>
@@ -132,7 +173,7 @@ const CompletedJobs = () => {
               </div> */}
             </>
           )}
-          <div className="md:w-2/3 w-full">
+          <div className="col-span-2 w-full min-w-full max-md:col-span-3">
             <Pagination
               current={currentPage}
               total={totalPages}
