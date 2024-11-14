@@ -298,13 +298,14 @@ export const useCreateNewService = () => {
       localStorage.removeItem("EmilistExpertAboutBusiness");
       localStorage.removeItem("EmilistSelectedBusinessCountry");
       localStorage.removeItem("EmilistExpertBusinessDescription");
-      localStorage.removeItem("EmilistExpertBusinessPicture");
+      localStorage.removeItem("EmilistExpertBusinessPictures");
       localStorage.removeItem("EmilistExpertMembership");
       localStorage.removeItem("EmilistExpertExpire");
       localStorage.removeItem("EmilistExpertNoEndDate");
       localStorage.removeItem("VerifyCert");
       localStorage.removeItem("EmilistExpertCertPic");
       localStorage.removeItem("EmilistExpertInsurance");
+      localStorage.removeItem("EmilistExpertCertificates");
     } catch (error: any) {
       console.error("error creating new service:", error);
       promiseErrorFunction(error);
