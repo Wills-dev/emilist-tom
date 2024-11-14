@@ -143,7 +143,7 @@ const RegistrationFormFive = () => {
                   </div>
                 </div>
                 <div className="w-full">
-                  <p className="input-label">Business address (Optional)</p>
+                  <p className="input-label">Business address</p>
                   <div className="w-full">
                     <input
                       type="text"
