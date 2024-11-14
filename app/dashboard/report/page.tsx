@@ -27,7 +27,7 @@ const Report = () => {
 
   useEffect(() => {
     handleGetJobAnalytics();
-  }, []);
+  }, [year, month]);
 
   return (
     <main className="relative">

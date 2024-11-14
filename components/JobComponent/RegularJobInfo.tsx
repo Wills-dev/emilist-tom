@@ -25,6 +25,7 @@ import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
 import AddQoute from "./AddQoute";
+import RegularServiceModal from "../modals/RegularServiceModal";
 
 interface RegularJobInfoProps {
   jobId: string;
@@ -34,6 +35,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
   const { currentUser } = useContext(AuthContext);
 
   const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openServiceModal, setOpenServiceModal] = useState(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
   const [isPromoModalOpen, setIsPromoModalOpen] = useState<boolean>(false);
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
@@ -261,10 +263,16 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                           <div className="flex items-center max-lg:w-full gap-2">
                             <button
                               className="bg-primary-green px-[20px] py-[12px] text-[#fcfefd] rounded-lg cursor-pointer font-bold whitespace-nowrap flex-c justify-center max-sm:py-[8px] max-sm:text-sm"
-                              onClick={() => handleApplyFofJob(jobId)}
+                              onClick={() => setOpenServiceModal(true)}
                             >
                               Apply
                             </button>
+                            <RegularServiceModal
+                              isOpen={openServiceModal}
+                              onCancel={() => setOpenServiceModal(false)}
+                              handleApplyFofJob={handleApplyFofJob}
+                              jobId={jobId}
+                            />
                           </div>
                         )}
                       </>

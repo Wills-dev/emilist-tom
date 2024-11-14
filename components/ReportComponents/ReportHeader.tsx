@@ -8,10 +8,10 @@ import { reportLinks } from "@/constants";
 
 type Props = {
   currentLink: number;
-  setMonth: any;
-  setYear: any;
-  month: number | undefined;
-  year: number;
+  setMonth?: any;
+  setYear?: any;
+  month?: number | undefined;
+  year?: number;
 };
 
 const ReportHeader = ({
@@ -95,7 +95,10 @@ const ReportHeader = ({
             </select>
           </div>
           <div className=" min-w-[137px] w-[137px]  max-w-[137px] rounded-lg h-[50px] px-4 bg-white focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:h-[46px] ">
-            <select className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-[14px] text-[#002913]" value={year} onChange={(e) => setYear(e.target.value)}
+            <select
+              className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-[14px] text-[#002913]"
+              value={year}
+              onChange={(e) => setYear(e.target.value)}
             >
               <option value={2022}>2022</option>
               <option value={2023}>2023</option>

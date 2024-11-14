@@ -14,7 +14,7 @@ export const useApplyForJob = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [rerender, setRerender] = useState(false);
 
-  const handleApplyFofJob = async (jobId: string) => {
+  const handleApplyFofJob = async (jobId: string, businessId: string) => {
     if (!currentUser) {
       return router.push("/login");
     }
@@ -23,6 +23,7 @@ export const useApplyForJob = () => {
       const payload = {
         jobId,
         type: "regular",
+        businessId,
       };
       await axiosInstance.post(`/jobs/apply-job`, payload);
       setRerender((prev) => !prev);
