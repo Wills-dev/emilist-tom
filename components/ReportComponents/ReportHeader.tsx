@@ -8,9 +8,19 @@ import { reportLinks } from "@/constants";
 
 type Props = {
   currentLink: number;
+  setMonth: any;
+  setYear: any;
+  month: number | undefined;
+  year: number;
 };
 
-const ReportHeader = ({ currentLink }: Props) => {
+const ReportHeader = ({
+  currentLink,
+  setMonth,
+  setYear,
+  month,
+  year,
+}: Props) => {
   const [open, setOpen] = useState<boolean>(false);
 
   return (
@@ -64,19 +74,33 @@ const ReportHeader = ({ currentLink }: Props) => {
             )}
           </div>
           <div className=" min-w-[137px] w-[137px]  max-w-[137px] rounded-lg h-[50px] px-4 bg-white focus:outline-none focus-within:border-primary-green focus-within:border-1 max-sm:h-[46px] ">
-            <select className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm text-[#002913]">
+            <select
+              className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm text-[#002913]"
+              value={month}
+              onChange={(e) => setMonth(e.target.value)}
+            >
               <option>Monthly</option>
-              <option>Jan</option>
-              <option>Feb</option>
-              <option>Mar</option>
+              <option value={1}>Jan</option>
+              <option value={2}>Feb</option>
+              <option value={3}>Mar</option>
+              <option value={4}>Apr</option>
+              <option value={5}>May</option>
+              <option value={6}>Jun</option>
+              <option value={7}>Jul</option>
+              <option value={8}>Aug</option>
+              <option value={9}>Sep</option>
+              <option value={10}>Oct</option>
+              <option value={11}>Nov</option>
+              <option value={12}>Dec</option>
             </select>
           </div>
           <div className=" min-w-[137px] w-[137px]  max-w-[137px] rounded-lg h-[50px] px-4 bg-white focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:h-[46px] ">
-            <select className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-[14px] text-[#002913]">
-              <option>2022</option>
-              <option>2021</option>
-              <option>2020</option>
-              <option>2019</option>
+            <select className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-[14px] text-[#002913]" value={year} onChange={(e) => setYear(e.target.value)}
+            >
+              <option value={2022}>2022</option>
+              <option value={2023}>2023</option>
+              <option value={2024}>2024</option>
+              <option value={2025}>2025</option>
             </select>
           </div>
         </div>

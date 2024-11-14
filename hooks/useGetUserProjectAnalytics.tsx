@@ -2,7 +2,7 @@ import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useGetUserProjectAnalytics = () => {
   const router = useRouter();
@@ -19,10 +19,8 @@ export const useGetUserProjectAnalytics = () => {
     }
     setLoadingAnalytics(true);
     try {
-      const { data } = await axiosInstance.post(`/projectAnalytics`, {
-        applicantId: currentUser.unique_id,
-      });
-      setProjectAnalytics(data);
+      const { data } = await axiosInstance.post(`/fetch-project-count`);
+      setProjectAnalytics(data?.data);
     } catch (error: any) {
       console.log("error getting project analytics", error);
     } finally {

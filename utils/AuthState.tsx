@@ -18,6 +18,7 @@ const AuthState = ({ children }: Props) => {
 
   const [currentUser, setCurrentUser] = useState<any>(null);
   const [userLoading, setUserLoading] = useState<boolean>(true);
+  const [reRender, setRerender] = useState(false);
 
   const getCurrentUser = async () => {
     try {
@@ -37,12 +38,13 @@ const AuthState = ({ children }: Props) => {
     } else {
       setUserLoading(false);
     }
-  }, []);
+  }, [reRender]);
 
   const value = {
     currentUser,
     setCurrentUser,
     userLoading,
+    setRerender,
   };
 
   return (

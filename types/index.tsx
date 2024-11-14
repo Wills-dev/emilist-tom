@@ -10,7 +10,6 @@ export interface ResetPasswordType {
 }
 
 export interface AboutBusinessProps {
-  ownerName?: string;
   businessName?: string;
   yearFounded?: string;
   employees?: string;
@@ -18,9 +17,7 @@ export interface AboutBusinessProps {
   statee?: string;
   startPrice?: string;
   noticePeriod?: string;
-  contactPersonName?: string;
-  contactPersonPhone?: string;
-  contactPersonEmail?: string;
+  currency: string;
 }
 
 export interface InsuranceFormProps {
@@ -181,3 +178,19 @@ export type TimeFrame = {
   number: number;
   period: string;
 };
+
+export interface Certificate {
+  issuingOrganization: string;
+  verificationNumber: string;
+  issuingDate: string;
+  expiringDate: string;
+  doesNotExpire: boolean;
+}
+
+export interface Membership {
+  organization: string;
+  position: string;
+  startDate: string;
+  endDate: string;
+  doesNotEnd: boolean;
+}

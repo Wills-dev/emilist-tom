@@ -19,7 +19,7 @@ const RegistrationFormThree = () => {
     if (file) {
       // Allowed file types
       const validExtensions = ["image/jpeg", "image/jpg", "image/png"];
-      const maxSizeInMB = 3 * 1024 * 1024; // 3MB
+      const maxSizeInMB = 2 * 1024 * 1024; //2MB
 
       // Check file size
       if (file.size > maxSizeInMB) {
@@ -67,7 +67,7 @@ const RegistrationFormThree = () => {
     };
     reader.readAsDataURL(formData);
     // Proceed to the next page
-    router.push(`/expert/register/pick-service`);
+    router.push(`/expert/register/about-business`);
   };
 
   return (

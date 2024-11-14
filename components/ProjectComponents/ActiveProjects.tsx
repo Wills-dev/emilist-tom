@@ -65,41 +65,41 @@ const ActiveProjects = () => {
                     </h6>
                   </div>
                   <div className="rounded-[20px] flex justify-end items-center gap-8 max-sm:gap-3">
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 max-sm:hidden">
                       <p className="text-[#5E625F]  text-[14px] font-[500] max-sm:text-[12px] whitespace-nowrap">
                         Milestone
                       </p>
-                      <h6 className="text-[#303632]  text-[16px] font-[700] leading-[24px] max-sm:text-[13px]  whitespace-nowrap">
+                      <h6 className="text-[#303632]  text-[16px] font-[700]  max-sm:text-[13px]  whitespace-nowrap">
                         {project?.milestoneProgress &&
                           project?.milestoneProgress}
                       </h6>
                     </div>
                     <div className="flex flex-col gap-2 max-md:hidden">
-                      <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                      <p className="text-[#5E625F]  text-[14px] font-[500] max-sm:text-[12px] whitespace-nowrap">
                         Start Date
                       </p>
-                      <h6 className="text-[#303632]  text-[16px] font-[700] leading-[24px] max-sm:text-[13px]  whitespace-nowrap">
+                      <h6 className="text-[#303632]  text-[16px] font-[700]  max-sm:text-[13px]  whitespace-nowrap">
                         {project?.startDate &&
                           formatStartDate(project?.startDate)}
                       </h6>
                     </div>
                     <div className="flex flex-col gap-2">
-                      <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                      <p className="text-[#5E625F]  text-[14px] font-[500] max-sm:text-[12px] whitespace-nowrap">
                         Due date
                       </p>
                       <div className=" flex items-center justify-center bg-[#F0FDF5] w-[74px] h-[30px] max-sm:h-[25px] max-sm:w-[55px] rounded-[20px]">
-                        <p className="text-[#25C269]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                        <p className="text-[#25C269]  text-[14px] font-[500] max-sm:text-[12px] whitespace-nowrap">
                           {project?.milestoneDueDate &&
                             formatDueDate(project?.milestoneDueDate)}
                         </p>
                       </div>
                     </div>
-                    <div className="flex flex-col gap-2">
-                      <p className="text-[#5E625F]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                    <div className="flex flex-col gap-2 max-sm:hidden">
+                      <p className="text-[#5E625F]  text-[14px] font-[500] max-sm:text-[12px] whitespace-nowrap">
                         Project Due date
                       </p>
                       <div className=" flex items-center justify-center bg-[#F0FDF5] w-[74px] h-[30px] max-sm:h-[25px] max-sm:w-[55px] rounded-[20px]">
-                        <p className="text-[#25C269]  text-[14px] font-[500] leading-[16px] max-sm:text-[12px] whitespace-nowrap">
+                        <p className="text-[#25C269]  text-[14px] font-[500] max-sm:text-[12px] whitespace-nowrap">
                           {project?.overallDueDate &&
                             formatDueDate(project?.overallDueDate)}
                         </p>
