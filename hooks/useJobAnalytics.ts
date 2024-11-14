@@ -7,10 +7,8 @@ export const useJobAnalytics = () => {
   const [startDate, setStateDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [period, setPeriod] = useState("day");
-  const [month, setMonth] = useState<undefined | number>(undefined);
+  const [month, setMonth] = useState<undefined | number>();
   const [year, setYear] = useState(new Date().getFullYear());
-
-  console.log("new Date().getFullYear()", new Date().getFullYear());
 
   const handleGetJobAnalytics = async () => {
     try {
@@ -19,7 +17,6 @@ export const useJobAnalytics = () => {
         `/jobs/user-job-analytics?year=${year}${monthQuery}`
       );
       setJobAnalytics(data?.data);
-      console.log("data", data);
     } catch (error) {
       console.log("error fetching job analytics", error);
     } finally {

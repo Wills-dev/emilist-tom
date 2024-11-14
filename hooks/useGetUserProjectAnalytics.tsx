@@ -19,7 +19,7 @@ export const useGetUserProjectAnalytics = () => {
     }
     setLoadingAnalytics(true);
     try {
-      const { data } = await axiosInstance.post(`/fetch-project-count`);
+      const { data } = await axiosInstance.get(`/fetch-project-count`);
       setProjectAnalytics(data?.data);
     } catch (error: any) {
       console.log("error getting project analytics", error);

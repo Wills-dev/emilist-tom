@@ -71,34 +71,29 @@ const chartData = [
 ];
 
 const chartConfig = {
-  new: {
+  totalJobs: {
     label: "New",
     color: "#054753",
   },
-  active: {
+  totalActiveJobs: {
     label: "Active",
     color: "#6667FF",
   },
-  overdue: {
+  totalOverdueJobs: {
     label: "Overdue",
     color: "#FF5D7A",
   },
-  paused: {
+  totalPausedJobs: {
     label: "Paused",
     color: "#FF9933",
   },
-  completed: {
+  totalCompletedJobs: {
     label: "Completed",
     color: "#25C269",
   },
 } satisfies ChartConfig;
 
 export function MultipleLineChart({ chartData }: MultipleLineChartProps) {
-  const { loadStat, statisticInfo, getStat } = useGetJobStatistics();
-
-  useEffect(() => {
-    getStat();
-  }, []);
   return (
     <>
       <Card className="mt-6">
@@ -117,43 +112,43 @@ export function MultipleLineChart({ chartData }: MultipleLineChartProps) {
             >
               <CartesianGrid vertical={false} />
               <XAxis
-                dataKey="month"
+                dataKey="period"
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 3)}
+                tickFormatter={(value) => value.slice(0, 6)}
               />
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               <Line
-                dataKey="new"
+                dataKey="totalJobs"
                 type="monotone"
                 stroke="#054753"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
-                dataKey="active"
+                dataKey="totalActiveJobs"
                 type="monotone"
                 stroke="#6667FF"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
-                dataKey="overdue"
+                dataKey="totalOverdueJobs"
                 type="monotone"
                 stroke="#FF5D7A"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
-                dataKey="paused"
+                dataKey="totalPausedJobs"
                 type="monotone"
                 stroke="#FF9933"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
-                dataKey="completed"
+                dataKey="totalCompletedJobs"
                 type="monotone"
                 stroke="#25C269"
                 strokeWidth={2}

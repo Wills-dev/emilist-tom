@@ -93,15 +93,26 @@ export const useApplyForBiddableJob = () => {
     setMilestones(updatedMilestones);
   };
 
-  const applyForBiddableJob = async (e: any, jobId: string) => {
+  const applyForBiddableJob = async (
+    e: any,
+    jobId: string,
+    businessId: string
+  ) => {
     e.preventDefault();
-
-    console.log("first");
 
     if (!currentUser) {
       return router.push("/login");
     }
     if (validateTotalPercentage()) {
+      return;
+    }
+
+    if (currentUser?.businesses.length === 0) {
+      toast.error("Please add a business to proceed", toastOptions);
+      return;
+    }
+    if (!businessId) {
+      toast.error("Please select a business", toastOptions);
       return;
     }
 
@@ -112,6 +123,7 @@ export const useApplyForBiddableJob = () => {
         type: "biddable",
         maximumPrice: Number(maxPrice),
         milestones,
+        businessId,
       };
       await axiosInstance.post(`/jobs/apply-job`, applyJobPayload);
       setOpenBidModal(false);
