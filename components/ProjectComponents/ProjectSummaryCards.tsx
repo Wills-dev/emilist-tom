@@ -23,45 +23,46 @@ const ProjectSummaryCards = () => {
           />
           <SummaryCard
             cardIcon="/assets/icons/newIcon.svg"
-            cardLink="/dashboard/job/new"
+            cardLink="/dashboard/project/new"
             cardSum={
-              projectAnalytics?.new && numberWithCommas(projectAnalytics?.new)
+              projectAnalytics?.totalPendingJobs &&
+              numberWithCommas(projectAnalytics?.totalPendingJobs)
             }
             cardTitle="New"
           />
           <SummaryCard
             cardIcon="/assets/icons/activeIcon.svg"
-            cardLink="/dashboard/job/active"
+            cardLink="/dashboard/project/active"
             cardSum={
-              projectAnalytics?.active &&
-              numberWithCommas(projectAnalytics?.active)
+              projectAnalytics?.totalActiveJobs &&
+              numberWithCommas(projectAnalytics?.totalActiveJobs)
             }
             cardTitle="Active"
           />
           <SummaryCard
             cardIcon="/assets/icons/overdueIcon.svg"
-            cardLink="/dashboard/job/overdue"
+            cardLink="/dashboard/project/overdue"
             cardSum={
-              projectAnalytics?.overdue &&
-              numberWithCommas(projectAnalytics?.overdue)
+              projectAnalytics?.totalOverdueJobs &&
+              numberWithCommas(projectAnalytics?.totalOverdueJobs)
             }
             cardTitle="Overdue"
           />
           <SummaryCard
             cardIcon="/assets/icons/pausedIcon.svg"
-            cardLink="/dashboard/job/paused"
+            cardLink="/dashboard/project/paused"
             cardSum={
-              projectAnalytics?.paused &&
-              numberWithCommas(projectAnalytics?.paused)
+              projectAnalytics?.totalPausedJobs &&
+              numberWithCommas(projectAnalytics?.totalPausedJobs)
             }
             cardTitle="Paused"
           />
           <SummaryCard
             cardIcon="/assets/icons/completedIcon.svg"
-            cardLink="/dashboard/job/completed"
+            cardLink="/dashboard/project/completed"
             cardSum={
-              projectAnalytics?.completed &&
-              numberWithCommas(projectAnalytics?.completed)
+              projectAnalytics?.totalCompletedJobs &&
+              numberWithCommas(projectAnalytics?.totalCompletedJobs)
             }
             cardTitle="Completed"
           />
