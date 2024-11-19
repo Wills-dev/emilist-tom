@@ -82,7 +82,9 @@ const RegistrationFormOne = () => {
               <p className="text-[#5e625f] font-medium py-2 max-sm:text-sm">
                 Select your services
               </p>
-
+              <p className="text-xs text-primary-green">
+                You can select more than one service
+              </p>
               <div className="relative w-full" ref={dropdownRef}>
                 <button
                   onClick={() => setOpen((prev) => !prev)}
