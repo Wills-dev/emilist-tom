@@ -17,6 +17,7 @@ import AboutJobOwner from "./AboutJobOwner";
 import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
+import AcceptDirectJobModal from "../modals/AcceptDirectJobModal";
 
 interface DirectJobInfoProps {
   jobId: string;
@@ -27,6 +28,7 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
 
   const { currentUser, userLoading } = useContext(AuthContext);
 
+  const [bizModal, setBizModal] = useState(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
 
@@ -139,12 +141,7 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                         <div className="flex gap-2 flex-wrap">
                           <button
                             className="text-sm bg-primary-green text-white hover:bg-green-600 whitespace-nowrap transition-all duration-300 rounded-lg px-4 py-2 text-center mb-4"
-                            onClick={() =>
-                              handleAcceptDirectJob(
-                                jobInfo?.applications[0]?._id,
-                                "accepted"
-                              )
-                            }
+                            onClick={() => setBizModal(true)}
                           >
                             Accept job
                           </button>
@@ -159,6 +156,12 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
                           >
                             Reject job
                           </button>
+                          <AcceptDirectJobModal
+                            isOpen={bizModal}
+                            onCancel={() => setBizModal(false)}
+                            AcceptDirectJob={handleAcceptDirectJob}
+                            applicationId={jobInfo?.applications[0]?._id}
+                          />
                         </div>
                       )}
                     </>

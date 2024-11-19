@@ -167,7 +167,6 @@ const DirectContractForm = () => {
                     <input
                       type="text"
                       className=" expert-reg-input"
-                      placeholder="Email or User ID"
                       name="invite"
                       value={createDirectContractJob.invite}
                       onChange={handleChange}

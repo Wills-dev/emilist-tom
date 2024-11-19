@@ -59,7 +59,9 @@ const NewProjects = () => {
                 >
                   <div className="flex flex-col gap-2">
                     <p className="text-[#737774] font-medium max-sm:text-xs">
-                      Statement of work{" "}
+                      {project?.type === "direct"
+                        ? "Open this direct job to accept or decline."
+                        : "Statement of work"}
                     </p>
                     <h6 className="sm:text-lg font-semibold">
                       {project?.title && project?.title}

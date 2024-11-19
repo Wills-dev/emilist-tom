@@ -222,26 +222,37 @@ export const useCreateNewService = () => {
       });
 
       expertData?.certification?.forEach((cert: any, index: number) => {
-        formData.append(
-          `certification[${index}][issuingOrganisation]`,
-          cert.issuingOrganisation
-        );
-        formData.append(
-          `certification[${index}][verificationNumber]`,
-          cert.verificationNumber
-        );
-        formData.append(
-          `certification[${index}][issuingDate]`,
-          cert.issuingDate
-        );
-        formData.append(
-          `certification[${index}][expiringDate]`,
-          cert.expiringDate
-        );
-        formData.append(
-          `certification[${index}][isCertificateExpire]`,
-          cert.doesNotExpire.toString()
-        );
+        if (cert.issuingOrganization) {
+          formData.append(
+            `certification[${index}][issuingOrganisation]`,
+            cert.issuingOrganization
+          );
+        }
+
+        if (cert.verificationNumber) {
+          formData.append(
+            `certification[${index}][verificationNumber]`,
+            cert.verificationNumber
+          );
+        }
+        if (cert.issuingDate) {
+          formData.append(
+            `certification[${index}][issuingDate]`,
+            cert.issuingDate
+          );
+        }
+        if (cert.expiringDate) {
+          formData.append(
+            `certification[${index}][expiringDate]`,
+            cert.expiringDate
+          );
+        }
+        if (cert.doesNotExpire.toString()) {
+          formData.append(
+            `certification[${index}][isCertificateExpire]`,
+            cert.doesNotExpire.toString()
+          );
+        }
       });
 
       expertData?.renderedServices?.forEach((service: any, index: number) => {
@@ -250,29 +261,51 @@ export const useCreateNewService = () => {
       });
 
       expertData?.membership?.forEach((member: any, index: number) => {
-        formData.append(
-          `membership[${index}][organisation]`,
-          member.organization
-        );
-        formData.append(`membership[${index}][positionHeld]`, member.position);
-        formData.append(`membership[${index}][startDate]`, member.startDate);
-        formData.append(`membership[${index}][endDate]`, member.endDate);
-        formData.append(
-          `membership[${index}][isMembershipExpire]`,
-          member.doesNotEnd.toString()
-        );
+        if (member.organization) {
+          formData.append(
+            `membership[${index}][organisation]`,
+            member.organization
+          );
+        }
+        if (member.position) {
+          formData.append(
+            `membership[${index}][positionHeld]`,
+            member.position
+          );
+        }
+        if (member.startDate) {
+          formData.append(`membership[${index}][startDate]`, member.startDate);
+        }
+        if (member.endDate) {
+          formData.append(`membership[${index}][endDate]`, member.endDate);
+        }
+        if (member.doesNotEnd.toString()) {
+          formData.append(
+            `membership[${index}][isMembershipExpire]`,
+            member.doesNotEnd.toString()
+          );
+        }
       });
 
       expertData?.insurance?.forEach((insurance: any, index: number) => {
-        formData.append(
-          `insurance[${index}][issuingOrganisation]`,
-          insurance.insuringOrganization
-        );
-        formData.append(`insurance[${index}][coverage]`, insurance.typeOfCover);
-        formData.append(
-          `insurance[${index}][description]`,
-          insurance.description
-        );
+        if (insurance.insuringOrganization) {
+          formData.append(
+            `insurance[${index}][issuingOrganisation]`,
+            insurance.insuringOrganization
+          );
+        }
+        if (insurance.typeOfCover) {
+          formData.append(
+            `insurance[${index}][coverage]`,
+            insurance.typeOfCover
+          );
+        }
+        if (insurance.description) {
+          formData.append(
+            `insurance[${index}][description]`,
+            insurance.description
+          );
+        }
       });
 
       for (let i = 0; i < businessPictures.length; i++) {
