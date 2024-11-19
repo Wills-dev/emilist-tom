@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useContext } from "react";
 
 import { IoIosArrowDown, IoMdClose } from "react-icons/io";
 import { AnimatePresence, motion } from "framer-motion";
-import { useGetUserServices } from "@/hooks/useGetUserServices";
-import ServiceDropdownLoader from "../Skeleton/ServiceDropdownLoader";
+
+import { AuthContext } from "@/utils/AuthState";
 
 interface DashboardSidebarProps {
   toggle: () => void;
@@ -27,7 +28,7 @@ const DashboardSidebar = ({
   openMaterialDropdown,
   dropdownRef,
 }: DashboardSidebarProps) => {
-  const { services, serviceLoad } = useGetUserServices();
+  const { currentUser } = useContext(AuthContext);
 
   return (
     <motion.div
@@ -130,25 +131,20 @@ const DashboardSidebar = ({
                   transition={{ duration: 0.3 }}
                   className="flex flex-col gap-4 pl-8"
                 >
-                  {serviceLoad ? (
-                    <ServiceDropdownLoader />
-                  ) : (
-                    <>
-                      {services?.map((service: any) => (
-                        <li
-                          className="capitalize hover:text-primary-green duration-300"
-                          key={service?.id}
-                        >
-                          <Link
-                            href={`/dashboard/service/info/${service?.id}`}
-                            onClick={handleServiceDropDown}
-                          >
-                            {service?.service}
-                          </Link>
-                        </li>
-                      ))}
-                    </>
-                  )}
+                  {currentUser?.businesses?.map((service: any) => (
+                    <li
+                      className="capitalize hover:text-primary-green duration-300"
+                      key={service?.id}
+                    >
+                      <Link
+                        href={`/dashboard/service/info/${service?._id}`}
+                        onClick={handleServiceDropDown}
+                      >
+                        {service?.businessName}
+                      </Link>
+                    </li>
+                  ))}
+
                   <li className="hover:text-green-600 duration-300 ">
                     <Link href="/expert/register" className="flex-c gap-1">
                       <Image

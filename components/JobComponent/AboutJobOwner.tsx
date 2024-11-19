@@ -73,7 +73,7 @@ const AboutJobOwner = ({ jobInfo, analytics }: Props) => {
                   : 0}
               </p>
             </div>
-            <div className="flex-c gap-3 w-full">
+            {/* <div className="flex-c gap-3 w-full">
               {" "}
               <h6 className="flex-1 text-sm font-semibold max-sm:text-xs  whitespace-nowrap">
                 Total Amount spent:
@@ -84,7 +84,7 @@ const AboutJobOwner = ({ jobInfo, analytics }: Props) => {
                   ? jobInfo?.userDetails?.totalAmountSpent
                   : 0}
               </p>
-            </div>
+            </div> */}
           </div>
         </div>
       )}

@@ -258,47 +258,51 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                 Membership
               </h5>
               <div className="flex flex-col gap-6">
-                {serviceInfo?.membership?.map(
-                  (membership: any, index: number) => (
-                    <div className=" flex flex-col  gap-2 " key={index}>
-                      <h5 className="font-semibold">
-                        {membership?.organisation}
-                      </h5>
-                      <div className="flex items-center gap-3 w-full">
-                        {" "}
-                        <h6 className="w-[100px] text-sm font-semibold max-sm:text-xs whitespace-nowrap">
-                          Position held:
-                        </h6>
-                        <p className=" text-[#303632] text-sm  max-sm:text-xs">
-                          {membership?.positionHeld}
-                        </p>
-                      </div>
-                      <div className="flex items-center  gap-3 w-full">
-                        {" "}
-                        <h6 className="w-[100px]  text-sm font-semibold max-sm:text-xs whitespace-nowrap">
-                          Starting Date:
-                        </h6>
-                        <p className=" text-[#303632] text-sm  max-sm:text-xs">
-                          {membership?.startDate &&
-                            convertDateFormat(membership?.startDate)}
-                        </p>
-                      </div>
-                      <div className="flex items-center gap-3 w-full">
-                        {" "}
-                        <h6 className="w-[100px] text-sm font-semibold max-sm:text-xs whitespace-nowrap">
-                          End Date:
-                        </h6>
-                        <p className=" text-[#303632] text-sm  max-sm:text-xs">
-                          {membership?.isMembershipExpire
-                            ? "No end date"
-                            : membership?.endDate &&
-                              convertDateFormat(membership?.endDate)}
-                        </p>
-                      </div>
-                    </div>
-                  )
-                )}
-                {serviceInfo?.membership?.length === 0 && (
+                {serviceInfo?.membership?.length > 0 ? (
+                  <>
+                    {" "}
+                    {serviceInfo?.membership?.map(
+                      (membership: any, index: number) => (
+                        <div className=" flex flex-col  gap-2 " key={index}>
+                          <h5 className="font-semibold">
+                            {membership?.organisation}
+                          </h5>
+                          <div className="flex items-center gap-3 w-full">
+                            {" "}
+                            <h6 className="w-[100px] text-sm font-semibold max-sm:text-xs whitespace-nowrap">
+                              Position held:
+                            </h6>
+                            <p className=" text-[#303632] text-sm  max-sm:text-xs">
+                              {membership?.positionHeld}
+                            </p>
+                          </div>
+                          <div className="flex items-center  gap-3 w-full">
+                            {" "}
+                            <h6 className="w-[100px]  text-sm font-semibold max-sm:text-xs whitespace-nowrap">
+                              Starting Date:
+                            </h6>
+                            <p className=" text-[#303632] text-sm  max-sm:text-xs">
+                              {membership?.startDate &&
+                                convertDateFormat(membership?.startDate)}
+                            </p>
+                          </div>
+                          <div className="flex items-center gap-3 w-full">
+                            {" "}
+                            <h6 className="w-[100px] text-sm font-semibold max-sm:text-xs whitespace-nowrap">
+                              End Date:
+                            </h6>
+                            <p className=" text-[#303632] text-sm  max-sm:text-xs">
+                              {membership?.isMembershipExpire
+                                ? "No end date"
+                                : membership?.endDate &&
+                                  convertDateFormat(membership?.endDate)}
+                            </p>
+                          </div>
+                        </div>
+                      )
+                    )}
+                  </>
+                ) : (
                   <h5 className="font-semibold">No membership</h5>
                 )}
               </div>
@@ -310,34 +314,43 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
             </h4>
 
             <div className="flex flex-col gap-6">
-              {serviceInfo?.insurance?.map((insurance: any, index: number) => (
-                <div className=" bg-white w-full rounded-[10px]" key={index}>
-                  <div className=" flex flex-col  gap-3 ">
-                    <div className="flex items-center gap-3 w-full">
-                      {" "}
-                      <h6 className="w-[120px]   font-semibold max-sm:text-xs whitespace-nowrap">
-                        Issuing Org:
-                      </h6>
-                      <p className=" text-[#303632]  max-sm:text-xs">
-                        {insurance?.issuingOrganisation}
-                      </p>
-                    </div>
-                    <div className="flex-c gap-3 w-full">
-                      {" "}
-                      <h6 className="w-[120px]   font-semibold max-sm:text-xs  whitespace-nowrap">
-                        Type of cover:
-                      </h6>
-                      <p className=" text-[#303632]  max-sm:text-xs">
-                        {insurance?.coverage}
-                      </p>
-                    </div>
-                    <p className=" text-[#303632]   max-sm:text-xs">
-                      {insurance?.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-              {serviceInfo?.insurance?.length === 0 && (
+              {serviceInfo?.insurance?.length > 0 ? (
+                <>
+                  {" "}
+                  {serviceInfo?.insurance?.map(
+                    (insurance: any, index: number) => (
+                      <div
+                        className=" bg-white w-full rounded-[10px]"
+                        key={index}
+                      >
+                        <div className=" flex flex-col  gap-3 ">
+                          <div className="flex items-center gap-3 w-full">
+                            {" "}
+                            <h6 className="w-[120px]   font-semibold max-sm:text-xs whitespace-nowrap">
+                              Issuing Org:
+                            </h6>
+                            <p className=" text-[#303632]  max-sm:text-xs">
+                              {insurance?.issuingOrganisation}
+                            </p>
+                          </div>
+                          <div className="flex-c gap-3 w-full">
+                            {" "}
+                            <h6 className="w-[120px]   font-semibold max-sm:text-xs  whitespace-nowrap">
+                              Type of cover:
+                            </h6>
+                            <p className=" text-[#303632]  max-sm:text-xs">
+                              {insurance?.coverage}
+                            </p>
+                          </div>
+                          <p className=" text-[#303632]   max-sm:text-xs">
+                            {insurance?.description}
+                          </p>
+                        </div>
+                      </div>
+                    )
+                  )}
+                </>
+              ) : (
                 <p className="font-semibold">No insurance</p>
               )}
             </div>
@@ -351,16 +364,18 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                     (certificate: any, index: number) => (
                       <div className="flex gap-10 max-md:flex-col" key={index}>
                         <div className="w-[320px] max-sm:w-[280px]">
-                          <Image
-                            src={
-                              certificate?.certificate &&
-                              certificate?.certificate
-                            }
-                            alt="certificate"
-                            width={280}
-                            height={190}
-                            className="object-cover w-[full] h-[190px]  min-w-full max-w-full max-sm:h-[140px]"
-                          />
+                          {certificate?.certificate && (
+                            <Image
+                              src={
+                                certificate?.certificate &&
+                                certificate?.certificate
+                              }
+                              alt="certificate"
+                              width={280}
+                              height={190}
+                              className="object-cover w-[full] h-[190px]  min-w-full max-w-full max-sm:h-[140px]"
+                            />
+                          )}
                           <div className="w-full flex flex-col gap-4 py-6">
                             <div className="flex items-start  gap-3 w-full">
                               {" "}

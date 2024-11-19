@@ -9,17 +9,27 @@ export const useAcceptDirectJob = () => {
   const [isLoad, setIsLoad] = useState(false);
   const [rerender, setRerender] = useState(false);
 
-  const handleAcceptDirectJob = async (jobId: string, status: string) => {
+  const handleAcceptDirectJob = async (
+    applicationId: string,
+    status: string,
+    businessId?: string
+  ) => {
     setIsLoad(true);
     try {
-      const { data } = await axiosInstance.patch(
-        `/jobs/accept-direct-job/${jobId}`,
-        {
-          status: status,
-        }
+      const payload: Record<string, any> = { status };
+      if (status === "accepted" && businessId) {
+        payload.businessId = businessId;
+      }
+      await axiosInstance.patch(
+        `/jobs/accept-direct-job/${applicationId}`,
+        payload
       );
       setRerender((prev) => !prev);
-      toast.success("Job accepted.", toastOptions);
+      if (status === "accepted") {
+        toast.success("Job accepted.", toastOptions);
+      } else {
+        toast.success("Job declined.", toastOptions);
+      }
     } catch (error) {
       console.log("error accepting direct job", error);
       promiseErrorFunction(error);

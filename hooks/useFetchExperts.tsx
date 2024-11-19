@@ -5,6 +5,7 @@ import { axiosInstance } from "@/axiosInstance/baseUrl";
 export const useFetchExperts = () => {
   const [allExperts, setAllExperts] = useState<any>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [hasMore, setHasMore] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");

@@ -6,7 +6,7 @@ interface PopularSectionProps {
 
 const PopularSection = ({ bgColor }: PopularSectionProps) => {
   return (
-    <div className="flex items-center w-full overflow-x-scroll gap-4 py-4 hide-scrollbar">
+    <>
       <div className="flex flex-col gap-4">
         <div className="flex flex-col gap-2">
           <div className="max-w-[400px] w-96 max-md:w-72 h-64 max-md:h-52 rounded-lg ">
@@ -79,7 +79,7 @@ const PopularSection = ({ bgColor }: PopularSectionProps) => {
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
