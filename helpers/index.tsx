@@ -6,6 +6,8 @@ import {
   differenceInDays,
   differenceInWeeks,
   differenceInMonths,
+  isToday,
+  isYesterday,
 } from "date-fns";
 
 import Cookies from "universal-cookie";
@@ -79,6 +81,20 @@ export function numberWithCommas(x: number | string) {
 export const goBack = () => {
   window.history.back();
 };
+
+export function formatMessageDate(dateString: string): string {
+  const date = new Date(dateString);
+
+  if (isToday(date)) {
+    return `Today at ${format(date, "hh:mm a")}`;
+  }
+
+  if (isYesterday(date)) {
+    return `Yesterday at ${format(date, "hh:mm a")}`;
+  }
+
+  return `${format(date, "MM/dd/yyyy")} at ${format(date, "hh:mm a")}`;
+}
 
 export const convertDateFormat = (oldDate: Date): string => {
   let date = new Date(oldDate).toString().split(" ");

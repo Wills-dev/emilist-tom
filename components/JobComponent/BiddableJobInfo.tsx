@@ -301,7 +301,12 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                       />
 
                       {/* chat modal */}
-                      {openChat && <ChatModal handleOpen={handleOpen} />}
+                      {openChat && (
+                        <ChatModal
+                          handleOpen={handleOpen}
+                          user={jobInfo?.userId}
+                        />
+                      )}
                     </div>
                   )}
                 </div>
