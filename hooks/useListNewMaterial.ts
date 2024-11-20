@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { MaterialDetailType } from "@/types";
 import { buildingMaterials } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useListNewMaterial = () => {
@@ -14,6 +14,8 @@ export const useListNewMaterial = () => {
   const { currentUser } = useContext(AuthContext);
 
   const [loading, setLoading] = useState(false);
+  const [currency, setCurrency] = useState("NGN");
+  const [location, setLocation] = useState("");
   const [selectedImages, setSelectedImages] = useState<any>([]);
   const [selectedImageFiles, setSelectedImageFiles] = useState<any>([]);
   const [category, setCategory] = useState<null | string>("");
@@ -67,7 +69,7 @@ export const useListNewMaterial = () => {
       const fileType = file.type.split("/")[1];
       if (!["jpeg", "jpg", "png"].includes(fileType)) {
         invalidFiles.push(file.name);
-      } else if (fileSize > 4000) {
+      } else if (fileSize > 2000) {
         invalidFiles.push(file.name);
       } else {
         // Check if the file is already added
@@ -84,7 +86,7 @@ export const useListNewMaterial = () => {
       });
       errorMessage += invalidFiles.length === 1 ? "is" : "are";
       errorMessage +=
-        " not a valid JPEG, JPG, or PNG file or exceeds the maximum size of 4mb.";
+        " not a valid JPEG, JPG, or PNG file or exceeds the maximum size of 2mb.";
       toast.error(`${errorMessage}`, toastOptions);
       e.target.value = null;
     }
@@ -114,10 +116,7 @@ export const useListNewMaterial = () => {
       quantity_available,
       price,
       supplier,
-      location,
     } = materialDetails;
-
-    const userId = currentUser.unique_id;
 
     if (
       !product_name ||
@@ -138,29 +137,46 @@ export const useListNewMaterial = () => {
       toast.error(`Please select an image`, toastOptions);
       return;
     }
+    const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+    if (!googleMapsApiKey) {
+      throw new Error("Google Maps API key is not defined.");
+    }
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        location
+      )}&key=${googleMapsApiKey}`
+    );
+    const data = await response.json();
+
+    if (data.status !== "OK") {
+      toast.error(
+        `Please enter a valid address from the suggestions.`,
+        toastOptions
+      );
+      return;
+    }
     setLoading(true);
     try {
       const materialPayload: any = {
-        product_name,
+        name: product_name,
         category,
-        sub_category: subCategory,
+        subCategory,
         brand,
         description,
-        quantity_available,
+        availableQuantity: quantity_available,
         price,
-        supplier,
+        storeName: supplier,
         location,
-        userid: userId,
+        currency,
       };
       const formData = new FormData();
       for (const property in materialPayload) {
         formData.append(property, materialPayload[property]);
       }
 
-      selectedImageFiles.forEach((file: any) =>
-        formData.append("product_image", file)
-      );
-      await axiosInstance.post(`/newMaterials`, formData, {
+      selectedImageFiles.forEach((file: any) => formData.append("files", file));
+      await axiosInstance.post(`/material/create-product`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -178,6 +194,7 @@ export const useListNewMaterial = () => {
       router.push("/dashboard/material/my-listed-materials");
       setCategory("");
       setSubCatgory("");
+      setLocation("");
       setSelectedImageFiles([]);
       setSelectedImages([]);
     } catch (error: any) {
@@ -201,5 +218,9 @@ export const useListNewMaterial = () => {
     setSubCatgory,
     handleCategoryChange,
     selectedMaterial,
+    setCurrency,
+    currency,
+    location,
+    setLocation,
   };
 };

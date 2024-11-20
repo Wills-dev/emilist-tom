@@ -13,7 +13,6 @@ import { useGetUserMaterials } from "@/hooks/useGetUserMaterials";
 
 const MyListMaterials = () => {
   const {
-    allMaterialData,
     handleChange,
     handlePageChange,
     isLoading,
@@ -50,19 +49,22 @@ const MyListMaterials = () => {
                   <p className="py-2">No expert or service listed</p>
                 ) : (
                   <>
-                    {myMaterials.length > 0 && allMaterialData.length < 1 ? (
+                    {myMaterials.length < 1 && totalPages > 0 && search ? (
                       <p className="py-2">
                         No result found, try searching for something else
                       </p>
                     ) : (
                       <>
-                        {allMaterialData?.map((material: any) => (
+                        {myMaterials?.map((material: any) => (
                           <div
                             key={material._id}
                             className="w-full grid md:grid-cols-5 grid-cols-6 gap-3 py-8 sm:px-6 hover:bg-gray-100 duration-300 shadow rounded-2xl px-2"
                           >
                             <Image
-                              src={material?.images[0] && material?.images[0]}
+                              src={
+                                material?.images[0] &&
+                                material?.images[0]?.imageUrl
+                              }
                               width={140}
                               height={100}
                               alt="service"
@@ -74,8 +76,7 @@ const MyListMaterials = () => {
                                   href={`/dashboard/material/info/${material._id}`}
                                   className="sm:text-2xl font-bold hover:text-primary-green duration-300"
                                 >
-                                  {material?.ProductName &&
-                                    Capitalize(material?.ProductName)}
+                                  {material?.name && Capitalize(material?.name)}
                                 </Link>
                                 {material?.description &&
                                 material?.description.length > 200 ? (
@@ -105,7 +106,7 @@ const MyListMaterials = () => {
                               <div className="flex-c md:flex-col md:items-end justify-between">
                                 <div className="flex flex-col gap-1">
                                   <p className="sm:text-2xl font-bold text-primary-green">
-                                    ₦{" "}
+                                    {material?.currency}{" "}
                                     {material?.price &&
                                       numberWithCommas(material?.price)}
                                   </p>
