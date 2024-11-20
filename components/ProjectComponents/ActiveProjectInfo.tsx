@@ -1,12 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useContext, useState } from "react";
 import Image from "next/image";
 
 import ChatModal from "../modals/ChatModal";
 
 import { Capitalize, numberWithCommas } from "@/helpers";
 import { getStatusClass } from "@/constants";
+import { AuthContext } from "@/utils/AuthState";
 
 interface ActiveProjectInfoProps {
   jobInfo: any;
@@ -14,6 +15,7 @@ interface ActiveProjectInfoProps {
 }
 
 const ActiveProjectInfo = ({ jobInfo, jobId }: ActiveProjectInfoProps) => {
+  const { currentUser } = useContext(AuthContext);
   const [openChat, setOpenChat] = useState(false);
 
   const handleOpen = () => {
@@ -121,7 +123,9 @@ const ActiveProjectInfo = ({ jobInfo, jobId }: ActiveProjectInfoProps) => {
               Chats
             </button>
             {/* chat modal */}
-            {openChat && <ChatModal handleOpen={handleOpen} />}
+            {openChat && currentUser?._id !== jobInfo?.userId?._id && (
+              <ChatModal handleOpen={handleOpen} user={jobInfo?.userId} />
+            )}
           </div>
         </div>
         <div className="w-full px-10 max-sm:px-5 py-6 flex justify-between">
@@ -168,7 +172,9 @@ const ActiveProjectInfo = ({ jobInfo, jobId }: ActiveProjectInfoProps) => {
             Chats
           </button>
           {/* chat modal */}
-          {openChat && <ChatModal handleOpen={handleOpen} />}
+          {openChat && (
+            <ChatModal handleOpen={handleOpen} user={jobInfo?.userId} />
+          )}
         </div>
         <div className="w-full px-10 max-sm:px-5 py-6">
           <div className="w-full flex items-center justify-between">

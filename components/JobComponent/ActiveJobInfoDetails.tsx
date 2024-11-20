@@ -213,7 +213,9 @@ const ActiveJobInfoDetails = ({
               Chats
             </button>
             {/* chat modal */}
-            {openChat && <ChatModal handleOpen={handleOpen} />}
+            {openChat && (
+              <ChatModal handleOpen={handleOpen} user={jobInfo?.userId} />
+            )}
           </div>
         </div>
         <div className="w-full px-10 max-sm:px-5 py-6 flex justify-between">
@@ -260,7 +262,9 @@ const ActiveJobInfoDetails = ({
             Chats
           </button>
           {/* chat modal */}
-          {openChat && <ChatModal handleOpen={handleOpen} />}
+          {openChat && (
+            <ChatModal handleOpen={handleOpen} user={jobInfo?.userId} />
+          )}
         </div>
         <div className="w-full px-10 max-sm:px-5 py-6">
           <div className="w-full flex items-center justify-between">

@@ -211,7 +211,7 @@ const DashboardNav = () => {
             <div className="flex-c sm:gap-6 gap-4">
               <div className="gap-3 flex items-center ">
                 <button className="p-2 hover:bg-green-100 duration-300 rounded-full max-xl:hidden">
-                  <Link href="/messages">
+                  <Link href="/dashboard/message">
                     <Image
                       src="/assets/icons/sms.svg"
                       alt="menu"
