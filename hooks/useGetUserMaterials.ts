@@ -1,12 +1,9 @@
-import { ChangeEvent, useContext, useEffect, useMemo, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 
-import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction } from "@/helpers";
 
 export const useGetUserMaterials = () => {
-  const { currentUser } = useContext(AuthContext);
-
   const [myMaterials, setMyMaterials] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -24,11 +21,10 @@ export const useGetUserMaterials = () => {
 
   const getAllMaterials = async () => {
     setIsLoading(true);
-    const userId = currentUser.unique_id;
     try {
-      const data = await axiosInstance.get(`/fetchMaterialsUser/${userId}`);
-      setMyMaterials(data?.data?.user_materials);
-      const totalJobs = data?.data?.user_materials?.length;
+      const { data } = await axiosInstance.get(`/material/fetch-user-products`);
+      setMyMaterials(data?.data?.products);
+      const totalJobs = data?.data?.totalProducts;
       setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
     } catch (error: any) {
       console.log("error fetching materials", error);
@@ -42,30 +38,7 @@ export const useGetUserMaterials = () => {
     getAllMaterials();
   }, []);
 
-  const allMaterialData = useMemo(() => {
-    let computedMaterials = myMaterials;
-
-    if (search) {
-      computedMaterials = computedMaterials?.filter(
-        (material: any) =>
-          material?.ProductName?.toLowerCase().includes(search.toLowerCase()) ||
-          material?.category?.toLowerCase().includes(search.toLowerCase()) ||
-          material?.subCategory?.toLowerCase().includes(search.toLowerCase()) ||
-          material?.brand?.toLowerCase().includes(search.toLowerCase()) ||
-          material?.supplier?.toLowerCase().includes(search.toLowerCase()) ||
-          material?.location?.toLowerCase().includes(search.toLowerCase()) ||
-          material?.description?.toLowerCase().includes(search.toLowerCase())
-      );
-    }
-
-    return computedMaterials?.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-    );
-  }, [myMaterials, currentPage, search]);
-
   return {
-    allMaterialData,
     handleChange,
     handlePageChange,
     isLoading,

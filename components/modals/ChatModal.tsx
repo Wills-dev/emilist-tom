@@ -6,6 +6,7 @@ import useListenMessages from "@/hooks/useListenMessages";
 import { formatMessageDate } from "@/helpers";
 import { useGetChat } from "@/hooks/useGetChat";
 import { useSendMessage } from "@/hooks/useSendMessage";
+import { useSocketContext } from "@/utils/SocketContext";
 
 type Props = {
   handleOpen: () => void;
@@ -16,6 +17,7 @@ const ChatModal = ({ handleOpen, user }: Props) => {
   const lastMessageRef: any = useRef(null);
 
   useListenMessages();
+  const { onlineUsers } = useSocketContext();
   const { getMessages, messages, isLoading } = useGetChat();
   const { message, setMessage, handleSendMessage } = useSendMessage();
 
@@ -34,19 +36,23 @@ const ChatModal = ({ handleOpen, user }: Props) => {
     <div className="absolute max-w-[280px] w-[280px] min-w-[260px] bg-white right-6 min-h-[50vh] max-h-[70vh] top-[15%]">
       <div className="px-4 py-2 max-sm:px-2 flex items-center justify-between border-b-[1px] border-[#8A8D8B]">
         <div className=" flex items-center gap-1">
-          {user?.profileImage ? (
-            <Image
-              src={user?.profileImage}
-              alt="menu"
-              width={35}
-              height={35}
-              className="object-cover w-[35px] h-[35px] max-sm:w-[24px] max-sm:h-[24px] rounded-full"
-            />
-          ) : (
-            <p className="w-[35px] h-[35px] max-sm:w-24px] max-sm:h-[24px] rounded-full bg-slate-200 mr-2 flex-c justify-center font-bold">
-              {user?.userName?.[0]?.toUpperCase()}
-            </p>
-          )}
+          <div
+            className={`${onlineUsers.includes(user?._id) && "online"} avatar`}
+          >
+            {user?.profileImage ? (
+              <Image
+                src={user?.profileImage}
+                alt="menu"
+                width={35}
+                height={35}
+                className="object-cover w-[35px] h-[35px] max-sm:w-[24px] max-sm:h-[24px] rounded-full"
+              />
+            ) : (
+              <p className="w-[35px] h-[35px] max-sm:w-24px] max-sm:h-[24px] rounded-full bg-slate-200 mr-2 flex-c justify-center font-bold">
+                {user?.userName?.[0]?.toUpperCase()}
+              </p>
+            )}
+          </div>
           <p className="text-[#303632] text-[16px] leading-[24px] font-[400] max-sm:text-[13px]">
             {user?.fullName ? user?.fullName : user?.userName}
           </p>
@@ -64,40 +70,46 @@ const ChatModal = ({ handleOpen, user }: Props) => {
         <>
           {" "}
           <div className="px-4 py-2 max-sm:px-2 flex flex-col  max-h-[50vh] max-xl:max-h-[45vh] overflow-y-scroll">
-            {messages.map((message: any, index: number) => {
-              const isSentByCurrentUser = message.senderId !== user?._id;
-              const shakeClass = message?.shouldShake ? "shake" : "";
-              return (
-                <div
-                  className="w-full flex flex-col"
-                  key={index}
-                  ref={lastMessageRef}
-                >
-                  <div
-                    className={`${
-                      isSentByCurrentUser ? "chat-end" : "chat-start"
-                    } chat`}
-                    key={index}
-                  >
+            {messages.length < 1 ? (
+              <p className="text-sm">Send a message to start conversation.</p>
+            ) : (
+              <>
+                {messages.map((message: any, index: number) => {
+                  const isSentByCurrentUser = message.senderId !== user?._id;
+                  const shakeClass = message?.shouldShake ? "shake" : "";
+                  return (
                     <div
-                      className={`chat-bubble ${
-                        isSentByCurrentUser
-                          ? "bg-[#054753]  text-[#FCFEFD]"
-                          : "bg-[#ECECEC]  text-[#303632]"
-                      } ${shakeClass}`}
+                      className="w-full flex flex-col"
+                      key={index}
+                      ref={lastMessageRef}
                     >
-                      {message?.content}
+                      <div
+                        className={`${
+                          isSentByCurrentUser ? "chat-end" : "chat-start"
+                        } chat`}
+                        key={index}
+                      >
+                        <div
+                          className={`chat-bubble ${
+                            isSentByCurrentUser
+                              ? "bg-[#054753]  text-[#FCFEFD]"
+                              : "bg-[#ECECEC]  text-[#303632]"
+                          } ${shakeClass}`}
+                        >
+                          {message?.content}
+                        </div>
+                        <div className="chat-footer opacity-50">
+                          <time className="text-[#3F556E] text-xs">
+                            {message?.createdAt &&
+                              formatMessageDate(message?.createdAt)}
+                          </time>{" "}
+                        </div>
+                      </div>
                     </div>
-                    <div className="chat-footer opacity-50">
-                      <time className="text-[#3F556E] text-xs">
-                        {message?.createdAt &&
-                          formatMessageDate(message?.createdAt)}
-                      </time>{" "}
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
+                  );
+                })}
+              </>
+            )}
           </div>
           <div className="px-4 py-2 max-sm:px-2">
             <form
