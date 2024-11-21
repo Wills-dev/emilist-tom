@@ -67,8 +67,7 @@ const MaterialInfo = ({ params }: any) => {
                 <div className="flex items-start justify-between gap-6 p-6">
                   <div className="flex flex-col gap-4">
                     <h1 className="text-3xl font-bold  max-sm:text-xl">
-                      {materialInfo?.productName &&
-                        Capitalize(materialInfo?.productName)}
+                      {materialInfo?.name && Capitalize(materialInfo?.name)}
                     </h1>
                     <Link
                       href={`/dashboard/report/insights`}
@@ -111,8 +110,8 @@ const MaterialInfo = ({ params }: any) => {
                           Quantity:
                         </p>
                         <p className="max-sm:text-sm">
-                          {materialInfo?.quantityAvailable &&
-                            numberWithCommas(materialInfo?.quantityAvailable)}
+                          {materialInfo?.availableQuantity &&
+                            numberWithCommas(materialInfo?.availableQuantity)}
                         </p>
                       </div>
                     </div>
@@ -131,7 +130,7 @@ const MaterialInfo = ({ params }: any) => {
                           Price:
                         </p>
                         <p className="max-sm:text-sm">
-                          ₦{" "}
+                          {materialInfo?.currency}{" "}
                           {materialInfo?.price &&
                             numberWithCommas(materialInfo?.price)}
                         </p>
@@ -163,19 +162,17 @@ const MaterialInfo = ({ params }: any) => {
                 <div className="p-6">
                   <h6 className="sm:text-lg font-medium">Images</h6>
                   <div className="pt-3 flex gap-4 flex-wrap">
-                    {materialInfo?.Images ? (
-                      materialInfo?.Images?.map(
-                        (materialImage: string, index: number) => (
-                          <Image
-                            src={materialImage}
-                            key={index}
-                            width={200}
-                            height={200}
-                            alt="product-image"
-                            className="w-28 h-28 rounded-lg object-cover"
-                          />
-                        )
-                      )
+                    {materialInfo?.images ? (
+                      materialInfo?.images?.map((image: any, index: number) => (
+                        <Image
+                          src={image?.imageUrl}
+                          key={index}
+                          width={200}
+                          height={200}
+                          alt="product-image"
+                          className="w-28 h-28 rounded-lg object-cover"
+                        />
+                      ))
                     ) : (
                       <p className="text-gray-500 text-xs">No images</p>
                     )}
