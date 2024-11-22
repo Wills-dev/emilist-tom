@@ -14,7 +14,8 @@ export const useGetMaterialInfo = () => {
       const { data } = await axiosInstance.get(
         `/material/fetch-product/${materialId}`
       );
-      setMaterialInfo(data?.data);
+
+      setMaterialInfo(data?.data?.product);
     } catch (error: any) {
       console.log("error getting material info", error);
       toast.error("Internal server error or No network", toastOptions);

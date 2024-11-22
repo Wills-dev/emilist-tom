@@ -1,15 +1,23 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
+
+import { useJsApiLoader, StandaloneSearchBox } from "@react-google-maps/api";
 
 import { buildingMaterials } from "@/constants";
 import { useEditMaterialInfo } from "@/hooks/useEditMaterialInfo";
+import Image from "next/image";
+import { useDeleteProductImage } from "@/hooks/useDeleteProductImage";
+import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 
 interface EditMaterialInfoFormProps {
   materialId: string;
 }
 
 const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
+  const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+  const { handleDeleteFetchedProductImage, isLoading, rerender } =
+    useDeleteProductImage();
   const {
     getMaterialInfo,
     handleSubmit,
@@ -22,17 +30,49 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
     selectedMaterial,
     handleCategoryChange,
     editMaterialInfo,
+    setLocation,
+    location,
+    fetchedImages,
+    onSelectFile,
+    selectedImages,
+    setSelectedImages,
+    handleImageDelete,
   } = useEditMaterialInfo();
+
+  const handlePlacesChanged = () => {
+    // Access the Autocomplete instance using refs
+    const autocomplete = autocompleteRef.current;
+
+    if (autocomplete) {
+      const places = autocomplete.getPlaces();
+      if (places && places.length > 0) {
+        const selectedPlace = places[0];
+        setLocation(selectedPlace.formatted_address || "");
+      }
+    }
+  };
+
+  const autocompleteRef: any = useRef(null);
+
+  if (!googleMapsApiKey) {
+    throw new Error("Google Maps API key is not defined.");
+  }
+
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: googleMapsApiKey,
+    libraries: ["places"],
+  });
 
   useEffect(() => {
     getMaterialInfo(materialId);
-  }, [materialId]);
+  }, [materialId, rerender]);
 
   return (
     <section className="pt-28 padding-x pb-20">
+      <LoadingOverlay loading={isLoading} />
       <h1 className="text-3xl font-bold  max-sm:text-xl pt-6">Edit product</h1>
 
-      {loading ? (
+      {loading || !isLoaded ? (
         <div className="flex item-center justify-center text-green-500 mt-6 h-[70vh]">
           <span className="loading loading-bars loading-lg"></span>
         </div>
@@ -50,8 +90,8 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                       type="text"
                       className="expert-reg-input"
                       placeholder="Dangote Cement"
-                      name="productName"
-                      value={editMaterialInfo.productName}
+                      name="name"
+                      value={editMaterialInfo.name}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -143,86 +183,137 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="40"
-                      name="quantityAvailable"
-                      value={editMaterialInfo.quantityAvailable}
+                      name="availableQuantity"
+                      value={editMaterialInfo.availableQuantity}
                       onChange={handleInputChange}
                     />
                   </div>
                 </div>
-                {/* <div className="w-full">
-                  <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
-                    Product image
-                  </p>
-                  <div className="w-full h-[210px] bg-[#ECECEC] rounded-md flex p-2 gap-2 flex-wrap">
-                {selectedImages?.length > 0 ? (
-                  selectedImages.map((image: string, index: number) => (
-                    <div
-                      className="h-14 min-h-14 min-w-14 w-14 max-h-14 max-w-14 relative"
-                      key={index}
-                    >
-                      <img
-                        src={image}
-                        alt="product"
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute bottom-0  right-0 w-5 h-5  bg-white flex-c  justify-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="w-4 h-4 text-orange-700 cursor-pointer"
-                          onClick={() => {
-                            setSelectedImages(
-                              selectedImages?.filter((e: string) => e !== image)
-                            );
-                            handleImageDelete(index);
-                          }}
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
-                          />
-                        </svg>
-                      </div>
-                    </div>
-                  ))
-                ) : (
+                <div className="w-full">
                   <label
-                    htmlFor="business-pic"
-                    className="w-full h-full cursor-pointer flex-c justify-center"
+                    className=" flex-c gap-1 text-primary-green py-2 font-medium max-sm:text-sm cursor-pointer max-w-fit"
+                    htmlFor="attach-file"
                   >
-                    <h6 className="text-sm ">Drop image here</h6>
-                    <input
-                      id="business-pic"
-                      type="file"
-                      accept="image/*"
-                      onChange={onSelectFile}
-                      name="file"
-                      className="invisible h-0 w-0"
-                      multiple
+                    <Image
+                      src="/assets/icons/add.svg"
+                      alt="logo"
+                      width={130}
+                      height={30}
+                      className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5"
                     />
+                    Add product image
                   </label>
-                )}
-              </div>
-                </div> */}
+                  <input
+                    type="file"
+                    id="attach-file"
+                    className="h-0 w-0 invisible"
+                    name="files"
+                    accept="image/*"
+                    onChange={onSelectFile}
+                  />
+                  <div className="flex-c gap-2 w-full flex-wrap">
+                    {selectedImages &&
+                      selectedImages.map((image, index) => {
+                        return (
+                          <div className="relative w-20 h-20" key={index}>
+                            <img
+                              src={image}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4 absolute bottom-0 right-0 text-red-600 font-bold bg-white border-gray-100 cursor-pointer"
+                              onClick={() => {
+                                setSelectedImages(
+                                  selectedImages?.filter((e) => e !== image)
+                                );
+                                handleImageDelete(index);
+                              }}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                              />
+                            </svg>
+                          </div>
+                        );
+                      })}
+                    {fetchedImages?.length > 0 &&
+                      fetchedImages.map((image: any, index: number) => {
+                        return (
+                          <div className="relative w-20 h-20" key={index}>
+                            <img
+                              src={image?.imageUrl}
+                              alt=""
+                              className="w-full h-full object-cover"
+                            />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="w-4 h-4 absolute bottom-0 right-0 text-red-600 font-bold bg-white border-gray-100 cursor-pointer"
+                              onClick={() => {
+                                handleDeleteFetchedProductImage(
+                                  materialId,
+                                  image?._id
+                                );
+                              }}
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0"
+                              />
+                            </svg>
+                          </div>
+                        );
+                      })}
+                  </div>
+                </div>
 
                 <div className="w-full">
                   <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
                     Price
                   </p>
-                  <div className="w-full">
+                  <div className="w-full grid grid-cols-3 gap-4">
                     <input
                       type="text"
-                      className=" expert-reg-input"
-                      placeholder=""
+                      className="col-span-2 expert-reg-input"
                       name="price"
                       value={editMaterialInfo.price}
                       onChange={handleInputChange}
                     />
+                    <div className="col-span-1 expert-reg-input-div">
+                      <select
+                        className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm"
+                        name="currency"
+                        value={editMaterialInfo.currency}
+                        onChange={handleInputChange}
+                      >
+                        <option defaultValue="">Select currency</option>
+
+                        <option value="NGN" className="capitalize">
+                          NGN
+                        </option>
+                        <option value="USD" className="capitalize">
+                          USD
+                        </option>
+                        <option value="GBP" className="capitalize">
+                          GBP
+                        </option>
+                        <option value="EUR" className="capitalize">
+                          EUR
+                        </option>
+                      </select>
+                    </div>
                   </div>
                 </div>
 
@@ -234,9 +325,8 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="ABC STORE"
-                      name="supplier"
-                      value={editMaterialInfo.supplier}
+                      name="storeName"
+                      value={editMaterialInfo.storeName}
                       onChange={handleInputChange}
                     />
                   </div>
@@ -246,14 +336,19 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                     Location
                   </p>
                   <div className="w-full">
-                    <input
-                      type="text"
-                      className="expert-reg-input"
-                      placeholder="Lagos, Nigeria"
-                      name="location"
-                      value={editMaterialInfo.location}
-                      onChange={handleInputChange}
-                    />
+                    <StandaloneSearchBox
+                      onLoad={(ref) => (autocompleteRef.current = ref)}
+                      onPlacesChanged={handlePlacesChanged}
+                    >
+                      <input
+                        type="text"
+                        className="expert-reg-input"
+                        name="location"
+                        placeholder="Lagos, Nigeria"
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                      />
+                    </StandaloneSearchBox>
                   </div>
                 </div>
               </div>

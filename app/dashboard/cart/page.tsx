@@ -7,23 +7,31 @@ import { CiCircleMinus, CiCirclePlus } from "react-icons/ci";
 
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 
-import { CartItemType } from "@/types";
 import { CartContext } from "@/utils/CartState";
 import { Capitalize, numberWithCommas } from "@/helpers";
 import { useRemoveMaterialFromCart } from "@/hooks/useRemoveMaterialFromCart";
-import { useAddMaterialToCart } from "@/hooks/useAddMaterialToCart";
+import { useIncreaseCartItem } from "@/hooks/useIncreaseCartItem";
+import { useDecreaseCartItem } from "@/hooks/useDecreaseCartItem";
+import { useDiscount } from "@/hooks/useDiscount";
 
 const Cart = () => {
   const { cartItems } = useContext(CartContext);
-  const { addMaterialToCart, cartLoading } = useAddMaterialToCart();
+  const { incrementLoading, incrementCartQuantity } = useIncreaseCartItem();
   const { deleteMaterialFromCart, deleteCartLoading } =
     useRemoveMaterialFromCart();
+  const { decreaseCartQuantity, decreaseLoading } = useDecreaseCartItem();
+  const { handleSubmitDiscount, discount, discountLoading, code, setCode } =
+    useDiscount();
 
   return (
     <main className="relative">
-      {deleteCartLoading || cartLoading ? (
+      {deleteCartLoading || discountLoading ? (
         <div className="absolute top-0 left-0 w-full min-h-screen bg-white h-full z-50 opacity-40" />
       ) : null}
+      {incrementLoading || decreaseLoading ? (
+        <div className="absolute top-0 left-0 w-full min-h-screen bg-white h-full z-50 opacity-40" />
+      ) : null}
+
       <DashboardNav />
       <section className="pt-28 padding-x pb-20">
         <div className="flex-c-b gap-4 pb-6">
@@ -51,14 +59,14 @@ const Cart = () => {
             className="flex flex-col gap-4
          border-b-1 border-gray-500 py-6"
           >
-            {cartItems?.cartItems?.map((cart: CartItemType) => (
-              <div
-                className="flex items-start justify-between"
-                key={cart?.materialId}
-              >
+            {cartItems?.products?.map((cart: any) => (
+              <div className="flex items-start justify-between" key={cart?._id}>
                 <div className="flex-1 flex gap-2">
                   <Image
-                    src="/assets/images/privateExpertImg.png"
+                    src={
+                      cart?.productId?.images[0] &&
+                      cart?.productId?.images[0]?.imageUrl
+                    }
                     width={200}
                     height={200}
                     alt="product-image"
@@ -66,11 +74,14 @@ const Cart = () => {
                   />
                   <div className="flex flex-col justify-between">
                     <p className="font-semibold max-sm:text-sm">
-                      {cart?.materialName && Capitalize(cart?.materialName)}
+                      {cart?.productId?.name &&
+                        Capitalize(cart?.productId?.name)}
                     </p>
                     <button
                       className="text-red-400 sm:text-sm text-xs font-medium w-fit text-start"
-                      onClick={() => deleteMaterialFromCart(cart?.materialId)}
+                      onClick={() =>
+                        deleteMaterialFromCart(cart?.productId?._id)
+                      }
                     >
                       Remove
                     </button>
@@ -78,7 +89,10 @@ const Cart = () => {
                 </div>
                 <div className="flex-1 flex-c-b gap-4 w-full ">
                   <div className=" flex-1 flex-c justify-center sm:gap-6 gap-3 max-sm:text-sm">
-                    <button className="sm:text-2xl text-lg">
+                    <button
+                      className="sm:text-2xl text-lg"
+                      onClick={() => decreaseCartQuantity(cart?.productId?._id)}
+                    >
                       <CiCircleMinus />
                     </button>
                     <span className="block">
@@ -86,16 +100,21 @@ const Cart = () => {
                     </span>
                     <button
                       className="sm:text-2xl text-lg"
-                      onClick={() => addMaterialToCart(cart?.materialId)}
+                      onClick={() =>
+                        incrementCartQuantity(cart?.productId?._id)
+                      }
                     >
                       <CiCirclePlus />
                     </button>
                   </div>
                   <p className="flex-1 text-center font-medium max-sm:text-sm">
-                    ₦{cart?.price && numberWithCommas(cart?.price)}
+                    {cart?.productId?.currency}
+                    {cart?.productId?.price &&
+                      numberWithCommas(cart?.productId?.price)}
                   </p>
                   <p className="flex-1 text-center font-medium max-sm:text-sm ">
-                    ₦{cart?.totalPrice && numberWithCommas(cart?.totalPrice)}
+                    {cart?.productId?.currency}
+                    {cart?.price && numberWithCommas(cart?.price)}
                   </p>
                 </div>
               </div>
@@ -115,8 +134,8 @@ const Cart = () => {
               <p className="max-sm:text-sm font-bold">
                 {" "}
                 ₦
-                {cartItems?.grandTotal
-                  ? numberWithCommas(cartItems?.grandTotal)
+                {cartItems?.totalAmount
+                  ? numberWithCommas(cartItems?.totalAmount)
                   : "0:00"}
               </p>
             </div>
@@ -125,14 +144,14 @@ const Cart = () => {
         {/* Cart details for mobile view */}
         <div className="md:hidden block">
           <div className="flex flex-col gap-4 border-t-1 border-gray-500">
-            {cartItems?.cartItems?.map((cart: CartItemType) => (
-              <div
-                className="border-b-1 border-gray-500 py-4"
-                key={cart?.materialId}
-              >
+            {cartItems?.cartItems?.map((cart: any) => (
+              <div className="border-b-1 border-gray-500 py-4" key={cart?._id}>
                 <div className="flex gap-2">
                   <Image
-                    src="/assets/images/privateExpertImg.png"
+                    src={
+                      cart?.productId?.images[0] &&
+                      cart?.productId?.images[0]?.imageUrl
+                    }
                     width={200}
                     height={200}
                     alt="product-image"
@@ -140,14 +159,20 @@ const Cart = () => {
                   />
                   <div className="flex flex-col gap-2">
                     <p className="font-semibold max-sm:text-sm">
-                      {cart?.materialName && Capitalize(cart?.materialName)}
+                      {cart?.productId?.name &&
+                        Capitalize(cart?.productId?.name)}
                     </p>
                     <p className="font-medium max-sm:text-sm">
-                      {" "}
-                      ₦{cart?.totalPrice && numberWithCommas(cart?.totalPrice)}
+                      {cart?.productId?.currency}{" "}
+                      {cart?.price && numberWithCommas(cart?.price)}
                     </p>
                     <div className="flex-c gap-3 max-sm:text-sm">
-                      <button className="text-lg">
+                      <button
+                        className="text-lg"
+                        onClick={() =>
+                          decreaseCartQuantity(cart?.productId?._id)
+                        }
+                      >
                         <CiCircleMinus />
                       </button>
                       <span className="block">
@@ -156,7 +181,9 @@ const Cart = () => {
                       </span>
                       <button
                         className=" text-lg"
-                        onClick={() => addMaterialToCart(cart?.materialId)}
+                        onClick={() =>
+                          incrementCartQuantity(cart?.productId?._id)
+                        }
                       >
                         <CiCirclePlus />
                       </button>
@@ -165,7 +192,7 @@ const Cart = () => {
                 </div>
                 <button
                   className="text-red-400 text-xs font-medium w-fit text-start pt-4"
-                  onClick={() => deleteMaterialFromCart(cart?.materialId)}
+                  onClick={() => deleteMaterialFromCart(cart?.productId?._id)}
                 >
                   Remove
                 </button>
@@ -189,8 +216,8 @@ const Cart = () => {
               <p className="max-sm:text-sm font-bold">
                 {" "}
                 ₦
-                {cartItems?.grandTotal
-                  ? numberWithCommas(cartItems?.grandTotal)
+                {cartItems?.totalAmount
+                  ? numberWithCommas(cartItems?.totalAmount)
                   : "0:00"}
               </p>
             </div>
@@ -201,11 +228,16 @@ const Cart = () => {
             If you have a promotion page, enter it here
           </p>
           <div className="flex-c-b gap-4 flex-wrap sm:pt-6 pt-2 max-md:flex-col">
-            <form className=" lg:w-1/2 md:w-2/3 w-full flex-c-b  shadow-lg h-12 rounded-lg">
+            <form
+              className=" lg:w-1/2 md:w-2/3 w-full flex-c-b  shadow-lg h-12 rounded-lg"
+              onSubmit={(e) => handleSubmitDiscount(e)}
+            >
               <div className="flex-1 flex-c px-2 rounded-l-lg border-light-gray border-1 focus-within:border-primary-green h-full  max-lg:h-12">
                 <input
-                  type="email"
+                  type="text"
                   placeholder="Please enter promo code"
+                  value={code}
+                  onChange={(e) => setCode(e.target.value)}
                   className="focus:outline-none max-md:text-sm w-full bg-white"
                 />
               </div>

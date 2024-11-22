@@ -5,13 +5,8 @@ import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
 import { CartContext } from "@/utils/CartState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
-
-interface CartPayloadType {
-  material_id: string;
-  user_id: string;
-}
 
 export const useRemoveMaterialFromCart = () => {
   const router = useRouter();
@@ -20,23 +15,13 @@ export const useRemoveMaterialFromCart = () => {
   const { setCartRerender } = useContext(CartContext);
   const [deleteCartLoading, setDeleteCartLoading] = useState(false);
 
-  const deleteMaterialFromCart = async (materialId: string) => {
+  const deleteMaterialFromCart = async (productId: string) => {
     setDeleteCartLoading(true);
     if (!currentUser) {
       router.push("/login");
     }
     try {
-      const deleteCartPayload: CartPayloadType = {
-        material_id: materialId,
-        user_id: currentUser.unique_id,
-      };
-      await axiosInstance.delete(`/deleteCart`, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-        data: deleteCartPayload,
-      });
-
+      await axiosInstance.patch(`/cart/remove-from-cart/${productId}`);
       toast.success("Material deleted from cart", toastOptions);
       setCartRerender((prev: boolean) => !prev);
     } catch (error: any) {

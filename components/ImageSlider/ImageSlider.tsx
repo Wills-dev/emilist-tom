@@ -13,13 +13,13 @@ const ImageSlider = ({ materialInfo }: ImageSliderProps) => {
   const prevImg = () => {
     const isFirstSlide = currentImage === 0;
     const newIndex = isFirstSlide
-      ? materialInfo?.Images?.length - 1
+      ? materialInfo?.images?.length - 1
       : currentImage - 1;
     setCurrentImage(newIndex);
   };
 
   const nextImg = () => {
-    const isLastSlide = currentImage === materialInfo?.Images?.length - 1;
+    const isLastSlide = currentImage === materialInfo?.images?.length - 1;
     const newIndex = isLastSlide ? 0 : currentImage + 1;
     setCurrentImage(newIndex);
   };
@@ -29,10 +29,10 @@ const ImageSlider = ({ materialInfo }: ImageSliderProps) => {
       <div className=" w-[676px] h-[413px] max-sm:w-[320px] max-sm:min-w-full max-sm:h-[226px] relative">
         <Image
           src={
-            materialInfo?.Images[currentImage] &&
-            materialInfo?.Images[currentImage]
+            materialInfo?.images[currentImage] &&
+            materialInfo?.images[currentImage]?.imageUrl
           }
-          alt="logo"
+          alt={materialInfo?.name}
           width={270}
           height={130}
           className="object-cover w-full h-full rounded-xl"
@@ -52,11 +52,11 @@ const ImageSlider = ({ materialInfo }: ImageSliderProps) => {
         </button>
       </div>
       <div className="flex gap-4 overflow-x-scroll w-full">
-        {materialInfo?.Images?.map((image: string, index: number) => (
+        {materialInfo?.images?.map((image: any, index: number) => (
           <Image
             key={index}
-            src={image && image}
-            alt="logo"
+            src={image?.imageUrl}
+            alt="product image"
             width={130}
             height={30}
             className={`${

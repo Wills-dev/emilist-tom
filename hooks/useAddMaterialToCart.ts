@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
 import { CartContext } from "@/utils/CartState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useAddMaterialToCart = () => {
@@ -15,7 +15,7 @@ export const useAddMaterialToCart = () => {
   const { setCartRerender } = useContext(CartContext);
   const [cartLoading, setCartLoading] = useState(false);
 
-  const addMaterialToCart = async (materialId: string) => {
+  const addMaterialToCart = async (productId: string) => {
     setCartLoading(true);
     if (!currentUser) {
       router.push("/login");
@@ -23,14 +23,9 @@ export const useAddMaterialToCart = () => {
     try {
       const cartPayload = {
         quantity: 1,
-        material_id: materialId,
-        user_id: currentUser.unique_id,
+        productId,
       };
-      await axiosInstance.post(`/addToCart`, cartPayload, {
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      });
+      await axiosInstance.post(`/cart/add-to-cart`, cartPayload);
 
       toast.success("Material added to cart", toastOptions);
       setCartRerender((prev: boolean) => !prev);

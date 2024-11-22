@@ -67,13 +67,13 @@ export interface MaterialDetailType {
 }
 
 export interface EditMaterialInfoType {
-  productName: string;
+  name: string;
   brand: string;
   description: string;
-  quantityAvailable: string | number;
+  availableQuantity: string | number;
   price: string | number;
-  supplier: string;
-  location: string;
+  storeName: string;
+  currency: string;
 }
 
 export interface ToggleLinkType {
