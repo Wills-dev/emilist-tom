@@ -13,15 +13,26 @@ import { useRemoveMaterialFromCart } from "@/hooks/useRemoveMaterialFromCart";
 import { useIncreaseCartItem } from "@/hooks/useIncreaseCartItem";
 import { useDecreaseCartItem } from "@/hooks/useDecreaseCartItem";
 import { useDiscount } from "@/hooks/useDiscount";
+import { useCheckoutCart } from "@/hooks/useCheckoutCart";
 
 const Cart = () => {
   const { cartItems } = useContext(CartContext);
+
+  const { isLoading, handleCheckout } = useCheckoutCart();
   const { incrementLoading, incrementCartQuantity } = useIncreaseCartItem();
   const { deleteMaterialFromCart, deleteCartLoading } =
     useRemoveMaterialFromCart();
   const { decreaseCartQuantity, decreaseLoading } = useDecreaseCartItem();
   const { handleSubmitDiscount, discount, discountLoading, code, setCode } =
     useDiscount();
+
+  const checkout = () => {
+    if (code && discount) {
+      handleCheckout(code);
+    } else {
+      handleCheckout();
+    }
+  };
 
   return (
     <main className="relative">
@@ -249,7 +260,21 @@ const Cart = () => {
                 Apply Discount
               </button>
             </form>
-            <button className="custom-btn max-md:mt-10">Checkout</button>
+
+            {isLoading ? (
+              <button type="button" className="load-btn">
+                {" "}
+                <span className="loading loading-dots loading-lg"></span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                className="custom-btn max-md:mt-10"
+                onClick={checkout}
+              >
+                Checkout
+              </button>
+            )}
           </div>
         </div>
       </section>

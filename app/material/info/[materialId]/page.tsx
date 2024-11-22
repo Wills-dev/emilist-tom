@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
+import ShareLink from "@/components/modals/ShareLink";
 import MainLayout from "@/components/MainLayout/MainLayout";
 import StarRating from "@/components/StarRating/StarRating";
 import ImageSlider from "@/components/ImageSlider/ImageSlider";
@@ -19,8 +20,6 @@ import { useSaveMaterials } from "@/hooks/useSaveMaterials";
 import { useUnsaveMaterial } from "@/hooks/useUnsaveMaterial";
 import { useGetMaterialInfo } from "@/hooks/useGetMaterialInfo";
 import { useAddMaterialToCart } from "@/hooks/useAddMaterialToCart";
-import { useGetUserSavedMaterials } from "@/hooks/useGetUserSavedMaterials";
-import ShareLink from "@/components/modals/ShareLink";
 
 const page = ({ params }: any) => {
   const materialId = params.materialId;
@@ -31,18 +30,11 @@ const page = ({ params }: any) => {
   const { handleSaveMaterial, rerender } = useSaveMaterials();
   const { addMaterialToCart, cartLoading } = useAddMaterialToCart();
   const { handleUnsaveMaterial, unsaveRerenderr } = useUnsaveMaterial();
-  const { loading, getMaterialInfo, materialInfo } = useGetMaterialInfo();
-  const { allUserSavedMaterials, getAllUserSavedMaterials } =
-    useGetUserSavedMaterials();
-
-  const isSaved = () =>
-    allUserSavedMaterials?.some(
-      (savedMaterial: any) => savedMaterial.id === materialId
-    );
+  const { loading, getMaterialInfo, materialInfo, isProductLiked } =
+    useGetMaterialInfo();
 
   useEffect(() => {
     getMaterialInfo(materialId);
-    getAllUserSavedMaterials();
   }, [materialId, rerender, unsaveRerenderr]);
 
   const handleCancel = () => {
@@ -75,7 +67,7 @@ const page = ({ params }: any) => {
               title="Share material"
             />
             <div className="flex-c sm:gap-8 gap-5 justify-end pb-5">
-              {isSaved() ? (
+              {isProductLiked ? (
                 <span
                   className="block text-xl text-pink-500 cursor-pointer"
                   onClick={() => handleUnsaveMaterial(materialId)}
