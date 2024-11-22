@@ -25,23 +25,15 @@ export const useFetchJobs = () => {
   };
 
   const getAllJobs = async () => {
+    const userId = currentUser?._id || "";
+    const url = `/jobs/fetch-all-jobs?page=${currentPage}&limit=10${
+      userId ? `&userId=${userId}` : ""
+    }`;
     try {
-      if (currentUser) {
-        const userId = currentUser?._id;
-        const { data } = await axiosInstance.get(
-          `/jobs/fetch-all-jobs?page=${currentPage}&limit=10&userId=${userId}`
-        );
-        setAllJobs(data?.data?.jobs);
-        const totalJobs = data?.data?.totalJobs;
-        setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
-      } else {
-        const { data } = await axiosInstance.get(
-          `/jobs/fetch-all-jobs?page=${currentPage}&limit=10`
-        );
-        setAllJobs(data?.data?.jobs);
-        const totalJobs = data?.data?.totalJobs;
-        setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
-      }
+      const { data } = await axiosInstance.get(url);
+      setAllJobs(data?.data?.jobs);
+      const totalJobs = data?.data?.totalJobs;
+      setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
     } catch (error: any) {
       console.log("error fetching all product", error);
     } finally {

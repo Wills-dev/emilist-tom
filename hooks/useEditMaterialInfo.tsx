@@ -6,7 +6,7 @@ import toast from "react-hot-toast";
 import { EditMaterialInfoType } from "@/types";
 import { buildingMaterials } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import {
   handleGoBack,
   handleInputFieldError,
@@ -23,23 +23,31 @@ export const useEditMaterialInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [category, setCategory] = useState<undefined | string>("");
   const [subCategory, setSubCatgory] = useState("");
+  const [location, setLocation] = useState("");
+  const [selectedImages, setSelectedImages] = useState<string[]>([]);
+  const [fetchedImages, setFetchedImages] = useState<any>([]);
+  const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
   const [editMaterialInfo, setEditMaterialInfo] =
     useState<EditMaterialInfoType>({
-      productName: "",
+      name: "",
       brand: "",
       description: "",
-      quantityAvailable: "",
-      price: "",
-      supplier: "",
-      location: "",
+      availableQuantity: "",
+      price: "NGN",
+      storeName: "",
+      currency: "",
     });
 
   const getMaterialInfo = async (materialId: string) => {
     try {
-      const data = await axiosInstance.get(`/fetchMaterial/${materialId}`);
-      setEditMaterialInfo(data?.data);
-      setCategory(data?.data?.category);
-      setSubCatgory(data?.data?.subCategory);
+      const { data } = await axiosInstance.get(
+        `/material/fetch-product/${materialId}`
+      );
+      setEditMaterialInfo(data?.data?.product);
+      setCategory(data?.data?.product?.category);
+      setSubCatgory(data?.data?.product?.subCategory);
+      setLocation(data?.data?.product?.location);
+      setFetchedImages(data?.data?.product?.images);
     } catch (error: any) {
       console.log("error getting material info", error);
       promiseErrorFunction(error);
@@ -70,15 +78,71 @@ export const useEditMaterialInfo = () => {
     (material) => material.name === category
   );
 
+  //onChange function for image
+  const onSelectFile = (e: any) => {
+    const selectedFiles = e.target.files;
+    const newImages = [...selectedImageFiles];
+    const selectedFilesArray = Array.from(selectedFiles);
+    const invalidFiles: any = [];
+    let totalImages = newImages.length + selectedFilesArray.length;
+
+    if (totalImages > 5) {
+      toast.error(`You can only select up to 5 images.`, toastOptions);
+      e.target.value = null;
+      return;
+    }
+
+    selectedFilesArray.forEach((file: any) => {
+      const fileSize = Math.round(file.size / 1024);
+      const fileType = file.type.split("/")[1];
+      if (!["jpeg", "jpg", "png"].includes(fileType)) {
+        invalidFiles.push(file.name);
+      } else if (fileSize > 2000) {
+        invalidFiles.push(file.name);
+      } else {
+        // Check if the file is already added
+        if (!newImages.some((img) => img.name === file.name)) {
+          newImages.push(file);
+        }
+      }
+    });
+
+    if (invalidFiles.length > 0) {
+      let errorMessage = "";
+      invalidFiles.forEach((fileName: string) => {
+        errorMessage += `${fileName} `;
+      });
+      errorMessage += invalidFiles.length === 1 ? "is" : "are";
+      errorMessage +=
+        " not a valid JPEG, JPG, or PNG file or exceeds the maximum size of 2mb.";
+      toast.error(`${errorMessage}`, toastOptions);
+      e.target.value = null;
+    }
+
+    // Update state with valid files only
+    const imagesArray = newImages.map((file: any) => URL.createObjectURL(file));
+    setSelectedImages(imagesArray);
+    setSelectedImageFiles(newImages);
+  };
+
+  const handleImageDelete = (index: number) => {
+    const newImages: File[] = [...selectedImageFiles];
+    newImages.splice(index, 1);
+    setSelectedImageFiles(newImages);
+  };
+
   const handleErrorCheck = () => {
     if (
-      !editMaterialInfo.productName ||
+      !editMaterialInfo.name ||
       !editMaterialInfo.brand ||
       !editMaterialInfo.description ||
-      !editMaterialInfo.quantityAvailable ||
+      !editMaterialInfo.availableQuantity ||
       !editMaterialInfo.price ||
-      !editMaterialInfo.supplier ||
-      !editMaterialInfo.location
+      !editMaterialInfo.storeName ||
+      !editMaterialInfo.currency ||
+      !location ||
+      !category ||
+      !subCategory
     ) {
       return true;
     }
@@ -92,39 +156,69 @@ export const useEditMaterialInfo = () => {
       return;
     } else if (handleErrorCheck()) {
       return handleInputFieldError();
+    } else if (selectedImageFiles?.length < 1 && fetchedImages.length < 1) {
+      toast.error("Please select an image", toastOptions);
+      return;
+    }
+    const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
+
+    if (!googleMapsApiKey) {
+      throw new Error("Google Maps API key is not defined.");
+    }
+    const response = await fetch(
+      `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(
+        location
+      )}&key=${googleMapsApiKey}`
+    );
+    const data = await response.json();
+
+    if (data.status !== "OK") {
+      toast.error(
+        `Please enter a valid address from the suggestions.`,
+        toastOptions
+      );
+      return;
     }
     setLoad(true);
     try {
       const {
-        productName,
+        name,
         brand,
         description,
-        quantityAvailable,
+        availableQuantity,
         price,
-        supplier,
-        location,
+        storeName,
+        currency,
       } = editMaterialInfo;
 
       const editInfoPayload: any = {
-        product_name: productName,
+        name,
         brand,
         description,
-        quantity_available: quantityAvailable,
+        availableQuantity,
         price,
-        supplier,
+        storeName,
         location,
-        sub_category: subCategory,
+        subCategory,
         category,
+        currency,
       };
       const formData = new FormData();
       for (const property in editInfoPayload) {
         formData.append(property, editInfoPayload[property]);
       }
-      await axiosInstance.put(`/updateMaterial/${materialId}`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      for (let i = 0; i < selectedImageFiles.length; i++) {
+        formData.append("files", selectedImageFiles[i]);
+      }
+      await axiosInstance.patch(
+        `/material/update-product/${materialId}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
       toast.success(`Material edited successfully `, toastOptions);
       handleGoBack();
     } catch (error: any) {
@@ -149,5 +243,12 @@ export const useEditMaterialInfo = () => {
     handleCategoryChange,
     selectedMaterial,
     editMaterialInfo,
+    setLocation,
+    location,
+    fetchedImages,
+    onSelectFile,
+    selectedImages,
+    setSelectedImages,
+    handleImageDelete,
   };
 };

@@ -112,8 +112,7 @@ const page = ({ params }: any) => {
               <ImageSlider materialInfo={materialInfo} />
               <div className="col-span-2 max-lg:col-span-2 max-md:col-span-4">
                 <h4 className="sm:text-3xl text-lg font-bold mb-4">
-                  {materialInfo?.productName &&
-                    Capitalize(materialInfo?.productName)}
+                  {materialInfo?.name && Capitalize(materialInfo?.name)}
                 </h4>
                 <div className="flex flex-col gap-2 font-inter">
                   <div className="flex justify-between max-sm:flex-col max-sm:gap-2">
@@ -127,10 +126,11 @@ const page = ({ params }: any) => {
                     <div className="flex-c gap-2 flex-1">
                       <h6 className="font-medium max-sm:text-sm">Supplier:</h6>
                       <Link
-                        href="/profile/about"
+                        href={`/profile/about/${materialInfo?.userId?._id}`}
                         className="text-primary-green underline  max-sm:text-sm"
                       >
-                        James Habib
+                        {materialInfo?.userId?.fullName ||
+                          materialInfo?.userId?.userName}
                       </Link>
                     </div>
                   </div>
@@ -142,25 +142,22 @@ const page = ({ params }: any) => {
                         {materialInfo?.category}
                       </p>
                     </div>
-                    <div className="flex-c gap-2 flex-1">
-                      <h6 className="font-medium max-sm:text-sm">Location:</h6>
-                      <p className="max-sm:text-sm">
-                        {" "}
-                        {materialInfo?.location}
-                      </p>
+                    <div className="flex-c gap-5 flex-1">
+                      <h6 className="font-medium max-sm:text-sm">Rating</h6>
+                      <div className="flex-c text-[#8A8D8B] max-sm:text-sm gap-1">
+                        <StarRating rating={4} />
+                        4.0
+                      </div>
                     </div>
                   </div>
-                  <div className="flex-c gap-5">
-                    <h6 className="font-medium max-sm:text-sm">Rating</h6>
-                    <div className="flex-c text-[#8A8D8B] max-sm:text-sm gap-1">
-                      <StarRating rating={4} />
-                      4.0
-                    </div>
+                  <div className="flex-c gap-2 flex-1">
+                    <h6 className="font-medium max-sm:text-sm">Location:</h6>
+                    <p className="max-sm:text-sm"> {materialInfo?.location}</p>
                   </div>
                 </div>
                 <h3 className="lg:text-lg font-bold text-primary-green  mt-5">
                   {" "}
-                  ₦{" "}
+                  {materialInfo?.currency}{" "}
                   {materialInfo?.price && numberWithCommas(materialInfo?.price)}
                 </h3>
                 <p className="font-medium max-sm:text-sm mt-2 ">Price</p>
@@ -172,7 +169,7 @@ const page = ({ params }: any) => {
                 </button>
               </div>
             </section>
-            <ProductDescription description={materialInfo?.description} />
+            <ProductDescription materialInfo={materialInfo} />
             <section className="border-b-1 border-gray-400 pb-8">
               {" "}
               <div className="flex-c-b gap-6 max-w-[676px] w-full">

@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useUnsaveMaterial = () => {
@@ -19,13 +19,8 @@ export const useUnsaveMaterial = () => {
     }
     try {
       setIsLoading(true);
-      await axiosInstance.delete(
-        `/unsave-material?user_id=${currentUser?.unique_id}&material_id=${materialId}`
-      );
-      toast.success(
-        `You have successfully unsaved this material `,
-        toastOptions
-      );
+      await axiosInstance.get(`/material/unlike-product/${materialId}`);
+      toast.success(`Material has been removed from saved items`, toastOptions);
       setRerenderr((prev) => !prev);
       setIsLoading(false);
     } catch (error: any) {

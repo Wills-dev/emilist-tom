@@ -13,12 +13,13 @@ import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import { Capitalize, numberWithCommas } from "@/helpers";
 import { useGetUserSavedMaterials } from "@/hooks/useGetUserSavedMaterials";
 import { useUnsaveMaterial } from "@/hooks/useUnsaveMaterial";
+import { useAddMaterialToCart } from "@/hooks/useAddMaterialToCart";
 
 const SavedMaterials = () => {
   const { handleUnsaveMaterial, unsaveRerenderr } = useUnsaveMaterial();
+  const { addMaterialToCart, cartLoading } = useAddMaterialToCart();
   const {
     saveLoading,
-    allUserSavedMaterialsData,
     allUserSavedMaterials,
     search,
     handlePageChange,
@@ -33,6 +34,9 @@ const SavedMaterials = () => {
 
   return (
     <main className="relative">
+      {cartLoading && (
+        <div className="absolute top-0 left-0 w-full min-h-screen bg-white h-full z-50 opacity-40" />
+      )}
       <DashboardNav />
       <section className="pt-28 padding-x pb-20">
         <div className="flex-c-b gap-4 pb-6">
@@ -49,23 +53,27 @@ const SavedMaterials = () => {
             <div className="flex-1 w-full flex flex-col gap-4">
               <>
                 {allUserSavedMaterials?.length < 1 ? (
-                  <p className="py-2">No expert or service saved</p>
+                  <p className="py-2">No saved material or product</p>
                 ) : (
                   <>
                     {allUserSavedMaterials?.length > 0 &&
-                    allUserSavedMaterialsData?.length < 1 ? (
+                    search &&
+                    totalPages > 0 ? (
                       <p className="py-2">
                         No result found, try searching for something else
                       </p>
                     ) : (
                       <>
-                        {allUserSavedMaterialsData?.map((material: any) => (
+                        {allUserSavedMaterials?.map((material: any) => (
                           <div
                             key={material._id}
                             className="w-full grid md:grid-cols-5 grid-cols-6 gap-3 py-4 sm:px-6 px-2 hover:bg-gray-100 duration-300 shadow rounded-2xl"
                           >
                             <Image
-                              src={material?.Images && material?.Images[0]}
+                              src={
+                                material?.images[0] &&
+                                material?.images[0]?.imageUrl
+                              }
                               width={140}
                               height={100}
                               alt="service"
@@ -77,8 +85,7 @@ const SavedMaterials = () => {
                                   href={`/material/info/${material._id}`}
                                   className="sm:text-2xl font-bold hover:text-primary-green duration-300"
                                 >
-                                  {material?.product_name &&
-                                    Capitalize(material?.product_name)}
+                                  {material?.name && Capitalize(material?.name)}
                                 </Link>
                                 {material?.description &&
                                 material?.description.length > 200 ? (
@@ -126,13 +133,18 @@ const SavedMaterials = () => {
                               <div className="flex-c md:flex-col md:items-end justify-between">
                                 <div className="flex flex-col gap-1">
                                   <p className="sm:text-2xl font-bold text-primary-green">
-                                    ₦{" "}
+                                    {material?.currency}{" "}
                                     {material?.price &&
                                       numberWithCommas(material?.price)}
                                   </p>
                                 </div>
 
-                                <button className="view-btn max-sm:text-sm">
+                                <button
+                                  className="view-btn max-sm:text-sm"
+                                  onClick={() =>
+                                    addMaterialToCart(material._id)
+                                  }
+                                >
                                   Add to Cart
                                 </button>
                               </div>

@@ -7,7 +7,7 @@ import { toastOptions } from "@/helpers";
 
 import { AuthContext } from "@/utils/AuthState";
 import { promiseErrorFunction } from "@/helpers";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useSaveMaterials = () => {
   const { currentUser } = useContext(AuthContext);
@@ -21,10 +21,8 @@ export const useSaveMaterials = () => {
     }
     try {
       setLoading(true);
-      await axiosInstance.post(
-        `/save-material?user_id=${currentUser?.unique_id}&material_id=${materialId}`
-      );
-      toast.success(`You have successfully saved this material `, toastOptions);
+      await axiosInstance.get(`/material/like-product/${materialId}`);
+      toast.success(`Material saved`, toastOptions);
       setRerender((prev) => !prev);
       setLoading(false);
     } catch (error: any) {
