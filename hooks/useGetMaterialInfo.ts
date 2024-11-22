@@ -8,6 +8,7 @@ import { axiosInstance } from "@/axiosInstance/baseUrls";
 export const useGetMaterialInfo = () => {
   const [loading, setLoading] = useState<boolean>(true);
   const [materialInfo, setMaterialInfo] = useState<any>({});
+  const [isProductLiked, setIsProductLiked] = useState(false);
 
   const getMaterialInfo = async (materialId: string) => {
     try {
@@ -16,6 +17,7 @@ export const useGetMaterialInfo = () => {
       );
 
       setMaterialInfo(data?.data?.product);
+      setIsProductLiked(data?.data?.liked);
     } catch (error: any) {
       console.log("error getting material info", error);
       toast.error("Internal server error or No network", toastOptions);
@@ -27,5 +29,6 @@ export const useGetMaterialInfo = () => {
     loading,
     getMaterialInfo,
     materialInfo,
+    isProductLiked,
   };
 };
