@@ -16,8 +16,8 @@ export const useLogout = () => {
       await axiosInstance.get(`/auth/log-out`);
       clearAuthClear("sessionId");
       setCurrentUser(null);
-      toast.success("Logout successful!", toastOptions);
       router.push("/");
+      toast.success("Logout successful!", toastOptions);
     } catch (error) {
       console.log("error logging out", error);
     }
