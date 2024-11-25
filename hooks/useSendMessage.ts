@@ -9,8 +9,7 @@ export const useSendMessage = () => {
   const [loading, setLoading] = useState(false);
   const [rerender, setRerender] = useState(false);
 
-  const { messages, setMessages, selectedConversation } =
-    useContext(ChatContext);
+  const { messages, setMessages } = useContext(ChatContext);
 
   const handleSendMessage = async (e: any, userId: string) => {
     e.preventDefault();

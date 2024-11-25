@@ -17,6 +17,7 @@ import { useRequestQuote } from "@/hooks/useRequestQuote";
 import { useAcceptQuote } from "@/hooks/useAcceptQuote";
 import CloseContractModal from "../modals/CloseContractModal";
 import { useCloseContract } from "@/hooks/useCloseContract";
+import MilestoneInvoice from "./MilestoneInvoice";
 
 const ActiveJobInfo = ({ jobId }: any) => {
   const { currentUser } = useContext(AuthContext);
@@ -66,6 +67,10 @@ const ActiveJobInfo = ({ jobId }: any) => {
     setCurrentMilestone,
   } = useGetJobInfo();
 
+  const hasInvoice = jobInfo?.milestones?.some((obj: any) =>
+    obj.hasOwnProperty("accountDetails")
+  );
+
   const isAllMilestoneCompleted = jobInfo?.milestones?.every(
     (milestone: any) => milestone.status === "completed"
   );
@@ -73,8 +78,6 @@ const ActiveJobInfo = ({ jobId }: any) => {
   const isAllMilestonePaid = jobInfo?.milestones?.every(
     (milestone: any) => milestone.paymentStatus === "paid"
   );
-
-  console.log("isAllMilestoneCompleted", isAllMilestoneCompleted);
 
   useEffect(() => {
     getJobInfo(jobId);
@@ -106,7 +109,11 @@ const ActiveJobInfo = ({ jobId }: any) => {
             requestQuote={requestQuote}
             acceptQuote={acceptQuote}
           />
-
+          {hasInvoice && (
+            <div className="col-span-3 max-lg:hidden max-h-max">
+              <MilestoneInvoice jobInfo={jobInfo} />
+            </div>
+          )}
           <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-[10px] py-10 ">
             <ul className="flex items-center flex-wrap gap-4   px-10 max-sm:px-5">
               {jobInfo?.milestones?.map((milestoneInfo: any, i: number) => (
@@ -309,6 +316,12 @@ const ActiveJobInfo = ({ jobId }: any) => {
               </div>
             )}
           </div>
+          {/* invoice mobile view */}
+          {hasInvoice && (
+            <div className="col-span-9 max-lg:col-span-12 lg:hidden max-h-max">
+              <MilestoneInvoice jobInfo={jobInfo} />
+            </div>
+          )}
         </div>
       )}
     </section>

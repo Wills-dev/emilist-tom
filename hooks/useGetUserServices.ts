@@ -10,7 +10,7 @@ export const useGetUserServices = () => {
   const [services, setServices] = useState<any>();
 
   const getUserServices = async () => {
-    const userId = currentUser.unique_id;
+    const userId = currentUser?.unique_id;
 
     setServiceLoad(true);
     try {

@@ -5,9 +5,8 @@ const page = ({ params }: any) => {
   const jobId = params.jobId;
 
   return (
-    <main className="relavie">
+    <main className="relative">
       <DashboardNav />
-
       <ActiveJobInfo jobId={jobId} />
     </main>
   );

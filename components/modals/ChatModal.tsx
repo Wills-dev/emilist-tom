@@ -23,7 +23,9 @@ const ChatModal = ({ handleOpen, user }: Props) => {
 
   useEffect(() => {
     setTimeout(() => {
-      lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
+      if (lastMessageRef.current) {
+        lastMessageRef.current.scrollIntoView({ behavior: "smooth" });
+      }
     }, 100);
   }, [messages]);
 
@@ -31,8 +33,6 @@ const ChatModal = ({ handleOpen, user }: Props) => {
     setTimeout;
     getMessages(user?._id);
   }, [user]);
-
-  console.log("messages", messages);
 
   return (
     <div className="h-screen w-full absolute top-0 left-0 right-0 flex justify-end items-center ">
@@ -91,7 +91,9 @@ const ChatModal = ({ handleOpen, user }: Props) => {
                       <div
                         className="w-full flex flex-col"
                         key={index}
-                        ref={lastMessageRef}
+                        ref={
+                          index === messages.length - 1 ? lastMessageRef : null
+                        }
                       >
                         <div
                           className={`${
@@ -103,7 +105,7 @@ const ChatModal = ({ handleOpen, user }: Props) => {
                             className={`chat-bubble ${
                               isSentByCurrentUser
                                 ? "bg-[#054753]  text-[#FCFEFD]"
-                                : "bg-[#ECECEC]  text-[#303632]"
+                                : "bg-[#ECECEC]  text-[#1d231f]"
                             } ${shakeClass}`}
                           >
                             {message?.content}

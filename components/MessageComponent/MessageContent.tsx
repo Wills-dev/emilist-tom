@@ -18,8 +18,7 @@ const MessageContent = () => {
   const { conversations, isLoading, getAllCoversations } = useGetAllChats();
   const { selectedConversation, setSelectedConversation } =
     useContext(ChatContext);
-  const { loading, message, setMessage, handleSendMessage, rerender } =
-    useSendMessage();
+  const { loading, message, setMessage, handleSendMessage } = useSendMessage();
   const { onlineUsers } = useSocketContext();
 
   const currentUserId = currentUser?._id;
@@ -113,7 +112,6 @@ const MessageContent = () => {
                                   {formatCreatedAt(
                                     conversation?.lastMessage?.createdAt
                                   )}{" "}
-                                  ago
                                 </p>
                               </div>
                               <p className="text-[#737774] text-sm max-sm:text-xs truncate w-full">

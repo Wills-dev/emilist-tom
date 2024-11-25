@@ -19,7 +19,7 @@ export const useGetUserProjectAnalytics = () => {
     }
     setLoadingAnalytics(true);
     try {
-      const { data } = await axiosInstance.get(`/jobs/fetch-job-count-creator`);
+      const { data } = await axiosInstance.get(`/jobs/fetch-project-count`);
       setProjectAnalytics(data?.data);
     } catch (error: any) {
       console.log("error getting project analytics", error);
@@ -30,7 +30,7 @@ export const useGetUserProjectAnalytics = () => {
 
   useEffect(() => {
     getUserProjectAnalytics();
-  }, [currentUser.unique_id]);
+  }, [currentUser?.unique_id]);
 
   return {
     loadingAnalytics,
