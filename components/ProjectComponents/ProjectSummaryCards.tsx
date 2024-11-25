@@ -18,15 +18,15 @@ const ProjectSummaryCards = () => {
           <SummaryCard
             cardIcon="/assets/icons/leadIcon.svg"
             cardLink="/dashboard/job/lead"
-            cardSum={3}
+            cardSum={0}
             cardTitle="Lead"
           />
           <SummaryCard
             cardIcon="/assets/icons/newIcon.svg"
             cardLink="/dashboard/project/new"
             cardSum={
-              projectAnalytics?.totalPendingJobs &&
-              numberWithCommas(projectAnalytics?.totalPendingJobs)
+              projectAnalytics?.totalPendingProjects &&
+              numberWithCommas(projectAnalytics?.totalPendingProjects)
             }
             cardTitle="New"
           />
@@ -34,8 +34,8 @@ const ProjectSummaryCards = () => {
             cardIcon="/assets/icons/activeIcon.svg"
             cardLink="/dashboard/project/active"
             cardSum={
-              projectAnalytics?.totalActiveJobs &&
-              numberWithCommas(projectAnalytics?.totalActiveJobs)
+              projectAnalytics?.totalActiveProjects &&
+              numberWithCommas(projectAnalytics?.totalActiveProjects)
             }
             cardTitle="Active"
           />
@@ -43,8 +43,8 @@ const ProjectSummaryCards = () => {
             cardIcon="/assets/icons/overdueIcon.svg"
             cardLink="/dashboard/project/overdue"
             cardSum={
-              projectAnalytics?.totalOverdueJobs &&
-              numberWithCommas(projectAnalytics?.totalOverdueJobs)
+              projectAnalytics?.totalOverdueProjects &&
+              numberWithCommas(projectAnalytics?.totalOverdueProjects)
             }
             cardTitle="Overdue"
           />
@@ -52,8 +52,8 @@ const ProjectSummaryCards = () => {
             cardIcon="/assets/icons/pausedIcon.svg"
             cardLink="/dashboard/project/paused"
             cardSum={
-              projectAnalytics?.totalPausedJobs &&
-              numberWithCommas(projectAnalytics?.totalPausedJobs)
+              projectAnalytics?.totalPausedProjects &&
+              numberWithCommas(projectAnalytics?.totalPausedProjects)
             }
             cardTitle="Paused"
           />
@@ -61,8 +61,8 @@ const ProjectSummaryCards = () => {
             cardIcon="/assets/icons/completedIcon.svg"
             cardLink="/dashboard/project/completed"
             cardSum={
-              projectAnalytics?.totalCompletedJobs &&
-              numberWithCommas(projectAnalytics?.totalCompletedJobs)
+              projectAnalytics?.totalCompletedProjects &&
+              numberWithCommas(projectAnalytics?.totalCompletedProjects)
             }
             cardTitle="Completed"
           />

@@ -144,7 +144,7 @@ const Applicants = ({
                       ) : null}
                     </div>
                   </Link>
-                  {currentUser._id === jobInfo?.userId?._id && (
+                  {currentUser?._id === jobInfo?.userId?._id && (
                     <div className="relative h-fit">
                       <Image
                         src="/assets/icons/Menu.svg"

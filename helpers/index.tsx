@@ -115,16 +115,16 @@ export const formatCreatedAt = (date: Date): string => {
     if (minutesDiff < 1) {
       return "Just now";
     } else if (minutesDiff < 2 && minutesDiff >= 1) {
-      return `${minutesDiff}m`;
+      return `${minutesDiff}m ago`;
     } else {
-      return `${minutesDiff}m`;
+      return `${minutesDiff}m ago`;
     }
   } else if (hoursDiff < 24) {
-    return `${hoursDiff}h`;
+    return `${hoursDiff}h ago`;
   } else if (daysDiff <= 7) {
-    return `${daysDiff}d`;
+    return `${daysDiff}d ago`;
   } else {
-    return `${weeksDiff}w`;
+    return `${weeksDiff}w ago`;
   }
 };
 

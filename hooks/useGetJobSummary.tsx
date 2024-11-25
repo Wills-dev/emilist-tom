@@ -31,7 +31,7 @@ export const useGetJobSummary = () => {
 
   useEffect(() => {
     getUserJobAnalytics();
-  }, [currentUser.unique_id]);
+  }, [currentUser?.unique_id]);
 
   return {
     loadingAnalytics,

@@ -17,7 +17,7 @@ export const useDeactivateAccount = () => {
       router.push("/login");
       return;
     }
-    const userId = currentUser.unique_id;
+    const userId = currentUser?.unique_id;
     try {
       await axiosInstance.post(
         `/deactivateAccount`,
