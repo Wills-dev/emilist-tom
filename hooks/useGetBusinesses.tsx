@@ -40,14 +40,11 @@ export const useGetBusinesses = () => {
   }, [fetchBusinesses]);
 
   const handleHorizontalScroll = useCallback(() => {
-    if (!containerRef.current || loading || !hasMore) return;
-
-    const { scrollWidth, scrollLeft, clientWidth } = containerRef.current;
-
-    // Trigger a fetch when the user scrolls near the end
-    if (scrollLeft + clientWidth >= scrollWidth - 100) {
-      setCurrentPage((prevPage) => prevPage + 1);
-    }
+    // if (!containerRef.current || loading || !hasMore) return;
+    // const { scrollWidth, scrollLeft, clientWidth } = containerRef.current;
+    // if (scrollLeft + clientWidth >= scrollWidth - 100) {
+    //   setCurrentPage((prevPage) => prevPage + 1);
+    // }
   }, [loading, hasMore]);
 
   return {
