@@ -30,13 +30,20 @@ const QuoteModal = ({
     getJobInfo(jobInfo?._id);
     if (jobInfo?.milestones?.length > 0) {
       setMilestones(
-        jobInfo?.milestones?.map((milestone: any) => ({
+        jobInfo.milestones.map((milestone: any) => ({
           milestoneId: milestone._id,
           achievement: milestone.achievement,
-          amount: 0,
+          amount: milestone.amount,
         }))
       );
-      setPercentage(new Array(jobInfo?.milestones?.length).fill(0));
+
+      const baseAmount = jobInfo.maximumPrice || jobInfo.budget;
+      if (baseAmount && isOpen) {
+        const calculatedPercentage = jobInfo.milestones.map(
+          (milestone: any) => (milestone.amount / Number(baseAmount)) * 100
+        );
+        setPercentage(calculatedPercentage);
+      }
     }
   }, [rerenderrr]);
 
@@ -48,19 +55,19 @@ const QuoteModal = ({
       >
         <h2 className="text-lg font-bold pb-5">Quote</h2>
         <div className="flex flex-col gap-2">
-          <div className="w-full">
-            <p className="text-[#5e625f] py-2 text-[16px] font-[500] max-sm:text-[14px]">
+          <div className="w-full opacity-45">
+            <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
               Project duration
             </p>
 
-            <p className="h-10 px-2 bg-slate-50 rounded-lg flex-c">
+            <p className="expert-reg-input-div flex-c">
               {jobInfo?.duration.number && jobInfo?.duration.number}{" "}
               {jobInfo?.duration.period && jobInfo?.duration.period}
             </p>
           </div>
           <div className="w-full">
             <div className="py-2">
-              <p className="text-[#5e625f]  text-[16px] font-[500] max-sm:text-[14px]">
+              <p className="text-[#5e625f]  font-medium max-sm:text-sm">
                 Total amount ({jobInfo?.currency})
               </p>
               <p className="text-xs text-primary-green">
@@ -78,12 +85,12 @@ const QuoteModal = ({
               />
             </div>
           </div>
-          <div className="w-full">
-            <p className="text-[#5e625f] py-2 text-[16px] font-[500] max-sm:text-[14px]">
+          <div className="w-full opacity-45">
+            <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
               Milestone
             </p>
             <div className="w-full">
-              <p className="h-10 px-2 bg-slate-50 rounded-lg flex-c">
+              <p className="expert-reg-input-div flex-c">
                 {jobInfo?.milestones?.length && jobInfo?.milestones?.length}{" "}
               </p>
             </div>
@@ -92,19 +99,19 @@ const QuoteModal = ({
           {jobInfo?.milestones?.map((mileStone: any, index: number) => (
             <div key={index}>
               <div className="w-full">
-                <h2 className="text-[20px] font-[600] leading-[32px] max-sm:text-[16px] max-sm:leading-[20px] py-5 ">
+                <h2 className="sm:text-lg font-[600] py-5 ">
                   Milestone {index + 1}
                 </h2>
-                <p className="text-[#5e625f] py-2 text-[16px] font-[500] max-sm:text-[14px]">
+                <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm opacity-45">
                   Milestone duration
                 </p>
-                <p className="h-10 px-2 bg-slate-50 rounded-lg flex-c">
+                <p className="expert-reg-input-div flex-c opacity-45">
                   {mileStone?.timeFrame?.number && mileStone?.timeFrame?.number}{" "}
                   {mileStone?.timeFrame?.period && mileStone?.timeFrame?.period}
                 </p>
               </div>
               <div className="w-full">
-                <p className="text-[#5e625f] pt-4 text-[16px] font-[500] max-sm:text-[14px]">
+                <p className="text-[#5e625f] pt-4 font-medium max-sm:text-sm">
                   Details of what is to be achieved
                 </p>
                 <p className="text-xs text-primary-green pb-3">
@@ -122,7 +129,7 @@ const QuoteModal = ({
               </div>
               <div className="w-full">
                 <div className="py-2">
-                  <p className="text-[#5e625f]  text-[16px] font-[500] max-sm:text-[14px]">
+                  <p className="text-[#5e625f]  font-medium max-sm:text-sm">
                     Percent for Milestone
                   </p>
                   <p className="text-xs text-primary-green">
@@ -142,12 +149,12 @@ const QuoteModal = ({
                   />
                 </div>
               </div>
-              <div className="w-full">
-                <p className="text-[#5e625f] py-2 text-[16px] font-[500] max-sm:text-[14px]">
+              <div className="w-full opacity-45">
+                <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
                   Amount ({jobInfo?.currency})
                 </p>
                 <div className="w-full">
-                  <p className="h-10 px-2 bg-slate-50 rounded-lg  flex-c">
+                  <p className="expert-reg-input-div  flex-c">
                     {milestones[index]?.amount || 0}
                   </p>
                 </div>
