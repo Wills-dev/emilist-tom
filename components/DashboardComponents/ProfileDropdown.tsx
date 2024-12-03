@@ -63,10 +63,20 @@ const ProfileDropdown = ({ handleOpen }: Props) => {
               <li className="hover:text-primary-green font-medium max-sm:text-sm">
                 Subscriptions
               </li>
+              <Link href="/dashboard/report/earnings" onClick={handleOpen}>
+                <li className="hover:text-primary-green font-medium max-sm:text-sm">
+                  Reports
+                </li>
+              </Link>
+              <Link href="/dashboard/wallet" onClick={handleOpen}>
+                <li className="hover:text-primary-green font-medium max-sm:text-sm">
+                  My Wallet
+                </li>
+              </Link>
             </Link>
-            <Link href="/dashboard/report/earnings" onClick={handleOpen}>
+            <Link href="/dashboard/transactions" onClick={handleOpen}>
               <li className="hover:text-primary-green font-medium max-sm:text-sm">
-                Reports
+                Transactions
               </li>
             </Link>
 

@@ -80,7 +80,7 @@ const DashboardExpertContent = () => {
                   <>
                     {businesses?.map((expert: any) => (
                       <div
-                        key={expert.id}
+                        key={expert._id}
                         className="w-full grid md:grid-cols-5 grid-cols-6 gap-3 py-4 sm:px-6 hover:bg-gray-100 duration-300"
                       >
                         {Array.isArray(expert?.businessImages) &&
@@ -138,17 +138,20 @@ const DashboardExpertContent = () => {
                             <div className="flex-c-b sm:py-2">
                               <div className="flex-c gap-2">
                                 <Image
-                                  src="/assets/dummyImages/profilePic.png"
+                                  src={
+                                    expert?.profileImage ||
+                                    "/assets/dummyImages/profilePic.png"
+                                  }
                                   width={50}
                                   height={50}
                                   alt="profile-pic"
                                   className="object-cover h-8 w-8 rounded-full"
                                 />
                                 <h6 className="sm:text-sm text-xs">
-                                  {expert?.firstname &&
-                                    Capitalize(expert?.firstname)}{" "}
-                                  {expert?.lastname &&
-                                    Capitalize(expert?.lastname)}
+                                  {expert?.firstName &&
+                                    Capitalize(expert?.firstName)}{" "}
+                                  {expert?.lastName &&
+                                    Capitalize(expert?.lastName)}
                                 </h6>
                               </div>
                               <div className="max-sm:text-xs font-medium uppercase">
