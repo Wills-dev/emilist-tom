@@ -63,34 +63,33 @@ export const useApplyForBiddableJob = () => {
     }
   };
 
-  const updateAmounts = (newPercentages: number[]) => {
+  // Handler to update a specific percentage
+  const handleSetPercentage = (index: number, value: number) => {
     if (!maxPrice) {
       toast.error("Please enter total amount.", toastOptions);
       return;
     }
-
-    const updatedMilestones = newPercentages.map((percent, index) => ({
-      ...milestones[index],
-      amount: (percent / 100) * Number(maxPrice),
-    }));
-
-    setMilestones(updatedMilestones);
-    setPercentage(newPercentages);
-  };
-
-  // Handler to update a specific percentage
-  const handleSetPercentage = (index: number, value: number) => {
     const updatedPercentages = [...percentage];
     updatedPercentages[index] = value;
-    updateAmounts(updatedPercentages);
+
+    setMilestones((prevMilestones) =>
+      prevMilestones.map((milestone, i) =>
+        i === index
+          ? { ...milestone, amount: (value / 100) * Number(maxPrice) }
+          : milestone
+      )
+    );
+
+    setPercentage(updatedPercentages);
   };
 
   // Handler to update achievement text
   const handleAchievementChange = (index: number, newAchievement: string) => {
-    const updatedMilestones = milestones.map((milestone, i) =>
-      i === index ? { ...milestone, achievement: newAchievement } : milestone
+    setMilestones((prevMilestones) =>
+      prevMilestones.map((milestone, i) =>
+        i === index ? { ...milestone, achievement: newAchievement } : milestone
+      )
     );
-    setMilestones(updatedMilestones);
   };
 
   const applyForBiddableJob = async (

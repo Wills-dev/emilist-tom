@@ -4,6 +4,7 @@ import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 
 import MessageTextarea from "./MessageTextarea";
+import { ScrollArea } from "../ui/scroll-area";
 
 import { useGetAllChats } from "@/hooks/useGetAllChats";
 import { formatCreatedAt } from "@/helpers";
@@ -30,7 +31,7 @@ const MessageContent = () => {
   return (
     <section className="padding-x py-28 ">
       <div className="border-1 border-[#DEE5ED]  grid grid-cols-3 h-[80svh] overflow-y-hidden">
-        <div className="col-span-1 max-lg:col-span-3 py-8  border-r-1  border-[#DEE5ED] h-full overflow-y-scroll max-w-full w-full">
+        <ScrollArea className="col-span-1 max-lg:col-span-3 py-8  border-r-1  border-[#DEE5ED] h-full overflow-y-auto max-w-full w-full">
           <div className="flex items-center gap-4 px-6 max-md:px-3">
             <h4 className="sm:text-lg font-semibold">Inbox</h4>
           </div>
@@ -131,7 +132,7 @@ const MessageContent = () => {
               </>
             )}
           </div>
-        </div>
+        </ScrollArea>
         <div className="col-span-2 max-lg:hidden h-full relative">
           <MessageTextarea
             loading={loading}

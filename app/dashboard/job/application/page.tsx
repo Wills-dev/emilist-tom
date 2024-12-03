@@ -15,7 +15,6 @@ const page = () => {
   const {
     isLoading,
     allAplliedJobs,
-    allAppliedJobsData,
     search,
     handleChange,
     handlePageChange,
@@ -29,11 +28,9 @@ const page = () => {
       {" "}
       <DashboardNav />
       <section className="padding-x py-28">
-        <h1 className=" text-3xl font-[700] leading-[36px] max-sm:text-xl max-sm:leading-[30px] my-4 text-[#282828]">
-          Applications
-        </h1>
+        <h1 className=" sm:text-3xl font-bold text-xl my-4">Applications</h1>
         {isLoading || userLoading ? (
-          <div className="flex item-center justify-center text-green-500 mt-6 h-[60vh] w-full">
+          <div className="flex-c justify-center text-green-500 mt-6 h-[60vh] w-full">
             <span className="loading loading-bars loading-lg"></span>
           </div>
         ) : (
@@ -59,20 +56,19 @@ const page = () => {
                 </div>
               </form>
 
-              {allAplliedJobs.length < 1 ? (
-                <p className="text-[#282828]">No applied job yet.</p>
+              {allAplliedJobs?.length < 1 ? (
+                <p className="">No applied job yet.</p>
               ) : (
                 <>
-                  {allAplliedJobs?.length > 0 &&
-                  allAppliedJobsData.length < 1 ? (
-                    <p className="text-[#282828]">
+                  {allAplliedJobs?.length < 1 && totalPages > 1 ? (
+                    <p className="">
                       No job matched your search, Trying search for something
                       else
                     </p>
                   ) : (
                     <>
                       {" "}
-                      {allAppliedJobsData?.map((job: any, index: number) => (
+                      {allAplliedJobs?.map((job: any, index: number) => (
                         <Link
                           href={
                             job?.type === "biddable"
@@ -84,89 +80,64 @@ const page = () => {
                           key={index}
                         >
                           <div className="w-full p-4  shadow-md rounded-[20px]">
-                            <div className="flex justify-between items-center w-full pb-5">
-                              <h5 className="text-[#000000] text-[20px] leading-[24px] font-[600] max-sm:text-[16px]">
-                                {job?.jobTitle && job?.jobTitle}
+                            <div className="flex-c-b w-full pb-5">
+                              <h5 className="sm:text-2xl font-semibold truncate">
+                                {job?.title && job?.title}
                               </h5>
-                              <div className="flex justify-end items-center gap-3 max-sm:gap-2 ">
-                                <h6 className="text-[#000000] text-[14px] leading-[20px] font-[500] max-sm:text-[12px]">
+                              <div className="flex-c justify-end gap-3 max-sm:gap-2 ">
+                                <h6 className="text-sm font-medium max-sm:text-xs">
+                                  Posted:{" "}
                                   {job?.createdAt &&
                                     formatCreatedAt(job.createdAt)}
                                 </h6>
-                                <Image
-                                  src="/assets/icons/menudot.svg"
-                                  alt="menu"
-                                  width={20}
-                                  height={20}
-                                  className="object-contain w-[20px] h-[20px] max-sm:w-[14px] max-sm:h-[14px] "
-                                />
                               </div>
                             </div>
-                            <div className="flex justify-between items-center">
+                            <div className="flex-c-b">
                               {job?.type === "biddable" ? (
-                                <>
-                                  <h6 className="text-[#737774] text-[14px] leading-[20px] font-[500] max-sm:text-[12px]">
-                                    Max price: ₦
-                                    {job?.maxPrice &&
-                                      numberWithCommas(job.maxPrice)}
-                                  </h6>
-                                </>
+                                <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs">
+                                  Max price: {job?.currency}{" "}
+                                  {job?.maximumPrice &&
+                                    numberWithCommas(job.maximumPrice)}
+                                </h6>
                               ) : (
-                                <h6 className="text-[#737774] text-[14px] leading-[20px] font-[500] max-sm:text-[12px] whitespace-nowrap">
-                                  Budget: ₦
-                                  {job?.amount && numberWithCommas(job.amount)}
+                                <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs whitespace-nowrap">
+                                  Budget: {job?.currency}{" "}
+                                  {job?.budget && numberWithCommas(job.budget)}
                                 </h6>
                               )}
-                              <h6 className="text-[#737774] text-[14px] leading-[20px] font-[500] max-sm:text-[12px]">
-                                Est Time:{" "}
-                                {job?.projectDuration && job?.projectDuration}
+                              <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs">
+                                Job duration: {job?.duration?.number}{" "}
+                                {job?.duration?.period}{" "}
                               </h6>
                             </div>
 
-                            <p className="text-[#303632] text-[14px] leading-[20px] font-[500] max-sm:text-[12px] py-2">
+                            <p className="text-[#303632] text-sm font-medium max-sm:text-xs py-2">
                               {job?.description
-                                ? job?.description.length < 450
+                                ? job?.description?.length < 450
                                   ? job?.description
-                                  : `${job?.description?.slice(0, 450)}...`
+                                  : `${job.description?.slice(0, 450)}...`
                                 : null}
                             </p>
-                            <div className="flex items-center gap-8 flex-wrap max-sm:gap-4 max-sm:justify-between">
-                              <p className="flex items-center text-[#737774] text-[16px] leading-[20px] font-[500] max-sm:text-[13px] py-2 whitespace-nowrap ">
+                            <div className=" flex-c gap-8 flex-wrap max-sm:gap-4 max-sm:justify-between">
+                              <h6 className="text-sm font-medium max-sm:text-xs capitalize">
+                                Job type: {job?.type && job?.type}
+                              </h6>
+                              <div className="flex-c justify-end gap-2 max-sm:gap-4 ">
                                 {" "}
                                 <Image
-                                  src="/assets/icons/location.png"
-                                  alt="location"
-                                  width={20}
-                                  height={20}
-                                  className="object-contain w-[20px] h-[20px] max-sm:w-[14px] max-sm:h-[14px] mr-2"
-                                />
-                                {job?.location && job?.location}
-                              </p>
-                              <div className="flex justify-end items-center gap-2 max-sm:gap-4 ">
-                                {" "}
-                                <Image
-                                  src="/assets/icons/face.png"
+                                  src="/assets/icons/user.svg"
                                   alt="menu"
                                   width={20}
                                   height={20}
-                                  className="object-contain w-[20px] h-[20px] max-sm:w-[14px] max-sm:h-[14px] "
+                                  className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
                                 />
-                                <p className="text-[#303632] text-[14px] leading-[20px] font-[500] max-sm:text-[12px] whitespace-nowrap ">
-                                  {job?.applicants && job.applicants?.length}{" "}
+                                <p className="text-[#303632] text-sm font-medium max-sm:text-xs whitespace-nowrap ">
+                                  {job?.applications
+                                    ? job?.applications?.length
+                                    : 0}{" "}
                                   Applicants
                                 </p>
                               </div>
-                              <p className="flex items-center text-[#737774] text-[16px] leading-[20px] font-[500] max-sm:text-[13px] py-2 whitespace-nowrap ">
-                                {" "}
-                                <Image
-                                  src="/assets/icons/share.svg"
-                                  alt="location"
-                                  width={20}
-                                  height={20}
-                                  className="object-contain w-[20px] h-[20px] max-sm:w-[14px] max-sm:h-[14px] mr-2"
-                                />
-                                Share
-                              </p>
                             </div>
                           </div>
                         </Link>

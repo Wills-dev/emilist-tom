@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
+import { ScrollArea } from "@/components/ui/scroll-area";
+
 import useListenMessages from "@/hooks/useListenMessages";
 
 import { formatMessageDate } from "@/helpers";
@@ -77,7 +79,7 @@ const ChatModal = ({ handleOpen, user }: Props) => {
         ) : (
           <>
             {" "}
-            <div className="px-4 py-2 max-sm:px-2 flex flex-col flex-1 h-full overflow-y-scroll">
+            <ScrollArea className="px-4 py-2 max-sm:px-2 flex flex-col flex-1 h-full overflow-y-auto">
               {!messages || messages?.length < 1 ? (
                 <p className="text-xs text-primary-green">
                   Send a message to start conversation.
@@ -122,7 +124,7 @@ const ChatModal = ({ handleOpen, user }: Props) => {
                   })}
                 </>
               )}
-            </div>
+            </ScrollArea>
             <div className="px-4 py-2 max-sm:px-2">
               <form
                 onSubmit={(e) => handleSendMessage(e, user?._id)}

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import React, { useContext, useEffect, useRef } from "react";
 
+import { ScrollArea } from "../ui/scroll-area";
 import MessageEmptyState from "./MessageEmptyState";
 
 import { AuthContext } from "@/utils/AuthState";
@@ -93,7 +94,7 @@ const MessageTextarea = ({
             </div>
           ) : (
             <>
-              <div className=" h-[62svh] overflow-y-scroll w-full  px-6 max-md:px-3 pt-3 pb-8">
+              <ScrollArea className=" h-[62svh] overflow-y-auto w-full  px-6 max-md:px-3 pt-3 pb-8">
                 {messages.map((message: any, index: number) => {
                   const isSentByCurrentUser =
                     message.senderId === currentUserId;
@@ -129,7 +130,7 @@ const MessageTextarea = ({
                     </div>
                   );
                 })}
-              </div>
+              </ScrollArea>
               <form
                 onSubmit={(e) => handleSendMessage(e, isReceiver?._id)}
                 className="w-full flex items-center px-6 max-md:px-3 gap-4 absolute bottom-0 left-0 right-0 bg-white py-2"

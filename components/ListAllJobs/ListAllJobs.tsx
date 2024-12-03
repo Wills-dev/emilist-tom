@@ -12,11 +12,11 @@ import ListedHomeJobs from "../Skeleton/ListedHomeJobs";
 import ListedHomeExperts from "../Skeleton/ListedHomeExperts";
 
 import { useFetchJobs } from "@/hooks/useFetchJobs";
-import { useFetchExperts } from "@/hooks/useFetchExperts";
+import { useGetBusinesses } from "@/hooks/useGetBusinesses";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 
 const ListAllJobs = () => {
-  const { loading, allExperts } = useFetchExperts();
+  const { businesses, loading } = useGetBusinesses();
   const {
     isLoading,
     allJobs,
@@ -183,7 +183,7 @@ const ListAllJobs = () => {
             </>
           )}
         </div>
-        {allExperts?.length && (
+        {businesses?.length && (
           <div className="col-span-3 max-xl:hidden py-10">
             <div className=" border-x-1 border-t-1 pt-4 rounded-lg">
               <h2 className="sm:text-lg font-bold  px-6 ">
@@ -193,7 +193,7 @@ const ListAllJobs = () => {
                 <ListedHomeExperts />
               ) : (
                 <div className=" flex flex-col mt-4">
-                  {allExperts?.slice(0, 5).map((expert: any) => (
+                  {businesses?.slice(0, 5).map((expert: any) => (
                     <div
                       className=" w-full border-b-1 px-6 hover:bg-gray-100 transition-all duration-300 py-4"
                       key={expert?.id}
@@ -213,9 +213,28 @@ const ListAllJobs = () => {
                           height={80}
                           className="object-cover w-20 h-20 rounded-full shadow"
                         />
+                        {Array.isArray(expert?.businessImages) &&
+                        expert?.businessImages[0]?.imageUrl ? (
+                          <Image
+                            src={expert?.businessImages[0]?.imageUrl}
+                            alt={expert?.services[0]}
+                            width={380}
+                            height={276}
+                            className="object-cover w-20 h-20 rounded-full shadow"
+                          />
+                        ) : (
+                          <Image
+                            src="/assets/images/Logo.svg"
+                            alt={expert?.services[0]}
+                            width={130}
+                            height={30}
+                            className="object-contain w-20 h-20 rounded-full shadow"
+                          />
+                        )}
                         <div className="flex flex-col flex-1">
                           <h2 className=" truncate  text-sm  font-bold ">
-                            {expert?.service && Capitalize(expert?.service)}
+                            {expert?.services[0] &&
+                              Capitalize(expert?.services[0])}
                           </h2>
                           {expert?.bio && expert?.bio.length > 100 ? (
                             <p className=" text-xs">
@@ -231,7 +250,7 @@ const ListAllJobs = () => {
                       </Link>
                       <div className="flex justify-end gap-6 text-gray-600">
                         <Link
-                          href={`/expert/info/${expert?.id}`}
+                          href={`/expert/info/${expert?._id}`}
                           className="text-sm font-semibold hover:text-primary-green transition-all duration-300"
                         >
                           View

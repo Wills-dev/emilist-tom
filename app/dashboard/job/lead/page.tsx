@@ -130,7 +130,7 @@ const Lead = () => {
                               <div className="flex-c justify-end gap-10 max-sm:gap-4 ">
                                 {job?.liked ? (
                                   <span
-                                    className="block text-xl text-pink-500 cursor-pointer"
+                                    className="block text-xl text-[#054753] cursor-pointer"
                                     onClick={() => handleUnsaveJob(job._id)}
                                   >
                                     <FaHeart />

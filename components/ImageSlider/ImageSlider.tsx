@@ -29,7 +29,7 @@ const ImageSlider = ({ materialInfo }: ImageSliderProps) => {
       <div className=" w-[676px] h-[413px] max-sm:w-[320px] max-sm:min-w-full max-sm:h-[226px] relative">
         <Image
           src={
-            materialInfo?.images[currentImage] &&
+            Array.isArray(materialInfo?.images) &&
             materialInfo?.images[currentImage]?.imageUrl
           }
           alt={materialInfo?.name}

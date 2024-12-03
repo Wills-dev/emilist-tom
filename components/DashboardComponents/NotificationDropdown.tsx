@@ -2,7 +2,12 @@ import Image from "next/image";
 
 import { motion } from "framer-motion";
 
+import { ScrollArea } from "../ui/scroll-area";
+import { useGetNotification } from "@/hooks/useGetNotification";
+
 const NotificationDropdown = () => {
+  const { isLoading, notifications } = useGetNotification();
+
   const messages = [1, 2, 3, 4, 5];
   return (
     <motion.div
@@ -15,7 +20,7 @@ const NotificationDropdown = () => {
       <h2 className="text-xl font-bold max-sm:text-lg px-6 max-md:px-3 py-6">
         Notification
       </h2>
-      <div className="h-[74svh] max-h-[74svh] overflow-y-scroll">
+      <ScrollArea className="h-[74svh] max-h-[74svh] overflow-y-auto">
         <div className="flex-c-b px-6 max-md:px-3 bg-[#F2F4F7] py-2 border-b-1 border-[#DEE5ED]">
           <h6 className="text-xs font-medium">Today</h6>
           <button className="text-sm text-primary-green font-medium uppercase">
@@ -160,7 +165,7 @@ const NotificationDropdown = () => {
             </div>
           ))}
         </div>
-      </div>
+      </ScrollArea>
     </motion.div>
   );
 };

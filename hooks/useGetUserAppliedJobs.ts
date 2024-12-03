@@ -1,7 +1,7 @@
 import { ChangeEvent, useContext, useEffect, useMemo, useState } from "react";
 
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useGetUserAppliedJobs = () => {
   const { currentUser, userLoading } = useContext(AuthContext);
@@ -23,15 +23,14 @@ export const useGetUserAppliedJobs = () => {
   const getAllJobs = async () => {
     setIsLoading(true);
     try {
-      const data = await axiosInstance.get(
-        `/applied-jobs/${currentUser?.unique_id}`
+      const { data } = await axiosInstance.get(
+        `/jobs/fetch-applied-jobs-by-status`
       );
-      setAllAplliedJobs(data?.data?.applied_jobs);
-      const totalJobs = data?.data?.length;
+      setAllAplliedJobs(data?.data?.applications);
+      const totalJobs = data?.data?.total || 0;
       setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
     } catch (error: any) {
       setIsLoading(false);
-      console.log(error);
       console.log("error getting user applied jobs", error);
     } finally {
       setIsLoading(false);
@@ -44,33 +43,9 @@ export const useGetUserAppliedJobs = () => {
     }
   }, [currentUser]);
 
-  const allAppliedJobsData = useMemo(() => {
-    let computedJobs = allAplliedJobs;
-
-    if (search) {
-      computedJobs = computedJobs?.filter(
-        (job: any) =>
-          job.category.toLowerCase().includes(search.toLowerCase()) ||
-          job.expertlevel.toLowerCase().includes(search.toLowerCase()) ||
-          job.location.toLowerCase().includes(search.toLowerCase()) ||
-          job.projecttitle.toLowerCase().includes(search.toLowerCase()) ||
-          job.projecttype.toLowerCase().includes(search.toLowerCase()) ||
-          job.service.toLowerCase().includes(search.toLowerCase()) ||
-          job.type.toLowerCase().includes(search.toLowerCase())
-      );
-      // setTotalPages(Math.ceil(computedJobs?.length / ITEMS_PER_PAGE));
-    }
-
-    return computedJobs?.slice(
-      (currentPage - 1) * ITEMS_PER_PAGE,
-      (currentPage - 1) * ITEMS_PER_PAGE + ITEMS_PER_PAGE
-    );
-  }, [allAplliedJobs, currentPage, search]);
-
   return {
     isLoading,
     allAplliedJobs,
-    allAppliedJobsData,
     search,
     handleChange,
     getAllJobs,

@@ -69,7 +69,7 @@ const page = ({ params }: any) => {
             <div className="flex-c sm:gap-8 gap-5 justify-end pb-5">
               {isProductLiked ? (
                 <span
-                  className="block text-xl text-pink-500 cursor-pointer"
+                  className="block text-xl text-[#054753] cursor-pointer"
                   onClick={() => handleUnsaveMaterial(materialId)}
                 >
                   <FaHeart />

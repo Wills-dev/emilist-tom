@@ -22,6 +22,7 @@ export const useConfirmPayment = () => {
     amountpaid: "",
     paymentmethod: "",
     date: "",
+    note: "",
   });
 
   const handleImageDelete = () => {
@@ -30,7 +31,9 @@ export const useConfirmPayment = () => {
   };
 
   const handlePaymentChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
   ) => {
     const { name, value } = e.target;
     setPaymentDetails((prevDetails) => ({
@@ -68,7 +71,7 @@ export const useConfirmPayment = () => {
       router.push("/login");
       return;
     }
-    const { amountpaid, paymentmethod, date } = paymentDetails;
+    const { amountpaid, paymentmethod, date, note } = paymentDetails;
     if (!amountpaid || !paymentmethod || !date) {
       toast.error(`Please fill all fields`, toastOptions);
       return;
@@ -81,6 +84,7 @@ export const useConfirmPayment = () => {
         amountpaid,
         paymentmethod,
         date,
+        note,
       };
 
       const formData = new FormData();

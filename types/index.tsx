@@ -101,6 +101,7 @@ export interface PaymentDetails {
   amountpaid: string;
   paymentmethod: string;
   date: string;
+  note?: string;
 }
 
 export interface ContractType {
@@ -193,4 +194,33 @@ export interface Membership {
   startDate: string;
   endDate: string;
   doesNotEnd: boolean;
+}
+
+export interface OwnerProfile {
+  firstName: string;
+  lastName: string;
+  phoneNumber: string;
+  state: string;
+  city: string;
+  bio: string;
+  address: string;
+}
+
+export interface Certificatee {
+  certificate: string;
+  newCertificate?: File | "";
+  issuingOrganisation: string;
+  verificationNumber: string;
+  issuingDate: string;
+  expiringDate: string;
+  isCertificateExpire: boolean;
+  isVerified: boolean;
+}
+
+export interface Membershipp {
+  organisation: string;
+  positionHeld: string;
+  startDate: string;
+  endDate: string;
+  isMembershipExpire: boolean;
 }

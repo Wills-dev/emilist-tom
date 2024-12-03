@@ -187,7 +187,7 @@ const DashboardMaterialContent = () => {
                           <div className="flex-c gap-2 cursor-pointer">
                             {material?.liked ? (
                               <span
-                                className="block text-xl text-pink-500 cursor-pointer"
+                                className="block text-xl text-[#054753] cursor-pointer"
                                 onClick={() =>
                                   handleUnsaveMaterial(material._id)
                                 }
