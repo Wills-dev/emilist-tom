@@ -18,8 +18,8 @@ const MaterialHomeData = () => {
         <PopularSection />
       ) : (
         <div className="flex items-center w-full overflow-x-scroll gap-4 sm:mt-6 py-4 hide-scrollbar">
-          {allMaterials?.map((material: any) => (
-            <div className="flex flex-col gap-4" key={material?.Id}>
+          {allMaterials?.map((material: any, i: number) => (
+            <div className="flex flex-col gap-4" key={i}>
               <Link
                 href={`/material/info/${material?.Id}`}
                 className="flex flex-col gap-2 group"

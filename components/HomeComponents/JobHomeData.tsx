@@ -18,8 +18,8 @@ const JobHomeData = () => {
         <PopularSection />
       ) : (
         <div className="flex items-center w-full overflow-x-scroll gap-4 sm:mt-6 py-4 hide-scrollbar">
-          {allJobs?.map((job: any) => (
-            <div className="flex flex-col gap-4" key={job?.Id}>
+          {allJobs?.map((job: any, i: number) => (
+            <div className="flex flex-col gap-4" key={i}>
               <Link
                 href={`/job/info/${job?.Id}`}
                 className="flex flex-col gap-2 group"
