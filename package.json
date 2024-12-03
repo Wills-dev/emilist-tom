@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@netlify/plugin-nextjs": "^5.8.1",
     "@radix-ui/react-scroll-area": "^1.2.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@radix-ui/react-toast": "^1.2.1",
@@ -23,7 +24,7 @@
     "framer-motion": "^11.3.29",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.435.0",
-    "next": "14.2.5",
+    "next": "^15.0.3",
     "react": "^18",
     "react-confirm-alert": "^3.0.6",
     "react-dom": "^18",
