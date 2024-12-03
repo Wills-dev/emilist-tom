@@ -3,6 +3,7 @@ import React, {
   ChangeEvent,
   FormEventHandler,
   useContext,
+  useEffect,
   useState,
 } from "react";
 
@@ -24,6 +25,7 @@ export const useCreateDirectContract = () => {
 
   const [loading, setLoading] = useState<boolean>(false);
   const [location, setLocation] = useState<string>("");
+  const [debouncedValue, setDebouncedValue] = useState<string>("");
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
   const [milestonesData, setMilestonesData] = useState<MilestonePer[]>([
@@ -245,6 +247,31 @@ export const useCreateDirectContract = () => {
       toastOptions
     );
   }
+
+  useEffect(() => {
+    // Set a timeout to update the debouncedValue
+    const handler = setTimeout(() => {
+      setDebouncedValue(createDirectContractJob?.invite);
+    }, 5000); // 3 seconds debounce
+
+    // Clear the timeout if the user types again
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [createDirectContractJob?.invite]);
+
+  useEffect(() => {
+    if (debouncedValue) {
+      // Make the API call whenever debouncedValue changes
+      axiosInstance
+        .get(`/auth/get-specific-user?user=${debouncedValue}`)
+        .then((response) => {})
+        .catch((error) => {
+          promiseErrorFunction(error);
+          console.error("Error verifying user:", error);
+        });
+    }
+  }, [debouncedValue]);
 
   const handleSubmitPostJob: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();

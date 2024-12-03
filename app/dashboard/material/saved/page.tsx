@@ -153,7 +153,7 @@ const SavedMaterials = () => {
                             <div className="md:col-span-4 col-span-6 border-t-1 border-[#B8B9B8] flex-c justify-end sm:gap-10 gap-5 pt-2">
                               <div className="flex-c gap-2 cursor-pointer">
                                 <span
-                                  className="block text-xl text-pink-500 cursor-pointer"
+                                  className="block text-xl text-[#054753] cursor-pointer"
                                   onClick={() =>
                                     handleUnsaveMaterial(material._id)
                                   }

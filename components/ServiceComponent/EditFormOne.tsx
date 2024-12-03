@@ -1,33 +1,56 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 
-import { useGetServiceInfo } from "@/hooks/useGetServiceInfo";
-import { useRouter } from "next/navigation";
+import toast from "react-hot-toast";
+import { CgCloseR } from "react-icons/cg";
+
+import { serviceList } from "@/constants";
+import { toastOptions } from "@/helpers";
 
 interface EditFormOneProps {
-  serviceId: string;
+  services: string[];
+  setServices: (value: string[]) => void;
+  nextPage: () => void;
 }
-
-const EditFormOne = ({ serviceId }: EditFormOneProps) => {
-  const { loading, getServiceInfo, serviceInfo } = useGetServiceInfo();
-
+const EditFormOne = ({ services, setServices, nextPage }: EditFormOneProps) => {
   const [open, setOpen] = useState(false);
   const [customOption, setCustomOption] = useState("");
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
-
-  const router = useRouter();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    getServiceInfo(serviceId);
-  }, [serviceId]);
+  const filteredSelectedOptions = services?.filter((options) => {
+    return options !== "Others";
+  });
+
+  const toggleOption = (option: string) => {
+    if (services.includes(option)) {
+      setServices(services.filter((item) => item !== option));
+    } else {
+      setServices([...services, option]);
+    }
+  };
+
+  const handleAddCustomOption = () => {
+    if (customOption.trim() !== "") {
+      setServices([...services, customOption]);
+      setCustomOption("");
+      setOpen(false);
+    }
+  };
+
+  const handleNext = () => {
+    if (services?.length < 1) {
+      toast.error("Please select at least one service", toastOptions);
+      return;
+    }
+    nextPage();
+  };
 
   return (
     <section className="max-md:padding-x h-screen overflow-y-auto">
       <div className="md:pl-[500px] w-full">
-        <div className="pt-28 max-md:pt-24 max-md:pb-15 w-full md:px-10">
+        <div className="max-w-[550px] pt-28 max-md:pt-24 max-md:pb-15 w-full md:px-10">
           <h1 className="expert-reg-title">Edit Expert Service Account</h1>
           <p className=" py-4">
             EmiList employers and customers want to hire your services. Tell the
@@ -42,7 +65,7 @@ const EditFormOne = ({ serviceId }: EditFormOneProps) => {
               <p className="text-xs text-primary-green">
                 You can select more than one service
               </p>
-              {/* <div className="relative w-full" ref={dropdownRef}>
+              <div className="relative w-full" ref={dropdownRef}>
                 <button
                   onClick={() => setOpen((prev) => !prev)}
                   type="button"
@@ -102,8 +125,7 @@ const EditFormOne = ({ serviceId }: EditFormOneProps) => {
                         ))}
                       </ul>
 
-                     
-                      {selectedOptions.includes("Others") && (
+                      {services.includes("Others") && (
                         <div className="flex-c gap-2 px-2">
                           <input
                             type="text"
@@ -123,12 +145,12 @@ const EditFormOne = ({ serviceId }: EditFormOneProps) => {
                     </div>
                   </div>
                 )}
-              </div> */}
+              </div>
             </div>
             <div className="flex justify-end  max-sm:justify-center">
-              {/* <button className="custom-btn" onClick={handleProceed}>
-                Proceed
-              </button> */}
+              <button className="custom-btn" onClick={handleNext}>
+                Next
+              </button>
             </div>
           </div>
         </div>

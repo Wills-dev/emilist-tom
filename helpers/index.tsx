@@ -128,6 +128,12 @@ export const formatCreatedAt = (date: Date): string => {
   }
 };
 
+export const formatDateForInput = (dateString: string | null) => {
+  if (!dateString) return "";
+  const date = new Date(dateString);
+  return date.toISOString().split("T")[0];
+};
+
 export function dataURLtoFile(dataUrl: string): File {
   const arr = dataUrl.split(",");
   const mime = arr[0].match(/:(.*?);/)?.[1];

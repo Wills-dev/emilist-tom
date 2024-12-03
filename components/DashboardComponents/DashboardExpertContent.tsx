@@ -12,19 +12,18 @@ import DashboardLinks from "./DashboardLinks";
 import StarRating from "../StarRating/StarRating";
 
 import { Capitalize, numberWithCommas } from "@/helpers";
-import { useFetchExperts } from "@/hooks/useFetchExperts";
+import { useGetBusinesses } from "@/hooks/useGetBusinesses";
 
 const DashboardExpertContent = () => {
   const {
+    businesses,
     loading,
-    allExperts,
-    allExpertsData,
     search,
-    handleChange,
-    handlePageChange,
     totalPages,
     currentPage,
-  } = useFetchExperts();
+    handleChange,
+    handlePageChange,
+  } = useGetBusinesses();
 
   return (
     <div className="col-span-7 max-lg:col-span-10 w-full bg-white p-6 rounded-lg max-sm:px-3">
@@ -69,34 +68,55 @@ const DashboardExpertContent = () => {
           </div>
         ) : (
           <>
-            {allExperts?.length < 1 ? (
+            {businesses?.length < 1 ? (
               <p className="py-2">No expert or service listed</p>
             ) : (
               <>
-                {allExperts?.length > 0 && allExpertsData.length < 1 ? (
+                {totalPages > 0 && businesses?.length < 1 ? (
                   <p className="py-2">
                     No result found, try searching for something else
                   </p>
                 ) : (
                   <>
-                    {allExpertsData?.map((expert: any) => (
+                    {businesses?.map((expert: any) => (
                       <div
                         key={expert.id}
                         className="w-full grid md:grid-cols-5 grid-cols-6 gap-3 py-4 sm:px-6 hover:bg-gray-100 duration-300"
                       >
-                        <Image
-                          src="/assets/images/privateExpertImg.png"
-                          width={140}
-                          height={100}
-                          alt="service"
-                          className="md:col-span-1 col-span-2 object-cover w-full sm:h-36  h-28 rounded-lg "
-                        />
+                        {Array.isArray(expert?.businessImages) &&
+                        expert?.businessImages[0]?.imageUrl ? (
+                          <Image
+                            src={expert?.businessImages[0]?.imageUrl}
+                            alt={expert?.services[0]}
+                            width={380}
+                            height={276}
+                            className="md:col-span-1 col-span-2 object-cover w-full sm:h-36  h-28 rounded-lg "
+                          />
+                        ) : (
+                          <Image
+                            src="/assets/images/Logo.svg"
+                            alt={expert?.services[0]}
+                            width={130}
+                            height={30}
+                            className="md:col-span-1 col-span-2 object-contain w-full sm:h-36  h-28 rounded-lg shadow px-2"
+                          />
+                        )}
                         <div className="col-span-4 flex justify-between max-md:flex-col md:gap-10 gap-2">
                           <div className="flex flex-col gap-2 flex-1">
                             <h4 className="sm:text-2xl font-bold">
-                              {expert?.service && Capitalize(expert?.service)}
+                              {expert?.services[0] &&
+                                Capitalize(expert?.services[0])}
                             </h4>
-                            <p className="max-sm:text-sm">{expert?.bio}</p>
+                            {expert?.bio && expert?.bio.length > 100 ? (
+                              <p className=" text-xs">
+                                {expert?.bio.slice(0, 100)}...
+                                <span className=" text-primary-green">
+                                  Read more
+                                </span>
+                              </p>
+                            ) : (
+                              <p className="sm:text-sm">{expert?.bio}</p>
+                            )}
                             <div className="flex-c-b  sm:gap-4 gap-2 flex-wrap">
                               <div className="flex-c gap-1 max-sm:text-sm ">
                                 <StarRating rating={4} />{" "}
@@ -139,9 +159,10 @@ const DashboardExpertContent = () => {
                           <div className="flex-c md:flex-col md:items-end justify-between">
                             <div className="flex flex-col gap-1">
                               <p className="sm:text-2xl font-bold text-primary-green">
-                                ₦{" "}
-                                {expert?.startingprice &&
-                                  numberWithCommas(expert?.startingprice)}
+                                {expert?.currency}{" "}
+                                {expert?.startingPrice
+                                  ? numberWithCommas(expert?.startingPrice)
+                                  : 0}
                               </p>
                               <p className="sm:text-sm text-xs">
                                 Starting price
@@ -149,7 +170,7 @@ const DashboardExpertContent = () => {
                             </div>
 
                             <Link
-                              href={`/expert/info/${expert?.id}`}
+                              href={`/expert/info/${expert?._id}`}
                               className="view-btn max-sm:text-sm"
                             >
                               View Details

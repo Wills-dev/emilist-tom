@@ -13,7 +13,7 @@ type Props = {
   ) => Promise<void>;
   loadingPayment: boolean;
   handlePaymentChange: React.ChangeEventHandler<
-    HTMLInputElement | HTMLSelectElement
+    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
   >;
   milestoneId: string;
   currentFile: any;
@@ -87,8 +87,21 @@ const PaymentModal = ({
               value={paymentDetails.date}
               onChange={handlePaymentChange}
               className="expert-reg-input"
-              placeholder="12345678990"
             />
+          </div>
+        </div>
+        <div className="w-full my-3">
+          <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
+            Note (optional)
+          </p>
+          <div className="w-full">
+            <textarea
+              className="min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm"
+              name="note"
+              rows={3}
+              value={paymentDetails.note}
+              onChange={handlePaymentChange}
+            ></textarea>
           </div>
         </div>
         <div className="w-full">

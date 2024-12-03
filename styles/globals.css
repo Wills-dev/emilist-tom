@@ -82,6 +82,10 @@ body {
   .input__container {
     @apply col-span-2 max-lg:col-span-4 max-md:col-span-2 max-sm:col-span-4;
   }
+
+  /* .scroll__ {
+    @apply scrollbar-thin scrollbar-corner-rounded-full scrollbar-thumb-rounded-full scrollbar-track-rounded-full scrollbar-thumb-[#b7abab] hover:scrollbar-thumb-[#cb9e9e] scrollbar-track-gray-200;
+  } */
 }
 
 ::-webkit-scrollbar {
@@ -104,11 +108,11 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  box-shadow: inset 0 0 5px rgb(220, 218, 218) !important;
+  box-shadow: inset 0 0 5px #dcdada !important;
   border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgb(183, 171, 171) !important;
+  background: #b7abab !important;
   border-radius: 10px;
 }
 
