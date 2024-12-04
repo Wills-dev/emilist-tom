@@ -1,5 +1,5 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import { useState } from "react";
 
 import MilestoneInvoiceModal from "../modals/MilestoneInvoiceModal";
 
@@ -26,7 +26,11 @@ const MilestoneInvoice = ({ jobInfo }: any) => {
             <div key={index}>
               {milestone?.accountDetails && (
                 <button
-                  className="w-full flex-c-b bg-[#054753] rounded-lg h-[48px] px-4 text-[#FCFEFD] text-sm font-medium"
+                  className={`w-full flex-c-b rounded-lg h-[48px] px-4 text-[#FCFEFD] text-sm font-medium ${
+                    milestone?.paymentStatus === "paid"
+                      ? "bg-[#054753]"
+                      : "bg-[#ff9933]"
+                  }`}
                   onClick={() => handleOpenInvoiceDetails(milestone)}
                 >
                   Milestone {index + 1} invoice
