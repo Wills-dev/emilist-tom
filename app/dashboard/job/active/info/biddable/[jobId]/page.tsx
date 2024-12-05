@@ -1,8 +1,8 @@
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import ActiveJobInfo from "@/components/JobComponent/ActiveJobInfo";
 
-const page = ({ params }: any) => {
-  const jobId = params.jobId;
+const page = async ({ params }: any) => {
+  const { jobId } = await params.jobId;
 
   return (
     <main className="relative">
