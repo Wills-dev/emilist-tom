@@ -20,7 +20,7 @@ const ProfileDropdown = ({ handleOpen }: Props) => {
       animate={{ y: 0 }}
       exit={{ y: 20 }}
       transition={{ duration: 0.3 }}
-      className="absolute max-w-[280px] w-[280px] min-w-[260px] bg-white -right-10 h-[420px] max-h-[420px] top-full max-sm:right-6 shadow border-1"
+      className="absolute max-w-[280px] w-[280px] min-w-[260px] bg-white -right-10 h-[500px] top-full max-sm:right-6 shadow border-1"
     >
       <div className="relative">
         <Image
@@ -63,16 +63,16 @@ const ProfileDropdown = ({ handleOpen }: Props) => {
               <li className="hover:text-primary-green font-medium max-sm:text-sm">
                 Subscriptions
               </li>
-              <Link href="/dashboard/report/earnings" onClick={handleOpen}>
-                <li className="hover:text-primary-green font-medium max-sm:text-sm">
-                  Reports
-                </li>
-              </Link>
-              <Link href="/dashboard/wallet" onClick={handleOpen}>
-                <li className="hover:text-primary-green font-medium max-sm:text-sm">
-                  My Wallet
-                </li>
-              </Link>
+            </Link>
+            <Link href="/dashboard/report/earnings" onClick={handleOpen}>
+              <li className="hover:text-primary-green font-medium max-sm:text-sm">
+                Reports
+              </li>
+            </Link>
+            <Link href="/dashboard/wallet" onClick={handleOpen}>
+              <li className="hover:text-primary-green font-medium max-sm:text-sm">
+                My Wallet
+              </li>
             </Link>
             <Link href="/dashboard/transactions" onClick={handleOpen}>
               <li className="hover:text-primary-green font-medium max-sm:text-sm">
