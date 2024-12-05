@@ -31,7 +31,7 @@ const ContactModal = ({ isOpen, onCancel }: Props) => {
             </div>
           </div>
 
-          <div className="flex items-center gap-6 max-sm:gap-3 ">
+          {/* <div className="flex items-center gap-6 max-sm:gap-3 ">
             <button className="  rounded-full flex justify-center items-center contact-phone">
               <Image
                 src="/assets/icons/call.svg"
@@ -49,7 +49,7 @@ const ContactModal = ({ isOpen, onCancel }: Props) => {
               className="object-contain w-[20px] h-[20px] max-sm:w-[14px] max-sm:h-[14px] cursor-pointer"
               onClick={onCancel}
             />
-          </div>
+          </div> */}
         </div>
         <div className="w-full px-3 max-sm:px-2 ">
           <textarea
