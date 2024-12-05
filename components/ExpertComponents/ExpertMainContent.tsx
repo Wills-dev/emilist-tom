@@ -8,7 +8,7 @@ type Props = {
 
 const ExpertMainContent = ({ setOpenModal, serviceInfo }: Props) => {
   return (
-    <section className="padding-x padding-y">
+    <section className=" padding-y">
       <div className="grid grid-cols-5 gap-5 max-lg:grid-cols-4">
         <ImageSlider serviceInfo={serviceInfo} />
         <div className="col-span-2 max-lg:col-span-2 max-md:col-span-4">

@@ -63,10 +63,10 @@ const MessageTextarea = ({
           {" "}
           {selectedConversation?.participants
             ?.filter((participant: any) => participant._id !== currentUserId)
-            .map((participant: any) => (
+            .map((participant: any, index: number) => (
               <div
                 className="w-full border-b-1  border-[#DEE5ED] flex items-center gap-2 px-6 max-md:px-3 py-3 "
-                key={participant?._id}
+                key={index}
               >
                 {participant.profileImage ? (
                   <Image
@@ -143,7 +143,7 @@ const MessageTextarea = ({
                         width={15}
                         height={15}
                         alt="search"
-                        className="object-contain w-[16px] h-[16px] cursor-pointer"
+                        className="object-contain w-6 h-6 cursor-pointer"
                       />
                     </label>
                     <input
@@ -160,7 +160,7 @@ const MessageTextarea = ({
                         width={15}
                         height={15}
                         alt="search"
-                        className="object-contain w-[16px] h-[16px] cursor-pointer"
+                        className="object-contain w-6 h-6 cursor-pointer"
                       />
                     </label>
                     <input

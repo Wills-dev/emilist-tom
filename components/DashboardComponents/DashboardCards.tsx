@@ -32,15 +32,15 @@ const DashboardCards = () => {
   const [last3Days, setLast3Days] = useState(getLastNDays(currentDate, 2));
   const [next3Days, setNext3Days] = useState(getNextNDays(currentDate, 4));
   return (
-    <div className="flex flex-col gap-4 w-full max-lg:overflow-x-scroll max-lg:flex-row">
+    <div className="flex flex-col gap-4 w-full max-lg:overflow-x-scroll max-lg:flex-row hide-scrollbar">
       <div className="bg-white w-full p-6 max-sm:px-3 flex flex-col gap-6 rounded-lg">
         <h4 className="capitalize sm:text-lg font-semibold">
           {currentDate.toLocaleDateString("en-US", {
             month: "short",
             day: "numeric",
-          })}
+          })}{" "}
         </h4>
-        <div className="flex w-full gap-3 overflow-x-scroll">
+        <div className="flex w-full gap-3 overflow-x-scroll hide-scrollbar">
           {last3Days.map((date, index) => (
             <div className="rounded-3xl" key={index}>
               <div className=" shadow w-7 max-w-7 min-w-7 rounded-3xl">
@@ -159,7 +159,7 @@ const DashboardCards = () => {
           </div>
         </div>
       </div>
-      <div className="bg-white w-full rounded-lg p-6 max-sm:px-3">
+      <div className="bg-white w-full rounded-lg p-6 max-sm:px-3 max-md:hidden">
         <div className="flex justify-between items-center w-full">
           <div className="flex items-center gap-2">
             <p className="font-medium max-sm:text-sm">Messages</p>
@@ -175,7 +175,7 @@ const DashboardCards = () => {
             View all
           </Link>
         </div>
-        <div className="flex flex-col mt-10 gap-4 max-lg:flex-row overflow-x-scroll max-lg:gap-8">
+        <div className="flex flex-col mt-10 gap-4 max-lg:flex-row overflow-x-scroll max-lg:gap-8 hide-scrollbar">
           {dashboardMsgProfiles.slice(0, 3).map((profile, index) => (
             <div className="flex w-full gap-3" key={index}>
               <div className="w-[40px] h-[40px] rounded-full bg-[#6B7280] flex-c justify-center relative">

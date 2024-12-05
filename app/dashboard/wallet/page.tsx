@@ -31,7 +31,11 @@ const Wallet = () => {
             <h1 className="sm:text-2xl text-lg font-bold pt-5">13</h1>
           </div>
         </div>
-        <p className="text-primary-green pt-2">Add more wallet</p>
+        <div className="flex-c-b">
+          <button className="text-primary-green pt-2">Fund wallet</button>{" "}
+          <button className="text-primary-green pt-2">Add more wallet</button>
+        </div>
+
         <AnimatePresence>
           <WalletHistory />
         </AnimatePresence>
