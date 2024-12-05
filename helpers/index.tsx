@@ -75,7 +75,9 @@ export const Capitalize = (str: string) => {
 };
 
 export function numberWithCommas(x: number | string) {
-  return x?.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return parseFloat(x.toString())
+    .toFixed(2)
+    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 }
 
 export const goBack = () => {
