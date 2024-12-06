@@ -74,10 +74,20 @@ export const Capitalize = (str: string) => {
     .join(" ");
 };
 
+// export function numberWithCommas(x: number | string) {
+//   return parseFloat(x.toString())
+//     .toFixed(2)
+//     .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+// }
+
 export function numberWithCommas(x: number | string) {
-  return parseFloat(x.toString())
-    .toFixed(2)
-    .replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const num = parseFloat(x.toString());
+  return Number.isInteger(num)
+    ? num.toLocaleString()
+    : num.toLocaleString(undefined, {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }); // Add commas with two decimal places for non-whole numbers
 }
 
 export const goBack = () => {

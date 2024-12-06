@@ -285,7 +285,7 @@ const RegistrationFormSeven = () => {
               </div>
               <div className="col-span-2  max-lg:col-span-4  flex flex-col gap-5">
                 {certificates.map((certificate, index) => (
-                  <>
+                  <div key={index}>
                     <div className="w-full">
                       <p className="input-label">Issuing Organisation</p>
                       <div className="w-full">
@@ -394,7 +394,7 @@ const RegistrationFormSeven = () => {
                         </p>
                       </label>
                     </div>
-                  </>
+                  </div>
                 ))}
                 <button
                   className="w-full flex items-center justify-end"
@@ -434,7 +434,10 @@ const RegistrationFormSeven = () => {
               </p>
 
               {memberships.map((membership, index) => (
-                <>
+                <div
+                  key={index}
+                  className="col-span-4 grid grid-cols-4 gap-6 w-full"
+                >
                   <div className="w-full col-span-2   max-lg:col-span-4   ">
                     <p className="input-label">Organisation</p>
                     <div className="w-full">
@@ -549,7 +552,7 @@ const RegistrationFormSeven = () => {
                       </label>
                     </label>
                   </div>
-                </>
+                </div>
               ))}
               <button
                 className="w-full flex items-center justify-end col-span-4"

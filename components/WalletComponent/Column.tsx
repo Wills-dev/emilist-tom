@@ -16,8 +16,8 @@ export const Column = [
   columnHelper.accessor("date", {
     header: "Date",
   }),
-  columnHelper.accessor("id", {
-    header: "Transaction ID",
+  columnHelper.accessor("virtualCard", {
+    header: "Transaction name",
   }),
   columnHelper.accessor("user", {
     header: "Full name",
@@ -29,16 +29,16 @@ export const Column = [
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          State
+          Transaction type
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
     },
     cell: ({ row }) => {
       const state = row.getValue("cable");
-      if (state === "inflow") {
+      if (state === "Credit") {
         return <div className=" text-green-400">{state}</div>;
-      } else if (state === "outflow") {
+      } else if (state === "Debit") {
         return <div className=" text-red-400">{state}</div>;
       }
     },
