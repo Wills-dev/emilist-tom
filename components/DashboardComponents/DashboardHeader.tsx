@@ -4,11 +4,17 @@ import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "@/utils/AuthState";
+import InviteModal from "../modals/InviteModal";
 
 const DashboardHeader = () => {
   const { currentUser } = useContext(AuthContext);
 
+  const [isOpen, setIsOpen] = useState(false);
   const [greeting, setGreeting] = useState("");
+
+  const onCancel = () => {
+    setIsOpen(false);
+  };
 
   useEffect(() => {
     const currentTime = new Date().getHours();
@@ -33,7 +39,10 @@ const DashboardHeader = () => {
           <span className="mr-2 font-bold">Emilist ID:</span>
           {currentUser?.uniqueId}
         </p>
-        <button className="w-full flex-c justify-end gap-1">
+        <button
+          className="w-full flex-c justify-end gap-1"
+          onClick={() => setIsOpen(true)}
+        >
           <Image
             src="/assets/icons/add.svg"
             alt="add-icon"
@@ -41,10 +50,11 @@ const DashboardHeader = () => {
             height={30}
             className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5"
           />{" "}
-          <p className="text-primary-green font-medium max-sm:text-sm">
+          <span className="text-primary-green font-medium max-sm:text-sm">
             Invite Friends
-          </p>
+          </span>
         </button>
+        <InviteModal isOpen={isOpen} onCancel={onCancel} />
       </div>
     </div>
   );

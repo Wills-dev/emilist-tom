@@ -26,9 +26,23 @@ export const useFetchJobs = () => {
 
   const getAllJobs = async () => {
     const userId = currentUser?._id || "";
-    const url = `/jobs/fetch-all-jobs?page=${currentPage}&limit=10${
+    let url = `/jobs/fetch-all-jobs?page=${currentPage}&limit=10${
       userId ? `&userId=${userId}` : ""
     }`;
+
+    if (search) {
+      url += `&search=${search}`;
+    } else {
+      if (filterName) {
+        url += `&title=${filterName}`;
+      }
+      if (filterLocation) {
+        url += `&location=${filterLocation}`;
+      }
+      if (filterService) {
+        url += `&service=${filterService}`;
+      }
+    }
     try {
       const { data } = await axiosInstance.get(url);
       setAllJobs(data?.data?.jobs);
