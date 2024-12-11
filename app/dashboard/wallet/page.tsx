@@ -4,11 +4,17 @@ import { AnimatePresence } from "framer-motion";
 
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import WalletHistory from "@/components/WalletComponent/WalletHistory";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/utils/AuthState";
+import AddNewWallet from "@/components/modals/AddNewWallet";
 
 const Wallet = () => {
   const { currentUser } = useContext(AuthContext);
+  const [isOpen, setIsOpen] = useState(false);
+
+  const onCancel = () => {
+    setIsOpen(false);
+  };
 
   return (
     <main className="relative">
@@ -33,7 +39,13 @@ const Wallet = () => {
         </div>
         <div className="flex-c-b">
           <button className="text-primary-green pt-2">Fund wallet</button>{" "}
-          <button className="text-primary-green pt-2">Add more wallet</button>
+          <button
+            className="text-primary-green pt-2"
+            onClick={() => setIsOpen(true)}
+          >
+            Add more wallet
+          </button>
+          <AddNewWallet isOpen={isOpen} onCancel={onCancel} />
         </div>
 
         <AnimatePresence>
