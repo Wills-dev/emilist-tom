@@ -72,18 +72,32 @@ const EditFormTwo = ({
   );
 
   const handleNext = () => {
-    if (
-      !ownerProfile.firstName ||
-      !ownerProfile.lastName ||
-      ownerLanguages?.length < 1 ||
-      !ownerCountry ||
-      !ownerProfile.phoneNumber ||
-      !ownerProfile.city ||
-      !ownerProfile.state ||
-      !ownerProfile.address ||
-      !ownerProfile.bio
-    ) {
-      return toast.error("Please fill all fields", toastOptions);
+    if (!ownerProfile.firstName) {
+      return toast.error("First Name is required", toastOptions);
+    }
+    if (!ownerProfile.lastName) {
+      return toast.error("Last Name is required", toastOptions);
+    }
+    if (!ownerLanguages || ownerLanguages.length < 1) {
+      return toast.error("Please select at least one language", toastOptions);
+    }
+    if (!ownerCountry) {
+      return toast.error("Country is required", toastOptions);
+    }
+    if (!ownerProfile.phoneNumber) {
+      return toast.error("Phone Number is required", toastOptions);
+    }
+    if (!ownerProfile.city) {
+      return toast.error("City is required", toastOptions);
+    }
+    if (!ownerProfile.state) {
+      return toast.error("State is required", toastOptions);
+    }
+    if (!ownerProfile.address) {
+      return toast.error("Address is required", toastOptions);
+    }
+    if (!ownerProfile.bio) {
+      return toast.error("Bio is required", toastOptions);
     }
     nextPage();
   };

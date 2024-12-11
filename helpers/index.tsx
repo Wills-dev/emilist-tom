@@ -98,14 +98,14 @@ export function formatMessageDate(dateString: string): string {
   const date = new Date(dateString);
 
   if (isToday(date)) {
-    return `Today at ${format(date, "hh:mm a")}`;
+    return format(date, "hh:mm a");
   }
 
   if (isYesterday(date)) {
-    return `Yesterday at ${format(date, "hh:mm a")}`;
+    return format(date, "hh:mm a");
   }
 
-  return `${format(date, "MM/dd/yyyy")} at ${format(date, "hh:mm a")}`;
+  return format(date, "hh:mm a");
 }
 
 export const convertDateFormat = (oldDate: Date): string => {
@@ -242,4 +242,15 @@ export const combineAndSortArrays = (arr1: any, arr2: any) => {
   return combinedArray.sort(
     (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
   );
+};
+
+export const mapExpertLevel = (expertLevel: any): number | null => {
+  const expertLevelMap: any = {
+    one: 1,
+    two: 2,
+    three: 3,
+    four: 4,
+  };
+
+  return expertLevel ? expertLevelMap[expertLevel] || null : null;
 };

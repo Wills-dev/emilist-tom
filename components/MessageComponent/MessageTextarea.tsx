@@ -26,11 +26,15 @@ const MessageTextarea = ({
   const lastMessageRef: any = useRef(null);
 
   const { currentUser } = useContext(AuthContext);
-  const { getMessages, messages, isLoading } = useGetChat();
+  const { getMessages, messages, isLoading, groupMessagesByDate } =
+    useGetChat();
+
   const { selectedConversation, setSelectedConversation } =
     useContext(ChatContext);
 
   useListenMessages();
+
+  const groupedMessages = groupMessagesByDate(messages);
 
   const currentUserId = currentUser?._id;
 
@@ -39,6 +43,10 @@ const MessageTextarea = ({
     return () => setSelectedConversation(null);
   }, [setSelectedConversation]);
 
+  const isReceiver = selectedConversation?.participants?.find(
+    (participant: any) => participant?._id !== currentUser?._id
+  );
+
   useEffect(() => {
     setTimeout(() => {
       lastMessageRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -46,13 +54,8 @@ const MessageTextarea = ({
   }, [messages]);
 
   useEffect(() => {
-    setTimeout;
     getMessages(isReceiver?._id);
   }, [selectedConversation]);
-
-  const isReceiver = selectedConversation?.participants?.find(
-    (participant: any) => participant?._id !== currentUser?._id
-  );
 
   return (
     <>
@@ -95,41 +98,55 @@ const MessageTextarea = ({
           ) : (
             <>
               <ScrollArea className=" h-[62svh] overflow-y-auto w-full  px-6 max-md:px-3 pt-3 pb-8">
-                {messages.map((message: any, index: number) => {
-                  const isSentByCurrentUser =
-                    message.senderId === currentUserId;
-                  const shakeClass = message?.shouldShake ? "shake" : "";
-                  return (
-                    <div
-                      className="w-full flex flex-col"
-                      key={index}
-                      ref={lastMessageRef}
-                    >
-                      <div
-                        className={`${
-                          isSentByCurrentUser ? "chat-end" : "chat-start"
-                        } chat`}
-                        key={index}
-                      >
-                        <div
-                          className={`chat-bubble ${
-                            isSentByCurrentUser
-                              ? "bg-[#054753]  text-[#FCFEFD]"
-                              : "bg-[#ECECEC]  text-[#303632]"
-                          } ${shakeClass}`}
-                        >
-                          {message?.content}
-                        </div>
-                        <div className="chat-footer opacity-50">
-                          <time className="text-[#3F556E] text-xs">
-                            {message?.createdAt &&
-                              formatMessageDate(message?.createdAt)}
-                          </time>{" "}
-                        </div>
-                      </div>
+                {Object.keys(groupedMessages).map((dateKey, dateIndex) => (
+                  <div key={dateKey} className="flex flex-col">
+                    <div className=" text-center text-gray-500 text-sm my-2">
+                      {dateKey}
                     </div>
-                  );
-                })}
+                    {groupedMessages[dateKey]?.map(
+                      (message: any, index: number) => {
+                        const isLastMessage =
+                          dateIndex ===
+                            Object.keys(groupedMessages).length - 1 &&
+                          index === groupedMessages[dateKey].length - 1;
+
+                        const isSentByCurrentUser =
+                          message.senderId === currentUserId;
+                        const shakeClass = message?.shouldShake ? "shake" : "";
+                        return (
+                          <div
+                            className="w-full flex flex-col"
+                            key={index}
+                            ref={lastMessageRef}
+                          >
+                            <div
+                              className={`${
+                                isSentByCurrentUser ? "chat-end" : "chat-start"
+                              } chat`}
+                              key={index}
+                            >
+                              <div
+                                className={`chat-bubble ${
+                                  isSentByCurrentUser
+                                    ? "bg-[#054753]  text-[#FCFEFD]"
+                                    : "bg-[#ECECEC]  text-[#303632]"
+                                } ${shakeClass}`}
+                              >
+                                {message?.content}
+                              </div>
+                              <div className="chat-footer opacity-50">
+                                <time className="text-[#3F556E] text-xs">
+                                  {message?.createdAt &&
+                                    formatMessageDate(message?.createdAt)}
+                                </time>{" "}
+                              </div>
+                            </div>
+                          </div>
+                        );
+                      }
+                    )}
+                  </div>
+                ))}
               </ScrollArea>
               <form
                 onSubmit={(e) => handleSendMessage(e, isReceiver?._id)}

@@ -17,7 +17,6 @@ export const useGetAllJobByAUser = () => {
   const [filterLocation, setFilterLocation] = useState("");
   const [filterName, setFilterName] = useState("");
   const [filterService, setFilterService] = useState("");
-  const [loadFilter, setLoadFilter] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -31,10 +30,24 @@ export const useGetAllJobByAUser = () => {
     if (!currentUser) {
       return router.push("/login");
     }
+
+    let url = `/jobs/fetch-listed-jobs?page=${currentPage}&limit=10`;
+
+    if (search) {
+      url += `&search=${search}`;
+    } else {
+      if (filterName) {
+        url += `&title=${filterName}`;
+      }
+      if (filterLocation) {
+        url += `&location=${filterLocation}`;
+      }
+      if (filterService) {
+        url += `&service=${filterService}`;
+      }
+    }
     try {
-      const { data } = await axiosInstance(
-        `/jobs/fetch-listed-jobs?page=${currentPage}&limit=10`
-      );
+      const { data } = await axiosInstance(url);
       setAllUserJobs(data?.data?.jobs);
       const totalJobs = data?.data?.totalJobs;
       setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
@@ -42,25 +55,6 @@ export const useGetAllJobByAUser = () => {
     } catch (error: any) {
       setLoading(false);
       console.log("error fetching user jobs", error);
-    }
-  };
-
-  const handleFilterJob = async () => {
-    if (!currentUser) {
-      return router.push("/login");
-    }
-    setLoadFilter(true);
-    try {
-      const { data } = await axiosInstance.get(
-        `/jobs/fetch-listed-jobs?page=${currentPage}&limit=10&location=${filterLocation}&title=${filterName}&service=${filterService}&search=${search}`
-      );
-      setAllUserJobs(data?.data?.jobs);
-      const totalJobs = data?.data?.totalJobs;
-      setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
-    } catch (error: any) {
-      console.log("error filtering user jobs", error);
-    } finally {
-      setLoadFilter(false);
     }
   };
 
@@ -82,7 +76,6 @@ export const useGetAllJobByAUser = () => {
     filterService,
     setFilterName,
     setFilterService,
-    handleFilterJob,
-    loadFilter,
+    getAllUserJobs,
   };
 };

@@ -8,6 +8,7 @@ import { CgMenuRight } from "react-icons/cg";
 import { IoIosArrowDown } from "react-icons/io";
 import { AnimatePresence } from "framer-motion";
 
+import { AuthContext } from "@/utils/AuthState";
 import { CartContext } from "@/utils/CartState";
 
 import JobDropdown from "./JobDropdown";
@@ -20,6 +21,7 @@ import BackgroundTransparent from "../BackgroundTransparent/BackgroundTransparen
 
 const DashboardNav = () => {
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { currentUser } = useContext(AuthContext);
   const { totalCartQuantity } = useContext(CartContext);
 
   const [openProfile, setOpenProfile] = useState(false);
@@ -260,7 +262,9 @@ const DashboardNav = () => {
                   className="flex w-8 h-8 bg-slate-600 rounded-full flex-c justify-center text-white uppercase relative cursor-pointer my-2"
                   onClick={handleProfileDropdown}
                 >
-                  TW
+                  {currentUser?.fullName
+                    ? currentUser?.fullName[0].toUpperCase()
+                    : currentUser?.userName[0].toUpperCase()}
                 </div>
                 <AnimatePresence>
                   {openProfile && (

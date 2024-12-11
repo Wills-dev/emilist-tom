@@ -1,8 +1,8 @@
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import BiddableProjectDetail from "@/components/ProjectComponents/BiddableProjectDetail";
 
-const page = ({ params }: any) => {
-  const jobId = params.jobId;
+const page = async ({ params }: any) => {
+  const { jobId } = await params;
 
   return (
     <main className="relative">

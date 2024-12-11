@@ -17,6 +17,7 @@ import MessageSkeleton from "../Skeleton/MessageSkeleton";
 const MessageContent = () => {
   const { currentUser } = useContext(AuthContext);
   const { conversations, isLoading, getAllCoversations } = useGetAllChats();
+
   const { selectedConversation, setSelectedConversation } =
     useContext(ChatContext);
   const { loading, message, setMessage, handleSendMessage } = useSendMessage();
@@ -98,9 +99,9 @@ const MessageContent = () => {
                                 />
                               ) : (
                                 <p className="w-[40px] h-[40px] max-sm:w-[35px] max-sm:h-[35px] rounded-full bg-slate-200 flex items-center justify-center font-bold">
-                                  {participant.fullName
-                                    ? participant.fullName[0].toUpperCase()
-                                    : participant.userName[0].toUpperCase()}
+                                  {participant?.fullName
+                                    ? participant?.fullName[0].toUpperCase()
+                                    : participant?.userName[0].toUpperCase()}
                                 </p>
                               )}
                             </div>
