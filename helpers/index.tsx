@@ -98,14 +98,14 @@ export function formatMessageDate(dateString: string): string {
   const date = new Date(dateString);
 
   if (isToday(date)) {
-    return `Today at ${format(date, "hh:mm a")}`;
+    return format(date, "hh:mm a");
   }
 
   if (isYesterday(date)) {
-    return `Yesterday at ${format(date, "hh:mm a")}`;
+    return format(date, "hh:mm a");
   }
 
-  return `${format(date, "MM/dd/yyyy")} at ${format(date, "hh:mm a")}`;
+  return format(date, "hh:mm a");
 }
 
 export const convertDateFormat = (oldDate: Date): string => {

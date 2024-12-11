@@ -1,5 +1,7 @@
 import { useContext, useState } from "react";
 
+import { format, startOfDay, isToday, isYesterday, parseISO } from "date-fns";
+
 import { ChatContext } from "@/utils/ChatState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 
@@ -20,9 +22,36 @@ export const useGetChat = () => {
     }
   };
 
+  const groupMessagesByDate = () => {
+    const grouped: { [key: string]: any } = {};
+
+    messages.forEach((message: any) => {
+      // Parse the message date
+      const messageDate = parseISO(message?.createdAt);
+
+      let key: string;
+      if (isToday(messageDate)) {
+        key = "Today";
+      } else if (isYesterday(messageDate)) {
+        key = "Yesterday";
+      } else {
+        key = format(messageDate, "dd/MM/yyyy");
+      }
+
+      if (!grouped[key]) {
+        grouped[key] = [];
+      }
+
+      grouped[key].push(message);
+    });
+
+    return grouped;
+  };
+
   return {
     getMessages,
     messages,
     isLoading,
+    groupMessagesByDate,
   };
 };

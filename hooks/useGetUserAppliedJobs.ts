@@ -7,6 +7,9 @@ export const useGetUserAppliedJobs = () => {
   const { currentUser, userLoading } = useContext(AuthContext);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [allAplliedJobs, setAllAplliedJobs] = useState<any>([]);
+  const [filterLocation, setFilterLocation] = useState("");
+  const [filterName, setFilterName] = useState("");
+  const [filterService, setFilterService] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
@@ -21,11 +24,23 @@ export const useGetUserAppliedJobs = () => {
   };
 
   const getAllJobs = async () => {
-    setIsLoading(true);
+    let url = `/jobs/fetch-applied-jobs-by-status?limit=10&page=${currentPage}`;
+
+    if (search) {
+      url += `&search=${search}`;
+    } else {
+      if (filterName) {
+        url += `&title=${filterName}`;
+      }
+      if (filterLocation) {
+        url += `&location=${filterLocation}`;
+      }
+      if (filterService) {
+        url += `&service=${filterService}`;
+      }
+    }
     try {
-      const { data } = await axiosInstance.get(
-        `/jobs/fetch-applied-jobs-by-status`
-      );
+      const { data } = await axiosInstance.get(url);
       setAllAplliedJobs(data?.data?.applications);
       const totalJobs = data?.data?.total || 0;
       setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
@@ -53,5 +68,11 @@ export const useGetUserAppliedJobs = () => {
     totalPages,
     currentPage,
     userLoading,
+    filterService,
+    setFilterService,
+    filterName,
+    setFilterName,
+    filterLocation,
+    setFilterLocation,
   };
 };
