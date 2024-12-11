@@ -1,9 +1,12 @@
 import Link from "next/link";
 import Image from "next/image";
+import { useContext } from "react";
 
 import { motion } from "framer-motion";
 
+import { mapExpertLevel } from "@/helpers";
 import { useLogout } from "@/hooks/useLogout";
+import { AuthContext } from "@/utils/AuthState";
 
 import StarRating from "../StarRating/StarRating";
 
@@ -12,6 +15,8 @@ type Props = {
 };
 
 const ProfileDropdown = ({ handleOpen }: Props) => {
+  const { currentUser } = useContext(AuthContext);
+
   const { logout } = useLogout();
 
   return (
@@ -32,22 +37,25 @@ const ProfileDropdown = ({ handleOpen }: Props) => {
         />
         <div className="absolute w-full flex justify-center flex-col items-center top-12">
           <div className="relative w-[109px] h-[109px]  max-sm:w-[90px] max-sm:h-[90px]">
-            <Image
-              src="/assets/dummyImages/profilePic.png"
-              alt="profile picuter"
-              width={109}
-              height={109}
-              className="object-cover w-full h-full min-h-full min-w-full rounded-full"
-            />
-            {/* <Image
-              src="/assets/icons/verify.svg"
-              alt="verify icon"
-              width={20}
-              height={20}
-              className="object-contain w-[20px] h-[20px] min-h-[20px] min-w-[20px] absolute right-0 top-2 max-sm:max-h-[14px] max-sm:min-h-[14px] max-sm:max-w-[14px] max-sm:min-w-[14px]"
-            /> */}
+            {currentUser?.profileImage ? (
+              <Image
+                src={currentUser?.profileImage}
+                alt="profile picuter"
+                width={109}
+                height={109}
+                className="object-cover w-full h-full min-h-full min-w-full rounded-full"
+              />
+            ) : (
+              <p className="w-[109px] h-[109px]  max-sm:w-[90px] max-sm:h-[90px] rounded-full bg-slate-200 flex-c justify-center font-bold text-lg">
+                {currentUser?.fullName
+                  ? currentUser?.fullName[0].toUpperCase()
+                  : currentUser?.userName[0].toUpperCase()}
+              </p>
+            )}
+
             <p className="bg-primary-green  text-center text-[#FCFEFD] text-sm max-sm:text-xs rounded-md capitalize absolute bottom-0 py-1 left-4 px-4 max-sm:left-2">
-              level 3
+              level{" "}
+              {currentUser?.level ? mapExpertLevel(currentUser?.level) : 5}
             </p>
           </div>
           <div className="flex items-center gap-1 my-8">

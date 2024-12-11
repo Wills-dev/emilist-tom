@@ -24,7 +24,7 @@ const ChatModal = ({ handleOpen, user }: Props) => {
     useGetChat();
   const { message, setMessage, handleSendMessage } = useSendMessage();
 
-  const groupedMessages = groupMessagesByDate();
+  const groupedMessages = groupMessagesByDate(messages);
 
   useEffect(() => {
     if (lastMessageRef.current) {

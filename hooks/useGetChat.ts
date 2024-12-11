@@ -1,6 +1,6 @@
 import { useContext, useState } from "react";
 
-import { format, startOfDay, isToday, isYesterday, parseISO } from "date-fns";
+import { format, isToday, isYesterday, parseISO } from "date-fns";
 
 import { ChatContext } from "@/utils/ChatState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
@@ -22,7 +22,7 @@ export const useGetChat = () => {
     }
   };
 
-  const groupMessagesByDate = () => {
+  const groupMessagesByDate = (messages: any) => {
     const grouped: { [key: string]: any } = {};
 
     messages.forEach((message: any) => {

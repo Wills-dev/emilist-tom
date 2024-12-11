@@ -1,8 +1,8 @@
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import ServiceDetails from "@/components/ServiceComponent/ServiceDetails";
 
-const Service = ({ params }: any) => {
-  const serviceId = params?.serviceId;
+const Service = async ({ params }: any) => {
+  const { serviceId } = await params;
   return (
     <main className="relative">
       <DashboardNav />
