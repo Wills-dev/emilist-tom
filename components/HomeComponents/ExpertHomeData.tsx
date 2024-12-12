@@ -67,7 +67,7 @@ const ExpertHomeData = () => {
           </div>
         ))}
         {loading && <PopularSection />}
-        {!hasMore && (
+        {!hasMore && data?.length > 10 && (
           <div className=" flex items-center justify-center pr-5">
             <p className="text-gray-500 text-center whitespace-nowrap">
               {" "}
@@ -75,11 +75,6 @@ const ExpertHomeData = () => {
             </p>
           </div>
         )}
-        {/* {&& (
-          <div className="text-center mt-4 text-gray-500">
-            No more experts to load.
-          </div>
-        )} */}
       </div>
     </>
   );

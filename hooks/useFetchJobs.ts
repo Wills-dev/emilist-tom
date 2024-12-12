@@ -1,4 +1,4 @@
-import { ChangeEvent, useContext, useEffect, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { AuthContext } from "@/utils/AuthState";
@@ -6,6 +6,10 @@ import { AuthContext } from "@/utils/AuthState";
 export const useFetchJobs = () => {
   const { currentUser } = useContext(AuthContext);
 
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  const [data, setData] = useState<any[]>([]);
+  const [hasMore, setHasMore] = useState(true);
   const [allJobs, setAllJobs] = useState<any>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -25,6 +29,8 @@ export const useFetchJobs = () => {
   };
 
   const getAllJobs = async () => {
+    if (!hasMore) return;
+
     const userId = currentUser?._id || "";
     let url = `/jobs/fetch-all-jobs?page=${currentPage}&limit=10${
       userId ? `&userId=${userId}` : ""
@@ -45,9 +51,14 @@ export const useFetchJobs = () => {
     }
     try {
       const { data } = await axiosInstance.get(url);
-      setAllJobs(data?.data?.jobs);
-      const totalJobs = data?.data?.totalJobs;
-      setTotalPages(Math.ceil(totalJobs / ITEMS_PER_PAGE));
+
+      const { jobs: newJobs, totalPages } = data?.data;
+      setAllJobs(newJobs);
+      setData((prev) => [...prev, ...newJobs]);
+      setTotalPages(totalPages);
+      if (currentPage >= newJobs) {
+        setHasMore(false);
+      }
     } catch (error: any) {
       console.log("error fetching all product", error);
     } finally {
@@ -58,6 +69,19 @@ export const useFetchJobs = () => {
   useEffect(() => {
     getAllJobs();
   }, [currentPage]);
+
+  const handleHorizontalScroll = () => {
+    const container = containerRef.current;
+
+    if (container) {
+      const { scrollLeft, scrollWidth, clientWidth } = container;
+
+      // Check if scrolled to the end
+      if (scrollLeft + clientWidth >= scrollWidth - 10 && hasMore) {
+        setCurrentPage((prev) => prev + 1);
+      }
+    }
+  };
 
   return {
     isLoading,
@@ -74,5 +98,9 @@ export const useFetchJobs = () => {
     filterService,
     setFilterName,
     setFilterService,
+    handleHorizontalScroll,
+    data,
+    containerRef,
+    hasMore,
   };
 };

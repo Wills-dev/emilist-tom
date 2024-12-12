@@ -14,6 +14,8 @@ import ListedHomeExperts from "../Skeleton/ListedHomeExperts";
 import { useFetchJobs } from "@/hooks/useFetchJobs";
 import { useGetBusinesses } from "@/hooks/useGetBusinesses";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
+import { CiSearch } from "react-icons/ci";
+import { serviceList } from "@/constants";
 
 const ListAllJobs = () => {
   const { businesses, loading } = useGetBusinesses();
@@ -28,9 +30,7 @@ const ListAllJobs = () => {
     currentPage,
     filterLocation,
     setFilterLocation,
-    filterName,
     filterService,
-    setFilterName,
     setFilterService,
   } = useFetchJobs();
 
@@ -39,45 +39,58 @@ const ListAllJobs = () => {
       <div className="grid grid-cols-10 gap-6 pt-28">
         <div className="col-span-2 max-xl:col-span-3 max-md:col-span-10 pt-10">
           <form className="flex lg:flex-col  gap-4">
-            <div className=" flex-1 w-full">
+            <div className=" flex-1 w-full border-1  border-[#b8b9b8] rounded-lg p-2 flex-c gap-2">
               <input
                 type="text"
                 placeholder="Search for jobs..."
-                className="border-1 flex-1  border-[#b8b9b8] rounded-lg w-full max-md:text-sm p-2 bg-white"
+                className="flex-1 w-full max-md:text-sm bg-white"
+                value={search}
+                onChange={handleChange}
               />
+              <button type="submit" className="text-xl" onClick={getAllJobs}>
+                {" "}
+                <CiSearch />
+              </button>
             </div>
             <div className="w-full max-lg:hidden">
-              <label
-                htmlFor="reviews"
-                className=" sm:text-lg font-semibold pt-6"
-              >
-                Reviews
+              <label htmlFor="reviews" className="font-semibold pt-6 pb-1">
+                Filter by category
               </label>
-              <input
-                type="text"
-                id="reviews"
-                placeholder="Number of Reviews"
+              <select
+                name=""
+                id="filter"
                 className="border-1 border-[#b8b9b8] rounded-lg w-full max-md:text-sm p-2 bg-white"
-              />
+                value={filterService}
+                onChange={(e) => setFilterService(e.target.value)}
+              >
+                <option defaultValue=""> Select</option>
+                {serviceList?.map((service, index) => (
+                  <option key={index} value={service} className="capitalize">
+                    {service}
+                  </option>
+                ))}
+              </select>
             </div>
             <div className="w-full border-b-1 border-[#d9d9d9] pb-4 max-lg:hidden">
               <label
                 htmlFor="location"
-                className="sm:text-lg font-semibold pt-6"
+                className="sm:text-lg font-semibold pt-6 pb-1"
               >
-                Location
+                Filter by location
               </label>
               <input
                 type="text"
                 id="location"
-                placeholder="Location"
                 className="border-1 border-[#b8b9b8] rounded-lg w-full max-sm:text-sm p-2 bg-white"
+                value={filterLocation}
+                onChange={(e) => setFilterLocation(e.target.value)}
               />
             </div>
-            <div className="flex justify-center items-center">
+            <div className="flex justify-center items-center max-lg:hidden">
               <button
                 type="submit"
                 className="text-primary-green text-center max-sm:text-sm font-semibold "
+                onClick={getAllJobs}
               >
                 APPLY
               </button>
@@ -87,9 +100,11 @@ const ListAllJobs = () => {
             <p className="">
               Meet new customers, Sign up to start growing your business
             </p>
-            <button className="custom-btn mt-5">
-              <Link href="/register/expert">Get Started</Link>
-            </button>
+            <div className="flex-c justify-center">
+              <button className="custom-btn mt-5">
+                <Link href="/register/expert">Get Started</Link>
+              </button>
+            </div>
           </div>
         </div>
         <div className="col-span-5 max-xl:col-span-7 max-lg:col-span-10 w-full">
@@ -106,7 +121,13 @@ const ListAllJobs = () => {
                     key={job._id}
                     className="w-full p-4 border-b-1 hover:bg-gray-100 transition-all duration-300"
                   >
-                    <Link href={`/jobs/info/`}>
+                    <Link
+                      href={
+                        job?.type === "biddable"
+                          ? `/dashboard/job/info/biddable/${job._id}`
+                          : `/dashboard/job/info/regular/${job._id}`
+                      }
+                    >
                       <div className="flex-c-b w-full ">
                         <h5 className="sm:text-lg font-semibold">
                           {job?.title && Capitalize(job?.title)}
@@ -143,22 +164,22 @@ const ListAllJobs = () => {
                           {job?.description}
                         </p>
                       )}
-                    </Link>
-                    <div className="flex-c gap-8 flex-wrap max-sm:gap-4 max-sm:justify-between text-[#737774]  font-medium text-sm pt-4">
-                      <p className="flex-c gap-1 whitespace-nowrap ">
+                      <p className="flex-c gap-1 whitespace-nowrap text-sm">
                         {" "}
-                        <span className="text-xl">
+                        <span className="text-lg">
                           <MdLocationOn />
                         </span>
                         {job?.location}
                       </p>
+                    </Link>
+                    <div className="flex-c gap-8 flex-wrap max-sm:gap-4 max-sm:justify-between text-[#737774]  font-medium text-sm pt-4">
                       <div className="flex-c justify-end gap-1  ">
                         <span className="text-lg">
                           <HiUser />
                         </span>
                         <p className=" whitespace-nowrap ">
-                          {job?.applications &&
-                            numberWithCommas(job?.applications?.lenght)}{" "}
+                          {job?.applications?.length &&
+                            numberWithCommas(job?.applications?.length)}{" "}
                           {job?.applications > 1 ? "Applicants" : "Applicant"}
                         </p>
                       </div>
@@ -196,23 +217,12 @@ const ListAllJobs = () => {
                   {businesses?.slice(0, 5).map((expert: any) => (
                     <div
                       className=" w-full border-b-1 px-6 hover:bg-gray-100 transition-all duration-300 py-4"
-                      key={expert?.id}
+                      key={expert?._id}
                     >
                       <Link
                         href="/catalog/expert"
                         className="flex gap-2 w-full "
                       >
-                        <Image
-                          src={
-                            expert?.imgURL
-                              ? expert?.imgURL
-                              : "/assets/images/Logo.svg"
-                          }
-                          alt="expert img"
-                          width={80}
-                          height={80}
-                          className="object-cover w-20 h-20 rounded-full shadow"
-                        />
                         {Array.isArray(expert?.businessImages) &&
                         expert?.businessImages[0]?.imageUrl ? (
                           <Image

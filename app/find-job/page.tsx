@@ -1,7 +1,7 @@
-import EmilistExpertSection from "@/components/EmilistExpertSection/EmilistExpertSection";
-import ListAllJobs from "@/components/ListAllJobs/ListAllJobs";
 import MainLayout from "@/components/MainLayout/MainLayout";
 import HomeLinks from "@/components/HomeComponents/HomeLinks";
+import ListAllJobs from "@/components/ListAllJobs/ListAllJobs";
+import EmilistExpertSection from "@/components/EmilistExpertSection/EmilistExpertSection";
 // import HeroSection from "@/components/HeroSection/HeroSection";
 
 const FindJob = () => {
