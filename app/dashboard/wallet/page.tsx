@@ -1,12 +1,14 @@
 "use client";
 
+import { useContext, useState } from "react";
+
 import { AnimatePresence } from "framer-motion";
 
+import { AuthContext } from "@/utils/AuthState";
+
+import AddNewWallet from "@/components/modals/AddNewWallet";
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import WalletHistory from "@/components/WalletComponent/WalletHistory";
-import { useContext, useState } from "react";
-import { AuthContext } from "@/utils/AuthState";
-import AddNewWallet from "@/components/modals/AddNewWallet";
 
 const Wallet = () => {
   const { currentUser } = useContext(AuthContext);

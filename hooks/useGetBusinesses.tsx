@@ -25,8 +25,6 @@ export const useGetBusinesses = () => {
     if (loading || !hasMore) return;
 
     setLoading(true);
-
-    setLoading(true);
     try {
       const { data } = await axiosInstance.get(
         `/business/fetch-all-business?page=${currentPage}&limit=10`
