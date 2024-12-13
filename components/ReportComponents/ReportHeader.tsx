@@ -1,37 +1,37 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
-import { useState } from "react";
 
 import { reportLinks } from "@/constants";
+import { usePathname } from "next/navigation";
 
-type Props = {
-  currentLink: number;
-  setMonth?: any;
-  setYear?: any;
-  month?: number | undefined;
-  year?: number;
-};
-
-const ReportHeader = ({
-  currentLink,
-  setMonth,
-  setYear,
-  month,
-  year,
-}: Props) => {
-  const [open, setOpen] = useState<boolean>(false);
+const ReportHeader = () => {
+  const pathname = usePathname();
 
   return (
     <div>
       <h2 className="text-2xl font-bold max-sm:text-lg pt-6">Report</h2>
       <div className="my-4">
-        <h6 className="text-[#5E625F] sm:text-lg font-medium text-sm">
+        <h6 className="text-[#5E625F] font-medium max-sm:text-sm">
           Select the report you want to see
         </h6>
-        <div className="flex-c gap-4 my-2 flex-wrap">
-          <div
+        <div className="flex-c gap-4 my-5 flex-wrap">
+          <ul className="flex-c gap-4 overflow-x-auto hide-scrollbar">
+            {reportLinks?.map((link) => (
+              <Link
+                href={link.link}
+                key={link.id}
+                className={`${
+                  pathname === link.link
+                    ? "text-primary-green  border-b-primary-green border-b-1"
+                    : "text-[#737774]"
+                }  font-semibold capitalize`}
+              >
+                <li>{link.name}</li>
+              </Link>
+            ))}
+          </ul>
+          {/* <div
             className={` flex-1 min-w-[280px]  max-w-[280px] rounded-lg  px-4 flex-c-b relative max-sm:h-[46px] h-[50px] bg-white `}
           >
             <div
@@ -72,40 +72,7 @@ const ReportHeader = ({
                 ))}
               </ul>
             )}
-          </div>
-          <div className=" min-w-[137px] w-[137px]  max-w-[137px] rounded-lg h-[50px] px-4 bg-white focus:outline-none focus-within:border-primary-green focus-within:border-1 max-sm:h-[46px] ">
-            <select
-              className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm text-[#002913]"
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-            >
-              <option>Monthly</option>
-              <option value={1}>Jan</option>
-              <option value={2}>Feb</option>
-              <option value={3}>Mar</option>
-              <option value={4}>Apr</option>
-              <option value={5}>May</option>
-              <option value={6}>Jun</option>
-              <option value={7}>Jul</option>
-              <option value={8}>Aug</option>
-              <option value={9}>Sep</option>
-              <option value={10}>Oct</option>
-              <option value={11}>Nov</option>
-              <option value={12}>Dec</option>
-            </select>
-          </div>
-          <div className=" min-w-[137px] w-[137px]  max-w-[137px] rounded-lg h-[50px] px-4 bg-white focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:h-[46px] ">
-            <select
-              className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-[14px] text-[#002913]"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-            >
-              <option value={2022}>2022</option>
-              <option value={2023}>2023</option>
-              <option value={2024}>2024</option>
-              <option value={2025}>2025</option>
-            </select>
-          </div>
+          </div> */}
         </div>
       </div>
     </div>

@@ -12,7 +12,7 @@ const JobSummaryCards = () => {
   const { loadingAnalytics, jobAnalytics } = useGetJobSummary();
 
   return (
-    <ScrollArea className="w-full overflow-x-auto whitespace-nowrap">
+    <ScrollArea className="w-full overflow-x-auto whitespace-nowrap hide-scrollbar">
       <div className="flex gap-4 py-4 w-max">
         {loadingAnalytics ? (
           <SummaryCardsSkeleton />

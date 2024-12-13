@@ -25,34 +25,38 @@ interface MultipleLineChartProps {
 export const description = "A multiple line chart";
 
 const chartConfig = {
-  totalJobs: {
+  totalProjects: {
     label: "New",
     color: "#054753",
   },
-  totalActiveJobs: {
+  totalActiveProjects: {
     label: "Active",
     color: "#6667FF",
   },
-  totalOverdueJobs: {
+  totalOverdueProjects: {
     label: "Overdue",
     color: "#FF5D7A",
   },
-  totalPausedJobs: {
+  totalPausedProjects: {
     label: "Paused",
     color: "#FF9933",
   },
-  totalCompletedJobs: {
+  totalCompletedProjects: {
     label: "Completed",
     color: "#25C269",
   },
 } satisfies ChartConfig;
 
-export function MultipleLineChart({ chartData }: MultipleLineChartProps) {
+export const ProjectMultipleLineChart = ({
+  chartData,
+}: MultipleLineChartProps) => {
   return (
     <>
       <Card className="mt-6">
         <CardHeader>
-          <CardTitle className="sm:text-2xl text-lg">Jobs Statistics</CardTitle>
+          <CardTitle className="sm:text-2xl text-lg">
+            Project Statistics
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <ChartContainer config={chartConfig} className="w-full h-[50vh]">
@@ -74,35 +78,35 @@ export function MultipleLineChart({ chartData }: MultipleLineChartProps) {
               />
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               <Line
-                dataKey="totalJobs"
+                dataKey="totalProjects"
                 type="monotone"
                 stroke="#054753"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
-                dataKey="totalActiveJobs"
+                dataKey="totalActiveProjects"
                 type="monotone"
                 stroke="#6667FF"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
-                dataKey="totalOverdueJobs"
+                dataKey="totalOverdueProjects"
                 type="monotone"
                 stroke="#FF5D7A"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
-                dataKey="totalPausedJobs"
+                dataKey="totalPausedProjects"
                 type="monotone"
                 stroke="#FF9933"
                 strokeWidth={2}
                 dot={false}
               />
               <Line
-                dataKey="totalCompletedJobs"
+                dataKey="totalCompletedProjects"
                 type="monotone"
                 stroke="#25C269"
                 strokeWidth={2}
@@ -114,4 +118,4 @@ export function MultipleLineChart({ chartData }: MultipleLineChartProps) {
       </Card>
     </>
   );
-}
+};
