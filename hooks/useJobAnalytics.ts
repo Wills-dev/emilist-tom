@@ -1,14 +1,14 @@
+import { useState } from "react";
+
 import { axiosInstance } from "@/axiosInstance/baseUrls";
-import React, { useState } from "react";
 
 export const useJobAnalytics = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [jobAnalytics, setJobAnalytics] = useState<any>([]);
   const [startDate, setStateDate] = useState("");
   const [endDate, setEndDate] = useState("");
-  const [period, setPeriod] = useState("day");
-  const [month, setMonth] = useState<undefined | number>();
-  const [year, setYear] = useState(new Date().getFullYear());
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState<any>(new Date().getFullYear());
 
   const handleGetJobAnalytics = async () => {
     try {
@@ -27,7 +27,6 @@ export const useJobAnalytics = () => {
     isLoading,
     jobAnalytics,
     setEndDate,
-    setPeriod,
     setStateDate,
     startDate,
     endDate,

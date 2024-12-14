@@ -2,27 +2,28 @@
 
 import { useEffect } from "react";
 
-import { useJobAnalytics } from "@/hooks/useJobAnalytics";
+import { useProjectAnalytics } from "@/hooks/useProjectAnalytics";
 import { MultipleLineChart } from "@/components/Charts/MultipleLineChart";
 
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
-import JobSummaryCards from "@/components/JobComponent/JobSummaryCards";
 import ReportHeader from "@/components/ReportComponents/ReportHeader";
+import ProjectSummaryCards from "@/components/ProjectComponents/ProjectSummaryCards";
+import { ProjectMultipleLineChart } from "@/components/ReportComponents/ProjectMultipleLineChart";
 
-const Report = () => {
+const page = () => {
   const {
     isLoading,
-    jobAnalytics,
+    projectAnalytics,
     setEndDate,
     setStateDate,
     startDate,
     endDate,
+    handleGetJobAnalytics,
     setMonth,
     setYear,
     month,
     year,
-    handleGetJobAnalytics,
-  } = useJobAnalytics();
+  } = useProjectAnalytics();
 
   useEffect(() => {
     handleGetJobAnalytics();
@@ -33,7 +34,7 @@ const Report = () => {
       <DashboardNav />{" "}
       <section className="padding-x py-28 bg-[#F6FDF9] min-h-screen ">
         <ReportHeader />
-        <JobSummaryCards />
+        <ProjectSummaryCards />
         <div className="flex-c gap-5">
           <div className=" min-w-[137px] w-[137px]  max-w-[137px] rounded-lg h-[50px] px-4 bg-white focus:outline-none focus-within:border-primary-green focus-within:border-1 max-sm:h-[46px] ">
             <select
@@ -70,10 +71,10 @@ const Report = () => {
             </select>
           </div>
         </div>
-        <MultipleLineChart chartData={jobAnalytics} />
+        <ProjectMultipleLineChart chartData={projectAnalytics} />
       </section>
     </main>
   );
 };
 
-export default Report;
+export default page;

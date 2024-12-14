@@ -3165,23 +3165,23 @@ export const reportLinks = [
     link: "/dashboard/report",
   },
   {
+    id: 3,
+    name: "Projects",
+    link: "/dashboard/report/projects",
+  },
+  {
     id: 2,
     name: "Earning",
     link: "/dashboard/report/earnings",
   },
 
   {
-    id: 3,
-    name: "Projects",
-    link: "/dashboard/report/projects",
-  },
-  {
     id: 4,
     name: "Insights",
     link: "/dashboard/report/insights",
   },
   {
-    id: 3,
+    id: 5,
     name: "Target",
     link: "/dashboard/service/target",
   },
