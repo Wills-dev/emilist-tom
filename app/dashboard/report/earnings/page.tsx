@@ -9,7 +9,7 @@ const Earnings = () => {
     <main className="relative">
       <DashboardNav />{" "}
       <section className="padding-x py-28 bg-[#F6FDF9] min-h-screen ">
-        <ReportHeader currentLink={1} />
+        <ReportHeader />
         <EarningSummaryCards />
         <BarCharts />
       </section>
