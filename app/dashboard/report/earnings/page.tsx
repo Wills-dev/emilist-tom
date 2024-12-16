@@ -11,7 +11,7 @@ const Earnings = () => {
       <section className="padding-x py-28 bg-[#F6FDF9] min-h-screen ">
         <ReportHeader />
         <EarningSummaryCards />
-        <BarCharts />
+        {/* <BarCharts /> */}
       </section>
     </main>
   );
