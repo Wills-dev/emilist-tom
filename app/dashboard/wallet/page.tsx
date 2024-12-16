@@ -1,10 +1,11 @@
 "use client";
 
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { AnimatePresence } from "framer-motion";
 
 import { AuthContext } from "@/utils/AuthState";
+import { useGetAllTransactions } from "@/hooks/useGetAllTransactions";
 
 import AddNewWallet from "@/components/modals/AddNewWallet";
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
@@ -16,6 +17,16 @@ const Wallet = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [open, setOpen] = useState(false);
 
+  const {
+    loading,
+    transactions,
+    totalPages,
+    handlePageChange,
+    search,
+    setSearch,
+    getAllTransactions,
+  } = useGetAllTransactions();
+
   const onCancel = () => {
     setIsOpen(false);
   };
@@ -23,6 +34,10 @@ const Wallet = () => {
   const onClose = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    getAllTransactions("Wallet");
+  }, []);
 
   return (
     <main className="relative">

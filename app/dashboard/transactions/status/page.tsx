@@ -12,6 +12,7 @@ const page = () => {
   const searchParams = useSearchParams();
 
   const reference = searchParams.get("reference");
+  const queryStatus = searchParams.get("status");
 
   const { status, loading, verifyPaymentStatus } = useVerifyPaymentStatus();
 
@@ -38,7 +39,7 @@ const page = () => {
       ) : (
         <div className="flex flex-col items-center justify-center  p-6 flex-1">
           <div className="shadow-md rounded-lg p-8 text-center flex flex-col items-center justify-center ">
-            {!status ? (
+            {status || queryStatus === "success" ? (
               <>
                 <svg
                   xmlns="http://www.w3.org/2000/svg"

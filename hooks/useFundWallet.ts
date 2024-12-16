@@ -79,12 +79,12 @@ export const useFundWallet = () => {
         formData
       );
 
-      const { paymentLink, transaction } = data?.data;
+      const { paymentLink } = data?.data;
 
       if (payload.paymentMethod === "Card" && paymentLink) {
         router.push(paymentLink);
       }
-      console.log("data", data);
+
       if (payload.paymentMethod === "BankTransfer") {
         toast.success(
           "Your funds will reflect on your wallet once payment is confirmed.",
