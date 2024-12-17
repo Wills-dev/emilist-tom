@@ -1,28 +1,34 @@
-import Link from "next/link";
-
-import { createColumnHelper } from "@tanstack/react-table";
-import { ArrowUpDown, MoreHorizontal } from "lucide-react";
+import { ArrowUpDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { createColumnHelper } from "@tanstack/react-table";
+
+import { convertDateFormat, numberWithCommas } from "@/helpers";
 
 const columnHelper = createColumnHelper();
 
 export const Column = [
-  columnHelper.accessor("date", {
-    header: "Date",
+  columnHelper.accessor("createdAt", {
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Date
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const date: Date = row.getValue("createdAt");
+      const formatted = convertDateFormat(date);
+      return <div className="">{formatted}</div>;
+    },
   }),
-  columnHelper.accessor("virtualCard", {
-    header: "Transaction name",
+  columnHelper.accessor("description", {
+    header: "Description",
   }),
-  columnHelper.accessor("user", {
-    header: "Full name",
-  }),
-  columnHelper.accessor("cable", {
+  columnHelper.accessor("type", {
     header: ({ column }) => {
       return (
         <Button
@@ -35,28 +41,77 @@ export const Column = [
       );
     },
     cell: ({ row }) => {
-      const state = row.getValue("cable");
-      if (state === "Credit") {
+      const state = row.getValue("type");
+      if (state === "CREDIT") {
         return <div className=" text-green-400">{state}</div>;
-      } else if (state === "Debit") {
+      } else if (state === "DEBIT") {
         return <div className=" text-red-400">{state}</div>;
       }
     },
   }),
-  columnHelper.accessor("amount", {
-    header: () => <div className="">Amount</div>,
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("amount"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "NGN",
-      }).format(amount);
-
-      return <div className=" font-medium">{formatted}</div>;
+  columnHelper.accessor("currency", {
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Currency
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
     },
   }),
+  columnHelper.accessor("amount", {
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Amount
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("amount"));
+      const formatted = numberWithCommas(amount);
+      return <div className="font-medium">{formatted}</div>;
+    },
+  }),
+
+  columnHelper.accessor("balanceAfter", {
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Balance After
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const amount = parseFloat(row.getValue("balanceAfter"));
+      const formatted = numberWithCommas(amount);
+      return <div className="font-medium">{formatted}</div>;
+    },
+  }),
+
   columnHelper.accessor("status", {
-    header: "Status",
+    header: ({ column }) => {
+      return (
+        <Button
+          variant="ghost"
+          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+        >
+          Status
+          <ArrowUpDown className="ml-2 h-4 w-4" />
+        </Button>
+      );
+    },
     cell: ({ row }) => {
       const status = row.getValue("status");
       if (status === "completed") {
@@ -65,9 +120,9 @@ export const Column = [
             {status}
           </div>
         );
-      } else if (status === "cancelled") {
+      } else if (status === "pending") {
         return (
-          <div className="rounded-full text-red-400 bg-red-50 px-3 py-1 text-center w-32">
+          <div className="rounded-full text-yellow-400 bg-yellow-50 px-3 py-1 text-center w-32">
             {status}
           </div>
         );

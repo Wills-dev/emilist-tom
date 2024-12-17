@@ -4,10 +4,11 @@ import { promiseErrorFunction } from "@/helpers";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useVerifyPaymentStatus = () => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [status, setStatus] = useState<null | boolean>(null);
 
   const verifyPaymentStatus = async (referenceId: string) => {
+    setLoading(true);
     try {
       const { data } = await axiosInstance.get(
         `/wallet/verify-paystack/${referenceId}`
@@ -18,6 +19,7 @@ export const useVerifyPaymentStatus = () => {
       }
     } catch (error) {
       console.log("error verifying payment status", error);
+      setStatus(false);
       promiseErrorFunction(error);
     } finally {
       setLoading(false);
