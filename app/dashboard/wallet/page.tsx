@@ -4,14 +4,14 @@ import { useContext, useEffect, useState } from "react";
 
 import { AnimatePresence } from "framer-motion";
 
+import { numberWithCommas } from "@/helpers";
 import { AuthContext } from "@/utils/AuthState";
 import { useGetAllTransactions } from "@/hooks/useGetAllTransactions";
 
+import FundWallet from "@/components/modals/FundWallet";
 import AddNewWallet from "@/components/modals/AddNewWallet";
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import WalletHistory from "@/components/WalletComponent/WalletHistory";
-import FundWallet from "@/components/modals/FundWallet";
-import { numberWithCommas } from "@/helpers";
 
 const Wallet = () => {
   const { currentUser } = useContext(AuthContext);
