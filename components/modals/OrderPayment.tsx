@@ -27,8 +27,6 @@ const OrderPayment = ({
 }: OrderPaymentProps) => {
   const { currentUser } = useContext(AuthContext);
 
-  console.log("paymentInfo", currency);
-
   return (
     <Modal open={isOpen} onCancel={onCancel} centered width={400} footer={null}>
       <form className="pt-8 flex flex-col gap-6 w-full ">

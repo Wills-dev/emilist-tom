@@ -7,6 +7,8 @@ export const useGetAllTransactions = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
+  const [limit, setLimit] = useState(100);
+  const [totalTransactions, setTotalTransactions] = useState(0);
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
@@ -14,13 +16,16 @@ export const useGetAllTransactions = () => {
 
   const getAllTransactions = async (query?: string) => {
     setLoading(true);
-    let url = `/transaction/fetch-all-user-transactions?page=${currentPage}&limit=10${
+    let url = `/transaction/fetch-all-user-transactions?page=${currentPage}&limit=${limit}${
       query ? `&paymentMethod=${query}` : ""
     }`;
 
     try {
       const { data } = await axiosInstance.get(url);
-      console.log("all trnasactions data", data);
+      const { totalTransactions, transactions } = data?.data;
+      setTransactions(transactions);
+      setTotalPages(Math.ceil(totalTransactions / 10));
+      setTotalTransactions(totalTransactions);
     } catch (error) {
       console.log("error fetching all user transactions", error);
     } finally {
@@ -36,5 +41,7 @@ export const useGetAllTransactions = () => {
     search,
     setSearch,
     getAllTransactions,
+    setLimit,
+    totalTransactions,
   };
 };

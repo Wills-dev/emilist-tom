@@ -47,18 +47,10 @@ const FundWallet = ({ isOpen, onCancel }: FundWalletProps) => {
 
               {currentUser?.wallets?.map((wallet: any) => (
                 <option key={wallet?._id} value={wallet?._id}>
-                  {wallet?._id}
+                  {wallet?.currency}
                 </option>
               ))}
             </select>
-          </div>
-        </div>
-        <div className="w-full">
-          <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
-            Currency
-          </p>
-          <div className="expert-reg-input-div flex-c opacity-45">
-            {walletInfo?.currency}
           </div>
         </div>
         <div className="w-full">
