@@ -11,10 +11,9 @@ export const useVerifyPaymentStatus = () => {
     setLoading(true);
     try {
       const { data } = await axiosInstance.get(
-        `/wallet/verify-paystack/${referenceId}`
+        `/transaction/verify-paystack-payment/${referenceId}`
       );
-
-      if (data?.data === "Wallet funded successfully") {
+      if (data?.message === "success") {
         setStatus(true);
       }
     } catch (error) {
