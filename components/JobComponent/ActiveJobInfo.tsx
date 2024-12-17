@@ -39,9 +39,8 @@ const ActiveJobInfo = ({ jobId }: any) => {
     handlePaymentChange,
     openPaymentModal,
     setOpenPaymentModal,
-    currentFile,
-    handleChangeFile,
-    handleImageDelete,
+    currency,
+    setCurrency,
   } = useConfirmPayment();
 
   const {
@@ -273,10 +272,11 @@ const ActiveJobInfo = ({ jobId }: any) => {
                         paymentDetails={paymentDetails}
                         handlePaymentChange={handlePaymentChange}
                         milestoneId={currentMilestone?._id}
-                        currentFile={currentFile}
-                        handleChangeFile={handleChangeFile}
+                        currency={currency}
+                        setCurrency={setCurrency}
                         jobId={jobId}
-                        handleImageDelete={handleImageDelete}
+                        amount={currentMilestone?.amount}
+                        jobCurrency={jobInfo?.currency}
                       />
                     </div>
                   )}

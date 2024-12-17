@@ -75,7 +75,6 @@ const PromoModal = ({ isOpen, onCancel }: PromoModalProps) => {
               <input
                 type="date"
                 className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-[14px] text-[#737774]"
-                placeholder="12345678990"
               />
             </div>
           </div>
@@ -87,7 +86,6 @@ const PromoModal = ({ isOpen, onCancel }: PromoModalProps) => {
               <input
                 type="date"
                 className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-[14px] text-[#737774]"
-                placeholder="12345678990"
               />
             </div>
           </div>
@@ -109,7 +107,6 @@ const PromoModal = ({ isOpen, onCancel }: PromoModalProps) => {
               <input
                 type="text"
                 className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-[14px]"
-                placeholder="#2,000"
               />
             </div>
           </div>

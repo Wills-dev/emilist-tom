@@ -48,11 +48,7 @@ const page = () => {
                   Number of times you want to be referred
                 </p>
                 <div className="w-full">
-                  <input
-                    type="text"
-                    className="expert-reg-input"
-                    placeholder="50 "
-                  />
+                  <input type="text" className="expert-reg-input" />
                 </div>
               </div>
               <div className="col-span-2 max-sm:col-span-4">
@@ -60,11 +56,7 @@ const page = () => {
                   Job
                 </p>
                 <div className="w-full">
-                  <input
-                    type="text"
-                    className="expert-reg-input"
-                    placeholder="10"
-                  />
+                  <input type="text" className="expert-reg-input" />
                 </div>
               </div>
               <div className="col-span-2  max-sm:col-span-4">
@@ -72,11 +64,7 @@ const page = () => {
                   Number of friends you want to invite
                 </p>
                 <div className="w-full">
-                  <input
-                    type="text"
-                    className="expert-reg-input"
-                    placeholder="50 "
-                  />
+                  <input type="text" className="expert-reg-input" />
                 </div>
               </div>
 
@@ -85,11 +73,7 @@ const page = () => {
                   Amount
                 </p>
                 <div className="w-full">
-                  <input
-                    type="text"
-                    className="expert-reg-input"
-                    placeholder="#500,000"
-                  />
+                  <input type="text" className="expert-reg-input" />
                 </div>
               </div>
 

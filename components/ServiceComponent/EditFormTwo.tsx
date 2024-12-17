@@ -291,7 +291,6 @@ const EditFormTwo = ({
                 <input
                   type="text"
                   className="expert-reg-input"
-                  placeholder="Port Harcourt"
                   name="state"
                   value={ownerProfile.state}
                   onChange={handleChange}
@@ -305,7 +304,6 @@ const EditFormTwo = ({
                   <input
                     type="text"
                     className="expert-reg-input"
-                    placeholder="Lekki "
                     name="city"
                     value={ownerProfile.city}
                     onChange={handleChange}
@@ -318,7 +316,6 @@ const EditFormTwo = ({
                   <input
                     type="text"
                     className="expert-reg-input"
-                    placeholder="7  fund  street "
                     name="address"
                     value={ownerProfile.address}
                     onChange={handleChange}

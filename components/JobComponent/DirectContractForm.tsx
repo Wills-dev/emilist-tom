@@ -68,7 +68,6 @@ const DirectContractForm = () => {
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
               className="col-span-2 expert-reg-input"
-              placeholder="1"
               value={milestone.duration}
               onChange={(e) =>
                 updateMilestonesData(e.target.value, index, "duration")
@@ -120,7 +119,6 @@ const DirectContractForm = () => {
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
               className="expert-reg-input"
-              placeholder=""
               value={milestone.percentage}
               onChange={(e) =>
                 updateMilestonesData(e.target.value, index, "percentage")
@@ -244,7 +242,6 @@ const DirectContractForm = () => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder=""
                       name="projectTitle"
                       value={createDirectContractJob.projectTitle}
                       onChange={handleChange}
@@ -337,7 +334,6 @@ const DirectContractForm = () => {
                       onKeyDown={handleKeyDown}
                       onWheel={handleWheel}
                       className="col-span-2 expert-reg-input"
-                      placeholder="3"
                       name="projectDuration"
                       value={createDirectContractJob.projectDuration}
                       onChange={handleChange}
@@ -404,7 +400,6 @@ const DirectContractForm = () => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="₦1,000"
                       name="budget"
                       value={createDirectContractJob.budget}
                       onChange={handleChange}
@@ -426,7 +421,6 @@ const DirectContractForm = () => {
                       <input
                         type="text"
                         className="expert-reg-input"
-                        placeholder="Lagos, Nigeria"
                         name="location"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}

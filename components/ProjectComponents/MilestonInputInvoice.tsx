@@ -37,10 +37,8 @@ const MilestonInputInvoice = ({
             <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
               Amount
             </p>
-            <div className="w-full">
-              <p>
-                {currency && currency} {milestoneAmount && milestoneAmount}
-              </p>
+            <div className="w-full expert-reg-input-div opacity-40 flex-c">
+              {currency && currency} {milestoneAmount && milestoneAmount}
             </div>
           </div>
           <div className="w-full  col-span-2">
@@ -74,7 +72,6 @@ const MilestonInputInvoice = ({
                 value={invoiceDetails.bankName}
                 onChange={handleChange}
                 className="expert-reg-input"
-                placeholder="Gtbank "
               />
             </div>
           </div>
@@ -89,7 +86,6 @@ const MilestonInputInvoice = ({
                 value={invoiceDetails.accountNumber}
                 onChange={handleChange}
                 className=" min-w-full w-full  max-w-full expert-reg-input"
-                placeholder="0231609769"
               />
             </div>
           </div>
@@ -104,7 +100,6 @@ const MilestonInputInvoice = ({
                 value={invoiceDetails.accountName}
                 onChange={handleChange}
                 className=" min-w-full w-full  max-w-full expert-reg-input"
-                placeholder="Shotolu Paul Oluwabukunmi"
               />
             </div>
           </div>

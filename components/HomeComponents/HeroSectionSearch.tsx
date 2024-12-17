@@ -41,7 +41,6 @@ const HeroSectionSearch = () => {
           </span>
           <input
             type="text"
-            placeholder="Enter location"
             className="focus:outline-none max-sm:text-sm flex-1 bg-white h-full"
           />
         </div>

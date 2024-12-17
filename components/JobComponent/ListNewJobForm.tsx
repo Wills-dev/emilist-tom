@@ -70,7 +70,6 @@ const ListNewJobForm = () => {
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
               className="col-span-2 expert-reg-input"
-              placeholder="1"
               value={milestone.duration}
               onChange={(e) =>
                 updateMilestonesData(e.target.value, index, "duration")
@@ -122,7 +121,6 @@ const ListNewJobForm = () => {
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
               className="expert-reg-input"
-              placeholder=""
               value={milestone.percentage}
               onChange={(e) =>
                 updateMilestonesData(e.target.value, index, "percentage")
@@ -231,7 +229,6 @@ const ListNewJobForm = () => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder=""
                       name="projectTitle"
                       value={postJobDetails.projectTitle}
                       onChange={handleChange}
@@ -324,7 +321,6 @@ const ListNewJobForm = () => {
                       onKeyDown={handleKeyDown}
                       onWheel={handleWheel}
                       className="col-span-2 expert-reg-input"
-                      placeholder="1"
                       name="projectDuration"
                       value={postJobDetails.projectDuration}
                       onChange={handleChange}
@@ -444,7 +440,6 @@ const ListNewJobForm = () => {
                           onKeyDown={handleKeyDown}
                           onWheel={handleWheel}
                           className="expert-reg-input"
-                          placeholder="25000"
                           name="maximumPrice"
                           value={postJobDetails.maximumPrice}
                           onChange={handleChange}
@@ -460,7 +455,6 @@ const ListNewJobForm = () => {
                         <input
                           type="text"
                           className="expert-reg-input"
-                          placeholder="₦5,000"
                           name="bidRange"
                           value={postJobDetails.bidRange}
                           onChange={handleChange}
@@ -479,7 +473,6 @@ const ListNewJobForm = () => {
                         onKeyDown={handleKeyDown}
                         onWheel={handleWheel}
                         className="expert-reg-input"
-                        placeholder="₦1,000"
                         name="budget"
                         value={postJobDetails.budget}
                         onChange={handleChange}
@@ -503,7 +496,6 @@ const ListNewJobForm = () => {
                       <input
                         type="text"
                         className="expert-reg-input"
-                        placeholder="Lagos, Nigeria"
                         name="location"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}

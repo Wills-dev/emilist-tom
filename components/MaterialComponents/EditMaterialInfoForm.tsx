@@ -89,7 +89,6 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="Dangote Cement"
                       name="name"
                       value={editMaterialInfo.name}
                       onChange={handleInputChange}
@@ -151,7 +150,6 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="Dangote Cement"
                       name="brand"
                       value={editMaterialInfo.brand}
                       onChange={handleInputChange}
@@ -344,7 +342,6 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                         type="text"
                         className="expert-reg-input"
                         name="location"
-                        placeholder="Lagos, Nigeria"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                       />

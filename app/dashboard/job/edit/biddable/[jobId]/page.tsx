@@ -87,7 +87,6 @@ const page = ({ params }: any) => {
             <input
               type="text"
               className="col-span-2 expert-reg-input"
-              placeholder="1"
               name="number"
               value={milestone?.timeFrame?.number}
               onChange={(e) =>
@@ -148,7 +147,6 @@ const page = ({ params }: any) => {
             <input
               type="text"
               className="expert-reg-input"
-              placeholder=""
               value={percentage[index] || 0}
               onChange={(e) => {
                 handlePercentageChange(index, Number(e.target.value));
@@ -169,7 +167,7 @@ const page = ({ params }: any) => {
             {/* <input
               type="text"
               className="expert-reg-input"
-              placeholder=""
+             
               name="amount"
               value={milestone.amount}
               onChange={(e) => handleMilestoneChange(index, e)}
@@ -257,7 +255,6 @@ const page = ({ params }: any) => {
                     <input
                       type="text"
                       className=" expert-reg-input"
-                      placeholder=""
                       name="title"
                       value={editJobDetails.title}
                       onChange={handleInputChange}
