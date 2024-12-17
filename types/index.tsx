@@ -98,9 +98,7 @@ export type QuoteModalProps = {
 };
 
 export interface PaymentDetails {
-  amountpaid: string;
-  paymentmethod: string;
-  date: string;
+  paymentMethod: string;
   note?: string;
 }
 

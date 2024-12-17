@@ -38,7 +38,6 @@ const AddMembershipModal = ({
             <input
               type="text"
               className="expert-reg-input"
-              placeholder=" "
               name="organization"
               value={membershipDetails.organization}
               onChange={handleChange}
@@ -68,7 +67,6 @@ const AddMembershipModal = ({
             <input
               type="date"
               className="expert-reg-input"
-              placeholder="12345678990"
               name="startDate"
               value={membershipDetails.startDate}
               onChange={handleChange}
@@ -81,7 +79,6 @@ const AddMembershipModal = ({
             <input
               type="date"
               className="expert-reg-input"
-              placeholder="12345678990"
               name="endDate"
               value={membershipDetails.endDate}
               onChange={handleChange}

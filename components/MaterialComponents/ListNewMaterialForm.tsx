@@ -74,7 +74,6 @@ const ListNewMaterialForm = () => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="Dangote Cement"
                       name="product_name"
                       value={materialDetails.product_name}
                       onChange={handleChange}
@@ -135,7 +134,6 @@ const ListNewMaterialForm = () => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="Dangote Cement"
                       name="brand"
                       value={materialDetails.brand}
                       onChange={handleChange}
@@ -167,7 +165,6 @@ const ListNewMaterialForm = () => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="40"
                       name="quantity_available"
                       value={materialDetails.quantity_available}
                       onChange={handleChange}
@@ -244,7 +241,6 @@ const ListNewMaterialForm = () => {
                     <input
                       type="text"
                       className="col-span-2 expert-reg-input"
-                      placeholder=""
                       name="price"
                       value={materialDetails.price}
                       onChange={handleChange}
@@ -282,7 +278,6 @@ const ListNewMaterialForm = () => {
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="ABC STORE"
                       name="supplier"
                       value={materialDetails.supplier}
                       onChange={handleChange}
@@ -302,7 +297,6 @@ const ListNewMaterialForm = () => {
                         type="text"
                         className="expert-reg-input"
                         name="location"
-                        placeholder="Lagos, Nigeria"
                         value={location}
                         onChange={(e) => setLocation(e.target.value)}
                       />

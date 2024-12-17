@@ -133,7 +133,6 @@ const HireExpertModal = ({
               <input
                 type="text"
                 className=" expert-reg-input"
-                placeholder="Lagos, Nigeria"
                 name="location"
                 value={hiringDetails?.location}
                 onChange={handleChnage}

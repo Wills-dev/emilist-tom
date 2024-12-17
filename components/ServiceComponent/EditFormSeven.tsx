@@ -67,7 +67,6 @@ const EditFormSeven = ({
                     <input
                       type="text"
                       className="expert-reg-input"
-                      placeholder="Builders association"
                       name="issuingOrganisation"
                       value={insurance.issuingOrganisation}
                       onChange={(e) =>

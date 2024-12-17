@@ -278,7 +278,6 @@ const MyListedJobs = () => {
                 <div className="mr-2">
                   <input
                     type="text"
-                    placeholder="Location"
                     className="border-1 border-[#b8b9b8] bg-white rounded-lg w-full text-sm px-2 py-2 mt-4 focus:outline-none focus:border-primary-green"
                     value={filterLocation}
                     onChange={(e) => setFilterLocation(e.target.value)}

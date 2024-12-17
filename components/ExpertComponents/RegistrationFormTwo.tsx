@@ -146,7 +146,6 @@ const RegistrationFormTwo = () => {
                   <input
                     type="number"
                     className=" expert-reg-input"
-                    placeholder="+234785676555 "
                     name="phoneNumber"
                     value={formData.phoneNumber}
                     onChange={handleChange}
@@ -292,7 +291,6 @@ const RegistrationFormTwo = () => {
                 <input
                   type="text"
                   className="expert-reg-input"
-                  placeholder="Port Harcourt"
                   name="state"
                   value={formData.state}
                   onChange={handleChange}
@@ -306,7 +304,6 @@ const RegistrationFormTwo = () => {
                   <input
                     type="text"
                     className="expert-reg-input"
-                    placeholder="Lekki "
                     name="city"
                     value={formData.city}
                     onChange={handleChange}

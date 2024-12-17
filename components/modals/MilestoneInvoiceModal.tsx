@@ -68,7 +68,7 @@ const MilestoneInvoiceModal = ({
           <div className="flex flex-col gap-2">
             <h6 className=" font-medium max-sm:text-sm">Note:</h6>
             <p className=" text-[#303632] max-sm:text-sm">
-              {invoiceDetails?.note}
+              {invoiceDetails?.accountDetails?.note}
             </p>
           </div>
         </div>

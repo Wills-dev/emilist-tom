@@ -70,11 +70,7 @@ const PromoteModal = ({ isOpen, onCancel }: Props) => {
               End Date
             </p>
             <div className="w-full">
-              <input
-                type="date"
-                className="expert-reg-input"
-                placeholder="12345678990"
-              />
+              <input type="date" className="expert-reg-input" />
             </div>
           </div>
         </div>
@@ -93,7 +89,6 @@ const PromoteModal = ({ isOpen, onCancel }: Props) => {
               <input
                 type="text"
                 className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm"
-                placeholder="#2,000"
               />
             </div>
           </div>

@@ -3,32 +3,35 @@ import { useContext, useState } from "react";
 
 import toast from "react-hot-toast";
 
-import { PaymentDetails } from "@/types";
 import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
+
+interface PaymentDetails {
+  paymentMethod: string;
+  note?: string;
+}
 
 export const useConfirmPayment = () => {
   const router = useRouter();
 
   const { currentUser } = useContext(AuthContext);
 
-  const [file, setFile] = useState<any>({});
+  // const [file, setFile] = useState<any>({});
   const [paymentRerender, setRerender] = useState(false);
-  const [currentFile, setCurrentFile] = useState<any>(null);
+  // const [currentFile, setCurrentFile] = useState<any>(null);
+  const [currency, setCurrency] = useState("");
   const [loadingPayment, setLoaingPayment] = useState(false);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
-    amountpaid: "",
-    paymentmethod: "",
-    date: "",
+    paymentMethod: "",
     note: "",
   });
 
-  const handleImageDelete = () => {
-    setCurrentFile(null);
-    setFile("");
-  };
+  // const handleImageDelete = () => {
+  //   setCurrentFile(null);
+  //   setFile("");
+  // };
 
   const handlePaymentChange = (
     e: React.ChangeEvent<
@@ -42,20 +45,20 @@ export const useConfirmPayment = () => {
     }));
   };
 
-  function handleChangeFile(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      if (file.size > 2 * 1024 * 1024) {
-        toast.error(
-          "File size exceeds 2MB. Please select a smaller file.",
-          toastOptions
-        );
-        return;
-      }
-      setFile(file);
-      setCurrentFile(URL.createObjectURL(file));
-    }
-  }
+  // function handleChangeFile(event: any) {
+  //   const file = event.target.files[0];
+  //   if (file) {
+  //     if (file.size > 2 * 1024 * 1024) {
+  //       toast.error(
+  //         "File size exceeds 2MB. Please select a smaller file.",
+  //         toastOptions
+  //       );
+  //       return;
+  //     }
+  //     setFile(file);
+  //     setCurrentFile(URL.createObjectURL(file));
+  //   }
+  // }
 
   const onCancelPayment = () => {
     setOpenPaymentModal(false);
@@ -71,9 +74,13 @@ export const useConfirmPayment = () => {
       router.push("/login");
       return;
     }
-    const { amountpaid, paymentmethod, date, note } = paymentDetails;
-    if (!amountpaid || !paymentmethod || !date) {
-      toast.error(`Please fill all fields`, toastOptions);
+    const { paymentMethod, note } = paymentDetails;
+    if (!paymentMethod) {
+      toast.error(`Please select payment method`, toastOptions);
+      return;
+    }
+    if (!currency) {
+      toast.error("Please select currency", toastOptions);
       return;
     }
     setLoaingPayment(true);
@@ -81,28 +88,28 @@ export const useConfirmPayment = () => {
       const paymentData = {
         jobId,
         milestoneId,
-        amountpaid,
-        paymentmethod,
-        date,
+        currency,
+        paymentMethod,
         note,
       };
 
-      const formData = new FormData();
+      const { data } = await axiosInstance.post(
+        `/jobs/pay-for-job`,
+        paymentData
+      );
+      const { paymentLink } = data?.data;
+      if (paymentData.paymentMethod === "Card" && paymentLink) {
+        router.push(paymentLink);
+      }
 
-      formData.append("jobId", paymentData?.jobId);
-      formData.append("milestoneId", paymentData?.milestoneId);
-      formData.append("amountPaid", paymentData?.amountpaid);
-      formData.append("paymentMethod", paymentData?.paymentmethod);
-      formData.append("date", paymentData?.date);
-      formData.append("image", file);
-
-      await axiosInstance.patch(`/jobs/update-milestone-payment`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-      toast.success(`Payment status successfully `, toastOptions);
-      setRerender((prev) => !prev);
+      if (
+        paymentData.paymentMethod === "Wallet" &&
+        data?.message === "success"
+      ) {
+        router.push(
+          "https://emilist-tom.netlify.app/dashboard/transactions/status?status=success"
+        );
+      }
       setOpenPaymentModal(false);
     } catch (error: any) {
       console.log("error confirming payment", error);
@@ -120,8 +127,7 @@ export const useConfirmPayment = () => {
     handlePaymentChange,
     openPaymentModal,
     setOpenPaymentModal,
-    currentFile,
-    handleChangeFile,
-    handleImageDelete,
+    currency,
+    setCurrency,
   };
 };
