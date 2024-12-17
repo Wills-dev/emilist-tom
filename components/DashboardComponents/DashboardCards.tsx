@@ -219,7 +219,7 @@ const DashboardCards = () => {
                                 }
                                 width={40}
                                 height={40}
-                                className="object-cover w-full h-full min-w-full max-w-full max-h-full min-h-full"
+                                className="object-cover w-full h-full min-w-full max-w-full max-h-full min-h-full rounded-full"
                               />
                             ) : (
                               <p className="font-inter text-sm uppercase text-white">
