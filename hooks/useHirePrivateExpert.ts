@@ -8,23 +8,63 @@ import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrl";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
+interface DateTime {
+  date: string; // Format: YYYY-MM-DD
+  time: string; // Format: HH:MM
+}
+
 export const useHirePrivateExpert = () => {
   const { currentUser } = useContext(AuthContext);
 
+  const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
-  const [isOpen, setIsOpen] = useState(false);
+  const [availability, setAvailability] = useState<DateTime[]>([]);
+
   const [hiringDetails, setHiringDetails] = useState<HiringDetails>({
     fullName: "",
-    jobType: "",
+    phoneNumber: "",
+    email: "",
+    privateExpertType: "",
     jobDetails: "",
     location: "",
   });
 
   const router = useRouter();
 
+  const handleAddDate = (date: string, time: string) => {
+    if (availability.length >= 3) {
+      toast.error("You can only select up to 3 dates.", toastOptions);
+      return;
+    }
+
+    if (availability.find((entry) => entry.date === date)) {
+      toast.error("This date is already selected.", toastOptions);
+      return;
+    }
+
+    setAvailability((prev) => [...prev, { date, time }]);
+  };
+
+  const handleRemoveDate = (date: string) => {
+    setAvailability((prev) => prev.filter((entry) => entry.date !== date));
+  };
+
   const handleDelete = () => {
     setSelectedImage(null);
+  };
+
+  const handleInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+    field: "date" | "time",
+    index: number
+  ) => {
+    const newValue = e.target.value;
+    setAvailability((prev) =>
+      prev.map((entry, i) =>
+        i === index ? { ...entry, [field]: newValue } : entry
+      )
+    );
   };
 
   const handleChnage = (
@@ -54,12 +94,18 @@ export const useHirePrivateExpert = () => {
     if (!currentUser) {
       router.push("/login");
     }
-    const { fullName, jobType, jobDetails, location } = hiringDetails;
+    const {
+      fullName,
+      phoneNumber,
+      email,
+      privateExpertType,
+      jobDetails,
+      location,
+    } = hiringDetails;
     setLoading(true);
     try {
       const expertData = {
         name: fullName,
-        jobType,
         details: jobDetails,
         location,
         file: selectedImage,
@@ -73,7 +119,9 @@ export const useHirePrivateExpert = () => {
       toast.success(`Form submitted successfully`, toastOptions);
       setHiringDetails({
         fullName: "",
-        jobType: "",
+        phoneNumber: "",
+        email: "",
+        privateExpertType: "",
         jobDetails: "",
         location: "",
       });
@@ -97,5 +145,9 @@ export const useHirePrivateExpert = () => {
     isOpen,
     onCancel,
     handleDelete,
+    handleAddDate,
+    handleRemoveDate,
+    availability,
+    handleInputChange,
   };
 };

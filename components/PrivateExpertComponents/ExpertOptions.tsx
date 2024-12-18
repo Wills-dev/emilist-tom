@@ -17,6 +17,10 @@ const ExpertOptions = () => {
     isOpen,
     onCancel,
     handleDelete,
+    handleAddDate,
+    handleRemoveDate,
+    availability,
+    handleInputChange,
   } = useHirePrivateExpert();
 
   return (
@@ -32,6 +36,10 @@ const ExpertOptions = () => {
         isOpen={isOpen}
         onCancel={onCancel}
         handleDelete={handleDelete}
+        handleAddDate={handleAddDate}
+        handleRemoveDate={handleRemoveDate}
+        availability={availability}
+        handleInputChange={handleInputChange}
       />
       <div className="flex gap-6 pb-20 max-md:flex-col max-md:items-center">
         <h4 className="text-4xl font-bold  max-sm:text-xl md:hidden">
