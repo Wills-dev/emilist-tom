@@ -51,9 +51,9 @@ export const insuranceOptions = [
 ];
 
 export const privateExpert = [
-  { title: "Investigator", url: "/" },
-  { title: "Supervisor", url: "/" },
-  { title: "Project manager", url: "/" },
+  { title: "Investigator", url: "/expert/private-expert" },
+  { title: "Supervisor", url: "/expert/private-expert" },
+  { title: "Project manager", url: "/expert/private-expert" },
   { title: "Private expert", url: "/become-expert" },
 ];
 

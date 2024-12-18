@@ -39,8 +39,8 @@ const HeroSection = ({ currentLink }: Props) => {
               </li>
             ))}
           </ul>
-          {currentLink === 0 && <HeroSectionSearch />}
-          {currentLink === 1 && <HeroSectionSearch />}
+          {currentLink === 0 && <HeroSectionSearch currentLink={currentLink} />}
+          {currentLink === 1 && <HeroSectionSearch currentLink={currentLink} />}
           {currentLink === 2 && (
             <div className="mb-10 ">
               <p className="">
@@ -51,7 +51,7 @@ const HeroSection = ({ currentLink }: Props) => {
               </button>
             </div>
           )}
-          {currentLink === 3 && <HeroSectionSearch />}
+          {currentLink === 3 && <HeroSectionSearch currentLink={currentLink} />}
         </div>
       </div>
       <div className=" pt-10 max-xl:pt-0 max-xl:px-20 max-md:px-0 col-span-3 max-xl:col-span-7 w-full">
@@ -92,8 +92,8 @@ const HeroSection = ({ currentLink }: Props) => {
             </li>
           ))}
         </ul>
-        {currentLink === 0 && <HeroSectionSearch />}
-        {currentLink === 1 && <HeroSectionSearch />}
+        {currentLink === 0 && <HeroSectionSearch currentLink={currentLink} />}
+        {currentLink === 1 && <HeroSectionSearch currentLink={currentLink} />}
         {currentLink === 2 && (
           <div className="mb-10 max-xl:flex flex-col items-center justify-center  ">
             <p className="  max-sm:text-sm">
@@ -104,7 +104,7 @@ const HeroSection = ({ currentLink }: Props) => {
             </button>
           </div>
         )}
-        {currentLink === 3 && <HeroSectionSearch />}
+        {currentLink === 3 && <HeroSectionSearch currentLink={currentLink} />}
       </div>
     </main>
   );

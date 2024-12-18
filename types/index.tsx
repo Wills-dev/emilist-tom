@@ -28,7 +28,9 @@ export interface InsuranceFormProps {
 
 export interface HiringDetails {
   fullName: string;
-  jobType: string;
+  phoneNumber: string;
+  email: string;
+  privateExpertType: string;
   jobDetails: string;
   location: string;
 }
