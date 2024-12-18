@@ -92,8 +92,8 @@ const HeroSection = ({ currentLink }: Props) => {
             </li>
           ))}
         </ul>
-        {currentLink === 0 && <HeroSectionSearch />}
-        {currentLink === 1 && <HeroSectionSearch />}
+        {currentLink === 0 && <HeroSectionSearch currentLink={currentLink} />}
+        {currentLink === 1 && <HeroSectionSearch currentLink={currentLink} />}
         {currentLink === 2 && (
           <div className="mb-10 max-xl:flex flex-col items-center justify-center  ">
             <p className="  max-sm:text-sm">
@@ -104,7 +104,7 @@ const HeroSection = ({ currentLink }: Props) => {
             </button>
           </div>
         )}
-        {currentLink === 3 && <HeroSectionSearch />}
+        {currentLink === 3 && <HeroSectionSearch currentLink={currentLink} />}
       </div>
     </main>
   );
