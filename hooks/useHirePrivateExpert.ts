@@ -1,4 +1,3 @@
-import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 
 import toast from "react-hot-toast";
@@ -9,8 +8,8 @@ import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 interface DateTime {
-  date: string; // Format: YYYY-MM-DD
-  time: string; // Format: HH:MM
+  date: string;
+  time: string;
 }
 
 export const useHirePrivateExpert = () => {
@@ -29,8 +28,6 @@ export const useHirePrivateExpert = () => {
     jobDetails: "",
     location: "",
   });
-
-  const router = useRouter();
 
   const handleAddDate = (date: string, time: string) => {
     if (availability.length >= 3) {
@@ -125,7 +122,7 @@ export const useHirePrivateExpert = () => {
         },
       });
       setIsOpen(false);
-      toast.success(`Form submitted successfully`, toastOptions);
+      toast.success(`Successfully sent`, toastOptions);
       setHiringDetails({
         fullName: "",
         phoneNumber: "",
@@ -134,6 +131,7 @@ export const useHirePrivateExpert = () => {
         jobDetails: "",
         location: "",
       });
+      setAvailability([]);
       setSelectedImage(null);
     } catch (error: any) {
       console.log("error hiring private expert", error);
