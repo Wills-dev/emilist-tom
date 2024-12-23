@@ -15,6 +15,11 @@ export const useFetchMaterials = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [loading, setLoading] = useState<boolean>(false);
   const [allMaterials, setAllMaterials] = useState<any>([]);
+  const [rating, setRating] = useState("");
+  const [minValue, setMinValue] = useState<number>(0);
+  const [maxValue, setMaxValue] = useState<number>(150);
+  const [noOfReviews, setNoOfReviews] = useState<string | undefined>(undefined);
+  const [totalProducts, setTotalProducts] = useState(0);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
@@ -22,6 +27,16 @@ export const useFetchMaterials = () => {
 
   const handlePageChange = (newPage: number) => {
     setCurrentPage(newPage);
+  };
+
+  const handleMinChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.min(Number(e.target.value), maxValue - 1); // Prevent overlap
+    setMinValue(value);
+  };
+
+  const handleMaxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = Math.max(Number(e.target.value), minValue + 1); // Prevent overlap
+    setMaxValue(value);
   };
 
   const getAllMaterials = async () => {
@@ -35,8 +50,9 @@ export const useFetchMaterials = () => {
     try {
       const { data } = await axiosInstance.get(url);
 
-      const { products: newProducts, totalPages } = data?.data;
+      const { products: newProducts, totalPages, totalProducts } = data?.data;
       setAllMaterials(newProducts);
+      setTotalProducts(totalProducts);
       setData((prev) => [...prev, ...newProducts]);
       setTotalPages(totalPages);
       if (currentPage >= newProducts) {
@@ -79,5 +95,14 @@ export const useFetchMaterials = () => {
     totalPages,
     currentPage,
     getAllMaterials,
+    handleMinChange,
+    handleMaxChange,
+    rating,
+    setRating,
+    minValue,
+    maxValue,
+    noOfReviews,
+    setNoOfReviews,
+    totalProducts,
   };
 };

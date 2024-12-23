@@ -26,7 +26,6 @@ const ServiceCatalog = () => {
     fetchBusinesses,
     loading,
     search,
-    setSearch,
     businesses,
     totalPages,
     currentPage,
@@ -60,7 +59,7 @@ const ServiceCatalog = () => {
       <div className="flex md:items-end gap-10 max-md:flex-col">
         <div className="flex flex-col gap-4 flex-1">
           <h2 className="sm:text-4xl font-bold text-lg capitalize">
-            {service}
+            {service ? service : locationQuery ? locationQuery : null}
           </h2>
           <p className="max-sm:text-sm">
             Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet

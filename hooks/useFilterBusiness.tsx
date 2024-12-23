@@ -19,8 +19,6 @@ export const useFilterBusiness = () => {
     undefined
   );
 
-  console.log("expertType", expertType);
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value);
   };

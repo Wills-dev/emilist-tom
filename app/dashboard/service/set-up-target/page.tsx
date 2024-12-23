@@ -1,7 +1,21 @@
-import DashboardNav from "@/components/DashboardComponents/DashboardNav";
+"use client";
+
 import Image from "next/image";
 
+import { useSetUpTarget } from "@/hooks/useSetUpTarget";
+
+import DashboardNav from "@/components/DashboardComponents/DashboardNav";
+
 const page = () => {
+  const {
+    duration,
+    setDuration,
+    target,
+    handleChnage,
+    loading,
+    handleSubmitTarget,
+  } = useSetUpTarget();
+
   return (
     <main className="relative">
       <DashboardNav />
@@ -18,29 +32,39 @@ const page = () => {
                 <p className="sm:text-xl font-semibold">
                   Set up target for monthly or yearly
                 </p>
-                <div className="flex items-center">
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={() => setDuration("monthly")}
+                >
                   <Image
-                    src="/assets/icons/circle.svg"
+                    src={
+                      duration === "monthly"
+                        ? "/assets/icons/circle-color.svg"
+                        : "/assets/icons/circle.svg"
+                    }
                     alt="menu"
                     width={25}
                     height={25}
                     className="object-contain w-6 h-6"
                   />{" "}
-                  <label htmlFor="Emi Preferred" className="ml-3">
-                    Monthly
-                  </label>
+                  <p className="ml-3">Monthly</p>
                 </div>
-                <div className="flex items-center">
+                <div
+                  className="flex items-center cursor-pointer"
+                  onClick={() => setDuration("yearly")}
+                >
                   <Image
-                    src="/assets/icons/circle.svg"
+                    src={
+                      duration === "yearly"
+                        ? "/assets/icons/circle-color.svg"
+                        : "/assets/icons/circle.svg"
+                    }
                     alt="menu"
                     width={25}
                     height={25}
                     className="object-contain w-6 h-6"
                   />{" "}
-                  <label htmlFor="Emi Preferred" className="ml-3">
-                    Yearly
-                  </label>
+                  <p className="ml-3">Yearly</p>
                 </div>
               </div>
               <div className="col-span-2  max-sm:col-span-4">
@@ -48,7 +72,13 @@ const page = () => {
                   Number of times you want to be referred
                 </p>
                 <div className="w-full">
-                  <input type="text" className="expert-reg-input" />
+                  <input
+                    type="number"
+                    name="referrals"
+                    value={target?.referrals}
+                    onChange={handleChnage}
+                    className="expert-reg-input"
+                  />
                 </div>
               </div>
               <div className="col-span-2 max-sm:col-span-4">
@@ -56,7 +86,13 @@ const page = () => {
                   Job
                 </p>
                 <div className="w-full">
-                  <input type="text" className="expert-reg-input" />
+                  <input
+                    type="number"
+                    name="job"
+                    value={target?.job}
+                    onChange={handleChnage}
+                    className="expert-reg-input"
+                  />
                 </div>
               </div>
               <div className="col-span-2  max-sm:col-span-4">
@@ -64,7 +100,13 @@ const page = () => {
                   Number of friends you want to invite
                 </p>
                 <div className="w-full">
-                  <input type="text" className="expert-reg-input" />
+                  <input
+                    type="number"
+                    name="invites"
+                    value={target?.invites}
+                    onChange={handleChnage}
+                    className="expert-reg-input"
+                  />
                 </div>
               </div>
 
@@ -72,13 +114,49 @@ const page = () => {
                 <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
                   Amount
                 </p>
-                <div className="w-full">
-                  <input type="text" className="expert-reg-input" />
+                <div className="w-full flex-c expert-reg-input">
+                  <input
+                    type="number"
+                    name="amount"
+                    value={target?.amount}
+                    onChange={handleChnage}
+                    className="flex-1 outline-none bg-[#ececec]"
+                  />
+                  <select
+                    name="currency"
+                    value={target?.currency}
+                    onChange={handleChnage}
+                    className="bg-[#ececec] outline-none border-l-1 border-primary-green pl-2"
+                  >
+                    <option defaultValue="">Select currency</option>
+
+                    <option value="NGN" className="capitalize">
+                      NGN
+                    </option>
+                    <option value="USD" className="capitalize">
+                      USD
+                    </option>
+                    <option value="GBP" className="capitalize">
+                      GBP
+                    </option>
+                    <option value="EUR" className="capitalize">
+                      EUR
+                    </option>
+                  </select>
                 </div>
               </div>
 
-              <div className="flex  my-20 justify-center col-span-4">
-                <button className="custom-btn">Set Target</button>
+              <div className="flex  my-10 justify-center col-span-4">
+                {loading ? (
+                  <button type="button" className="load-btn">
+                    {" "}
+                    <span className="loading loading-dots loading-lg"></span>
+                  </button>
+                ) : (
+                  <button className="custom-btn" onClick={handleSubmitTarget}>
+                    Set Target
+                  </button>
+                )}
               </div>
             </div>
           </div>
