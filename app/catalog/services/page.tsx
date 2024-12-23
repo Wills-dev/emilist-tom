@@ -1,7 +1,12 @@
-import React from "react";
+import MainLayout from "@/components/MainLayout/MainLayout";
+import ServiceCatalog from "@/components/ServiceCatalog/ServiceCatalog";
 
 const Page = () => {
-  return <div>Page</div>;
+  return (
+    <MainLayout>
+      <ServiceCatalog />
+    </MainLayout>
+  );
 };
 
 export default Page;
