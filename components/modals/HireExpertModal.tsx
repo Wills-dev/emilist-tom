@@ -8,8 +8,8 @@ import toast from "react-hot-toast";
 import { toastOptions } from "@/helpers";
 
 interface DateTime {
-  date: string; // Format: YYYY-MM-DD
-  time: string; // Format: HH:MM
+  date: string;
+  time: string;
 }
 
 interface HireExpertModalProps {
@@ -95,7 +95,7 @@ const HireExpertModal = ({
               type="email"
               className="expert-reg-input"
               name="email"
-              value={hiringDetails.fullName}
+              value={hiringDetails.email}
               onChange={handleChnage}
             />
           </div>
@@ -107,7 +107,7 @@ const HireExpertModal = ({
               <div className=" min-w-full w-full  max-w-full rounded-lg h-14 px-2 bg-[#ececec] focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:h-12">
                 <select
                   className="bg-[#ececec] outline-none min-w-full w-full h-full max-w-full max-sm:text-sm "
-                  name="jobType"
+                  name="privateExpertType"
                   value={hiringDetails?.privateExpertType}
                   onChange={handleChnage}
                 >

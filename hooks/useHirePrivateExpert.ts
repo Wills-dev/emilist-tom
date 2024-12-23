@@ -5,7 +5,7 @@ import toast from "react-hot-toast";
 
 import { HiringDetails } from "@/types";
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 interface DateTime {
@@ -91,9 +91,6 @@ export const useHirePrivateExpert = () => {
   };
 
   const handleSubmit = async () => {
-    if (!currentUser) {
-      router.push("/login");
-    }
     const {
       fullName,
       phoneNumber,
@@ -104,13 +101,25 @@ export const useHirePrivateExpert = () => {
     } = hiringDetails;
     setLoading(true);
     try {
-      const expertData = {
-        name: fullName,
-        details: jobDetails,
-        location,
-        file: selectedImage,
-      };
-      await axiosInstance.post(`/privateexpert`, expertData, {
+      const formData = new FormData();
+
+      formData.append("fullName", fullName);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("email", email);
+      formData.append("typeOfExpert", privateExpertType);
+      formData.append("details", jobDetails);
+      formData.append("location", location);
+
+      if (selectedImage) {
+        formData.append("image", selectedImage);
+      }
+
+      availability?.forEach((entry) => {
+        formData.append(`availability[time]`, entry?.time);
+        formData.append(`availability[date]`, entry?.date);
+      });
+
+      await axiosInstance.post(`/expert/create-private-expert`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

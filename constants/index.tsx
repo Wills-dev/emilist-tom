@@ -3228,15 +3228,15 @@ export const getStatusClass = (status: string) => {
 export const selectList = [
   {
     title: "All",
-    value: "all",
+    value: "",
   },
   {
     title: "Verified experts",
-    value: "verifiedExperts",
+    value: "Verified",
   },
   {
     title: "Unverified experts",
-    value: "unverifiedExperts",
+    value: "EmiPreferred",
   },
 ];
 
