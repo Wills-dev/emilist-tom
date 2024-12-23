@@ -1,16 +1,15 @@
-import { useRouter } from "next/navigation";
 import React, { useContext, useState } from "react";
 
 import toast from "react-hot-toast";
 
 import { HiringDetails } from "@/types";
 import { AuthContext } from "@/utils/AuthState";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 interface DateTime {
-  date: string; // Format: YYYY-MM-DD
-  time: string; // Format: HH:MM
+  date: string;
+  time: string;
 }
 
 export const useHirePrivateExpert = () => {
@@ -29,8 +28,6 @@ export const useHirePrivateExpert = () => {
     jobDetails: "",
     location: "",
   });
-
-  const router = useRouter();
 
   const handleAddDate = (date: string, time: string) => {
     if (availability.length >= 3) {
@@ -91,9 +88,6 @@ export const useHirePrivateExpert = () => {
   };
 
   const handleSubmit = async () => {
-    if (!currentUser) {
-      router.push("/login");
-    }
     const {
       fullName,
       phoneNumber,
@@ -104,19 +98,31 @@ export const useHirePrivateExpert = () => {
     } = hiringDetails;
     setLoading(true);
     try {
-      const expertData = {
-        name: fullName,
-        details: jobDetails,
-        location,
-        file: selectedImage,
-      };
-      await axiosInstance.post(`/privateexpert`, expertData, {
+      const formData = new FormData();
+
+      formData.append("fullName", fullName);
+      formData.append("phoneNumber", phoneNumber);
+      formData.append("email", email);
+      formData.append("typeOfExpert", privateExpertType);
+      formData.append("details", jobDetails);
+      formData.append("location", location);
+
+      if (selectedImage) {
+        formData.append("image", selectedImage);
+      }
+
+      availability?.forEach((entry) => {
+        formData.append(`availability[time]`, entry?.time);
+        formData.append(`availability[date]`, entry?.date);
+      });
+
+      await axiosInstance.post(`/expert/create-private-expert`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       setIsOpen(false);
-      toast.success(`Form submitted successfully`, toastOptions);
+      toast.success(`Successfully sent`, toastOptions);
       setHiringDetails({
         fullName: "",
         phoneNumber: "",
@@ -125,6 +131,7 @@ export const useHirePrivateExpert = () => {
         jobDetails: "",
         location: "",
       });
+      setAvailability([]);
       setSelectedImage(null);
     } catch (error: any) {
       console.log("error hiring private expert", error);
