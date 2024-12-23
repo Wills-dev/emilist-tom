@@ -3223,3 +3223,57 @@ export const getStatusClass = (status: string) => {
       return "";
   }
 };
+
+// filter constants
+export const selectList = [
+  {
+    title: "All",
+    value: "all",
+  },
+  {
+    title: "Verified experts",
+    value: "verifiedExperts",
+  },
+  {
+    title: "Unverified experts",
+    value: "unverifiedExperts",
+  },
+];
+
+export const serviceRating = [
+  {
+    count: 4,
+    value: "four",
+  },
+  {
+    count: 3,
+    value: "three",
+  },
+  {
+    count: 2,
+    value: "two",
+  },
+  {
+    count: 1,
+    value: "one",
+  },
+];
+
+export const noticePeriod = [
+  {
+    title: "24 hours",
+    value: 1,
+  },
+  {
+    title: "3 days",
+    value: 3,
+  },
+  {
+    title: "7 days",
+    value: 7,
+  },
+  {
+    title: "21 days",
+    value: 21,
+  },
+];
