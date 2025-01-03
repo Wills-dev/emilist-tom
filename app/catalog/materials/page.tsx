@@ -1,7 +1,12 @@
-import React from "react";
+import MainLayout from "@/components/MainLayout/MainLayout";
+import MaterialCatalog from "@/components/MaterialCatalog/MaterialCatalog";
 
 const page = () => {
-  return <div>page</div>;
+  return (
+    <MainLayout>
+      <MaterialCatalog />
+    </MainLayout>
+  );
 };
 
 export default page;

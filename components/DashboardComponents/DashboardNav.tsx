@@ -116,7 +116,7 @@ const DashboardNav = () => {
         ref={dropdownRef}
       >
         <div className="flex-c-b w-full max-lg:py-4">
-          <Link href="/dashboard/job">
+          <Link href="/">
             <Image
               src="/assets/images/Logo.svg"
               alt="logo"

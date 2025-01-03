@@ -1,9 +1,8 @@
-import React, { useContext, useState } from "react";
+import { useState } from "react";
 
 import toast from "react-hot-toast";
 
 import { HiringDetails } from "@/types";
-import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
@@ -13,8 +12,6 @@ interface DateTime {
 }
 
 export const useHirePrivateExpert = () => {
-  const { currentUser } = useContext(AuthContext);
-
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);

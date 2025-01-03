@@ -65,7 +65,7 @@ const HireExpertModal = ({
         <div className="grid grid-cols-2 w-full gap-4">
           <div className="w-full col-span-2   ">
             <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
-              Enter your full name
+              Full name
             </p>
             <input
               type="text"
@@ -77,7 +77,7 @@ const HireExpertModal = ({
           </div>
           <div className="w-full col-span-2   ">
             <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
-              Enter your phone number
+              Phone number
             </p>
             <input
               type="text"
@@ -89,7 +89,7 @@ const HireExpertModal = ({
           </div>
           <div className="w-full col-span-2   ">
             <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
-              Enter your email
+              Email address
             </p>
             <input
               type="email"

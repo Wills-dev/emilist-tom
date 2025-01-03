@@ -22,11 +22,24 @@ import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 export const description = "A radial chart with a custom shape";
 
 interface RadialChartProps {
-  chartData: any;
-  chartConfig: any;
+  percentage: any;
 }
 
-export function RadialChart({ chartData, chartConfig }: RadialChartProps) {
+export function RadialChart({ percentage }: RadialChartProps) {
+  const chartData = [
+    { target: "target", percentage: percentage || 0, fill: "#6667FF" },
+  ];
+
+  const chartConfig = {
+    percentage: {
+      label: "Percentage",
+    },
+    target: {
+      label: "Target",
+      color: "#6667FF",
+    },
+  } satisfies ChartConfig;
+
   return (
     <Card className="flex flex-col border-none">
       <CardHeader className="items-center pb-0">
@@ -89,14 +102,6 @@ export function RadialChart({ chartData, chartConfig }: RadialChartProps) {
           </RadialBarChart>
         </ChartContainer>
       </CardContent>
-      {/* <CardFooter className="flex-col gap-2 text-sm">
-        <div className="flex items-center gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-        </div>
-        <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
-        </div>
-      </CardFooter> */}
     </Card>
   );
 }
