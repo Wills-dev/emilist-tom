@@ -143,11 +143,23 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
                   <p className="max-sm:text-sm"> {materialInfo?.location}</p>
                 </div>
               </div>
-              <h3 className="lg:text-lg font-bold text-primary-green  mt-5">
+              <h3
+                className={`lg:text-lg font-bold text-primary-green  mt-5 ${
+                  materialInfo?.isDiscounted && "opacity-35 line-through"
+                }`}
+              >
                 {" "}
                 {materialInfo?.currency}{" "}
                 {materialInfo?.price && numberWithCommas(materialInfo?.price)}
               </h3>
+              {materialInfo?.isDiscounted && (
+                <h3 className="lg:text-lg font-bold text-primary-green  mt-5">
+                  {" "}
+                  {materialInfo?.currency}{" "}
+                  {materialInfo?.discountedPrice &&
+                    numberWithCommas(materialInfo?.discountedPrice)}
+                </h3>
+              )}
               <p className="font-medium max-sm:text-sm mt-2 ">Price</p>
               <button
                 className="bg-primary-green px-6 py-5 text-white rounded-lg font-bold mt-10 whitespace-nowrap max-lg:mt-5 max-sm:text-sm max-sm:py-3 w-full hover:bg-green-600 transition-all duration-300"
