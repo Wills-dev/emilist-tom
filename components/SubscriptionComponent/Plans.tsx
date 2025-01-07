@@ -4,12 +4,38 @@ import Image from "next/image";
 import { useState } from "react";
 
 import SubscriptionToggle from "./SubscriptionToggle";
-import { useGetSubscriptionPlans } from "@/hooks/useGetSubscriptionPlans";
+
+import { useSubNewPlan } from "@/hooks/useSubNewPlan";
 import { Capitalize, numberWithCommas } from "@/helpers";
+import { SubscriptionPayment } from "../modals/SubscriptionPayment";
+import { useGetSubscriptionPlans } from "@/hooks/useGetSubscriptionPlans";
 
 const Plans = () => {
-  const [planType, setPlanType] = useState(false);
-  const { plans, isLoading } = useGetSubscriptionPlans();
+  const [amount, setAmount] = useState(0);
+  const [planId, setPlanId] = useState("");
+  const { plans, isLoading, planType, setPlanType } = useGetSubscriptionPlans();
+  const {
+    isOpen,
+    setIsOpen,
+    currency,
+    setCurrency,
+    loading,
+    paymentMethod,
+    setPaymenntMethod,
+    handleSubNewPlan,
+    setDurationType,
+  } = useSubNewPlan();
+
+  const handleOpenModal = (
+    amount: number,
+    planId: string,
+    durationType: "monthly" | "yearly"
+  ) => {
+    setIsOpen(true);
+    setAmount(amount);
+    setPlanId(planId);
+    setDurationType(durationType);
+  };
 
   return (
     <section className="py-28 padding-x">
@@ -33,7 +59,7 @@ const Plans = () => {
                 className={`${
                   !planType && "bg-white"
                 } flex-1 w-full h-full text-[#374151]  text-sm font-[500] leading-[24px] max-sm:text-[12px]`}
-                onClick={() => setPlanType(false)}
+                onClick={() => setPlanType("monthly")}
               >
                 Monthly
               </button>
@@ -41,7 +67,7 @@ const Plans = () => {
                 className={`${
                   planType && "bg-white"
                 } flex-1 w-full h-full text-[#374151]  text-sm font-[500] leading-[24px] max-sm:text-[12px]`}
-                onClick={() => setPlanType(true)}
+                onClick={() => setPlanType("yearly")}
               >
                 Yearly
               </button>
@@ -68,13 +94,18 @@ const Plans = () => {
                     <h5 className=" text-3xl font-extrabold  max-sm:text-2xl py-2">
                       {plan?.price && ` ₦${numberWithCommas(plan?.price)}`}
                       <span className="text-[#6B7280]  text-[16px] font-[500] leading-[24px] max-sm:text-sm max-sm:leading-[18px] font-inter">
-                        /{planType ? "yr" : "mo"}
+                        /{planType === "yearly" ? "yr" : "mo"}
                       </span>
                     </h5>
                   )}
 
                   {plan?.price !== 0 && (
-                    <button className="w-full bg-primary-green h-[38px] max-h-[38px] text-[#F6FDF9] text-sm font-[500] font-inter mt-4 rounded-[6px] ">
+                    <button
+                      className="w-full bg-primary-green h-[38px] max-h-[38px] text-[#F6FDF9] text-sm font-[500] font-inter mt-4 rounded-[6px] "
+                      onClick={() =>
+                        handleOpenModal(plan?.price, plan?._id, planType)
+                      }
+                    >
                       Buy Startup
                     </button>
                   )}
@@ -105,6 +136,19 @@ const Plans = () => {
           </div>
         </>
       )}
+
+      <SubscriptionPayment
+        isOpen={isOpen}
+        onCancel={() => setIsOpen(false)}
+        amount={amount}
+        currency={currency}
+        setPaymentMethod={setPaymenntMethod}
+        paymentMethod={paymentMethod}
+        setCurrency={setCurrency}
+        handleSubNewPlan={handleSubNewPlan}
+        planId={planId}
+        loading={loading}
+      />
     </section>
   );
 };
