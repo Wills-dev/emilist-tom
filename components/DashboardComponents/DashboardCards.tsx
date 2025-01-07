@@ -11,11 +11,13 @@ import { AuthContext } from "@/utils/AuthState";
 import { formatCreatedAt } from "@/helpers";
 
 import MessageSkeleton from "../Skeleton/MessageSkeleton";
+import { useGetTarget } from "@/hooks/useGetTarget";
 
 const DashboardCards = () => {
   const currentDate = new Date();
 
   const { currentUser } = useContext(AuthContext);
+  const { loading, target } = useGetTarget();
   const { conversations, isLoading, getAllCoversations } = useGetAllChats();
   const { onlineUsers } = useSocketContext();
 
@@ -108,7 +110,10 @@ const DashboardCards = () => {
         </div>
       </div>
       <div className="bg-white w-full rounded-lg p-6 max-sm:px-3 max-sm:min-w-min">
-        <h4 className="sm:text-lg font-medium">Your Target for this month</h4>
+        <h4 className="sm:text-lg font-medium">
+          Your Target for this{" "}
+          {target?.duration === "monthly" ? "month" : "year"}
+        </h4>
         <div className="flex flex-col gap-4 my-5 ">
           <div className="flex flex-col gap-4 max-lg:flex-row max-lg:items-center w-full">
             <div className="text-sm font-medium max-sm:text-xs">
@@ -117,11 +122,11 @@ const DashboardCards = () => {
                 <div className="flex-1">
                   <progress
                     className="progress lg:max-w-56 lg:w-full w-56"
-                    value="57"
+                    value={target?.jobs?.percentage || 0}
                     max="100"
                   ></progress>
                 </div>
-                <p>57%</p>
+                <p>{target?.jobs?.percentage || 0}%</p>
               </div>
             </div>
             <div className="text-sm font-medium max-sm:text-xs">
@@ -130,11 +135,11 @@ const DashboardCards = () => {
                 <div className="flex-1">
                   <progress
                     className="progress progress-warning lg:max-w-56 lg:w-full w-56"
-                    value="40"
+                    value={target?.amount?.percentage || 0}
                     max="100"
                   ></progress>
                 </div>
-                <p>40%</p>
+                <p>{target?.amount?.percentage || 0}%</p>
               </div>
             </div>
           </div>
@@ -145,11 +150,11 @@ const DashboardCards = () => {
                 <div className="flex-1">
                   <progress
                     className="progress progress-success lg:max-w-56 lg:w-full w-56"
-                    value="40"
+                    value={target?.referrals?.percentage || 0}
                     max="100"
                   ></progress>
                 </div>
-                <p>40%</p>
+                <p>{target?.referrals?.percentage || 0}%</p>
               </div>
             </div>
             <div className="text-sm font-medium max-sm:text-xs">
@@ -158,11 +163,11 @@ const DashboardCards = () => {
                 <div className="flex-1">
                   <progress
                     className="progress progress-error lg:max-w-56 lg:w-full w-56"
-                    value="100"
+                    value={target?.invites?.percentage || 0}
                     max="100"
                   ></progress>
                 </div>
-                <p>100%</p>
+                <p>{target?.invites?.percentage || 0}%</p>
               </div>
             </div>
           </div>
