@@ -74,6 +74,73 @@ const Plans = () => {
             </div>
           </div>
           <div className="w-full flex gap-5 overflow-x-scroll mt-2">
+            <div className="min-h-[620px] w-[286px] max-w-[286px] min-w-[286px] border-[1px] border-[#E5E7EB] rounded-[8px]">
+              <div className="w-full border-b-1 border-[#E5E7EB] p-5">
+                <h5 className=" text-xl font-medium  max-sm:text-lg">Basic</h5>
+                <p className="text-[#303632]  text-sm max-sm:text-xs py-4">
+                  All the basics for starting a new business
+                </p>
+
+                <h5 className=" text-3xl font-extrabold  max-sm:text-2xl">
+                  Free
+                </h5>
+              </div>
+              <div className="w-full p-5">
+                <h5 className="  text-sm font-semibold max-sm:text-xs uppercase">
+                  What’s included
+                </h5>
+                <div className="flex flex-col gap-4 mt-6">
+                  <div className="flex items-start">
+                    <Image
+                      src="/assets/icons/Icon.svg"
+                      alt="good"
+                      width={14}
+                      height={10}
+                      className="object-contain w-[14px] h-[10px] mr-3 mt-1"
+                    />
+                    <p className="text-[#6B7280]  text-sm max-sm:text-xs  font-inter">
+                      Post up to 3 jobs
+                    </p>
+                  </div>
+                  <div className="flex items-start">
+                    <Image
+                      src="/assets/icons/Icon.svg"
+                      alt="good"
+                      width={14}
+                      height={10}
+                      className="object-contain w-[14px] h-[10px] mr-3 mt-1"
+                    />
+                    <p className="text-[#6B7280]  text-sm max-sm:text-xs  font-inter">
+                      Post up to 5 materials
+                    </p>
+                  </div>
+                  <div className="flex items-start">
+                    <Image
+                      src="/assets/icons/Icon.svg"
+                      alt="good"
+                      width={14}
+                      height={10}
+                      className="object-contain w-[14px] h-[10px] mr-3 mt-1"
+                    />
+                    <p className="text-[#6B7280]  text-sm max-sm:text-xs  font-inter">
+                      Apply to a maximum of 10 jobs.
+                    </p>
+                  </div>
+                  <div className="flex items-start">
+                    <Image
+                      src="/assets/icons/Icon.svg"
+                      alt="good"
+                      width={14}
+                      height={10}
+                      className="object-contain w-[14px] h-[10px] mr-3 mt-1"
+                    />
+                    <p className="text-[#6B7280]  text-sm max-sm:text-xs  font-inter">
+                      Upload up to one business
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
             {plans?.map((plan: any, index) => (
               <div
                 key={index}

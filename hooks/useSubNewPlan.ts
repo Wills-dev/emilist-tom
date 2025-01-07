@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import toast from "react-hot-toast";
 
@@ -6,6 +7,8 @@ import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
 
 export const useSubNewPlan = () => {
+  const router = useRouter();
+
   const [isOpen, setIsOpen] = useState(false);
   const [currency, setCurrency] = useState("");
   const [loading, setLoading] = useState(false);
@@ -41,8 +44,17 @@ export const useSubNewPlan = () => {
         `/subscription/subscribe-plan`,
         payload
       );
-      console.log("data", data);
-      // setIsOpen(false);
+      setIsOpen(false);
+      const { paymentLink } = data?.data;
+      if (payload.paymentMethod === "Card" && paymentLink) {
+        router.push(paymentLink);
+      }
+
+      if (payload.paymentMethod === "Wallet" && data?.message === "success") {
+        router.push(
+          "https://emilist-tom.netlify.app/dashboard/transactions/status?status=success"
+        );
+      }
     } catch (error) {
       console.log("error creating subscrip[tion plan", error);
       promiseErrorFunction(error);

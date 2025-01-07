@@ -49,13 +49,27 @@ const MaterialHomeData = () => {
               <h4 className="w-full font-medium sm:text-xl group-hover:text-primary-green transition-all duration-300 ease-out">
                 {material?.name && Capitalize(material?.name)}
               </h4>
-              <p className="w-full flex-c text-center text-sm max-md:text-xs">
+              <p
+                className={`w-full flex-c text-center text-sm max-md:text-xs ${
+                  material?.isDiscounted && "line-through opacity-25"
+                }`}
+              >
                 <span className="text-gray-500">Price:</span>{" "}
                 <span className="ml-2 font-semibold">
                   {material?.currency}{" "}
                   {material?.price && numberWithCommas(material?.price)}
                 </span>
               </p>
+              {material?.isDiscounted && (
+                <p className="w-full flex-c text-center text-sm max-md:text-xs">
+                  <span className="text-gray-500">Discount Price:</span>{" "}
+                  <span className="ml-2 font-semibold">
+                    {material?.currency}{" "}
+                    {material?.discountedPrice &&
+                      numberWithCommas(material?.discountedPrice)}
+                  </span>
+                </p>
+              )}
             </Link>
             <Link
               href="/catalog/material"
