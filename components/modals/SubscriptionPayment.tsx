@@ -2,60 +2,53 @@ import { useContext } from "react";
 
 import { Modal } from "antd";
 
-import { PaymentDetails } from "@/types";
 import { numberWithCommas } from "@/helpers";
 import { AuthContext } from "@/utils/AuthState";
 
-type Props = {
-  isOpen: boolean;
+interface SubscriptionPaymentProps {
   onCancel: () => void;
-  paymentDetails: PaymentDetails;
-  confirmPayment: (
-    e: React.FormEvent<HTMLFormElement>,
-    milestoneId: string,
-    jobId: string
-  ) => Promise<void>;
-  loadingPayment: boolean;
-  handlePaymentChange: React.ChangeEventHandler<
-    HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-  >;
-  milestoneId: string;
-  jobId: string;
-  setCurrency: (currency: string) => void;
-  currency: string;
+  isOpen: boolean;
   amount: number;
-  jobCurrency: string;
-};
+  currency: string;
+  setCurrency: (currency: string) => void;
+  paymentMethod: string;
+  setPaymentMethod: (paymentMethod: string) => void;
+  handleSubNewPlan: (
+    e: React.FormEvent,
+    planId: string,
+    isRenew: boolean
+  ) => Promise<string | undefined>;
+  planId: string;
+  loading: boolean;
+}
 
-const PaymentModal = ({
+export const SubscriptionPayment = ({
   isOpen,
   onCancel,
-  paymentDetails,
-  handlePaymentChange,
-  confirmPayment,
-  loadingPayment,
-  milestoneId,
-  currency,
-  setCurrency,
-  jobId,
   amount,
-  jobCurrency,
-}: Props) => {
+  currency,
+  setPaymentMethod,
+  setCurrency,
+  paymentMethod,
+  handleSubNewPlan,
+  planId,
+  loading,
+}: SubscriptionPaymentProps) => {
   const { currentUser } = useContext(AuthContext);
 
   return (
     <Modal open={isOpen} onCancel={onCancel} centered width={600} footer={null}>
       <form
+        onSubmit={(e) => handleSubNewPlan(e, planId, false)}
         className="flex-c justify-center flex-col gap-4 px-6 max-sm:px-3 py-10"
-        onSubmit={(e) => confirmPayment(e, milestoneId, jobId)}
       >
         <h2 className="sm:text-lg font-bold">Payment</h2>
         <div className="w-full col-span-2   max-lg:col-span-4   ">
           <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
-            Amount paid
+            Plan amount
           </p>
           <div className="w-full expert-reg-input-div opacity-40 flex-c">
-            {jobCurrency && jobCurrency} {amount && numberWithCommas(amount)}
+            ₦{amount && numberWithCommas(amount)}
           </div>
         </div>
         <div className="w-full  ">
@@ -67,8 +60,8 @@ const PaymentModal = ({
               <select
                 className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                 name="paymentMethod"
-                value={paymentDetails.paymentMethod}
-                onChange={handlePaymentChange}
+                value={paymentMethod}
+                onChange={(e) => setPaymentMethod(e.target.value)}
               >
                 {" "}
                 <option defaultValue="">Select payment method</option>
@@ -83,7 +76,7 @@ const PaymentModal = ({
             Currency
           </p>
           <div className="expert-reg-input-div">
-            {paymentDetails?.paymentMethod === "Wallet" ? (
+            {paymentMethod === "Wallet" ? (
               <select
                 className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                 onChange={(e) => {
@@ -127,22 +120,8 @@ const PaymentModal = ({
             )}
           </div>
         </div>
-        <div className="w-full my-3">
-          <p className="text-[#5e625f] py-2  font-medium max-sm:text-sm">
-            Note (optional)
-          </p>
-          <div className="w-full">
-            <textarea
-              className="min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm"
-              name="note"
-              rows={3}
-              value={paymentDetails.note}
-              onChange={handlePaymentChange}
-            ></textarea>
-          </div>
-        </div>
 
-        {loadingPayment ? (
+        {loading ? (
           <button className="load-btn">
             <span className="loading loading-dots loading-lg"></span>
           </button>
@@ -152,11 +131,6 @@ const PaymentModal = ({
           </button>
         )}
       </form>
-      <p className="text-xs text-primary-green text-center">
-        Ensure you enter the correct payment details
-      </p>
     </Modal>
   );
 };
-
-export default PaymentModal;
