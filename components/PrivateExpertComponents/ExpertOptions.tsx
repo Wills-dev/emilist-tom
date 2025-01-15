@@ -59,12 +59,11 @@ const ExpertOptions = () => {
             Investigator
           </h4>
           <p className="max-sm:text-sm  max-md:text-center">
-            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-            sint. Velit officia consequat duis enim velit mollit. Exercitation
-            veniam consequat sunt nostrud amet.Amet minim mollit non deserunt
-            ullamco est sit aliqua dolor do amet sint. Velit officia consequat
-            duis enim velit mollit. Exercitation veniam consequat sunt nostrud
-            amet.
+            The success of your project starts with clarity and authentication
+            of project elements. Click here to engage the services of EmiList
+            investigators to help you navigate the authentication of your
+            project resources like work status, land, documents, contracts,
+            agreements, qualifications, and certifications
           </p>
           <div className="w-full flex max-md:justify-center">
             <button className="custom-btn" onClick={() => setIsOpen(true)}>
@@ -91,12 +90,9 @@ const ExpertOptions = () => {
             Supervisor
           </h4>
           <p className="max-sm:text-sm  max-md:text-center">
-            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-            sint. Velit officia consequat duis enim velit mollit. Exercitation
-            veniam consequat sunt nostrud amet.Amet minim mollit non deserunt
-            ullamco est sit aliqua dolor do amet sint. Velit officia consequat
-            duis enim velit mollit. Exercitation veniam consequat sunt nostrud
-            amet.
+            For meticulous project oversight, click here to engage experienced
+            project supervisors who will closely monitor the project process,
+            manage the team, allocate resources, and ensure timely delivery.
           </p>
           <div className="w-full flex max-md:justify-center">
             <button className="custom-btn" onClick={() => setIsOpen(true)}>
@@ -124,12 +120,9 @@ const ExpertOptions = () => {
             Project Manager
           </h4>
           <p className="max-sm:text-sm  max-md:text-center">
-            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-            sint. Velit officia consequat duis enim velit mollit. Exercitation
-            veniam consequat sunt nostrud amet.Amet minim mollit non deserunt
-            ullamco est sit aliqua dolor do amet sint. Velit officia consequat
-            duis enim velit mollit. Exercitation veniam consequat sunt nostrud
-            amet.
+            To get your project done on time and within budget, you can engage
+            the services of seasoned project mangers to help align project
+            resources with schedule without exceeding budget.
           </p>
           <div className="w-full flex max-md:justify-center">
             <button className="custom-btn" onClick={() => setIsOpen(true)}>

@@ -154,22 +154,22 @@ const Cart = () => {
                       </div>
                       <p className="flex-1 text-center font-medium max-sm:text-sm">
                         {cart?.productId?.currency}
-                        {cart?.productId?.price &&
-                          numberWithCommas(cart?.productId?.price)}
+                        {cart?.price && numberWithCommas(cart?.price)}
                       </p>
                       <p className="flex-1 text-center font-medium max-sm:text-sm ">
                         {cart?.productId?.currency}
-                        {cart?.price && numberWithCommas(cart?.price)}
+                        {cart?.price &&
+                          numberWithCommas(cart?.price * cart?.quantity)}
                       </p>
                     </div>
                   </div>
                 ))}
               </div>
               <div className="flex flex-wrap justify-end py-6 gap-4">
-                <div className="flex-c-b sm:gap-6 gap-4 px-2 py-3 min-w-44 border-1 border-gray-500 rounded-md">
+                {/* <div className="flex-c-b sm:gap-6 gap-4 px-2 py-3 min-w-44 border-1 border-gray-500 rounded-md">
                   <p className="max-sm:text-sm">Discount</p>
                   <p className="max-sm:text-sm font-bold"> ₦0.00</p>
-                </div>
+                </div> */}
                 <div className="flex-c-b sm:gap-6 gap-4 px-2 py-3 min-w-44 border-1 border-gray-500 rounded-md">
                   <p className="max-sm:text-sm">Delivery</p>
                   <p className="max-sm:text-sm font-bold"> ₦0.00</p>
@@ -189,7 +189,7 @@ const Cart = () => {
             {/* Cart details for mobile view */}
             <div className="md:hidden block">
               <div className="flex flex-col gap-4 border-t-1 border-gray-500">
-                {cartItems?.cartItems?.map((cart: any) => (
+                {cartItems?.products?.map((cart: any) => (
                   <div
                     className="border-b-1 border-gray-500 py-4"
                     key={cart?._id}
@@ -212,7 +212,8 @@ const Cart = () => {
                         </p>
                         <p className="font-medium max-sm:text-sm">
                           {cart?.productId?.currency}{" "}
-                          {cart?.price && numberWithCommas(cart?.price)}
+                          {cart?.price &&
+                            numberWithCommas(cart?.price * cart?.quantity)}
                         </p>
                         <div className="flex-c gap-3 max-sm:text-sm">
                           <button
@@ -252,10 +253,10 @@ const Cart = () => {
               <div className="flex justify-between items-start">
                 <div className="flex flex-col">
                   {" "}
-                  <div className="flex-c  gap-4 px-2 py-3">
+                  {/* <div className="flex-c  gap-4 px-2 py-3">
                     <p className="max-sm:text-sm">Discount</p>
                     <p className="max-sm:text-sm font-bold"> ₦0.00</p>
-                  </div>
+                  </div> */}
                   <div className="flex-c gap-4 px-2">
                     <p className="max-sm:text-sm">Delivery</p>
                     <p className="max-sm:text-sm font-bold"> ₦0.00</p>
@@ -274,32 +275,10 @@ const Cart = () => {
               </div>
             </div>
             <div className="py-10">
-              <p className="max-sm:text-sm font-medium text-gray-400">
+              {/* <p className="max-sm:text-sm font-medium text-gray-400">
                 If you have a promotion page, enter it here
-              </p>
-              <div className="flex-c-b gap-4 flex-wrap sm:pt-6 pt-2 max-md:flex-col">
-                <form
-                  className=" lg:w-1/2 md:w-2/3 w-full flex-c-b  shadow-lg h-12 rounded-lg"
-                  onSubmit={(e) => handleSubmitDiscount(e)}
-                >
-                  <div className="flex-1 flex-c px-2 rounded-l-lg border-light-gray border-1 focus-within:border-primary-green h-full  max-lg:h-12">
-                    <input
-                      type="text"
-                      placeholder="Please enter promo code"
-                      value={code}
-                      onChange={(e) => setCode(e.target.value)}
-                      className="focus:outline-none max-md:text-sm w-full bg-white"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="bg-primary-green w-fit sm:px-6 px-3 h-full max-lg:h-12 border-primary-green border-1 rounded-r-lg text-white whitespace-nowrap max-sm:text-xs"
-                  >
-                    Apply Discount
-                  </button>
-                </form>
-
+              </p> */}
+              <div className="flex justify-end gap-4 sm:pt-6 pt-2">
                 {isLoading ? (
                   <button type="button" className="load-btn">
                     {" "}
