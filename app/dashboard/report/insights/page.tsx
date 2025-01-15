@@ -1,7 +1,13 @@
-import React from "react";
+import DashboardNav from "@/components/DashboardComponents/DashboardNav";
+import InsightContent from "@/components/ReportComponents/InsightContent";
 
 const Insights = () => {
-  return <div>Insights</div>;
+  return (
+    <main className="relative">
+      <DashboardNav />
+      <InsightContent />
+    </main>
+  );
 };
 
 export default Insights;
