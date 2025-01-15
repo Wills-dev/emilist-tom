@@ -35,9 +35,7 @@ const DirectProjectDetail = ({ jobId }: DirectProjectDetailProps) => {
   const {
     uploadInvoice,
     loadInvoice,
-    handleChange,
     rerenderrrr,
-    invoiceDetails,
     setOpenInvoice,
     openInvoice,
   } = useUploadInvoiceForMilestone();
@@ -220,8 +218,6 @@ const DirectProjectDetail = ({ jobId }: DirectProjectDetailProps) => {
                       onCancel={() => setOpenInvoice(false)}
                       uploadInvoice={uploadInvoice}
                       loadInvoice={loadInvoice}
-                      handleChange={handleChange}
-                      invoiceDetails={invoiceDetails}
                       milestoneId={currentMilestone._id}
                       milestoneAmount={currentMilestone.amount}
                       jobId={jobId}

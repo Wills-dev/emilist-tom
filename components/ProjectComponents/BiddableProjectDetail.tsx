@@ -40,9 +40,7 @@ const BiddableProjectDetail = ({ jobId }: BiddableProjectDetailProps) => {
   const {
     uploadInvoice,
     loadInvoice,
-    handleChange,
     rerenderrrr,
-    invoiceDetails,
     setOpenInvoice,
     openInvoice,
   } = useUploadInvoiceForMilestone();
@@ -222,8 +220,6 @@ const BiddableProjectDetail = ({ jobId }: BiddableProjectDetailProps) => {
                       onCancel={() => setOpenInvoice(false)}
                       uploadInvoice={uploadInvoice}
                       loadInvoice={loadInvoice}
-                      handleChange={handleChange}
-                      invoiceDetails={invoiceDetails}
                       milestoneId={currentMilestone._id}
                       milestoneAmount={currentMilestone.amount}
                       jobId={jobId}

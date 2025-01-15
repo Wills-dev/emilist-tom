@@ -35,9 +35,7 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
   const {
     uploadInvoice,
     loadInvoice,
-    handleChange,
     rerenderrrr,
-    invoiceDetails,
     setOpenInvoice,
     openInvoice,
   } = useUploadInvoiceForMilestone();
@@ -221,8 +219,6 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
                       onCancel={() => setOpenInvoice(false)}
                       uploadInvoice={uploadInvoice}
                       loadInvoice={loadInvoice}
-                      handleChange={handleChange}
-                      invoiceDetails={invoiceDetails}
                       milestoneId={currentMilestone._id}
                       milestoneAmount={currentMilestone.amount}
                       jobId={jobId}
