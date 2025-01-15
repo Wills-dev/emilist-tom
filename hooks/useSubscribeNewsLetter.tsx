@@ -2,8 +2,8 @@ import { useState } from "react";
 
 import toast from "react-hot-toast";
 
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
-import { axiosInstance } from "@/axiosInstance/baseUrl";
 
 export const useSubscribeNewsLetter = () => {
   const [email, setEmail] = useState<string>("");
@@ -20,7 +20,7 @@ export const useSubscribeNewsLetter = () => {
       const emailData = {
         email,
       };
-      await axiosInstance.post("/newslettersubscribe", emailData);
+      await axiosInstance.post("/auth/subscribe-newsletter", emailData);
       toast.success(
         `You have successfully subscribed to our newsletter`,
         toastOptions

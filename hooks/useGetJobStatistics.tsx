@@ -22,8 +22,6 @@ export const useGetJobStatistics = () => {
           filterby ? filterby : "monthly"
         }`
       );
-
-      console.log("data", data);
     } catch (error) {
       console.log("error gettting job statistic", error);
     } finally {

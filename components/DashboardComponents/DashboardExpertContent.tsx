@@ -5,16 +5,22 @@ import Image from "next/image";
 
 import { CiSearch } from "react-icons/ci";
 import { FaRegHeart } from "react-icons/fa";
-import { IoCopyOutline } from "react-icons/io5";
+import { IoCopy, IoCopyOutline } from "react-icons/io5";
 import Pagination from "react-responsive-pagination";
 
 import DashboardLinks from "./DashboardLinks";
 import StarRating from "../StarRating/StarRating";
+import CompareSearch from "../Compare/CompareSearch";
 
+import { useCompare } from "@/hooks/useCompare";
 import { Capitalize, numberWithCommas } from "@/helpers";
 import { useGetBusinesses } from "@/hooks/useGetBusinesses";
+import { useContext } from "react";
+import { CompareContext } from "@/utils/CompareState";
 
 const DashboardExpertContent = () => {
+  const { compare } = useCompare();
+  const { compareServices } = useContext(CompareContext);
   const {
     businesses,
     loading,
@@ -68,6 +74,7 @@ const DashboardExpertContent = () => {
           </div>
         ) : (
           <>
+            {compareServices?.length > 0 && <CompareSearch />}
             {businesses?.length < 1 ? (
               <p className="py-2">No expert or service listed</p>
             ) : (
@@ -188,12 +195,21 @@ const DashboardExpertContent = () => {
                             </span>
                             <p className="sm:text-sm text-xs">Favourite</p>
                           </div>
-                          <div className="flex-c gap-2 cursor-pointer">
-                            <span className="text-lg block">
-                              <IoCopyOutline />
-                            </span>
-                            <p className="sm:text-sm text-xs">Compare</p>
-                          </div>
+                          <button
+                            className="flex-c gap-2 cursor-pointer"
+                            onClick={() => compare(expert._id)}
+                          >
+                            {expert?.isCompared ? (
+                              <span className="text-lg block text-primary-green">
+                                <IoCopy />
+                              </span>
+                            ) : (
+                              <span className="text-lg block">
+                                <IoCopyOutline />
+                              </span>
+                            )}
+                            <span className="sm:text-sm text-xs">Compare</span>
+                          </button>
                         </div>
                       </div>
                     ))}
