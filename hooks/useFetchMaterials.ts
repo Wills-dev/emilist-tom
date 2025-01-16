@@ -39,13 +39,36 @@ export const useFetchMaterials = () => {
     setMaxValue(value);
   };
 
-  const getAllMaterials = async () => {
+  const getAllMaterials = async (
+    material?: string | null,
+    locationQuery?: string | null
+  ) => {
     if (loading || !hasMore) return;
 
     const userId = currentUser?._id || "";
-    const url = `/material/fetch-all-products?page=${currentPage}&limit=10${
+    let url = `/material/fetch-all-products?page=${currentPage}&limit=10${
       userId ? `&userId=${userId}` : ""
     }`;
+    if (search) {
+      url += `&search=${search}`;
+    } else if (material) {
+      url += `&search=${material}`;
+    }
+    if (locationQuery) {
+      url += `&location=${locationQuery}`;
+    }
+    // if (minValue) {
+    //   url += `&minPrice=${minValue}`;
+    // }
+    // if (maxValue) {
+    //   url += `&maxPrice=${maxValue}`;
+    // }
+    if (rating) {
+      url += `&minRating=${rating}`;
+    }
+    if (noOfReviews) {
+      url += `&minReviews=${noOfReviews}`;
+    }
     setLoading(true);
     try {
       const { data } = await axiosInstance.get(url);

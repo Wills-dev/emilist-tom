@@ -51,8 +51,8 @@ const ServiceCatalog = () => {
   } = useFilterBusiness();
 
   useEffect(() => {
-    fetchBusinesses();
-  }, [currentPage]);
+    fetchBusinesses(service, locationQuery);
+  }, [currentPage, service, locationQuery]);
 
   return (
     <section className="py-28 max-lg:py-24 padding-x">

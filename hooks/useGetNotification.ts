@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 
 import {
   parseISO,
@@ -14,8 +14,6 @@ import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useGetNotification = () => {
-  const { currentUser } = useContext(AuthContext);
-
   const [isLoading, setIsLoading] = useState(false);
   const [notifications, setNotifications] = useState([]);
 
@@ -77,13 +75,10 @@ export const useGetNotification = () => {
     return grouped;
   };
 
-  useEffect(() => {
-    getNotifications();
-  }, [currentUser]);
-
   return {
     isLoading,
     notifications,
     groupNotificationsByDate,
+    getNotifications,
   };
 };
