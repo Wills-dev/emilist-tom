@@ -48,8 +48,8 @@ const MaterialCatalog = () => {
   } = useFetchMaterials();
 
   useEffect(() => {
-    getAllMaterials();
-  }, [rerender, unsaveRerenderr]);
+    getAllMaterials(material, locationQuery);
+  }, [rerender, unsaveRerenderr, material, locationQuery]);
 
   return (
     <section className="py-28 max-lg:py-24 padding-x">

@@ -1,16 +1,29 @@
 import Image from "next/image";
+import { useContext, useEffect } from "react";
 
 import { motion } from "framer-motion";
 
-import { ScrollArea } from "../ui/scroll-area";
-import { useGetNotification } from "@/hooks/useGetNotification";
 import { formatCreatedAt } from "@/helpers";
+import { ScrollArea } from "../ui/scroll-area";
+import { AuthContext } from "@/utils/AuthState";
+import { useGetNotification } from "@/hooks/useGetNotification";
+import { useClearNotification } from "@/hooks/useClearNotification";
 
 const NotificationDropdown = () => {
-  const { isLoading, notifications, groupNotificationsByDate } =
-    useGetNotification();
+  const { currentUser } = useContext(AuthContext);
+
+  const { load, rerender, clearNotification } = useClearNotification();
+  const {
+    isLoading,
+    notifications,
+    groupNotificationsByDate,
+    getNotifications,
+  } = useGetNotification();
 
   const groupNotification = groupNotificationsByDate();
+  useEffect(() => {
+    getNotifications();
+  }, [currentUser, rerender]);
 
   return (
     <motion.div
@@ -71,7 +84,10 @@ const NotificationDropdown = () => {
                                 {msg?.message}
                               </p>
                               <div className="flex justify-end">
-                                <button className="text-sm text-primary-green font-medium uppercase">
+                                <button
+                                  className="text-sm text-primary-green font-medium uppercase"
+                                  onClick={() => clearNotification(msg._id)}
+                                >
                                   CLEAR
                                 </button>
                               </div>
