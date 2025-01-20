@@ -76,5 +76,6 @@ export const useGetBusinesses = () => {
     currentPage,
     handleChange,
     handlePageChange,
+    fetchBusinesses,
   };
 };

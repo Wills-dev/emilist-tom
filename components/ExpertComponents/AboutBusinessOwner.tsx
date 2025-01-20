@@ -5,13 +5,13 @@ import StarRating from "../StarRating/StarRating";
 import { Capitalize } from "@/helpers";
 
 type Props = {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpenModal: () => void;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   serviceInfo: any;
 };
 
 const AboutBusinessOwner = ({
-  setOpenModal,
+  handleOpenModal,
   setIsOpen,
   serviceInfo,
 }: Props) => {
@@ -53,7 +53,7 @@ const AboutBusinessOwner = ({
 
             <button
               className="border-[2px] boreder-[#303632] px-4 py-3 rounded-[10px] mt-4 text-[#303632]"
-              onClick={() => setOpenModal(true)}
+              onClick={handleOpenModal}
             >
               Contact Me
             </button>

@@ -1,12 +1,14 @@
 "use client";
 
 import { useGetServiceInfo } from "@/hooks/useGetServiceInfo";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import ReviewProfile from "./ReviewProfile";
 import ExpertMainContent from "./ExpertMainContent";
 import ReviewSlider from "../ReviewSlider/ReviewSlider";
 import AboutBusinessOwner from "./AboutBusinessOwner";
 import ContactModal from "../modals/ContactModal";
+import { useRouter } from "next/navigation";
+import { AuthContext } from "@/utils/AuthState";
 
 interface ExpertDetailsProps {
   businessId: string;
@@ -18,6 +20,17 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openShareModal, setOpenShareModal] = useState<boolean>(false);
+
+  const router = useRouter();
+  const { currentUser } = useContext(AuthContext);
+
+  const handleOpenModal = () => {
+    if (!currentUser) {
+      router.push("/login");
+      return;
+    }
+    setOpenModal(true);
+  };
 
   useEffect(() => {
     getServiceInfo(businessId);
@@ -36,13 +49,13 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
             setOpenShareModal={setOpenShareModal}
           />
           <ExpertMainContent
-            setOpenModal={setOpenModal}
+            handleOpenModal={handleOpenModal}
             serviceInfo={serviceInfo}
           />
           <ReviewSlider />
           <AboutBusinessOwner
             serviceInfo={serviceInfo}
-            setOpenModal={setOpenModal}
+            handleOpenModal={handleOpenModal}
             setIsOpen={setIsOpen}
           />
 
@@ -50,6 +63,7 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
           <ContactModal
             isOpen={openModal}
             onCancel={() => setOpenModal(false)}
+            user={serviceInfo?.userId}
           />
         </div>
       )}

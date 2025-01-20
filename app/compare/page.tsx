@@ -185,7 +185,11 @@ const ComparePage = () => {
         </div>
       </div>
 
-      <ContactModal isOpen={openModal} onCancel={() => setOpenModal(false)} />
+      <ContactModal
+        isOpen={openModal}
+        onCancel={() => setOpenModal(false)}
+        user=""
+      />
     </MainLayout>
   );
 };

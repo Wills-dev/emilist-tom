@@ -2,11 +2,11 @@ import { numberWithCommas } from "@/helpers";
 import ImageSlider from "./ImageSlider";
 
 type Props = {
-  setOpenModal: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpenModal: () => void;
   serviceInfo: any;
 };
 
-const ExpertMainContent = ({ setOpenModal, serviceInfo }: Props) => {
+const ExpertMainContent = ({ handleOpenModal, serviceInfo }: Props) => {
   return (
     <section className=" padding-y">
       <div className="grid grid-cols-5 gap-5 max-lg:grid-cols-4">
@@ -41,7 +41,7 @@ const ExpertMainContent = ({ setOpenModal, serviceInfo }: Props) => {
             <div className="w-full flex items-center justify-center">
               <button
                 className="custom-btn  max-sm:py-3 w-[295px]"
-                onClick={() => setOpenModal(true)}
+                onClick={handleOpenModal}
               >
                 Contact Me
               </button>
