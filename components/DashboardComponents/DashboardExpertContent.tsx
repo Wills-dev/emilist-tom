@@ -4,7 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 
 import { CiSearch } from "react-icons/ci";
-import { FaRegHeart } from "react-icons/fa";
+import { FaHeart, FaRegHeart } from "react-icons/fa";
 import { IoCopy, IoCopyOutline } from "react-icons/io5";
 import Pagination from "react-responsive-pagination";
 
@@ -15,12 +15,16 @@ import CompareSearch from "../Compare/CompareSearch";
 import { useCompare } from "@/hooks/useCompare";
 import { Capitalize, numberWithCommas } from "@/helpers";
 import { useGetBusinesses } from "@/hooks/useGetBusinesses";
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import { CompareContext } from "@/utils/CompareState";
+import { useLikeBusiness } from "@/hooks/useLikeBusiness";
+import { useUnlikeBusiness } from "@/hooks/useUnlikeBusiness";
 
 const DashboardExpertContent = () => {
   const { compare } = useCompare();
   const { compareServices } = useContext(CompareContext);
+  const { handleLikeBusiness, rerender } = useLikeBusiness();
+  const { handleUnlikeBusiness, unsaveRerenderr } = useUnlikeBusiness();
   const {
     businesses,
     loading,
@@ -29,7 +33,12 @@ const DashboardExpertContent = () => {
     currentPage,
     handleChange,
     handlePageChange,
+    fetchBusinesses,
   } = useGetBusinesses();
+
+  useEffect(() => {
+    fetchBusinesses();
+  }, [rerender, unsaveRerenderr]);
 
   return (
     <div className="col-span-7 max-lg:col-span-10 w-full bg-white p-6 rounded-lg max-sm:px-3">
@@ -126,8 +135,13 @@ const DashboardExpertContent = () => {
                             )}
                             <div className="flex-c-b  sm:gap-4 gap-2 flex-wrap">
                               <div className="flex-c gap-1 max-sm:text-sm ">
-                                <StarRating rating={4} />{" "}
-                                <span className="sm:text-sm text-xs">(51)</span>
+                                <StarRating rating={expert?.averageRating} />{" "}
+                                <span className="sm:text-sm text-xs">
+                                  (
+                                  {expert?.totalReviews &&
+                                    numberWithCommas(expert?.totalReviews)}
+                                  )
+                                </span>
                               </div>
                               <div className="flex-c gap-1">
                                 <Image
@@ -138,7 +152,11 @@ const DashboardExpertContent = () => {
                                   className="w-4 h-4 object-contain"
                                 />
                                 <p className="sm:text-sm text-xs">
-                                  52 Jobs completed
+                                  {expert?.completedJobs &&
+                                    numberWithCommas(
+                                      expert?.completedJobs
+                                    )}{" "}
+                                  Jobs completed
                                 </p>
                               </div>
                             </div>
@@ -190,9 +208,23 @@ const DashboardExpertContent = () => {
                         <div className="col-span-1 max-md:hidden" />
                         <div className="md:col-span-4 col-span-6 border-t-1 border-[#B8B9B8] flex-c justify-end sm:gap-10 gap-5 py-2">
                           <div className="flex-c gap-2 cursor-pointer">
-                            <span className="text-lg block">
-                              <FaRegHeart />
-                            </span>
+                            {expert?.liked ? (
+                              <span
+                                className="block text-xl text-[#054753] cursor-pointer"
+                                onClick={() =>
+                                  handleUnlikeBusiness(expert?._id)
+                                }
+                              >
+                                <FaHeart />
+                              </span>
+                            ) : (
+                              <span
+                                className="block text-xl cursor-pointer"
+                                onClick={() => handleLikeBusiness(expert?._id)}
+                              >
+                                <FaRegHeart />
+                              </span>
+                            )}
                             <p className="sm:text-sm text-xs">Favourite</p>
                           </div>
                           <button

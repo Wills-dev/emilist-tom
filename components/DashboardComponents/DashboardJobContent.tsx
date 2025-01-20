@@ -135,8 +135,8 @@ const DashboardJobContent = () => {
                         <Link
                           href={
                             job?.type === "biddable"
-                              ? `/job/info/biddable/${job._id}`
-                              : `/job/info/regular/${job._id}`
+                              ? `/dashboard/job/info/biddable/${job._id}`
+                              : `/dashboard/job/info/regular/${job._id}`
                           }
                           className="underline text-primary-green text-xs"
                         >
