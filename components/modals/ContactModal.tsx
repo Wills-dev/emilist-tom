@@ -98,7 +98,7 @@ const ContactModal = ({ isOpen, onCancel, user }: Props) => {
         ) : (
           <>
             <div className="w-full px-3 max-sm:px-2">
-              <ScrollArea className="px-4 py-2 max-sm:px-2 flex flex-col flex-1 max-h-[60vh] overflow-y-auto">
+              <ScrollArea className="px-4 py-2 max-sm:px-2 flex flex-col flex-1 max-h-[60vh] h-[60vh] min-h-[60vh] overflow-y-auto">
                 {!messages || messages?.length < 1 ? (
                   <p className="text-xs text-primary-green">
                     Send a message to start conversation.

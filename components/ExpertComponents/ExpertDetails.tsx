@@ -9,6 +9,7 @@ import AboutBusinessOwner from "./AboutBusinessOwner";
 import ContactModal from "../modals/ContactModal";
 import { useRouter } from "next/navigation";
 import { AuthContext } from "@/utils/AuthState";
+import Link from "next/link";
 
 interface ExpertDetailsProps {
   businessId: string;
@@ -52,13 +53,23 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
             handleOpenModal={handleOpenModal}
             serviceInfo={serviceInfo}
           />
+          <div className=" max-w-[676px] w-full flex-c-b pb-6 flex-wrap gap-2">
+            <h6 className="sm:text-2xl text-lg font-semibold whitespace-nowrap">
+              What people loved about this seller
+            </h6>
+            <Link
+              href="/expert/reviews"
+              className="max-sm:text-sm text-primary-green whitespace-nowrap"
+            >
+              See all reviews
+            </Link>
+          </div>
           <ReviewSlider />
           <AboutBusinessOwner
             serviceInfo={serviceInfo}
             handleOpenModal={handleOpenModal}
             setIsOpen={setIsOpen}
           />
-
           {/* contact modal */}
           <ContactModal
             isOpen={openModal}

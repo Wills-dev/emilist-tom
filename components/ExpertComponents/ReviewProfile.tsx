@@ -35,7 +35,7 @@ const ReviewProfile = ({ serviceInfo, setOpenShareModal }: Props) => {
                 </p>
                 <div className="flex-c my-1 gap-2 max-sm:gap-0 pl-2">
                   {" "}
-                  <StarRating rating={4} />
+                  <StarRating rating={serviceInfo?.averageRating || 0} />
                   <p className="text-[13px] max-sm:text-[10px]">(51)</p>
                 </div>
               </div>
