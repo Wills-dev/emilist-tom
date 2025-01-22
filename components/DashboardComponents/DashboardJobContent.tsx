@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import { CiSearch } from "react-icons/ci";
 import { IoLocationSharp } from "react-icons/io5";
@@ -12,13 +12,19 @@ import Pagination from "react-responsive-pagination";
 
 import DashboardLinks from "./DashboardLinks";
 
+import { AuthContext } from "@/utils/AuthState";
 import { useSaveJob } from "@/hooks/useSaveJob";
 import { useUnsaveJob } from "@/hooks/useUnSaveJob";
+import { useAddClicks } from "@/hooks/useAddClicks";
 import { useBlackListJob } from "@/hooks/useBlackListJob";
 import { useFetchJobs } from "@/hooks/useFetchJobs";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 
 const DashboardJobContent = () => {
+  const { currentUser } = useContext(AuthContext);
+  const userId = currentUser?._id;
+
+  const { addClicks } = useAddClicks();
   const { handleSaveJob, rerender } = useSaveJob();
   const { handleUnsaveJob, unsaveRerenderr } = useUnsaveJob();
   const { handleBlackListJob, rerenderrr } = useBlackListJob();
@@ -109,6 +115,9 @@ const DashboardJobContent = () => {
                             job?.type === "biddable"
                               ? `/dashboard/job/info/biddable/${job._id}`
                               : `/dashboard/job/info/regular/${job._id}`
+                          }
+                          onClick={() =>
+                            addClicks("job", job._id, userId || null)
                           }
                         >
                           {job?.title && Capitalize(job?.title)}

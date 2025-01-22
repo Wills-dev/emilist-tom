@@ -3200,6 +3200,10 @@ export const profileLinks = [
     id: 3,
     name: "Message & Notification",
   },
+  {
+    id: 4,
+    name: "Bank Details",
+  },
 ];
 
 export const getStatusClass = (status: string) => {

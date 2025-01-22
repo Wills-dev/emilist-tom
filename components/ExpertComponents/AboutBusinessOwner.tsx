@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import StarRating from "../StarRating/StarRating";
 
-import { Capitalize } from "@/helpers";
+import { Capitalize, convertDateFormat } from "@/helpers";
 
 type Props = {
   handleOpenModal: () => void;
@@ -16,7 +16,7 @@ const AboutBusinessOwner = ({
   serviceInfo,
 }: Props) => {
   return (
-    <section className="sm:pt-10 sm:pb-10 pb-6">
+    <section className="pt-10 sm:pb-10 pb-6">
       <h5 className="sm:text-xl font-semibold">About The Seller</h5>
       <div>
         <div className="flex w-full padding-y">
@@ -45,7 +45,7 @@ const AboutBusinessOwner = ({
                 </p>
                 <div className="flex items-center my-1 gap-2 max-sm:gap-1 pl-2">
                   {" "}
-                  <StarRating rating={4} />
+                  <StarRating rating={serviceInfo?.averageRating || 0} />
                   <p className="text-[13px] max-sm:text-[10px]">(51)</p>
                 </div>
               </div>
@@ -64,7 +64,10 @@ const AboutBusinessOwner = ({
             <h4 className="text-lg font-semibold max-sm:text-xs font-inter mb-2">
               Member Since
             </h4>
-            <h6 className="  text-[#303632] max-sm:text-xs">18 May, 2022</h6>
+            <h6 className="  text-[#303632] max-sm:text-xs">
+              {serviceInfo?.createdAt &&
+                convertDateFormat(serviceInfo?.createdAt)}
+            </h6>
           </div>
           <div>
             <h4 className="text-lg font-semibold max-sm:text-xs font-inter mb-2">

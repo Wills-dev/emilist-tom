@@ -28,6 +28,11 @@ export const useEditProfile = () => {
   const [showSave, setShowSave] = useState(false);
   const [profileImage, setProfileImage] = useState<any>({});
   const [currentImage, setCurrentImage] = useState<string>("");
+  const [bankDetails, setBankDetails] = useState<any>({
+    number: "",
+    holdersName: "",
+    bank: "",
+  });
   const [profileDetails, setProfileDetails] = useState<ProfileDetail>({
     fullName: "",
     number1: "",
@@ -75,6 +80,11 @@ export const useEditProfile = () => {
     setProfileDetails({ ...profileDetails, [name]: value });
   };
 
+  const handleBankInfoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setBankDetails({ ...bankDetails, [name]: value });
+  };
+
   const getUser = async () => {
     setLoad(true);
     try {
@@ -89,6 +99,11 @@ export const useEditProfile = () => {
         whatsAppNo: data?.data?.whatsAppNo ? data?.data?.whatsAppNo : "",
         gender: data?.data?.gender ? data?.data?.gender : "",
         email: data?.data?.email ? data?.data?.email : "",
+      });
+      setBankDetails({
+        bank: data?.data?.accountDetails?.bank || "",
+        number: data?.data?.accountDetails?.number || "",
+        holdersName: data?.data?.accountDetails?.holdersName || "",
       });
       setCurrentImage(data?.data?.profileImage && data?.data?.profileImage);
     } catch (error: any) {
@@ -132,6 +147,18 @@ export const useEditProfile = () => {
       if (number2) formData.append("number2", number2);
       if (whatsAppNo) formData.append("whatsAppNo", whatsAppNo);
       if (gender) formData.append("gender", gender);
+      if (bankDetails?.number) {
+        formData.append("accountDetails[number]", bankDetails?.number);
+      }
+      if (bankDetails?.bank) {
+        formData.append("accountDetails[bank]", bankDetails?.bank);
+      }
+      if (bankDetails?.holdersName) {
+        formData.append(
+          "accountDetails[holdersName]",
+          bankDetails?.holdersName
+        );
+      }
 
       formData.append("image", profileImage);
 
@@ -166,5 +193,7 @@ export const useEditProfile = () => {
     handleChange,
     showSave,
     setProfileDetails,
+    handleBankInfoChange,
+    bankDetails,
   };
 };

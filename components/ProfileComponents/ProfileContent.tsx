@@ -8,6 +8,7 @@ import { profileLinks } from "@/constants";
 import PersonalProfile from "./PersonalProfile";
 import ProfileSecurity from "./ProfileSecurity";
 import ProfileNotification from "./ProfileNotification";
+import BankDetails from "./BankDetails";
 
 const ProfileContent = () => {
   const [open, setOpen] = useState<boolean>(false);
@@ -78,6 +79,7 @@ const ProfileContent = () => {
         <div className="mt-6">
           {currentLink === 3 && <ProfileNotification />}
         </div>
+        <div className="mt-6">{currentLink === 4 && <BankDetails />}</div>
       </div>
     </section>
   );

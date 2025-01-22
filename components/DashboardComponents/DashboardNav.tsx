@@ -10,6 +10,12 @@ import { AnimatePresence } from "framer-motion";
 
 import { AuthContext } from "@/utils/AuthState";
 import { CartContext } from "@/utils/CartState";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 import JobDropdown from "./JobDropdown";
 import ServiceDropdown from "./ServiceDropdown";
@@ -213,48 +219,76 @@ const DashboardNav = () => {
             <div className="flex-c sm:gap-6 gap-4">
               <div className="gap-3 flex items-center ">
                 <button className="p-2 hover:bg-green-100 duration-300 rounded-full max-xl:hidden">
-                  <Link href="/dashboard/message">
-                    <Image
-                      src="/assets/icons/sms.svg"
-                      alt="menu"
-                      width={24}
-                      height={24}
-                      className="object-contain w-6 h-6"
-                    />
-                  </Link>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Link href="/dashboard/message">
+                          <Image
+                            src="/assets/icons/sms.svg"
+                            alt="menu"
+                            width={24}
+                            height={24}
+                            className="object-contain w-6 h-6"
+                          />
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Messages</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </button>
                 <div className="relative p-2 hover:bg-green-100 duration-300 rounded-full max-xl:hidden">
-                  <span className="block">
-                    {" "}
-                    <Image
-                      src="/assets/icons/notification.svg"
-                      alt="menu"
-                      width={24}
-                      height={24}
-                      className="object-contain w-6 h-6 cursor-pointer "
-                      onClick={handleNotificationDropdown}
-                    />
-                  </span>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        {" "}
+                        <span className="block">
+                          {" "}
+                          <Image
+                            src="/assets/icons/notification.svg"
+                            alt="menu"
+                            width={24}
+                            height={24}
+                            className="object-contain w-6 h-6 cursor-pointer "
+                            onClick={handleNotificationDropdown}
+                          />
+                        </span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Notification</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
 
                   <AnimatePresence>
                     {openNotification && <NotificationDropdown />}
                   </AnimatePresence>
                 </div>
                 <div className="p-2 hover:bg-green-100 duration-300 rounded-full">
-                  <Link href="/dashboard/cart" className="relative">
-                    <Image
-                      src="/assets/icons/shopping-cart.svg"
-                      alt="menu"
-                      width={24}
-                      height={24}
-                      className="object-contain w-6 h-6"
-                    />
-                    {totalCartQuantity > 0 && (
-                      <span className="absolute -top-3 -right-2 px-2 py-1 bg-green-300 rounded-full text-xs">
-                        {totalCartQuantity}
-                      </span>
-                    )}
-                  </Link>
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Link href="/dashboard/cart" className="relative">
+                          <Image
+                            src="/assets/icons/shopping-cart.svg"
+                            alt="menu"
+                            width={24}
+                            height={24}
+                            className="object-contain w-6 h-6"
+                          />
+                          {totalCartQuantity > 0 && (
+                            <span className="absolute -top-3 -right-2 px-2 py-1 bg-green-300 rounded-full text-xs">
+                              {totalCartQuantity}
+                            </span>
+                          )}
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Cart items</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
               </div>
               <div className="relative">
