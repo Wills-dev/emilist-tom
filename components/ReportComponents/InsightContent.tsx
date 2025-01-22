@@ -1,9 +1,29 @@
+"use client";
+
 import Image from "next/image";
 
+import { ChartConfig } from "@/components/ui/chart";
+import { useGetInsights } from "@/hooks/useGetInsights";
+import { InsightRadialChart } from "../InsightRadialChart/InsightRadialChart";
+
 const InsightContent = () => {
+  const { loading, insights } = useGetInsights();
+
+  const chartData = [{ browser: "safari", visitors: 121, fill: "#6667FF" }];
+
+  const chartConfig = {
+    visitors: {
+      label: "Visitors",
+    },
+    safari: {
+      label: "Safari",
+      color: "#6667FF",
+    },
+  } satisfies ChartConfig;
+
   return (
     <section className="py-28 padding-x">
-      <div className="flex gap-1 overflow-x-scroll w-full">
+      <div className="flex flex-wrap gap-1 w-full">
         <div className="w-[505px] max-w-[505px] min-w-[505px] h-[285px] max-sm:h-[250px] max-sm:max-w-[450px] max-sm:w-[450px] shadow-md rounded-[10px] m-2 p-6 py-8">
           <h2 className="font-bold text-xl max-sm: mb-6">Overview</h2>
           <div className="grid grid-cols-6 gap-6">
@@ -74,7 +94,7 @@ const InsightContent = () => {
             </div>
           </div>
         </div>
-        <div className="w-[349px] max-w-[349px] min-w-[349px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
+        <div className="w-[340px] max-w-[340px] min-w-[340px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
           <h2 className="font-bold sm:text-xl max-sm: mb-10">
             Promotion Duration
           </h2>
@@ -95,7 +115,7 @@ const InsightContent = () => {
             </button>
           </div>
         </div>
-        <div className="w-[349px] max-w-[349px] min-w-[349px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
+        <div className="w-[340px] max-w-[340px] min-w-[340px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
           <h2 className="font-bold sm:text-xl max-sm: mb-10">Clicks</h2>
           <div className="w-full my-8">
             <div className="flex justify-between items-center w-full">
@@ -114,6 +134,28 @@ const InsightContent = () => {
             <button className="bg-primary-green w-[151px] py-3 text-[#fcfefd] rounded-[10px] cursor-pointer font-bold whitespace-nowrap min-w-[210px]">
               Add More Subscription
             </button>
+          </div>
+        </div>
+      </div>
+      <div className="flex flex-wrap gap-10 mt-10">
+        <div className="flex flex-col gap-4 justify-center">
+          <p className="text-gray-700 font-semibold font-xl max-sm:text-sm text-center">
+            Reached
+          </p>
+          <div className="">
+            <InsightRadialChart
+              chartData={chartData}
+              chartConfig={chartConfig}
+              title=""
+            />
+          </div>
+
+          <div className="flex flex-col gap-4 mt-3 ">
+            <div className="flex-c gap-2 justify-center">
+              <span className="w-4 h-4 rounded-full bg-[#6667FF]"></span>{" "}
+              <p className="font-medium max-sm:text-sm">Premium subscribers:</p>{" "}
+              <span className="sm:text-lg font-medium">81</span>
+            </div>
           </div>
         </div>
       </div>

@@ -15,7 +15,6 @@ export const useFetchJobs = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [search, setSearch] = useState("");
-  const ITEMS_PER_PAGE = 10;
   const [filterLocation, setFilterLocation] = useState("");
   const [filterName, setFilterName] = useState("");
   const [filterService, setFilterService] = useState("");
