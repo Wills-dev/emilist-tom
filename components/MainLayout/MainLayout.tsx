@@ -8,7 +8,7 @@ interface MainLayoutProps {
 
 const MainLayout = ({ children }: MainLayoutProps) => {
   return (
-    <main className="relative ">
+    <main className="relative min-h-screen h-full bg-white">
       <Nav />
       {children}
       <NewsLetter />

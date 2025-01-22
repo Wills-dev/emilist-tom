@@ -22,7 +22,7 @@ import { useUnlikeBusiness } from "@/hooks/useUnlikeBusiness";
 
 const DashboardExpertContent = () => {
   const { compare } = useCompare();
-  const { compareServices } = useContext(CompareContext);
+  const { compareServices, rrerender } = useContext(CompareContext);
   const { handleLikeBusiness, rerender } = useLikeBusiness();
   const { handleUnlikeBusiness, unsaveRerenderr } = useUnlikeBusiness();
   const {
@@ -38,7 +38,7 @@ const DashboardExpertContent = () => {
 
   useEffect(() => {
     fetchBusinesses();
-  }, [rerender, unsaveRerenderr]);
+  }, [rerender, unsaveRerenderr, rrerender]);
 
   return (
     <div className="col-span-7 max-lg:col-span-10 w-full bg-white p-6 rounded-lg max-sm:px-3">

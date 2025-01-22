@@ -14,6 +14,7 @@ type Props = {
 const CompareState = ({ children }: Props) => {
   const token = readAuthCookie("sessionId");
 
+  const [rrerender, setRerender] = useState(false);
   const [compareLoading, setLoading] = useState(true);
   const [compareServices, setCompareServices] = useState([]);
 
@@ -22,7 +23,6 @@ const CompareState = ({ children }: Props) => {
       const { data } = await axiosInstance.get(
         `/business/fetch-compared-business`
       );
-      console.log("data", data);
       setCompareServices(data?.data);
     } catch (error) {
       console.log("error getting compared services", error);
@@ -37,11 +37,13 @@ const CompareState = ({ children }: Props) => {
     } else {
       setLoading(false);
     }
-  }, []);
+  }, [rrerender]);
 
   const value = {
     compareLoading,
     compareServices,
+    setRerender,
+    rrerender,
   };
 
   return (

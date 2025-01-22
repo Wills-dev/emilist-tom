@@ -1,12 +1,22 @@
-import { useState, useEffect, useRef, useCallback, ChangeEvent } from "react";
+import {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  ChangeEvent,
+  useContext,
+} from "react";
 
+import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 export const useGetBusinesses = () => {
+  const { currentUser } = useContext(AuthContext);
+
   const [data, setData] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [hasMore, setHasMore] = useState(true);
   const [businesses, setBusinesses] = useState([]);
@@ -22,13 +32,15 @@ export const useGetBusinesses = () => {
   };
 
   const fetchBusinesses = useCallback(async () => {
-    if (loading || !hasMore) return;
+    if (!hasMore) return;
 
-    setLoading(true);
+    const userId = currentUser?._id || "";
+    let url = `/business/fetch-all-business?page=${currentPage}&limit=10${
+      userId ? `&userId=${userId}` : ""
+    }`;
+
     try {
-      const { data } = await axiosInstance.get(
-        `/business/fetch-all-business?page=${currentPage}&limit=10`
-      );
+      const { data } = await axiosInstance.get(url);
 
       const { business: newBusinesses, totalPages } = data?.data;
 
