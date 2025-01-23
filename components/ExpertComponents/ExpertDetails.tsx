@@ -1,15 +1,18 @@
 "use client";
 
-import { useGetServiceInfo } from "@/hooks/useGetServiceInfo";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState } from "react";
+
 import ReviewProfile from "./ReviewProfile";
+import ContactModal from "../modals/ContactModal";
 import ExpertMainContent from "./ExpertMainContent";
 import ReviewSlider from "../ReviewSlider/ReviewSlider";
 import AboutBusinessOwner from "./AboutBusinessOwner";
-import ContactModal from "../modals/ContactModal";
-import { useRouter } from "next/navigation";
+
 import { AuthContext } from "@/utils/AuthState";
-import Link from "next/link";
+import { useGetServiceInfo } from "@/hooks/useGetServiceInfo";
+import ShareLink from "../modals/ShareLink";
 
 interface ExpertDetailsProps {
   businessId: string;
@@ -33,6 +36,10 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
     setOpenModal(true);
   };
 
+  const handleOpen = () => {
+    setOpenShareModal(true);
+  };
+
   useEffect(() => {
     getServiceInfo(businessId);
   }, [businessId]);
@@ -45,10 +52,7 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
         </div>
       ) : (
         <div className="padding-x py-28">
-          <ReviewProfile
-            serviceInfo={serviceInfo}
-            setOpenShareModal={setOpenShareModal}
-          />
+          <ReviewProfile serviceInfo={serviceInfo} handleOpen={handleOpen} />
           <ExpertMainContent
             handleOpenModal={handleOpenModal}
             serviceInfo={serviceInfo}
@@ -58,7 +62,7 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
               What people loved about this seller
             </h6>
             <Link
-              href="/expert/reviews"
+              href={`/expert/reviews/${businessId}`}
               className="max-sm:text-sm text-primary-green whitespace-nowrap"
             >
               See all reviews
@@ -75,6 +79,14 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
             isOpen={openModal}
             onCancel={() => setOpenModal(false)}
             user={serviceInfo?.userId}
+          />
+          {/* Share modal */}
+          <ShareLink
+            handleCancel={() => setOpenShareModal(false)}
+            isModalOpen={openShareModal}
+            link={`https://emilist.com/expert/info/${businessId}`}
+            title="Share business"
+            textToCopy="Check out this business on Emilist"
           />
         </div>
       )}

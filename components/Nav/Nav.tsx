@@ -10,15 +10,25 @@ import { IoIosArrowDown } from "react-icons/io";
 import { MdKeyboardArrowRight } from "react-icons/md";
 import { AnimatePresence, motion } from "framer-motion";
 
+import { CartContext } from "@/utils/CartState";
 import { AuthContext } from "@/utils/AuthState";
 
 import ExploreEmilist from "../modals/ExploreEmilist";
+
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const Sidebar = dynamic(() => import("../Sidebar/Sidebar"));
 const MenuItem = dynamic(() => import("../MenuItem/MenuItem"));
 
 const Nav = () => {
   const { currentUser } = useContext(AuthContext);
+  const { totalCartQuantity } = useContext(CartContext);
+
   const [menu, setMenu] = useState(false);
   const [openSideBar, setOpenSideBar] = useState(false);
   const [openExploreEmilistModal, setOpenExploreEmilistModal] = useState(false);
@@ -82,14 +92,41 @@ const Nav = () => {
               </button>
             </li>
             {currentUser ? (
-              <li>
-                <Link
-                  href="/dashboard/job"
-                  className="font-medium px-5 sm:py-2 py-1 home-nav max-sm:text-sm"
-                >
-                  Dashboard
-                </Link>
-              </li>
+              <>
+                <li>
+                  <Link
+                    href="/dashboard/job"
+                    className="font-medium px-5 sm:py-2 py-1 home-nav max-sm:text-sm"
+                  >
+                    Dashboard
+                  </Link>
+                </li>
+                <div className="p-2 hover:bg-green-100 duration-300 rounded-full">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger>
+                        <Link href="/dashboard/cart" className="relative">
+                          <Image
+                            src="/assets/icons/shopping-cart.svg"
+                            alt="menu"
+                            width={24}
+                            height={24}
+                            className="object-contain w-6 h-6"
+                          />
+                          {totalCartQuantity > 0 && (
+                            <span className="absolute -top-3 -right-2 px-2 py-1 bg-green-300 rounded-full text-xs">
+                              {totalCartQuantity}
+                            </span>
+                          )}
+                        </Link>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>Cart items</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+              </>
             ) : (
               <>
                 <li>
@@ -112,14 +149,43 @@ const Nav = () => {
             )}
           </ul>
         </nav>
-        <button className="lg:hidden block text-xl" onClick={toggle}>
-          <CgMenuRight />
-        </button>
+        <div className="flex-c gap-4 lg:hidden ">
+          {currentUser && (
+            <div className="p-2 hover:bg-green-100 duration-300 rounded-full">
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Link href="/dashboard/cart" className="relative">
+                      <Image
+                        src="/assets/icons/shopping-cart.svg"
+                        alt="menu"
+                        width={24}
+                        height={24}
+                        className="object-contain w-6 h-6"
+                      />
+                      {totalCartQuantity > 0 && (
+                        <span className="absolute -top-3 -right-2 px-2 py-1 bg-green-300 rounded-full text-xs">
+                          {totalCartQuantity}
+                        </span>
+                      )}
+                    </Link>
+                  </TooltipTrigger>
+                  <TooltipContent>
+                    <p>Cart items</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            </div>
+          )}
+          <button className="block text-xl" onClick={toggle}>
+            <CgMenuRight />
+          </button>
+        </div>
         <AnimatePresence>
           {openSideBar && <Sidebar toggle={toggle} />}
         </AnimatePresence>
       </div>
-      <div className="relative border-t-1 w-full py-2 lg:hidden">
+      <div className="relative border-t-1 w-full py-2 lg:hidden flex-c gap-2">
         <button className=" flex-c gap-1" onClick={toggleMenu}>
           <AnimatePresence>
             <motion.span

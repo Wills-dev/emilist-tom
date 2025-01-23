@@ -16,11 +16,11 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-interface ExpertReviewContentProps {
-  businessId: string;
+interface MaterialReviewContentProps {
+  materialId: string;
 }
 
-const ExpertReviewContent = ({ businessId }: ExpertReviewContentProps) => {
+const MaterialReviewContent = ({ materialId }: MaterialReviewContentProps) => {
   const stars = [5, 4, 3, 2, 1];
 
   const [filter, setFilter] = useState("");
@@ -50,29 +50,6 @@ const ExpertReviewContent = ({ businessId }: ExpertReviewContentProps) => {
               <p className="text-[#054753] max-sm:text-sm">(40)</p>
             </div>
           ))}
-        </div>
-        <div className="flex-1 flex flex-col gap-6">
-          <p className="sm:text-xl font-semibold">Rating Breakdown</p>
-          <div className="flex-c gap-10">
-            <p className="max-sm:text-sm">Seller communication level</p>
-            <div className="flex-c gap-2">
-              <p className="max-sm:text-sm text-[#ff9933]">4</p>
-              <span className="text-xl">
-                {" "}
-                <FaStar className="text-[#ff9933]" />
-              </span>
-            </div>
-          </div>
-          <div className="flex-c gap-10">
-            <p className="max-sm:text-sm">Service as described</p>
-            <div className="flex-c gap-2">
-              <p className="max-sm:text-sm text-[#ff9933]">4.2</p>
-              <span className="text-xl">
-                {" "}
-                <FaStar className="text-[#ff9933]" />
-              </span>
-            </div>
-          </div>
         </div>
       </div>
       <div className="flex-c gap-4 text-gray-600 border-b-1 border-gray-400 py-6">
@@ -169,4 +146,4 @@ const ExpertReviewContent = ({ businessId }: ExpertReviewContentProps) => {
   );
 };
 
-export default ExpertReviewContent;
+export default MaterialReviewContent;

@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 
 import { FaHeart, FaRegHeart } from "react-icons/fa";
 
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 import { useSaveMaterials } from "@/hooks/useSaveMaterials";
 import { useUnsaveMaterial } from "@/hooks/useUnsaveMaterial";
 import { useGetMaterialInfo } from "@/hooks/useGetMaterialInfo";
@@ -63,8 +64,8 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
           <ShareLink
             handleCancel={handleCancel}
             isModalOpen={isModalOpen}
-            link={link}
-            textToCopy={`https://emilist.com/material/info/${materialId}`}
+            link={`https://emilist.com/material/info/${materialId}`}
+            textToCopy={link}
             title="Share material"
           />
           <div className="flex-c sm:gap-8 gap-5 justify-end pb-5">
@@ -149,13 +150,15 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
                 }`}
               >
                 {" "}
-                {materialInfo?.currency}{" "}
+                {materialInfo?.currency &&
+                  getCurrencySign(materialInfo?.currency)}
                 {materialInfo?.price && numberWithCommas(materialInfo?.price)}
               </h3>
               {materialInfo?.isDiscounted && (
                 <h3 className="lg:text-lg font-bold text-primary-green  mt-5">
                   {" "}
-                  {materialInfo?.currency}{" "}
+                  {materialInfo?.currency &&
+                    getCurrencySign(materialInfo?.currency)}
                   {materialInfo?.discountedPrice &&
                     numberWithCommas(materialInfo?.discountedPrice)}
                 </h3>
@@ -177,7 +180,7 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
                 What people loved about this product
               </h6>
               <Link
-                href={`/material/info/all-reviews/${2}`}
+                href={`/material/info/all-reviews/${materialId}`}
                 className="text-primary-green sm:text-sm text-xs hover:text-green-600 duration-300 transition-all"
               >
                 See all reviews
