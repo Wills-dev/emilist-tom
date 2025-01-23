@@ -12,9 +12,8 @@ export const useGetVat = () => {
   const getVat = async () => {
     setLoad(true);
     try {
-      const { data } = await axiosInstance.get(`/transaction/fetch-user-vat`);
-      console.log("data", data);
-      setVat(data);
+      const { data } = await axiosInstance.get(`/transaction/fetch-vat`);
+      setVat(data?.data);
     } catch (error) {
       console.log("error getting vat", error);
     } finally {

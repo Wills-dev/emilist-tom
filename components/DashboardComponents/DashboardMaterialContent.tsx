@@ -91,7 +91,7 @@ const DashboardMaterialContent = () => {
         ) : (
           <>
             {allMaterials?.length < 1 ? (
-              <p className="py-2">No expert or service listed</p>
+              <p className="py-2">No materials</p>
             ) : (
               <>
                 {allMaterials?.length > 0 && totalPages > 0 && search ? (
