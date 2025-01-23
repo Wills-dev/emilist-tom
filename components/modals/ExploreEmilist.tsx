@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Modal } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { category, privateExpert, serviceList } from "@/constants";
+import { category, serviceList } from "@/constants";
 import { fadeIn } from "@/anim";
 
 interface ExploreEmilistProps {
@@ -68,16 +68,14 @@ const ExploreEmilist = ({ isOpen, onCancel }: ExploreEmilistProps) => {
               Private Expert
             </h2>
             <ul className="flex flex-col gap-4">
-              {privateExpert?.map((expert, index) => (
-                <li key={index} className="">
-                  <Link
-                    href={expert.url}
-                    className="hover:text-primary-green transition-all duration-300 capitalize"
-                  >
-                    {expert.title}
-                  </Link>
-                </li>
-              ))}
+              <li className="">
+                <Link
+                  href="/expert/private-expert"
+                  className="hover:text-primary-green transition-all duration-300 capitalize"
+                >
+                  Private expert
+                </Link>
+              </li>
             </ul>
           </div>
         </motion.div>
