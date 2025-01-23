@@ -2,13 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useContext } from "react";
 
 import PopularSection from "../Skeleton/PopularSection";
 
+import { AuthContext } from "@/utils/AuthState";
+import { useAddClicks } from "@/hooks/useAddClicks";
 import { useFetchJobs } from "@/hooks/useFetchJobs";
 import { Capitalize, numberWithCommas } from "@/helpers";
 
 const JobHomeData = () => {
+  const { currentUser } = useContext(AuthContext);
+  const userId = currentUser?._id;
+
+  const { addClicks } = useAddClicks();
   const { isLoading, handleHorizontalScroll, data, containerRef, hasMore } =
     useFetchJobs();
 
@@ -23,6 +30,7 @@ const JobHomeData = () => {
           <Link
             href={`/job/info/${job?._id}`}
             className="flex flex-col gap-2 group"
+            onClick={() => addClicks("job", job._id, userId || null)}
           >
             <div className="max-w-[400px] w-96 max-md:w-72 h-64 max-md:h-52 overflow-hidden rounded-lg bg-white flex-c justify-center shadow">
               {job?.Images?.length > 0 ? (
@@ -59,7 +67,7 @@ const JobHomeData = () => {
             </p>
           </Link>
           <Link
-            href="/catalog/jobs"
+            href="/dashboard/job"
             className="border-1 border-gray-700 rounded-lg px-4 py-2 font-medium max-md:text-sm w-fit hover:border-gray-500 hover:text-gray-500 transition-all duration-300"
           >
             See more jobs

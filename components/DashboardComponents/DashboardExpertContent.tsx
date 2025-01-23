@@ -20,9 +20,15 @@ import { CompareContext } from "@/utils/CompareState";
 import { useLikeBusiness } from "@/hooks/useLikeBusiness";
 import { useUnlikeBusiness } from "@/hooks/useUnlikeBusiness";
 import { getCurrencySign } from "@/helpers/getCurrencySign";
+import { useAddClicks } from "@/hooks/useAddClicks";
+import { AuthContext } from "@/utils/AuthState";
 
 const DashboardExpertContent = () => {
+  const { currentUser } = useContext(AuthContext);
+  const userId = currentUser?._id;
+
   const { compare } = useCompare();
+  const { addClicks } = useAddClicks();
   const { compareServices, rrerender } = useContext(CompareContext);
   const { handleLikeBusiness, rerender } = useLikeBusiness();
   const { handleUnlikeBusiness, unsaveRerenderr } = useUnlikeBusiness();
@@ -202,6 +208,13 @@ const DashboardExpertContent = () => {
                             <Link
                               href={`/expert/info/${expert?._id}`}
                               className="view-btn max-sm:text-sm"
+                              onClick={() =>
+                                addClicks(
+                                  "business",
+                                  expert?._id,
+                                  userId || null
+                                )
+                              }
                             >
                               View Details
                             </Link>

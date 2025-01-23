@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 
 import { CiSearch } from "react-icons/ci";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
@@ -16,8 +16,14 @@ import { useSaveMaterials } from "@/hooks/useSaveMaterials";
 import { useUnsaveMaterial } from "@/hooks/useUnsaveMaterial";
 import { useFetchMaterials } from "@/hooks/useFetchMaterials";
 import { useAddMaterialToCart } from "@/hooks/useAddMaterialToCart";
+import { AuthContext } from "@/utils/AuthState";
+import { useAddClicks } from "@/hooks/useAddClicks";
 
 const DashboardMaterialContent = () => {
+  const { currentUser } = useContext(AuthContext);
+  const userId = currentUser?._id;
+
+  const { addClicks } = useAddClicks();
   const { handleSaveMaterial, rerender } = useSaveMaterials();
   const { addMaterialToCart, cartLoading } = useAddMaterialToCart();
   const { handleUnsaveMaterial, unsaveRerenderr } = useUnsaveMaterial();
@@ -112,6 +118,13 @@ const DashboardMaterialContent = () => {
                           <div className="flex flex-col gap-2 flex-1">
                             <Link
                               href={`/material/info/${material._id}`}
+                              onClick={() =>
+                                addClicks(
+                                  "materials",
+                                  material._id,
+                                  userId || null
+                                )
+                              }
                               className="sm:text-2xl font-bold hover:text-primary-green duration-300"
                             >
                               {material?.name && Capitalize(material?.name)}
@@ -121,8 +134,15 @@ const DashboardMaterialContent = () => {
                               <p className="max-sm:text-sm">
                                 {material?.description.slice(0, 200)}...
                                 <Link
-                                  href={`/material/info/${material.Id}`}
+                                  href={`/material/info/${material._id}`}
                                   className="underline text-primary-green text-xs"
+                                  onClick={() =>
+                                    addClicks(
+                                      "materials",
+                                      material._id,
+                                      userId || null
+                                    )
+                                  }
                                 >
                                   Read more
                                 </Link>

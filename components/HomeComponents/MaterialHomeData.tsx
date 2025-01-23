@@ -2,13 +2,20 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useContext } from "react";
 
 import PopularSection from "../Skeleton/PopularSection";
 
+import { AuthContext } from "@/utils/AuthState";
 import { useFetchMaterials } from "@/hooks/useFetchMaterials";
 import { Capitalize, numberWithCommas } from "@/helpers";
+import { useAddClicks } from "@/hooks/useAddClicks";
 
 const MaterialHomeData = () => {
+  const { currentUser } = useContext(AuthContext);
+  const userId = currentUser?._id;
+
+  const { addClicks } = useAddClicks();
   const { handleHorizontalScroll, data, containerRef, loading, hasMore } =
     useFetchMaterials();
 
@@ -24,6 +31,9 @@ const MaterialHomeData = () => {
           <div className="flex flex-col gap-4" key={i}>
             <Link
               href={`/material/info/${material?._id}`}
+              onClick={() =>
+                addClicks("materials", material._id, userId || null)
+              }
               className="flex flex-col gap-2 group"
             >
               <div className="max-w-[400px] w-96 max-md:w-72 h-64 max-md:h-52 overflow-hidden rounded-lg bg-white flex-c justify-center">
@@ -72,7 +82,7 @@ const MaterialHomeData = () => {
               )}
             </Link>
             <Link
-              href="/catalog/material"
+              href="/dashboard/material"
               className="border-1 border-gray-700 rounded-lg px-4 py-2 font-medium max-md:text-sm w-fit hover:border-gray-500 hover:text-gray-500 transition-all duration-300"
             >
               See more materials

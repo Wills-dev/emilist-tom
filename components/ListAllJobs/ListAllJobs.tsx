@@ -16,8 +16,15 @@ import { useGetBusinesses } from "@/hooks/useGetBusinesses";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 import { CiSearch } from "react-icons/ci";
 import { serviceList } from "@/constants";
+import { useContext } from "react";
+import { AuthContext } from "@/utils/AuthState";
+import { useAddClicks } from "@/hooks/useAddClicks";
 
 const ListAllJobs = () => {
+  const { currentUser } = useContext(AuthContext);
+  const userId = currentUser?._id;
+
+  const { addClicks } = useAddClicks();
   const { businesses, loading } = useGetBusinesses();
   const {
     isLoading,
@@ -127,6 +134,7 @@ const ListAllJobs = () => {
                           ? `/dashboard/job/info/biddable/${job._id}`
                           : `/dashboard/job/info/regular/${job._id}`
                       }
+                      onClick={() => addClicks("job", job._id, userId || null)}
                     >
                       <div className="flex-c-b w-full ">
                         <h5 className="sm:text-lg font-semibold">
