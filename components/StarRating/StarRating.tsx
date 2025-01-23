@@ -9,13 +9,13 @@ const StarRating: React.FC<StarRatingProps> = ({ rating }) => {
 
   for (let i = 1; i <= 5; i++) {
     if (i <= Math.floor(rating)) {
-      stars.push(<FaStar key={i} className="text-yellow-500" />);
+      stars.push(<FaStar key={i} className="text-[#ff9933]" />);
     } else if (i === Math.ceil(rating)) {
       const decimal = rating % 1;
       if (decimal > 0.8) {
-        stars.push(<FaStar key={i} className="text-yellow-500" />);
+        stars.push(<FaStar key={i} className="text-[#ff9933]" />);
       } else if (decimal > 0.4) {
-        stars.push(<FaStarHalfAlt key={i} className="text-yellow-500" />);
+        stars.push(<FaStarHalfAlt key={i} className="text-[#ff9933]" />);
       } else {
         stars.push(<FaStar key={i} className="text-gray-300" />);
       }
