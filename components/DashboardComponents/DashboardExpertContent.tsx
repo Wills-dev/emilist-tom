@@ -19,6 +19,7 @@ import { useContext, useEffect } from "react";
 import { CompareContext } from "@/utils/CompareState";
 import { useLikeBusiness } from "@/hooks/useLikeBusiness";
 import { useUnlikeBusiness } from "@/hooks/useUnlikeBusiness";
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 
 const DashboardExpertContent = () => {
   const { compare } = useCompare();
@@ -187,7 +188,8 @@ const DashboardExpertContent = () => {
                           <div className="flex-c md:flex-col md:items-end justify-between">
                             <div className="flex flex-col gap-1">
                               <p className="sm:text-2xl font-bold text-primary-green">
-                                {expert?.currency}{" "}
+                                {expert?.currency &&
+                                  getCurrencySign(expert?.currency)}
                                 {expert?.startingPrice
                                   ? numberWithCommas(expert?.startingPrice)
                                   : 0}

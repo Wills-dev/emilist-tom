@@ -1,16 +1,8 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
@@ -74,34 +66,22 @@ export function EarningAreaChart() {
             <Area
               dataKey="mobile"
               type="natural"
-              fill="var(--color-mobile)"
+              fill="#054753"
               fillOpacity={0.4}
-              stroke="var(--color-mobile)"
+              stroke="#054753"
               stackId="a"
             />
             <Area
               dataKey="desktop"
               type="natural"
-              fill="var(--color-desktop)"
+              fill="#9ef769"
               fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              stroke="#9ef769"
               stackId="a"
             />
           </AreaChart>
         </ChartContainer>
       </CardContent>
-      {/* <CardFooter>
-        <div className="flex w-full items-start gap-2 text-sm">
-          <div className="grid gap-2">
-            <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
-            </div>
-            <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
-            </div>
-          </div>
-        </div>
-      </CardFooter> */}
     </Card>
   );
 }

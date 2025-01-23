@@ -6,6 +6,7 @@ import Image from "next/image";
 import { RadialChart } from "../Charts/RadialChart";
 import { useGetTarget } from "@/hooks/useGetTarget";
 import { numberWithCommas } from "@/helpers";
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 
 const TargetInfo = () => {
   const { loading, target } = useGetTarget();
@@ -64,10 +65,10 @@ const TargetInfo = () => {
               </p>
               <div className="flex flex-col items-end gap-1">
                 <p className="text-xl text-[#737774] font-semibold max-sm:text-sm">
-                  {target?.currency}{" "}
+                  {target?.currency && getCurrencySign(target?.currency)}
                   {target?.amount?.current &&
                     numberWithCommas(target?.amount?.current)}
-                  /{target?.currency}{" "}
+                  /{target?.currency && getCurrencySign(target?.currency)}
                   {target?.amount?.target &&
                     numberWithCommas(target?.amount?.target)}
                 </p>

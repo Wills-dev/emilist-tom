@@ -74,17 +74,17 @@ export function ExpenseAreaChart() {
             <Area
               dataKey="mobile"
               type="natural"
-              fill="var(--color-mobile)"
+              fill="#FF5D7A"
               fillOpacity={0.4}
-              stroke="var(--color-mobile)"
+              stroke="#FF5D7A"
               stackId="a"
             />
             <Area
               dataKey="desktop"
               type="natural"
-              fill="var(--color-desktop)"
+              fill="#ff9933"
               fillOpacity={0.4}
-              stroke="var(--color-desktop)"
+              stroke="#ff9933"
               stackId="a"
             />
           </AreaChart>
