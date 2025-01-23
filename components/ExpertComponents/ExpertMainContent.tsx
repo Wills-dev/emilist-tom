@@ -1,5 +1,6 @@
 import { numberWithCommas } from "@/helpers";
 import ImageSlider from "./ImageSlider";
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 
 type Props = {
   handleOpenModal: () => void;
@@ -30,7 +31,8 @@ const ExpertMainContent = ({ handleOpenModal, serviceInfo }: Props) => {
             </ul>
             <div className="">
               <h3 className="text-lg font-bold text-primary-green max-sm:text-sm mb-6">
-                {serviceInfo?.currency}{" "}
+                {serviceInfo?.currency &&
+                  getCurrencySign(serviceInfo?.currency)}
                 {serviceInfo?.startingPrice &&
                   numberWithCommas(serviceInfo?.startingPrice)}
               </h3>

@@ -19,6 +19,7 @@ import { useAddClicks } from "@/hooks/useAddClicks";
 import { useBlackListJob } from "@/hooks/useBlackListJob";
 import { useFetchJobs } from "@/hooks/useFetchJobs";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 
 const DashboardJobContent = () => {
   const { currentUser } = useContext(AuthContext);
@@ -127,7 +128,7 @@ const DashboardJobContent = () => {
                     <div className="flex-c-b flex-wrap">
                       <h6 className="text-[#737774] text-sm font-medium max-sm:text-xs">
                         {job?.type === "biddable" ? "Max price" : "Budget"}:{" "}
-                        {job?.currency}{" "}
+                        {job?.currency && getCurrencySign(job?.currency)}
                         {job?.budget && numberWithCommas(job?.budget)}
                         {job?.maximumPrice &&
                           numberWithCommas(job?.maximumPrice)}

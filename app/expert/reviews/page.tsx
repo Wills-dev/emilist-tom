@@ -1,7 +1,12 @@
-import React from "react";
+import ExpertReviewContent from "@/components/ExpertReveiwContent/ExpertReviewContent";
+import MainLayout from "@/components/MainLayout/MainLayout";
 
 const page = () => {
-  return <div>page</div>;
+  return (
+    <MainLayout>
+      <ExpertReviewContent />
+    </MainLayout>
+  );
 };
 
 export default page;

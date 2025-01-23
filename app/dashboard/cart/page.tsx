@@ -12,19 +12,19 @@ import { Capitalize, numberWithCommas } from "@/helpers";
 import { useRemoveMaterialFromCart } from "@/hooks/useRemoveMaterialFromCart";
 import { useIncreaseCartItem } from "@/hooks/useIncreaseCartItem";
 import { useDecreaseCartItem } from "@/hooks/useDecreaseCartItem";
-import { useDiscount } from "@/hooks/useDiscount";
 import { useCheckoutCart } from "@/hooks/useCheckoutCart";
 import OrderPayment from "@/components/modals/OrderPayment";
+import { useGetVat } from "@/hooks/useGetVat";
 
 const Cart = () => {
   const { cartItems, totalCartQuantity } = useContext(CartContext);
 
+  const { vat, load } = useGetVat();
   const { incrementLoading, incrementCartQuantity } = useIncreaseCartItem();
   const { deleteMaterialFromCart, deleteCartLoading } =
     useRemoveMaterialFromCart();
   const { decreaseCartQuantity, decreaseLoading } = useDecreaseCartItem();
-  const { handleSubmitDiscount, discount, discountLoading, code, setCode } =
-    useDiscount();
+
   const {
     isLoading,
     handleCheckout,
@@ -39,16 +39,12 @@ const Cart = () => {
   } = useCheckoutCart();
 
   const checkout = () => {
-    if (code && discount) {
-      handleCheckout(code);
-    } else {
-      handleCheckout();
-    }
+    handleCheckout();
   };
 
   return (
     <main className="relative">
-      {deleteCartLoading || discountLoading ? (
+      {deleteCartLoading ? (
         <div className="absolute top-0 left-0 w-full min-h-screen bg-white h-full z-50 opacity-40" />
       ) : null}
       {incrementLoading || decreaseLoading ? (
@@ -172,6 +168,10 @@ const Cart = () => {
                 </div> */}
                 <div className="flex-c-b sm:gap-6 gap-4 px-2 py-3 min-w-44 border-1 border-gray-500 rounded-md">
                   <p className="max-sm:text-sm">Delivery</p>
+                  <p className="max-sm:text-sm font-bold"> ₦0.00</p>
+                </div>
+                <div className="flex-c-b sm:gap-6 gap-4 px-2 py-3 min-w-44 border-1 border-gray-500 rounded-md">
+                  <p className="max-sm:text-sm">Vat</p>
                   <p className="max-sm:text-sm font-bold"> ₦0.00</p>
                 </div>
                 <div className="flex-c-b sm:gap-6 gap-4 px-2 py-3 min-w-44 border-1 border-gray-500 rounded-md">
