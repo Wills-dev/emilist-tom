@@ -148,6 +148,9 @@ const DashboardJobContent = () => {
                               ? `/dashboard/job/info/biddable/${job._id}`
                               : `/dashboard/job/info/regular/${job._id}`
                           }
+                          onClick={() =>
+                            addClicks("job", job._id, userId || null)
+                          }
                           className="underline text-primary-green text-xs"
                         >
                           Read more

@@ -2,13 +2,20 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useContext } from "react";
 
 import PopularSection from "../Skeleton/PopularSection";
 
+import { AuthContext } from "@/utils/AuthState";
+import { useAddClicks } from "@/hooks/useAddClicks";
 import { Capitalize, numberWithCommas } from "@/helpers";
 import { useGetBusinesses } from "@/hooks/useGetBusinesses";
 
 const ExpertHomeData = () => {
+  const { currentUser } = useContext(AuthContext);
+  const userId = currentUser?._id;
+
+  const { addClicks } = useAddClicks();
   const { handleHorizontalScroll, data, containerRef, loading, hasMore } =
     useGetBusinesses();
 
@@ -24,6 +31,7 @@ const ExpertHomeData = () => {
             <Link
               href={`/expert/info/${expert?._id}`}
               className="flex flex-col gap-2 group"
+              onClick={() => addClicks("business", expert?._id, userId || null)}
             >
               <div className="max-w-[400px] w-96 max-md:w-72 h-64 max-md:h-52 overflow-hidden rounded-lg flex-c justify-center shadow">
                 {Array.isArray(expert?.businessImages) &&
@@ -59,7 +67,7 @@ const ExpertHomeData = () => {
               </p>
             </Link>
             <Link
-              href="/catalog/services"
+              href="/dashboard/expert"
               className="border-1 border-gray-700 rounded-lg px-4 py-2 font-medium max-md:text-sm w-fit hover:border-gray-500 hover:text-gray-500 transition-all duration-300"
             >
               See experts near you

@@ -8,7 +8,7 @@ export const useAddClicks = () => {
   ) => {
     try {
       await axiosInstance.patch(
-        `/auth/add-click?service=${service}&serviceId=6${serviceId}&userId=${
+        `/auth/add-click?service=${service}&serviceId=${serviceId}&userId=${
           userId || null
         }`
       );
