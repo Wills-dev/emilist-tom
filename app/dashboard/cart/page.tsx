@@ -172,7 +172,10 @@ const Cart = () => {
                 </div>
                 <div className="flex-c-b sm:gap-6 gap-4 px-2 py-3 min-w-44 border-1 border-gray-500 rounded-md">
                   <p className="max-sm:text-sm">Vat</p>
-                  <p className="max-sm:text-sm font-bold"> ₦0.00</p>
+                  <p className="max-sm:text-sm font-bold">
+                    {" "}
+                    ₦{vat && numberWithCommas(vat)}
+                  </p>
                 </div>
                 <div className="flex-c-b sm:gap-6 gap-4 px-2 py-3 min-w-44 border-1 border-gray-500 rounded-md">
                   <p className="max-sm:text-sm">Total</p>
