@@ -6,10 +6,10 @@ import { Capitalize } from "@/helpers";
 
 type Props = {
   serviceInfo: any;
-  setOpenShareModal: React.Dispatch<React.SetStateAction<boolean>>;
+  handleOpen: () => void;
 };
 
-const ReviewProfile = ({ serviceInfo, setOpenShareModal }: Props) => {
+const ReviewProfile = ({ serviceInfo, handleOpen }: Props) => {
   return (
     <section className="">
       <div className="w-full flex items-end justify-between gap-8 flex-wrap">
@@ -77,7 +77,7 @@ const ReviewProfile = ({ serviceInfo, setOpenShareModal }: Props) => {
               width={24}
               height={24}
               className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
-              onClick={() => setOpenShareModal(true)}
+              onClick={handleOpen}
             />
           </button>
         </div>

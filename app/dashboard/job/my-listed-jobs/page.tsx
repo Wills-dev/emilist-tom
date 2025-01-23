@@ -108,15 +108,15 @@ const MyListedJobs = () => {
                         <ShareLink
                           handleCancel={handleCancel}
                           isModalOpen={isModalOpen}
-                          link={link}
-                          title="Share job"
-                          textToCopy={
+                          link={
                             job?.type === "biddable"
                               ? `https://emilist.com/dashboard/job/info/biddable/${job._id}`
                               : job?.type === "regular"
                               ? `https://emilist.com/dashboard/job/info/regular/${job._id}`
                               : `https://emilist.com/dashboard/job/info/direct/${job._id}`
                           }
+                          title="Share job"
+                          textToCopy={link}
                         />
                         <Link
                           href={
