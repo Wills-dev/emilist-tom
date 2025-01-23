@@ -23,7 +23,7 @@ const CompareState = ({ children }: Props) => {
       const { data } = await axiosInstance.get(
         `/business/fetch-compared-business`
       );
-      setCompareServices(data?.data);
+      setCompareServices(data?.data?.enhancedBusinesses);
     } catch (error) {
       console.log("error getting compared services", error);
     } finally {

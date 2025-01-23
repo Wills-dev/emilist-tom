@@ -18,6 +18,7 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 
 const ComparePage = () => {
   const { compare } = useCompare();
@@ -38,7 +39,7 @@ const ComparePage = () => {
           </div>
         ) : (
           <div className="relative flex my-10">
-            {compareServices.length > 6 ? (
+            {compareServices.length > 0 ? (
               <>
                 <div className="absolute left-0 sm:w-52 w-28 bg-white flex flex-col font-semibold max-sm:text-sm">
                   <div className="w-full h-[330px] border-b-1 py-6" />
@@ -99,7 +100,8 @@ const ComparePage = () => {
                             </button>
                           </div>
                           <h3 className="text-lg font-bold text-primary-green ">
-                            {expert?.currency}{" "}
+                            {expert?.currency &&
+                              getCurrencySign(expert?.currency)}
                             {expert?.startingPrice
                               ? numberWithCommas(expert?.startingPrice)
                               : 0}
