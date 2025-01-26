@@ -208,7 +208,7 @@ const DashboardCards = () => {
                   (participant: any) => participant?._id !== currentUser?._id
                 );
                 return (
-                  <div className="w-full" key={index}>
+                  <div className="w-full  min-w-56" key={index}>
                     {conversation?.participants
                       ?.filter(
                         (participant: any) => participant._id !== currentUserId

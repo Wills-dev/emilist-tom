@@ -20,6 +20,7 @@ import { useBlackListJob } from "@/hooks/useBlackListJob";
 import { useFetchJobs } from "@/hooks/useFetchJobs";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 import { getCurrencySign } from "@/helpers/getCurrencySign";
+import ReadMore from "../ReadMore/ReadMore";
 
 const DashboardJobContent = () => {
   const { currentUser } = useContext(AuthContext);
@@ -139,28 +140,13 @@ const DashboardJobContent = () => {
                         {job?.createdAt && formatCreatedAt(job.createdAt)}
                       </h6>
                     </div>
-                    {job?.description && job?.description.length > 300 ? (
-                      <p className="text-sm font-medium max-sm:text-sm py-2">
-                        {job?.description?.slice(0, 300)}...
-                        <Link
-                          href={
-                            job?.type === "biddable"
-                              ? `/dashboard/job/info/biddable/${job._id}`
-                              : `/dashboard/job/info/regular/${job._id}`
-                          }
-                          onClick={() =>
-                            addClicks("job", job._id, userId || null)
-                          }
-                          className="underline text-primary-green text-xs"
-                        >
-                          Read more
-                        </Link>
-                      </p>
-                    ) : (
-                      <p className="text-sm font-medium max-sm:text-sm py-2">
-                        {job?.description}
-                      </p>
-                    )}
+                    {
+                      <ReadMore
+                        text={job?.description || ""}
+                        maxLength={300}
+                        style="text-sm font-medium max-sm:text-sm py-2"
+                      />
+                    }
                     <div className="flex-c-b gap-10 max-sm:gap-5 ">
                       <h6 className="text-[#737774] text-sm  font-medium max-sm:text-sm max-sm:hidden">
                         Job duration: {job?.duration?.number}{" "}

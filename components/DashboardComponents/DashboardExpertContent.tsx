@@ -22,6 +22,7 @@ import { useUnlikeBusiness } from "@/hooks/useUnlikeBusiness";
 import { getCurrencySign } from "@/helpers/getCurrencySign";
 import { useAddClicks } from "@/hooks/useAddClicks";
 import { AuthContext } from "@/utils/AuthState";
+import ReadMore from "../ReadMore/ReadMore";
 
 const DashboardExpertContent = () => {
   const { currentUser } = useContext(AuthContext);
@@ -130,16 +131,11 @@ const DashboardExpertContent = () => {
                               {expert?.services[0] &&
                                 Capitalize(expert?.services[0])}
                             </h4>
-                            {expert?.bio && expert?.bio.length > 100 ? (
-                              <p className=" text-xs">
-                                {expert?.bio.slice(0, 100)}...
-                                <span className=" text-primary-green">
-                                  Read more
-                                </span>
-                              </p>
-                            ) : (
-                              <p className="sm:text-sm">{expert?.bio}</p>
-                            )}
+                            <ReadMore
+                              text={expert?.bio || ""}
+                              maxLength={100}
+                              style="sm:text-sm"
+                            />
                             <div className="flex-c-b  sm:gap-4 gap-2 flex-wrap">
                               <div className="flex-c gap-1 max-sm:text-sm ">
                                 <StarRating rating={expert?.averageRating} />{" "}

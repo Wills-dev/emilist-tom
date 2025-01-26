@@ -22,11 +22,10 @@ interface MaterialReviewContentProps {
 }
 
 const MaterialReviewContent = ({ materialId }: MaterialReviewContentProps) => {
-  const stars = [5, 4, 3, 2, 1];
   const {
     data,
     reviews,
-    isLoading,
+    isLoadin,
     getReviews,
     totalPages,
     currentPage,
@@ -51,7 +50,7 @@ const MaterialReviewContent = ({ materialId }: MaterialReviewContentProps) => {
   }, [filter, materialId]);
   return (
     <div className="padding-x pt-28 pb-10">
-      {isLoading ? (
+      {isLoadin ? (
         <div className="flex item-center justify-center text-green-500 mt-6 h-[60vh]">
           <span className="loading loading-bars loading-lg"></span>
         </div>
