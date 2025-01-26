@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import StarRating from "../StarRating/StarRating";
 import ContactModal from "../modals/ContactModal";
+import { useGetUser } from "@/hooks/useGetUser";
+import { getLevelValue } from "@/helpers/getLevelValue";
 
 interface AboutUserProps {
   userId: string;
@@ -13,50 +15,72 @@ interface AboutUserProps {
 const AboutUser = ({ userId }: AboutUserProps) => {
   const [openContactModal, setOpenContactModal] = useState(false);
 
+  const { user, isLoading, getUserInfo } = useGetUser();
+
+  useEffect(() => {
+    getUserInfo(userId);
+  }, [userId]);
+
   return (
     <section className="padding-x py-28 w-full">
-      <div className="bg-white w-full rounded-[10px] py-10 px-14 max-sm:px-5 mt-10">
-        <h2 className="sm:text-xl font-bold text-lg ">Profile</h2>
+      {isLoading ? (
+        <div className="flex item-center justify-center text-green-500 mt-6 h-[70vh]">
+          <span className="loading loading-bars loading-lg"></span>
+        </div>
+      ) : (
+        <div className="bg-white w-full rounded-[10px] py-10 px-14 max-sm:px-5 mt-10">
+          <h2 className="sm:text-xl font-bold text-lg ">Profile</h2>
 
-        <div className="flex mt-6 mb-20 max-md:flex-col max-md:justify-center max-sm:items-center">
-          <div className="">
-            <div className="relative w-[170px] h-[170px]  max-sm:w-[120px] max-sm:h-[120px] max-md:mb-5">
-              <Image
-                src="/assets/dummyImages/profilePic.png"
-                alt="profile picuter"
-                width={170}
-                height={170}
-                className="object-cover w-full h-full min-h-full min-w-full rounded-full"
-              />
-              <Image
-                src="/assets/icons/verify.svg"
-                alt="verify icon"
-                width={20}
-                height={20}
-                className="object-contain w-6 h-6 min-h-6 min-w-6 absolute right-4 top-2 max-sm:max-h-5 max-sm:min-h-5 max-sm:max-w-5 max-sm:min-w-5"
-              />
-              <p className="bg-primary-green  text-center text-[#FCFEFD] sm:text-sm text-xs rounded-[5px] capitalize absolute -bottom-[0.9rem] left-12 px-4 max-md:left-7">
-                level 3
-              </p>
-            </div>
-          </div>
-          <div className="ml-6 mt-2">
-            <div className="flex gap-8">
-              <p className="sm:text-xl font-semibold capitalize ">Toks Wale</p>
-              <div className="flex-c gap-2">
-                <Image
-                  src="/assets/icons/location.svg"
-                  alt="verify icon"
-                  width={20}
-                  height={20}
-                  className="object-contain w-6 h-6 min-h-6 min-w-6 max-sm:max-h-5 max-sm:min-h-5 max-sm:max-w-5 max-sm:min-w-5"
-                />
-                <p className=" text-[#5E625F] font-medium max-sm:text-sm capitalize ">
-                  Lagos, Nigeria
+          <div className="flex mt-6 mb-20 max-md:flex-col max-md:justify-center max-sm:items-center">
+            <div className="">
+              <div className="relative w-[170px] h-[170px]  max-sm:w-[120px] max-sm:h-[120px] max-md:mb-5">
+                {user?.profileImage ? (
+                  <Image
+                    src={user?.profileImage}
+                    alt="profile pic"
+                    width={170}
+                    height={170}
+                    className="object-cover w-full h-full min-h-full min-w-full rounded-full"
+                  />
+                ) : (
+                  <p className="w-[170px] h-[170px]  max-sm:w-[120px] max-sm:h-[120px] rounded-full bg-slate-200 mr-2 flex-c justify-center font-bold">
+                    {user?.userName?.[0]?.toUpperCase()}
+                  </p>
+                )}
+                {user?.isVerified && (
+                  <Image
+                    src="/assets/icons/verify.svg"
+                    alt="verify icon"
+                    width={20}
+                    height={20}
+                    className="object-contain w-6 h-6 min-h-6 min-w-6 absolute right-4 top-2 max-sm:max-h-5 max-sm:min-h-5 max-sm:max-w-5 max-sm:min-w-5"
+                  />
+                )}
+                <p className="bg-primary-green  text-center text-[#FCFEFD] sm:text-sm text-xs rounded-[5px] capitalize absolute -bottom-[0.9rem] left-12 px-4 max-md:left-7">
+                  level {user?.level && getLevelValue(user?.level)}
                 </p>
               </div>
             </div>
-            <div className="flex-c gap-3 py-3 max-md:justify-center">
+            <div className="ml-6 mt-2">
+              <div className="flex gap-8">
+                <p className="sm:text-xl font-semibold capitalize ">
+                  {" "}
+                  {user?.fullName ? user?.fullName : user?.userName}
+                </p>
+                <div className="flex-c gap-2">
+                  <Image
+                    src="/assets/icons/location.svg"
+                    alt="verify icon"
+                    width={20}
+                    height={20}
+                    className="object-contain w-6 h-6 min-h-6 min-w-6 max-sm:max-h-5 max-sm:min-h-5 max-sm:max-w-5 max-sm:min-w-5"
+                  />
+                  <p className=" text-[#5E625F] font-medium max-sm:text-sm capitalize ">
+                    {user?.location}
+                  </p>
+                </div>
+              </div>
+              {/* <div className="flex-c gap-3 py-3 max-md:justify-center">
               <p className="text-primary-green font-medium  max-sm:text-sm capitalize underline">
                 Bricklayer
               </p>
@@ -75,58 +99,53 @@ const AboutUser = ({ userId }: AboutUserProps) => {
                 <StarRating rating={4} />
                 <p className="font-medium max-sm:text-sm capitalize ">4.0</p>
               </div>
+            </div> */}
+              <button
+                className="bg-primary-green  text-center text-[#FCFEFD] text-sm max-sm:text-xs rounded-[10px] max-sm capitalize w-[280px] py-5 max-sm:w-full mt-5"
+                onClick={() => setOpenContactModal(true)}
+              >
+                Contact me
+              </button>
+              <ContactModal
+                isOpen={openContactModal}
+                onCancel={() => setOpenContactModal(false)}
+                user={user}
+              />
             </div>
-            <button
-              className="bg-primary-green  text-center text-[#FCFEFD] text-sm max-sm:text-xs rounded-[10px] max-sm capitalize w-[280px] py-5 max-sm:w-full mt-5"
-              onClick={() => setOpenContactModal(true)}
-            >
-              Contact me
-            </button>
-            <ContactModal
-              isOpen={openContactModal}
-              onCancel={() => setOpenContactModal(false)}
-              user=""
-            />
           </div>
-        </div>
 
-        <h2 className="sm:text-xl font-semibold text-lg pb-8">About</h2>
-        <div className="flex-c gap-16 flex-wrap">
-          <div className="flex-c gap-8">
-            <p className="font-semibold max-sm:text-sm capitalize ">Gender:</p>
-            <p className="text-[#303632] max-sm:text-sm capitalize ">Male</p>
+          <h2 className="sm:text-xl font-semibold text-lg pb-8">About</h2>
+          <div className="flex-c gap-16 flex-wrap">
+            <div className="flex-c gap-8">
+              <p className="font-semibold max-sm:text-sm capitalize ">
+                Gender:
+              </p>
+              <p className="text-[#303632] max-sm:text-sm capitalize ">
+                {user?.gender ? user?.gender : "None"}
+              </p>
+            </div>
+            <div className="flex-c gap-8">
+              <p className="font-semibold max-sm:text-sm capitalize ">Email:</p>
+              <p className="text-[#303632] max-sm:text-sm capitalize ">
+                {user?.email}
+              </p>
+            </div>
+            <div className="flex-c gap-8">
+              <p className="font-semibold max-sm:text-sm capitalize ">
+                Language:
+              </p>
+              <p className="text-[#303632] max-sm:text-sm capitalize ">
+                {user?.language}
+              </p>
+            </div>
           </div>
-          <div className="flex-c gap-8">
-            <p className="font-semibold max-sm:text-sm capitalize ">Email:</p>
+          <div className="my-10">
+            <p className="font-semibold max-sm:text-sm capitalize my-3">Bio</p>
             <p className="text-[#303632] max-sm:text-sm capitalize ">
-              Tokswale@gmail.com
+              {user?.bio}
             </p>
           </div>
-          <div className="flex-c gap-8">
-            <p className="font-semibold max-sm:text-sm capitalize ">
-              Language:
-            </p>
-            <p className="text-[#303632] max-sm:text-sm capitalize ">
-              English, French
-            </p>
-          </div>
-        </div>
-        <div className="my-10">
-          <p className="font-semibold max-sm:text-sm capitalize my-3">Bio</p>
-          <p className="text-[#303632] max-sm:text-sm capitalize ">
-            Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet
-            sint. Velit officia consequat duis enim velit mollit. Exercitation
-            veniam consequat sunt nostrud amet.Amet minim mollit non deserunt
-            ullamco est sit aliqua dolor do amet sint. Velit officia consequat
-            duis enim velit mollit. Exercitation veniam Amet minim mollit non
-            deserunt ullamco est sit aliqua dolor do amet sint. Velit officia
-            consequat duis enim velit mollit. Exercitation veniam consequat sunt
-            nostrud amet.Amet minim mollit non deserunt ullamco est sit aliqua
-            dolor do amet sint. Velit officia consequat duis enim velit mollit.
-            Exercitation veniam
-          </p>
-        </div>
-        <div className=" w-full mb-12">
+          {/* <div className=" w-full mb-12">
           <h2 className="sm:text-lg font-semibold mt-8">Membership</h2>
 
           <div className="w-full">
@@ -195,8 +214,9 @@ const AboutUser = ({ userId }: AboutUserProps) => {
               </div>
             </div>
           </div>
+        </div> */}
         </div>
-      </div>
+      )}
     </section>
   );
 };
