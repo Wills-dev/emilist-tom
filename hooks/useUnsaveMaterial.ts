@@ -20,7 +20,7 @@ export const useUnsaveMaterial = () => {
     try {
       setIsLoading(true);
       await axiosInstance.get(`/material/unlike-product/${materialId}`);
-      toast.success(`Material has been removed from saved items`, toastOptions);
+      toast.success(`Material removed from saved.`, toastOptions);
       setRerenderr((prev) => !prev);
       setIsLoading(false);
     } catch (error: any) {

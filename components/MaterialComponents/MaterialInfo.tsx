@@ -21,6 +21,8 @@ import ImageSlider from "../ImageSlider/ImageSlider";
 import ProductDescription from "./ProductDescription";
 import ReviewSlider from "../ReviewSlider/ReviewSlider";
 import OtherProductFromSeller from "./OtherProductFromSeller";
+import { useGetMaterialReview } from "@/hooks/useGetMaterialReview";
+import ReviewSliderLoader from "../ReviewSlider/ReviewSliderLoader";
 
 interface MaterialInfoProps {
   materialId: string;
@@ -30,11 +32,11 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
   const [link, setLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
+  const { data, isLoading, getReviews } = useGetMaterialReview();
   const { handleSaveMaterial, rerender } = useSaveMaterials();
   const { addMaterialToCart, cartLoading } = useAddMaterialToCart();
   const { handleUnsaveMaterial, unsaveRerenderr } = useUnsaveMaterial();
-  const { loading, getMaterialInfo, materialInfo, isProductLiked } =
-    useGetMaterialInfo();
+  const { loading, getMaterialInfo, materialInfo } = useGetMaterialInfo();
 
   useEffect(() => {
     getMaterialInfo(materialId);
@@ -48,6 +50,10 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
     setIsModalOpen(true);
     setLink(url);
   };
+
+  useEffect(() => {
+    getReviews(materialId, "mostRecent");
+  }, []);
 
   return (
     <div className="gap-8 pt-28 pb-4 padding-x">
@@ -69,19 +75,39 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
             title="Share material"
           />
           <div className="flex-c sm:gap-8 gap-5 justify-end pb-5">
-            {isProductLiked ? (
+            {materialInfo?.liked ? (
               <span
-                className="block text-xl text-[#054753] cursor-pointer"
+                className="block cursor-pointer"
                 onClick={() => handleUnsaveMaterial(materialId)}
               >
-                <FaHeart />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="#054753"
+                  className="size-6"
+                >
+                  <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                </svg>
               </span>
             ) : (
               <span
-                className="block text-xl cursor-pointer"
+                className="block  cursor-pointer"
                 onClick={() => handleSaveMaterial(materialId)}
               >
-                <FaRegHeart />
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="#5E625F"
+                  className="size-6"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                  />
+                </svg>
               </span>
             )}
             <Image
@@ -101,10 +127,11 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
             />
           </div>
           <section className="grid grid-cols-5 gap-5 max-lg:grid-cols-4">
-            <ImageSlider materialInfo={materialInfo} />
+            <ImageSlider materialInfo={materialInfo?.product} />
             <div className="col-span-2 max-lg:col-span-2 max-md:col-span-4">
               <h4 className="sm:text-3xl text-lg font-bold mb-4">
-                {materialInfo?.name && Capitalize(materialInfo?.name)}
+                {materialInfo?.product?.name &&
+                  Capitalize(materialInfo?.product?.name)}
               </h4>
               <div className="flex flex-col gap-2 font-inter">
                 <div className="flex justify-between max-sm:flex-col max-sm:gap-2">
@@ -112,24 +139,28 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
                     <h6 className="font-medium max-sm:text-sm">Brand:</h6>
                     <p className=" max-sm:text-sm">
                       {" "}
-                      {materialInfo?.brand && Capitalize(materialInfo?.brand)}
+                      {materialInfo?.product?.brand &&
+                        Capitalize(materialInfo?.product?.brand)}
                     </p>
                   </div>
                   <div className="flex-c gap-2 flex-1">
                     <h6 className="font-medium max-sm:text-sm">Supplier:</h6>
                     <Link
-                      href={`/profile/about/${materialInfo?.userId?._id}`}
+                      href={`/profile/about/${materialInfo?.product?.userId?._id}`}
                       className="text-primary-green underline  max-sm:text-sm"
                     >
-                      {materialInfo?.userId?.fullName ||
-                        materialInfo?.userId?.userName}
+                      {materialInfo?.product?.userId?.fullName ||
+                        materialInfo?.product?.userId?.userName}
                     </Link>
                   </div>
                 </div>
                 <div className="flex justify-between gap-2 max-sm:flex-col ">
                   <div className="flex-c gap-2 flex-1">
                     <h6 className="font-medium max-sm:text-sm">Category:</h6>
-                    <p className="max-sm:text-sm"> {materialInfo?.category}</p>
+                    <p className="max-sm:text-sm">
+                      {" "}
+                      {materialInfo?.product?.category}
+                    </p>
                   </div>
                   <div className="flex-c gap-5 flex-1">
                     <h6 className="font-medium max-sm:text-sm">Rating</h6>
@@ -141,26 +172,31 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
                 </div>
                 <div className="flex-c gap-2 flex-1">
                   <h6 className="font-medium max-sm:text-sm">Location:</h6>
-                  <p className="max-sm:text-sm"> {materialInfo?.location}</p>
+                  <p className="max-sm:text-sm">
+                    {" "}
+                    {materialInfo?.product?.location}
+                  </p>
                 </div>
               </div>
               <h3
                 className={`lg:text-lg font-bold text-primary-green  mt-5 ${
-                  materialInfo?.isDiscounted && "opacity-35 line-through"
+                  materialInfo?.product?.isDiscounted &&
+                  "opacity-35 line-through"
                 }`}
               >
                 {" "}
-                {materialInfo?.currency &&
-                  getCurrencySign(materialInfo?.currency)}
-                {materialInfo?.price && numberWithCommas(materialInfo?.price)}
+                {materialInfo?.product?.currency &&
+                  getCurrencySign(materialInfo?.product?.currency)}
+                {materialInfo?.product?.price &&
+                  numberWithCommas(materialInfo?.product?.price)}
               </h3>
-              {materialInfo?.isDiscounted && (
+              {materialInfo?.product?.isDiscounted && (
                 <h3 className="lg:text-lg font-bold text-primary-green  mt-5">
                   {" "}
-                  {materialInfo?.currency &&
-                    getCurrencySign(materialInfo?.currency)}
-                  {materialInfo?.discountedPrice &&
-                    numberWithCommas(materialInfo?.discountedPrice)}
+                  {materialInfo?.product?.currency &&
+                    getCurrencySign(materialInfo?.product?.currency)}
+                  {materialInfo?.product?.discountedPrice &&
+                    numberWithCommas(materialInfo?.product?.discountedPrice)}
                 </h3>
               )}
               <p className="font-medium max-sm:text-sm mt-2 ">Price</p>
@@ -172,22 +208,34 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
               </button>
             </div>
           </section>
-          <ProductDescription materialInfo={materialInfo} />
+          <ProductDescription materialInfo={materialInfo?.product} />
           <section className="border-b-1 border-gray-400 pb-8">
             {" "}
             <div className="flex-c-b gap-6 max-w-[676px] w-full">
               <h6 className="sm:text-2xl text-lg font-semibold">
                 What people loved about this product
               </h6>
-              <Link
-                href={`/material/info/all-reviews/${materialId}`}
-                className="text-primary-green sm:text-sm text-xs hover:text-green-600 duration-300 transition-all"
-              >
-                See all reviews
-              </Link>
+              {data?.length > 0 && (
+                <Link
+                  href={`/material/info/all-reviews/${materialId}`}
+                  className="text-primary-green sm:text-sm text-xs hover:text-green-600 duration-300 transition-all"
+                >
+                  See all reviews
+                </Link>
+              )}
             </div>
             <div className="py-6">
-              <ReviewSlider />
+              {isLoading ? (
+                <ReviewSliderLoader />
+              ) : (
+                <>
+                  {data?.length > 0 ? (
+                    <ReviewSlider reviews={data} />
+                  ) : (
+                    <p>No review for this material</p>
+                  )}
+                </>
+              )}
             </div>
           </section>
           <OtherProductFromSeller />

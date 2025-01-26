@@ -12,6 +12,7 @@ import { Capitalize, convertDateFormat, numberWithCommas } from "@/helpers";
 import { useDeleteService } from "@/hooks/useDeleteService";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import PromoModal from "../modals/PromoModal";
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 
 interface ServiceDetailsProps {
   serviceId: string;
@@ -69,10 +70,10 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-4">
               <div className="flex items-center justify-between">
                 <h5 className="sm:text-3xl font-semibold text-xl">
-                  {serviceInfo?.businessName
-                    ? Capitalize(serviceInfo?.businessName)
-                    : serviceInfo?.services[0] &&
-                      Capitalize(serviceInfo?.services[0])}
+                  {serviceInfo?.business?.businessName
+                    ? Capitalize(serviceInfo?.business?.businessName)
+                    : serviceInfo?.business?.services[0] &&
+                      Capitalize(serviceInfo?.business?.services[0])}
                 </h5>
                 <div className="relative w-[30px] h-[30px] max-sm:w-[18px] max-sm:h-[18px]">
                   <button onClick={toggleActionButton}>
@@ -106,11 +107,12 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
             </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">
               <p className="text-primary-green font-medium max-sm:text-sm py-2 flex-wrap">
-                {serviceInfo?.services?.map(
+                {serviceInfo?.business?.services?.map(
                   (service: string, index: number) => (
                     <span key={index} className="pl-1">
                       {service}
-                      {index + 1 !== serviceInfo?.services?.length && ","}
+                      {index + 1 !== serviceInfo?.business?.services?.length &&
+                        ","}
                     </span>
                   )
                 )}
@@ -128,7 +130,7 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                   />
                   <div className="flex flex-col gap-1">
                     <h6 className="sm:text-lg font-semibold">
-                      {serviceInfo?.yearFounded}
+                      {serviceInfo?.business?.yearFounded}
                     </h6>
                     <p className="text-[#474C48] max-sm:text-sm">
                       Year founded
@@ -145,9 +147,10 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className="text-lg font-semibold max-sm:text-sm">
-                      {serviceInfo?.currency}{" "}
-                      {serviceInfo?.startingPrice &&
-                        numberWithCommas(serviceInfo?.startingPrice)}
+                      {serviceInfo?.business?.currency &&
+                        getCurrencySign(serviceInfo?.business?.currency)}
+                      {serviceInfo?.business?.startingPrice &&
+                        numberWithCommas(serviceInfo?.business?.startingPrice)}
                     </h6>
                     <p className="text-[#474C48]  max-sm:text-xs">
                       Starting price
@@ -164,7 +167,7 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className=" text-lg font-semibold max-sm:text-sm">
-                      {serviceInfo?.noticePeriod} days
+                      {serviceInfo?.business?.noticePeriod} days
                     </h6>
                     <p className="text-[#474C48] max-sm:text-xs">
                       Notice period
@@ -181,11 +184,11 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className=" text-lg font-semibold max-sm:text-sm">
-                      {serviceInfo?.businessState &&
-                        Capitalize(serviceInfo?.businessState)}
+                      {serviceInfo?.business?.businessState &&
+                        Capitalize(serviceInfo?.business?.businessState)}
                       ,{" "}
-                      {serviceInfo?.businessCountry &&
-                        Capitalize(serviceInfo?.businessCountry)}
+                      {serviceInfo?.business?.businessCountry &&
+                        Capitalize(serviceInfo?.business?.businessCountry)}
                     </h6>
                     <p className="text-[#474C48] max-sm:text-xs">Location</p>
                   </div>
@@ -200,8 +203,10 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                   />
                   <div className="flex flex-col  gap-1">
                     <h6 className=" text-lg font-semibold max-sm:text-sm">
-                      {serviceInfo?.numberOfEmployee &&
-                        numberWithCommas(serviceInfo?.numberOfEmployee)}
+                      {serviceInfo?.business?.numberOfEmployee &&
+                        numberWithCommas(
+                          serviceInfo?.business?.numberOfEmployee
+                        )}
                     </h6>
                     <p className="text-[#474C48] max-sm:text-xs">
                       No of employee
@@ -216,13 +221,13 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                   About my service
                 </h6>
                 <p className=" my-5 text-[#303632]   max-sm:text-xs">
-                  {serviceInfo?.bio}
+                  {serviceInfo?.business?.bio}
                 </p>
               </div>
               <div className=" w-full">
                 <h6 className=" my-5   font-semibold max-sm:text-xs">Images</h6>
                 <div className="flex gap-4 overflow-x-scroll w-full">
-                  {serviceInfo?.businessImages?.map(
+                  {serviceInfo?.business?.businessImages?.map(
                     (image: any, index: number) => (
                       <Image
                         key={index}
@@ -244,7 +249,7 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                 Service Coverage
               </h5>
               <ul className=" flex flex-col  gap-5 list-disc pl-6 max-md:pl-4 text-[#303632]">
-                {serviceInfo?.coverageArea?.map(
+                {serviceInfo?.business?.coverageArea?.map(
                   (area: string, index: number) => (
                     <li key={index} className="max-sm:text-xs ">
                       {area}
@@ -258,10 +263,10 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                 Membership
               </h5>
               <div className="flex flex-col gap-6">
-                {serviceInfo?.membership?.length > 0 ? (
+                {serviceInfo?.business?.membership?.length > 0 ? (
                   <>
                     {" "}
-                    {serviceInfo?.membership?.map(
+                    {serviceInfo?.business?.membership?.map(
                       (membership: any, index: number) => (
                         <div className=" flex flex-col  gap-2 " key={index}>
                           <h5 className="font-semibold">
@@ -314,10 +319,10 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
             </h4>
 
             <div className="flex flex-col gap-6">
-              {serviceInfo?.insurance?.length > 0 ? (
+              {serviceInfo?.business?.insurance?.length > 0 ? (
                 <>
                   {" "}
-                  {serviceInfo?.insurance?.map(
+                  {serviceInfo?.business?.insurance?.map(
                     (insurance: any, index: number) => (
                       <div
                         className=" bg-white w-full rounded-[10px]"
@@ -358,9 +363,9 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
               <h6 className=" my-5 font-semibold max-sm:text-xs">
                 Certificate
               </h6>
-              {serviceInfo?.certification?.length > 0 ? (
+              {serviceInfo?.business?.certification?.length > 0 ? (
                 <div className="flex gap-6 flex-wrap">
-                  {serviceInfo?.certification?.map(
+                  {serviceInfo?.business?.certification?.map(
                     (certificate: any, index: number) => (
                       <div className="flex gap-10 max-md:flex-col" key={index}>
                         <div className="w-[320px] max-sm:w-[280px]">

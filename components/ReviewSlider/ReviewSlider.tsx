@@ -1,48 +1,14 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
+
 import StarRating from "../StarRating/StarRating";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
 
-type Review = {
-  id: number;
-  name: string;
-  rating: number;
-  review: string;
-  avatar: string;
-};
-
-const reviews: Review[] = [
-  {
-    id: 1,
-    name: "Olamide Komolafe",
-    rating: 4,
-    review:
-      "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enimtest sit aliqua dolor do amet sint. Velit off...",
-    avatar: "https://randomuser.me/api/portraits/men/32.jpg",
-  },
-  {
-    id: 2,
-    name: "John Doe",
-    rating: 5,
-    review:
-      "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enimtest sit aliqua dolor do amet sint. Velit off...",
-    avatar: "https://randomuser.me/api/portraits/men/64.jpg",
-  },
-  {
-    id: 3,
-    name: "Jane Smith",
-    rating: 3,
-    review:
-      "Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enimtest sit aliqua dolor do amet sint. Velit off...",
-    avatar: "https://randomuser.me/api/portraits/women/65.jpg",
-  },
-];
-
-const ReviewSlider = () => {
+const ReviewSlider = ({ reviews }: any) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const totalReviews = reviews.length;
 
@@ -88,16 +54,27 @@ const ReviewSlider = () => {
           transition={{ duration: 0.5 }}
           className="p-4 bg-white  flex gap-4"
         >
-          <Image
-            width={20}
-            height={20}
-            src="/assets/dummyImages/profilePic.png"
-            alt={reviews[currentIndex].name}
-            className="w-12 h-12 rounded-full"
-          />
+          {reviews[currentIndex].userId?.profileImage ? (
+            <Image
+              width={20}
+              height={20}
+              src={reviews[currentIndex].userId?.profileImage}
+              alt="profile pic"
+              className="sm:w-12 w-10 sm:h-12 h-10 object-cover  rounded-full"
+            />
+          ) : (
+            <p className="sm:w-12 w-10 sm:h-12 h-10 rounded-full bg-slate-200 flex-c justify-center font-bold">
+              {reviews[currentIndex].userId?.userName?.[0]?.toUpperCase()}
+            </p>
+          )}
           <div className="">
             <div className="flex-c gap-4 flex-wrap">
-              <h3 className="font-semibold">{reviews[currentIndex].name}</h3>
+              <h3 className="font-semibold">
+                {" "}
+                {reviews[currentIndex]?.userId?.fullName
+                  ? reviews[currentIndex]?.userId?.fullName
+                  : reviews[currentIndex]?.userId?.userName}
+              </h3>
               <div className="flex items-center">
                 <StarRating rating={reviews[currentIndex].rating} />
                 <span className="ml-2 text-gray-500">
@@ -105,7 +82,9 @@ const ReviewSlider = () => {
                 </span>
               </div>
             </div>
-            <p className="text-gray-500 mt-2">{reviews[currentIndex].review}</p>
+            <p className="text-gray-500 mt-2">
+              {reviews[currentIndex].comment}
+            </p>
           </div>
         </motion.div>
       </AnimatePresence>

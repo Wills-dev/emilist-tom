@@ -3,6 +3,7 @@ import Image from "next/image";
 import StarRating from "../StarRating/StarRating";
 
 import { Capitalize, convertDateFormat } from "@/helpers";
+import { getLevelValue } from "@/helpers/getLevelValue";
 
 type Props = {
   handleOpenModal: () => void;
@@ -38,21 +39,25 @@ const AboutBusinessOwner = ({
               <p className="ml-2 text-primary-green  ">Online</p>
             </div>
 
-            <div className="flex items-center justify-between w-full">
+            <div className="flex-c-b w-full">
               <div className="flex items-center">
-                <p className="text-[#5E625F] text-base pr-2 border-r-[1px] border-[##5E625F] max-sm:text-xs">
-                  LEVEL 4
+                <p className="text-[#5E625F] pr-2 border-r-1 border-[##5E625F] max-sm:text-xs">
+                  LEVEL{" "}
+                  {serviceInfo?.userId.level &&
+                    getLevelValue(serviceInfo?.userId.level)}
                 </p>
-                <div className="flex items-center my-1 gap-2 max-sm:gap-1 pl-2">
+                <div className="flex-c my-1 gap-2 max-sm:gap-1 pl-2">
                   {" "}
                   <StarRating rating={serviceInfo?.averageRating || 0} />
-                  <p className="text-[13px] max-sm:text-[10px]">(51)</p>
+                  <p className="text-sm max-sm:text-xs">
+                    ({serviceInfo?.totalReviews || 0})
+                  </p>
                 </div>
               </div>
             </div>
 
             <button
-              className="border-[2px] boreder-[#303632] px-4 py-3 rounded-[10px] mt-4 text-[#303632]"
+              className="border-1 boreder-[#303632] px-4 py-3 rounded-[10px] mt-4 text-[#303632]"
               onClick={handleOpenModal}
             >
               Contact Me

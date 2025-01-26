@@ -117,8 +117,8 @@ const MaterialReviewContent = ({ materialId }: MaterialReviewContentProps) => {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="most recent">Most recent</SelectItem>
-                  <SelectItem value="most relevant">Most relevant</SelectItem>
+                  <SelectItem value="mostRecent">Most recent</SelectItem>
+                  <SelectItem value="mostRelevant">Most relevant</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
