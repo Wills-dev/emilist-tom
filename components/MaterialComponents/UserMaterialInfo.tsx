@@ -15,6 +15,9 @@ import StarRating from "../StarRating/StarRating";
 import ReviewSlider from "../ReviewSlider/ReviewSlider";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
+import { useGetMaterialReview } from "@/hooks/useGetMaterialReview";
+import ReviewSliderLoader from "../ReviewSlider/ReviewSliderLoader";
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 
 interface UserMaterialInfoProps {
   materialId: string;
@@ -23,6 +26,8 @@ interface UserMaterialInfoProps {
 const UserMaterialInfo = ({ materialId }: UserMaterialInfoProps) => {
   const [showActionDropdown, setShowActionDropdown] = useState(false);
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
+
+  const { data, isLoadin, getReviews } = useGetMaterialReview();
   const { handleDeleteMaterial, isDeleteLoading } = useDeleteMaterial();
   const { loading, getMaterialInfo, materialInfo } = useGetMaterialInfo();
   const {
@@ -75,7 +80,8 @@ const UserMaterialInfo = ({ materialId }: UserMaterialInfoProps) => {
                 <div className="flex items-start justify-between gap-6 p-6">
                   <div className="flex flex-col gap-4">
                     <h1 className="text-3xl font-bold  max-sm:text-xl">
-                      {materialInfo?.name && Capitalize(materialInfo?.name)}
+                      {materialInfo?.product?.name &&
+                        Capitalize(materialInfo?.product?.name)}
                     </h1>
                     <Link
                       href={`/dashboard/report/insights`}
@@ -177,21 +183,26 @@ const UserMaterialInfo = ({ materialId }: UserMaterialInfoProps) => {
                           Quantity:
                         </p>
                         <p className="max-sm:text-sm">
-                          {materialInfo?.availableQuantity &&
-                            numberWithCommas(materialInfo?.availableQuantity)}
+                          {materialInfo?.product?.availableQuantity &&
+                            numberWithCommas(
+                              materialInfo?.product?.availableQuantity
+                            )}
                         </p>
                       </div>
                     </div>
                     <div className="flex flex-col gap-4">
-                      {materialInfo?.isDiscounted ? (
+                      {materialInfo?.product?.isDiscounted ? (
                         <div className="flex-c gap-2">
                           <p className="max-sm:text-sm font-semibold text-gray-900">
                             Discount Price:
                           </p>
                           <p className="max-sm:text-sm">
-                            {materialInfo?.currency}{" "}
-                            {materialInfo?.discountedPrice &&
-                              numberWithCommas(materialInfo?.discountedPrice)}
+                            {materialInfo?.product?.currency &&
+                              getCurrencySign(materialInfo?.product?.currency)}
+                            {materialInfo?.product?.discountedPrice &&
+                              numberWithCommas(
+                                materialInfo?.product?.discountedPrice
+                              )}
                           </p>
                         </div>
                       ) : (
@@ -200,8 +211,8 @@ const UserMaterialInfo = ({ materialId }: UserMaterialInfoProps) => {
                             Brand:
                           </p>
                           <p className="max-sm:text-sm ">
-                            {materialInfo?.brand &&
-                              Capitalize(materialInfo?.brand)}
+                            {materialInfo?.product?.brand &&
+                              Capitalize(materialInfo?.product?.brand)}
                           </p>
                         </div>
                       )}
@@ -210,9 +221,10 @@ const UserMaterialInfo = ({ materialId }: UserMaterialInfoProps) => {
                           Price:
                         </p>
                         <p className="max-sm:text-sm">
-                          {materialInfo?.currency}{" "}
-                          {materialInfo?.price &&
-                            numberWithCommas(materialInfo?.price)}
+                          {materialInfo?.product?.currency &&
+                            getCurrencySign(materialInfo?.product?.currency)}
+                          {materialInfo?.product?.price &&
+                            numberWithCommas(materialInfo?.product?.price)}
                         </p>
                       </div>
                     </div>
@@ -222,7 +234,7 @@ const UserMaterialInfo = ({ materialId }: UserMaterialInfoProps) => {
                           Category:
                         </p>
                         <p className="max-sm:text-sm">
-                          {materialInfo?.category}
+                          {materialInfo?.product?.category}
                         </p>
                       </div>
                       <div className="flex-c gap-2">
@@ -230,57 +242,75 @@ const UserMaterialInfo = ({ materialId }: UserMaterialInfoProps) => {
                           Sub-Category:
                         </p>
                         <p className="max-sm:text-sm">
-                          {materialInfo?.subCategory}
+                          {materialInfo?.product?.subCategory}
                         </p>
                       </div>
                     </div>
                   </div>
                   <p className="max-sm:text-sm pt-8 pb-2">
-                    {materialInfo?.description}
+                    {materialInfo?.product?.description}
                   </p>
                 </div>
                 <div className="p-6">
                   <h6 className="sm:text-lg font-medium">Images</h6>
                   <div className="pt-3 flex gap-4 flex-wrap">
-                    {materialInfo?.images ? (
-                      materialInfo?.images?.map((image: any, index: number) => (
-                        <Image
-                          src={image?.imageUrl}
-                          key={index}
-                          width={200}
-                          height={200}
-                          alt="product-image"
-                          className="w-28 h-28 rounded-lg object-cover"
-                        />
-                      ))
+                    {materialInfo?.product?.images ? (
+                      materialInfo?.product?.images?.map(
+                        (image: any, index: number) => (
+                          <Image
+                            src={image?.imageUrl}
+                            key={index}
+                            width={200}
+                            height={200}
+                            alt="product-image"
+                            className="w-28 h-28 rounded-lg object-cover"
+                          />
+                        )
+                      )
                     ) : (
                       <p className="text-gray-500 text-xs">No images</p>
                     )}
                   </div>
                 </div>
+                <div className="p-6">
+                  <div className="flex-c gap-6">
+                    <h6 className="sm:text-lg font-medium">Rating:</h6>
+                    <div className="flex c gap-1">
+                      <StarRating rating={materialInfo?.averageRating | 0} />
+                      <span className="block text-sm text-gray-400">
+                        {" "}
+                        {materialInfo?.averageRating || 0}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </>
             )}
-            <div className="p-6">
-              <div className="flex-c gap-6">
-                <h6 className="sm:text-lg font-medium">Rating:</h6>
-                <div className="flex c gap-1">
-                  <StarRating rating={4} />
-                  <span className="block text-sm text-gray-400">4.0</span>
-                </div>
-              </div>
-            </div>
+
             <div className="p-6">
               <div className="flex-c-b gap-6 max-w-[676px] w-full">
                 <h6 className="sm:text-2xl text-lg font-semibold">Reviews</h6>
-                <Link
-                  href={`/material/info/all-reviews/${2}`}
-                  className="text-primary-green sm:text-sm text-xs hover:text-green-600 duration-300 transition-all"
-                >
-                  See all reviews
-                </Link>
+                {data?.length > 0 && (
+                  <Link
+                    href={`/material/info/all-reviews/${2}`}
+                    className="text-primary-green sm:text-sm text-xs hover:text-green-600 duration-300 transition-all"
+                  >
+                    See all reviews
+                  </Link>
+                )}
               </div>
               <div className="py-6">
-                <ReviewSlider />
+                {isLoadin ? (
+                  <ReviewSliderLoader />
+                ) : (
+                  <>
+                    {data?.length > 0 ? (
+                      <ReviewSlider reviews={data} />
+                    ) : (
+                      <p>No review for this material</p>
+                    )}
+                  </>
+                )}
               </div>
             </div>
           </div>

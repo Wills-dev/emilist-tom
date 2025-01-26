@@ -7,7 +7,7 @@ export const useGetMaterialReview = () => {
   const [reviews, setReviews] = useState<any>({});
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoadin, setIsLoading] = useState(false);
 
   const getReviews = async (materialId: string, sort: string) => {
     setIsLoading(true);
@@ -35,7 +35,7 @@ export const useGetMaterialReview = () => {
   return {
     data,
     reviews,
-    isLoading,
+    isLoadin,
     getReviews,
     totalPages,
     currentPage,

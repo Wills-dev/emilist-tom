@@ -4,8 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-import { FaHeart, FaRegHeart } from "react-icons/fa";
-
 import { getCurrencySign } from "@/helpers/getCurrencySign";
 import { useSaveMaterials } from "@/hooks/useSaveMaterials";
 import { useUnsaveMaterial } from "@/hooks/useUnsaveMaterial";
@@ -32,7 +30,7 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
   const [link, setLink] = useState("");
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
-  const { data, isLoading, getReviews } = useGetMaterialReview();
+  const { data, isLoadin, getReviews } = useGetMaterialReview();
   const { handleSaveMaterial, rerender } = useSaveMaterials();
   const { addMaterialToCart, cartLoading } = useAddMaterialToCart();
   const { handleUnsaveMaterial, unsaveRerenderr } = useUnsaveMaterial();
@@ -165,8 +163,8 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
                   <div className="flex-c gap-5 flex-1">
                     <h6 className="font-medium max-sm:text-sm">Rating</h6>
                     <div className="flex-c text-[#8A8D8B] max-sm:text-sm gap-1">
-                      <StarRating rating={4} />
-                      4.0
+                      <StarRating rating={materialInfo?.averageRating | 0} />
+                      {materialInfo?.averageRating || 0}
                     </div>
                   </div>
                 </div>
@@ -225,7 +223,7 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
               )}
             </div>
             <div className="py-6">
-              {isLoading ? (
+              {isLoadin ? (
                 <ReviewSliderLoader />
               ) : (
                 <>

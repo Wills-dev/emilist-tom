@@ -19,6 +19,7 @@ import { useAddMaterialToCart } from "@/hooks/useAddMaterialToCart";
 import { AuthContext } from "@/utils/AuthState";
 import { useAddClicks } from "@/hooks/useAddClicks";
 import { getCurrencySign } from "@/helpers/getCurrencySign";
+import ReadMore from "../ReadMore/ReadMore";
 
 const DashboardMaterialContent = () => {
   const { currentUser } = useContext(AuthContext);
@@ -134,33 +135,19 @@ const DashboardMaterialContent = () => {
                             >
                               {material?.name && Capitalize(material?.name)}
                             </Link>
-                            {material?.description &&
-                            material?.description.length > 200 ? (
-                              <p className="max-sm:text-sm">
-                                {material?.description.slice(0, 200)}...
-                                <Link
-                                  href={`/material/info/${material._id}`}
-                                  className="underline text-primary-green text-xs"
-                                  onClick={() =>
-                                    addClicks(
-                                      "materials",
-                                      material._id,
-                                      userId || null
-                                    )
-                                  }
-                                >
-                                  Read more
-                                </Link>
-                              </p>
-                            ) : (
-                              <p className="max-sm:text-sm">
-                                {material?.description}
-                              </p>
-                            )}
+                            <ReadMore
+                              text={material?.description || ""}
+                              maxLength={200}
+                              style="max-sm:text-sm"
+                            />
                             <div className="flex-c-b  sm:gap-4 gap-2 flex-wrap">
                               <div className="flex-c gap-1 max-sm:text-sm ">
-                                <StarRating rating={4} />{" "}
-                                <span className="sm:text-sm text-xs">(51)</span>
+                                <StarRating
+                                  rating={material?.averageRating || 0}
+                                />{" "}
+                                <span className="sm:text-sm text-xs">
+                                  ({material?.numberOfRatings || 0})
+                                </span>
                               </div>
                             </div>
                             <div className="flex-c-b sm:py-2">
@@ -195,8 +182,9 @@ const DashboardMaterialContent = () => {
                               <p className="sm:text-2xl font-bold text-primary-green">
                                 {material?.currency &&
                                   getCurrencySign(material?.currency)}
-                                {material?.price &&
-                                  numberWithCommas(material?.price)}
+                                {material?.discountedPrice
+                                  ? numberWithCommas(material?.discountedPrice)
+                                  : numberWithCommas(material?.price)}
                               </p>
                             </div>
 

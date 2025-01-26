@@ -10,6 +10,7 @@ import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 
 import { Capitalize, numberWithCommas } from "@/helpers";
 import { useGetUserMaterials } from "@/hooks/useGetUserMaterials";
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 
 const MyListMaterials = () => {
   const {
@@ -106,14 +107,15 @@ const MyListMaterials = () => {
                               <div className="flex-c md:flex-col md:items-end justify-between">
                                 <div className="flex flex-col gap-1">
                                   <p className="sm:text-2xl font-bold text-primary-green">
-                                    {material?.currency}{" "}
+                                    {material?.currency &&
+                                      getCurrencySign(material?.currency)}
                                     {material?.price &&
                                       numberWithCommas(material?.price)}
                                   </p>
                                 </div>
 
                                 <Link
-                                  href="/report/insights"
+                                  href="/dashboard/report/insights"
                                   className="view-btn max-sm:text-sm"
                                 >
                                   view Insight

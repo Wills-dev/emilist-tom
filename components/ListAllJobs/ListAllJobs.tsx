@@ -16,13 +16,25 @@ import { useGetBusinesses } from "@/hooks/useGetBusinesses";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 import { CiSearch } from "react-icons/ci";
 import { serviceList } from "@/constants";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { AuthContext } from "@/utils/AuthState";
 import { useAddClicks } from "@/hooks/useAddClicks";
+import ReadMore from "../ReadMore/ReadMore";
+import ShareLink from "../modals/ShareLink";
 
 const ListAllJobs = () => {
   const { currentUser } = useContext(AuthContext);
   const userId = currentUser?._id;
+
+  const [jobId, setJobId] = useState("");
+  const [jobType, setJobType] = useState("");
+  const [openShareModal, setOpenShareModal] = useState(false);
+
+  const handleOpen = (id: string, type: string) => {
+    setOpenShareModal(true);
+    setJobId(id);
+    setJobType(type);
+  };
 
   const { addClicks } = useAddClicks();
   const { businesses, loading } = useGetBusinesses();
@@ -45,12 +57,12 @@ const ListAllJobs = () => {
     <section className="padding-y padding-x">
       <div className="grid grid-cols-10 gap-6 pt-28">
         <div className="col-span-2 max-xl:col-span-3 max-md:col-span-10 pt-10">
-          <form className="flex lg:flex-col  gap-4">
+          <div className="flex lg:flex-col  gap-4">
             <div className=" flex-1 w-full border-1  border-[#b8b9b8] rounded-lg p-2 flex-c gap-2">
               <input
                 type="text"
                 placeholder="Search for jobs..."
-                className="flex-1 w-full max-md:text-sm bg-white"
+                className="flex-1 w-full max-md:text-sm bg-white outline-none"
                 value={search}
                 onChange={handleChange}
               />
@@ -66,7 +78,7 @@ const ListAllJobs = () => {
               <select
                 name=""
                 id="filter"
-                className="border-1 border-[#b8b9b8] rounded-lg w-full max-md:text-sm p-2 bg-white"
+                className="border-1 border-[#b8b9b8] outline-none rounded-lg w-full max-md:text-sm p-2 bg-white"
                 value={filterService}
                 onChange={(e) => setFilterService(e.target.value)}
               >
@@ -88,7 +100,7 @@ const ListAllJobs = () => {
               <input
                 type="text"
                 id="location"
-                className="border-1 border-[#b8b9b8] rounded-lg w-full max-sm:text-sm p-2 bg-white"
+                className="border-1 border-[#b8b9b8] outline-none rounded-lg w-full max-sm:text-sm p-2 bg-white"
                 value={filterLocation}
                 onChange={(e) => setFilterLocation(e.target.value)}
               />
@@ -102,7 +114,7 @@ const ListAllJobs = () => {
                 APPLY
               </button>
             </div>
-          </form>
+          </div>
           <div className="py-10 max-lg:hidden">
             <p className="">
               Meet new customers, Sign up to start growing your business
@@ -128,18 +140,20 @@ const ListAllJobs = () => {
                     key={job._id}
                     className="w-full p-4 border-b-1 hover:bg-gray-100 transition-all duration-300"
                   >
-                    <Link
-                      href={
-                        job?.type === "biddable"
-                          ? `/dashboard/job/info/biddable/${job._id}`
-                          : `/dashboard/job/info/regular/${job._id}`
-                      }
+                    <div
                       onClick={() => addClicks("job", job._id, userId || null)}
                     >
                       <div className="flex-c-b w-full ">
-                        <h5 className="sm:text-lg font-semibold">
+                        <Link
+                          href={
+                            job?.type === "biddable"
+                              ? `/dashboard/job/info/biddable/${job._id}`
+                              : `/dashboard/job/info/regular/${job._id}`
+                          }
+                          className="sm:text-lg font-semibold hover:text-primary-green"
+                        >
                           {job?.title && Capitalize(job?.title)}
-                        </h5>
+                        </Link>
                         <div className="flex-c justify-end gap-3 max-sm:gap-2 ">
                           <h6 className="text-sm font-msdium max-sm:text-xs">
                             {job?.createdAt && formatCreatedAt(job.createdAt)}
@@ -160,18 +174,11 @@ const ListAllJobs = () => {
                           {job?.duration?.period}
                         </h6>
                       </div>
-                      {job?.description && job?.description.length > 300 ? (
-                        <p className="font-medium text-sm py-2">
-                          {job?.description.slice(0, 300)}...
-                          <span className="underline text-primary-green">
-                            Read more
-                          </span>
-                        </p>
-                      ) : (
-                        <p className="font-medium text-sm py-2">
-                          {job?.description}
-                        </p>
-                      )}
+                      <ReadMore
+                        text={job?.description}
+                        maxLength={300}
+                        style="font-medium text-sm py-2"
+                      />
                       <p className="flex-c gap-1 whitespace-nowrap text-sm">
                         {" "}
                         <span className="text-lg">
@@ -179,7 +186,7 @@ const ListAllJobs = () => {
                         </span>
                         {job?.location}
                       </p>
-                    </Link>
+                    </div>
                     <div className="flex-c gap-8 flex-wrap max-sm:gap-4 max-sm:justify-between text-[#737774]  font-medium text-sm pt-4">
                       <div className="flex-c justify-end gap-1  ">
                         <span className="text-lg">
@@ -191,7 +198,10 @@ const ListAllJobs = () => {
                           {job?.applications > 1 ? "Applicants" : "Applicant"}
                         </p>
                       </div>
-                      <button className="flex-c gap-1  whitespace-nowrap cursor-pointer hover:text-primary-green transition-all duration-300">
+                      <button
+                        className="flex-c gap-1  whitespace-nowrap cursor-pointer hover:text-primary-green transition-all duration-300"
+                        onClick={() => handleOpen(job._id, job?.type)}
+                      >
                         <span className="text-xl">
                           <TbShare3 />
                         </span>
@@ -212,6 +222,13 @@ const ListAllJobs = () => {
             </>
           )}
         </div>
+        <ShareLink
+          handleCancel={() => setOpenShareModal(false)}
+          isModalOpen={openShareModal}
+          link={`https://emilist.com/dashboard/job/info/${jobType}/${jobId}`}
+          title="Share job"
+          textToCopy="Check out this job on Emilist"
+        />
         {businesses?.length && (
           <div className="col-span-3 max-xl:hidden py-10">
             <div className=" border-x-1 border-t-1 pt-4 rounded-lg">
@@ -227,10 +244,7 @@ const ListAllJobs = () => {
                       className=" w-full border-b-1 px-6 hover:bg-gray-100 transition-all duration-300 py-4"
                       key={expert?._id}
                     >
-                      <Link
-                        href="/catalog/expert"
-                        className="flex gap-2 w-full "
-                      >
+                      <div className="flex gap-2 w-full ">
                         {Array.isArray(expert?.businessImages) &&
                         expert?.businessImages[0]?.imageUrl ? (
                           <Image
@@ -254,18 +268,13 @@ const ListAllJobs = () => {
                             {expert?.services[0] &&
                               Capitalize(expert?.services[0])}
                           </h2>
-                          {expert?.bio && expert?.bio.length > 100 ? (
-                            <p className=" text-xs">
-                              {expert?.bio.slice(0, 100)}...
-                              <span className=" text-primary-green">
-                                Read more
-                              </span>
-                            </p>
-                          ) : (
-                            <p className="text-xs">{expert?.bio}</p>
-                          )}
+                          <ReadMore
+                            text={expert?.bio}
+                            maxLength={100}
+                            style="text-xs"
+                          />
                         </div>
-                      </Link>
+                      </div>
                       <div className="flex justify-end gap-6 text-gray-600">
                         <Link
                           href={`/expert/info/${expert?._id}`}
