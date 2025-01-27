@@ -1,21 +1,16 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 
 interface MultipleLineChartProps {
@@ -59,7 +54,7 @@ export const ProjectMultipleLineChart = ({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="w-full h-[50vh]">
+          <ChartContainer config={chartConfig} className="w-full h-[60vh]">
             <LineChart
               accessibilityLayer
               data={chartData}
@@ -112,6 +107,7 @@ export const ProjectMultipleLineChart = ({
                 strokeWidth={2}
                 dot={false}
               />
+              <ChartLegend content={<ChartLegendContent />} />
             </LineChart>
           </ChartContainer>
         </CardContent>

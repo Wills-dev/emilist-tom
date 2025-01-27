@@ -7,6 +7,8 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
@@ -41,7 +43,7 @@ export function ExpenseAreaChart({ earnings }: any) {
         </CardDescription> */}
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="w-full h-[60vh]">
           <AreaChart
             accessibilityLayer
             data={chartData}
@@ -66,22 +68,6 @@ export function ExpenseAreaChart({ earnings }: any) {
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Area
-              dataKey="EUR_expenses"
-              type="natural"
-              fill="#FF5D7A"
-              fillOpacity={0.4}
-              stroke="#FF5D7A"
-              stackId="a"
-            />
-            <Area
-              dataKey="GBP_expenses"
-              type="natural"
-              fill="#ff9933"
-              fillOpacity={0.4}
-              stroke="#ff9933"
-              stackId="a"
-            />
-            <Area
               dataKey="NGN_expenses"
               type="natural"
               fill="#054753"
@@ -97,6 +83,23 @@ export function ExpenseAreaChart({ earnings }: any) {
               stroke="#9ef769"
               stackId="a"
             />
+            <Area
+              dataKey="EUR_expenses"
+              type="natural"
+              fill="#FF5D7A"
+              fillOpacity={0.4}
+              stroke="#FF5D7A"
+              stackId="a"
+            />
+            <Area
+              dataKey="GBP_expenses"
+              type="natural"
+              fill="#ff9933"
+              fillOpacity={0.4}
+              stroke="#ff9933"
+              stackId="a"
+            />
+            <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
       </CardContent>
