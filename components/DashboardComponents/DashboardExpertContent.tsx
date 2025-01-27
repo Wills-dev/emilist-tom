@@ -91,7 +91,9 @@ const DashboardExpertContent = () => {
           </div>
         ) : (
           <>
-            {compareServices?.length > 0 && <CompareSearch />}
+            {compareServices?.length > 0 && (
+              <CompareSearch title="businesses" link="/compare" />
+            )}
             {businesses?.length < 1 ? (
               <p className="py-2">No expert or service listed</p>
             ) : (

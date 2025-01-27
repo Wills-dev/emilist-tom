@@ -3,21 +3,21 @@ import { useRouter } from "next/navigation";
 
 import { AuthContext } from "@/utils/AuthState";
 import { promiseErrorFunction } from "@/helpers";
-import { CompareContext } from "@/utils/CompareState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
+import { CompareMaterialContext } from "@/utils/CompareMaterialState";
 
-export const useCompare = () => {
+export const useCompareMaterial = () => {
   const router = useRouter();
   const { currentUser } = useContext(AuthContext);
-  const { setRerender } = useContext(CompareContext);
+  const { setRerender } = useContext(CompareMaterialContext);
 
-  const compare = async (serviceId: string) => {
+  const compareMaterial = async (materialId: string) => {
     if (!currentUser) {
       return router.push("/login");
     }
 
     try {
-      await axiosInstance.patch(`/business/compare-business/${serviceId}`);
+      await axiosInstance.patch(`/material/compare-product/${materialId}`);
       setRerender((prev: boolean) => !prev);
     } catch (error) {
       console.log("error adding business to compare", error);
@@ -26,6 +26,6 @@ export const useCompare = () => {
   };
 
   return {
-    compare,
+    compareMaterial,
   };
 };

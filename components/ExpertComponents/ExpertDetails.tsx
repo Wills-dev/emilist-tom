@@ -18,6 +18,8 @@ import { useUnlikeBusiness } from "@/hooks/useUnlikeBusiness";
 import { useCompare } from "@/hooks/useCompare";
 import { useGetBusinessReviews } from "@/hooks/useGetBusinessReviews";
 import ReviewSliderLoader from "../ReviewSlider/ReviewSliderLoader";
+import { CompareContext } from "@/utils/CompareState";
+import CompareSearch from "../Compare/CompareSearch";
 
 interface ExpertDetailsProps {
   businessId: string;
@@ -27,6 +29,7 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
   const router = useRouter();
 
   const { currentUser } = useContext(AuthContext);
+  const { compareServices, rrerender } = useContext(CompareContext);
   const { loading, getServiceInfo, serviceInfo } = useGetServiceInfo();
 
   const { compare } = useCompare();
@@ -34,7 +37,6 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
   const { data, isLoading, getReviews } = useGetBusinessReviews();
   const { handleUnlikeBusiness, unsaveRerenderr } = useUnlikeBusiness();
 
-  const [isOpen, setIsOpen] = useState<boolean>(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openShareModal, setOpenShareModal] = useState<boolean>(false);
 
@@ -52,7 +54,7 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
 
   useEffect(() => {
     getServiceInfo(businessId);
-  }, [businessId, rerender, unsaveRerenderr]);
+  }, [businessId, rerender, unsaveRerenderr, rrerender]);
 
   useEffect(() => {
     getReviews(businessId, "mostRecent");
@@ -66,6 +68,9 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
         </div>
       ) : (
         <div className="padding-x py-28">
+          {compareServices.length > 0 && (
+            <CompareSearch title="businesses" link="/compare" />
+          )}
           <ReviewProfile
             serviceInfo={serviceInfo}
             handleOpen={handleOpen}
@@ -104,7 +109,6 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
           <AboutBusinessOwner
             serviceInfo={serviceInfo?.business}
             handleOpenModal={handleOpenModal}
-            setIsOpen={setIsOpen}
           />
           {/* contact modal */}
           <ContactModal

@@ -42,10 +42,7 @@ const ProductDescription = ({ materialInfo }: any) => {
         </div>
         <div className="flex gap-4">
           <h6 className="flex-1 font-medium max-sm:text-sm">Store name:</h6>
-          <p className="flex-1 max-sm:text-sm">
-            {" "}
-            {materialInfo?.storeName && materialInfo?.storeName}
-          </p>
+          <p className="flex-1 max-sm:text-sm"> {materialInfo?.storeName}</p>
         </div>
       </div>
     </section>
