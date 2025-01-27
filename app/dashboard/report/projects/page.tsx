@@ -2,8 +2,17 @@
 
 import { useEffect } from "react";
 
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
 import { useProjectAnalytics } from "@/hooks/useProjectAnalytics";
-import { MultipleLineChart } from "@/components/Charts/MultipleLineChart";
 
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import ReportHeader from "@/components/ReportComponents/ReportHeader";
@@ -29,47 +38,56 @@ const page = () => {
     handleGetJobAnalytics();
   }, [year, month]);
 
+  const handleMonthChange = (value: string) => {
+    setMonth(value);
+  };
+
+  const handleYearChange = (value: string) => {
+    setYear(value);
+  };
+
   return (
     <main className="relative">
       <DashboardNav />{" "}
       <section className="padding-x py-28 bg-[#F6FDF9] min-h-screen ">
         <ReportHeader />
         <ProjectSummaryCards />
-        <div className="flex-c gap-5">
-          <div className=" min-w-[137px] w-[137px]  max-w-[137px] rounded-lg h-[50px] px-4 bg-white focus:outline-none focus-within:border-primary-green focus-within:border-1 max-sm:h-[46px] ">
-            <select
-              className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm text-[#002913]"
-              value={month}
-              onChange={(e) => setMonth(e.target.value)}
-            >
-              <option>Monthly</option>
-              <option value="">Reset</option>
-              <option value={1}>Jan</option>
-              <option value={2}>Feb</option>
-              <option value={3}>Mar</option>
-              <option value={4}>Apr</option>
-              <option value={5}>May</option>
-              <option value={6}>Jun</option>
-              <option value={7}>Jul</option>
-              <option value={8}>Aug</option>
-              <option value={9}>Sep</option>
-              <option value={10}>Oct</option>
-              <option value={11}>Nov</option>
-              <option value={12}>Dec</option>
-            </select>
-          </div>
-          <div className=" min-w-[137px] w-[137px]  max-w-[137px] rounded-lg h-[50px] px-4 bg-white focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:h-[46px] ">
-            <select
-              className="bg-white outline-none  min-w-full w-full h-full max-w-full max-sm:text-[14px] text-[#002913]"
-              value={year}
-              onChange={(e) => setYear(e.target.value)}
-            >
-              <option value={2022}>2022</option>
-              <option value={2023}>2023</option>
-              <option value={2024}>2024</option>
-              <option value={2025}>2025</option>
-            </select>
-          </div>
+        <div className="flex-c-b mt-6  gap-4 flex-wrap">
+          <Select value={month} onValueChange={handleMonthChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by month" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Month</SelectLabel>
+                <SelectItem value="1">Jan</SelectItem>
+                <SelectItem value="2">Feb</SelectItem>
+                <SelectItem value="3">Mar</SelectItem>
+                <SelectItem value="4">Apr</SelectItem>
+                <SelectItem value="5">May</SelectItem>
+                <SelectItem value="6">Jun</SelectItem>
+                <SelectItem value="7">Jul</SelectItem>
+                <SelectItem value="8">Aug</SelectItem>
+                <SelectItem value="9">Sep</SelectItem>
+                <SelectItem value="10">Oct</SelectItem>
+                <SelectItem value="11">Nov</SelectItem>
+                <SelectItem value="11">Dec</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
+          <Select value={year} onValueChange={handleYearChange}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="Filter by year" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectGroup>
+                <SelectLabel>Year</SelectLabel>
+                <SelectItem value="2024">2024</SelectItem>
+                <SelectItem value="2025">2025</SelectItem>
+                <SelectItem value="2026">2026</SelectItem>
+              </SelectGroup>
+            </SelectContent>
+          </Select>
         </div>
         <ProjectMultipleLineChart chartData={projectAnalytics} />
       </section>

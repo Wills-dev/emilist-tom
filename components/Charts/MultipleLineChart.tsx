@@ -1,21 +1,15 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { CartesianGrid, Line, LineChart, XAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
+  ChartLegend,
+  ChartLegendContent,
 } from "@/components/ui/chart";
 
 interface MultipleLineChartProps {
@@ -55,7 +49,7 @@ export function MultipleLineChart({ chartData }: MultipleLineChartProps) {
           <CardTitle className="sm:text-2xl text-lg">Jobs Statistics</CardTitle>
         </CardHeader>
         <CardContent>
-          <ChartContainer config={chartConfig} className="w-full h-[50vh]">
+          <ChartContainer config={chartConfig} className="w-full h-[60vh]">
             <LineChart
               accessibilityLayer
               data={chartData}
@@ -70,7 +64,7 @@ export function MultipleLineChart({ chartData }: MultipleLineChartProps) {
                 tickLine={false}
                 axisLine={false}
                 tickMargin={8}
-                tickFormatter={(value) => value.slice(0, 6)}
+                tickFormatter={(value) => value.slice(0, 10)}
               />
               <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
               <Line
@@ -108,6 +102,7 @@ export function MultipleLineChart({ chartData }: MultipleLineChartProps) {
                 strokeWidth={2}
                 dot={false}
               />
+              <ChartLegend content={<ChartLegendContent />} />
             </LineChart>
           </ChartContainer>
         </CardContent>

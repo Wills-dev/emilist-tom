@@ -7,6 +7,8 @@ import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
+  ChartLegend,
+  ChartLegendContent,
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
@@ -38,7 +40,7 @@ export function EarningAreaChart({ earnings }: any) {
         <CardTitle>Earnings</CardTitle>
       </CardHeader>
       <CardContent>
-        <ChartContainer config={chartConfig}>
+        <ChartContainer config={chartConfig} className="w-full h-[60vh]">
           <AreaChart
             accessibilityLayer
             data={chartData}
@@ -94,6 +96,7 @@ export function EarningAreaChart({ earnings }: any) {
               stroke="#fee300"
               stackId="a"
             />
+            <ChartLegend content={<ChartLegendContent />} />
           </AreaChart>
         </ChartContainer>
       </CardContent>
