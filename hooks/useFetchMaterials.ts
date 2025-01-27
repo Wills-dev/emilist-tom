@@ -13,7 +13,7 @@ export const useFetchMaterials = () => {
   const [hasMore, setHasMore] = useState(true);
   const [totalPages, setTotalPages] = useState(1);
   const [currentPage, setCurrentPage] = useState(1);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
   const [allMaterials, setAllMaterials] = useState<any>([]);
   const [rating, setRating] = useState("");
   const [minValue, setMinValue] = useState<number>(0);
@@ -43,7 +43,7 @@ export const useFetchMaterials = () => {
     material?: string | null,
     locationQuery?: string | null
   ) => {
-    if (loading || !hasMore) return;
+    if (!hasMore) return;
 
     const userId = currentUser?._id || "";
     let url = `/material/fetch-all-products?page=${currentPage}&limit=10${
@@ -69,7 +69,7 @@ export const useFetchMaterials = () => {
     if (noOfReviews) {
       url += `&minReviews=${noOfReviews}`;
     }
-    setLoading(true);
+
     try {
       const { data } = await axiosInstance.get(url);
 

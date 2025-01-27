@@ -7,13 +7,11 @@ import { getLevelValue } from "@/helpers/getLevelValue";
 
 type Props = {
   handleOpenModal: () => void;
-  setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
   serviceInfo: any;
 };
 
 const AboutBusinessOwner = ({
   handleOpenModal,
-  setIsOpen,
   serviceInfo,
 }: Props) => {
   return (
@@ -170,10 +168,7 @@ const AboutBusinessOwner = ({
           <h3 className="pb-6 max-sm:pb-6 text-[20px] font-semibold ">
             Certification
           </h3>
-          <button
-            className="pb-10 max-sm:pb-6 text-[20px] font-semibold text-primary-green underline"
-            onClick={() => setIsOpen(true)}
-          >
+          <button className="pb-10 max-sm:pb-6 text-[20px] font-semibold text-primary-green underline">
             See certification
           </button>
         </div>

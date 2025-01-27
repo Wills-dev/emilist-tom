@@ -69,7 +69,7 @@ const ComparePage = () => {
                         expert?.businessImages[0]?.imageUrl ? (
                           <Image
                             src={expert?.businessImages[0]?.imageUrl}
-                            alt={expert?.services[0]}
+                            alt={expert?.businessName}
                             width={380}
                             height={276}
                             className="object-cover min-w-full h-[170px] "
@@ -77,7 +77,7 @@ const ComparePage = () => {
                         ) : (
                           <Image
                             src="/assets/images/Logo.svg"
-                            alt={expert?.services[0]}
+                            alt={expert?.businessName}
                             width={130}
                             height={30}
                             className="object-contain min-w-full  h-[170px] border-1 "

@@ -5,11 +5,23 @@ import { createContext, useEffect, useState } from "react";
 import { readAuthCookie } from "@/helpers";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 
-export const CompareContext = createContext<any>(null);
-
 type Props = {
   children: React.ReactNode;
 };
+
+interface CompareContextType {
+  compareLoading: boolean;
+  compareServices: any[];
+  setRerender: React.Dispatch<React.SetStateAction<boolean>>;
+  rrerender: boolean;
+}
+
+export const CompareContext = createContext<CompareContextType>({
+  compareLoading: false,
+  compareServices: [],
+  setRerender: () => {},
+  rrerender: false,
+});
 
 const CompareState = ({ children }: Props) => {
   const token = readAuthCookie("sessionId");
