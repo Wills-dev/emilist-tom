@@ -1,5 +1,6 @@
+import { useEffect, useState } from "react";
+
 import { axiosInstance } from "@/axiosInstance/baseUrls";
-import React, { useEffect, useState } from "react";
 
 export const useGetInsights = () => {
   const [loading, setLoading] = useState(false);
@@ -9,8 +10,7 @@ export const useGetInsights = () => {
     setLoading(true);
     try {
       const { data } = await axiosInstance.get(`/auth/insights`);
-      console.log("data", data);
-      setInsights(data);
+      setInsights(data?.data);
     } catch (error) {
       console.log("error loading insights", error);
     } finally {

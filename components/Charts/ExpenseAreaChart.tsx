@@ -1,43 +1,37 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   ChartConfig,
   ChartContainer,
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  NGN_expenses: {
+    label: "Naira",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  USD_expenses: {
+    label: "Dollar",
+    color: "hsl(var(--chart-2))",
+  },
+  GBP_expenses: {
+    label: "Pounds",
+    color: "hsl(var(--chart-2))",
+  },
+  EUR_expenses: {
+    label: "Euro",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
-export function ExpenseAreaChart() {
+export function ExpenseAreaChart({ earnings }: any) {
+  const chartData = earnings?.earningsStatistics;
+
   return (
     <Card>
       <CardHeader>
@@ -58,11 +52,11 @@ export function ExpenseAreaChart() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="period"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 8)}
             />
             <YAxis
               tickLine={false}
@@ -72,7 +66,7 @@ export function ExpenseAreaChart() {
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Area
-              dataKey="mobile"
+              dataKey="EUR_expenses"
               type="natural"
               fill="#FF5D7A"
               fillOpacity={0.4}
@@ -80,11 +74,27 @@ export function ExpenseAreaChart() {
               stackId="a"
             />
             <Area
-              dataKey="desktop"
+              dataKey="GBP_expenses"
               type="natural"
               fill="#ff9933"
               fillOpacity={0.4}
               stroke="#ff9933"
+              stackId="a"
+            />
+            <Area
+              dataKey="NGN_expenses"
+              type="natural"
+              fill="#054753"
+              fillOpacity={0.4}
+              stroke="#054753"
+              stackId="a"
+            />
+            <Area
+              dataKey="USD_expenses"
+              type="natural"
+              fill="#9ef769"
+              fillOpacity={0.4}
+              stroke="#9ef769"
               stackId="a"
             />
           </AreaChart>

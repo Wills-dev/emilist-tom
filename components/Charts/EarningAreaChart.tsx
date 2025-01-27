@@ -9,34 +9,33 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-const chartData = [
-  { month: "January", desktop: 186, mobile: 80 },
-  { month: "February", desktop: 305, mobile: 200 },
-  { month: "March", desktop: 237, mobile: 120 },
-  { month: "April", desktop: 73, mobile: 190 },
-  { month: "May", desktop: 209, mobile: 130 },
-  { month: "June", desktop: 214, mobile: 140 },
-];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  NGN: {
+    label: "Naira",
     color: "hsl(var(--chart-1))",
   },
-  mobile: {
-    label: "Mobile",
+  USD: {
+    label: "Dollar",
+    color: "hsl(var(--chart-2))",
+  },
+  GBP: {
+    label: "Pounds",
+    color: "hsl(var(--chart-2))",
+  },
+  EUR: {
+    label: "Euro",
     color: "hsl(var(--chart-2))",
   },
 } satisfies ChartConfig;
 
-export function EarningAreaChart() {
+export function EarningAreaChart({ earnings }: any) {
+  const chartData = earnings?.earningsStatistics;
+
   return (
     <Card>
       <CardHeader>
         <CardTitle>Earnings</CardTitle>
-        {/* <CardDescription>
-          Showing total visitors for the last 6 months
-        </CardDescription> */}
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -50,11 +49,11 @@ export function EarningAreaChart() {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="period"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={(value) => value.slice(0, 8)}
             />
             <YAxis
               tickLine={false}
@@ -64,7 +63,7 @@ export function EarningAreaChart() {
             />
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Area
-              dataKey="mobile"
+              dataKey="NGN"
               type="natural"
               fill="#054753"
               fillOpacity={0.4}
@@ -72,11 +71,27 @@ export function EarningAreaChart() {
               stackId="a"
             />
             <Area
-              dataKey="desktop"
+              dataKey="USD"
               type="natural"
               fill="#9ef769"
               fillOpacity={0.4}
               stroke="#9ef769"
+              stackId="a"
+            />
+            <Area
+              dataKey="GBP"
+              type="natural"
+              fill="#ff9933"
+              fillOpacity={0.4}
+              stroke="#ff9933"
+              stackId="a"
+            />
+            <Area
+              dataKey="EUR"
+              type="natural"
+              fill="#fee300"
+              fillOpacity={0.4}
+              stroke="#fee300"
               stackId="a"
             />
           </AreaChart>
