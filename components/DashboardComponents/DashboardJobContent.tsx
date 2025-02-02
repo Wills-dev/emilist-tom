@@ -7,7 +7,7 @@ import { useContext, useEffect } from "react";
 import { CiSearch } from "react-icons/ci";
 import { IoLocationSharp } from "react-icons/io5";
 import { Popconfirm, PopconfirmProps } from "antd";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
+
 import Pagination from "react-responsive-pagination";
 
 import DashboardLinks from "./DashboardLinks";

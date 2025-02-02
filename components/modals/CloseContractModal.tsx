@@ -62,7 +62,7 @@ const CloseContractModal = ({
   );
 
   return (
-    <Modal open={isOpen} onCancel={onCancel} centered width={620}>
+    <Modal open={isOpen} onCancel={onCancel} centered width={620} footer={null}>
       <form
         onSubmit={(e) => closeContract(e, jobId)}
         className="flex-c justify-center flex-col gap-4 px-6 max-sm:px-3 py-4"
