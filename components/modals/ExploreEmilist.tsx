@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 
 import { category, serviceList } from "@/constants";
 import { fadeIn } from "@/anim";
+import { useRouter } from "next/navigation";
 
 interface ExploreEmilistProps {
   isOpen: boolean;
@@ -12,6 +13,19 @@ interface ExploreEmilistProps {
 }
 
 const ExploreEmilist = ({ isOpen, onCancel }: ExploreEmilistProps) => {
+  const router = useRouter();
+
+  const handleSearch = (service: string, type: string) => {
+    // Build the query string dynamically
+    const query = new URLSearchParams({
+      ...(service && { q: service.trim() }),
+    }).toString();
+    if (type === "service") {
+      router.push(`/catalog/services?${query}`);
+    } else {
+      router.push(`/find-job?${query}`);
+    }
+  };
   return (
     <Modal open={isOpen} centered onCancel={onCancel} width={900} footer={null}>
       {" "}
@@ -36,12 +50,12 @@ const ExploreEmilist = ({ isOpen, onCancel }: ExploreEmilistProps) => {
                   key={index}
                   className="xl:w-1/4 lg:w-1/3 w-1/2 py-2"
                 >
-                  <Link
-                    href="/"
-                    className="hover:text-primary-green transition-all duration-300 capitalize"
+                  <p
+                    onClick={() => handleSearch(category, "job")}
+                    className="hover:text-primary-green transition-all duration-300 capitalize cursor-pointer"
                   >
                     {category}
-                  </Link>
+                  </p>
                 </motion.li>
               ))}
             </ul>
@@ -53,12 +67,12 @@ const ExploreEmilist = ({ isOpen, onCancel }: ExploreEmilistProps) => {
             <ul className="flex-c flex-wrap gap-4">
               {serviceList?.map((service, index) => (
                 <li key={index} className="xl:w-1/4 lg:w-1/3 w-1/2 py-2">
-                  <Link
-                    href="/"
-                    className="hover:text-primary-green transition-all duration-300 capitalize"
+                  <p
+                    onClick={() => handleSearch(service, "service")}
+                    className="hover:text-primary-green transition-all duration-300 capitalize cursor-pointer"
                   >
                     {service}
-                  </Link>
+                  </p>
                 </li>
               ))}
             </ul>

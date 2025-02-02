@@ -26,6 +26,7 @@ import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ApplyBiddableJobModal from "../modals/ApplyBiddableJobModal";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
+import { getLevelValue } from "@/helpers/getLevelValue";
 
 interface BiddableJobInfoProps {
   jobId: string;
@@ -375,15 +376,8 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     />
                     <div className="flex flex-col  gap-1">
                       <h6 className="text-lg  font-semibold max-sm:text-sm">
-                        {jobInfo?.expertLevel && jobInfo.expertLevel === "one"
-                          ? 1
-                          : jobInfo.expertLevel === "two"
-                          ? 2
-                          : jobInfo.expertLevel === "three"
-                          ? 3
-                          : jobInfo.expertLevel === "four"
-                          ? 4
-                          : null}
+                        {jobInfo?.expertLevel &&
+                          getLevelValue(jobInfo.expertLevel)}
                       </h6>
                       <p className="text-[#474C48] max-sm:text-xs">
                         Expert level

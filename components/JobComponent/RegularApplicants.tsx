@@ -74,7 +74,7 @@ const RegularApplicants = ({
                   key={index}
                 >
                   <Link
-                    href={`/experts/details/${applicant?.user?._id}`}
+                    href={`/dashboard/service/info/${applicant?.businessId}`}
                     className={`flex-1 flex w-full ${
                       isAnyAccepted &&
                       acceptedApplicantId !== applicant?.user?._id

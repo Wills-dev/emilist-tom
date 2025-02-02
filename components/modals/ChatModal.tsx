@@ -45,7 +45,7 @@ const ChatModal = ({ handleOpen, user }: Props) => {
         <div className="px-4 py-2 max-sm:px-2 flex items-center justify-between border-b-1 border-[#8A8D8B]">
           <div className=" flex items-center gap-1">
             <div
-              className={`${
+              className={`min-w-[35px] min-h-[35px]  w-[35px] h-[35px] max-sm:w-[24px] max-sm:h-[24px] ${
                 onlineUsers.includes(user?._id) && "online"
               } avatar`}
             >
@@ -55,10 +55,10 @@ const ChatModal = ({ handleOpen, user }: Props) => {
                   alt="menu"
                   width={35}
                   height={35}
-                  className="object-cover w-[35px] h-[35px] max-sm:w-[24px] max-sm:h-[24px] rounded-full"
+                  className="object-cover w-full h-full rounded-full"
                 />
               ) : (
-                <p className="w-[35px] h-[35px] max-sm:w-[24px] max-sm:h-[24px] rounded-full bg-slate-200 mr-2 flex-c justify-center font-bold">
+                <p className="w-[35px] h-[35px]  max-sm:w-[24px] max-sm:h-[24px] rounded-full bg-slate-200 mr-2 flex-c justify-center font-bold">
                   {user?.userName?.[0]?.toUpperCase()}
                 </p>
               )}

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import Image from "next/image";
+import { useSearchParams } from "next/navigation";
 
 import { HiUser } from "react-icons/hi2";
 import { TbShare3 } from "react-icons/tb";
@@ -11,25 +12,42 @@ import Pagination from "react-responsive-pagination";
 import ListedHomeJobs from "../Skeleton/ListedHomeJobs";
 import ListedHomeExperts from "../Skeleton/ListedHomeExperts";
 
-import { useFetchJobs } from "@/hooks/useFetchJobs";
 import { useGetBusinesses } from "@/hooks/useGetBusinesses";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 
 import { CiSearch } from "react-icons/ci";
 import { serviceList } from "@/constants";
-import { useContext, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useState } from "react";
 import { AuthContext } from "@/utils/AuthState";
 import { useAddClicks } from "@/hooks/useAddClicks";
 import ReadMore from "../ReadMore/ReadMore";
 import ShareLink from "../modals/ShareLink";
+import { axiosInstance } from "@/axiosInstance/baseUrls";
 
 const ListAllJobs = () => {
+  const searchParams = useSearchParams();
+
+  const q = searchParams.get("q") || "";
   const { currentUser } = useContext(AuthContext);
   const userId = currentUser?._id;
 
   const [jobId, setJobId] = useState("");
   const [jobType, setJobType] = useState("");
   const [openShareModal, setOpenShareModal] = useState(false);
+  const [allJobs, setAllJobs] = useState<any>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [search, setSearch] = useState("");
+  const [filterLocation, setFilterLocation] = useState("");
+  const [filterName, setFilterName] = useState("");
+  const [filterService, setFilterService] = useState("");
+
+  const { addClicks } = useAddClicks();
+  const { businesses, loading } = useGetBusinesses();
+
+  const notFound =
+    search || q || filterName || filterService || filterLocation || "";
 
   const handleOpen = (id: string, type: string) => {
     setOpenShareModal(true);
@@ -37,22 +55,49 @@ const ListAllJobs = () => {
     setJobType(type);
   };
 
-  const { addClicks } = useAddClicks();
-  const { businesses, loading } = useGetBusinesses();
-  const {
-    isLoading,
-    allJobs,
-    search,
-    handleChange,
-    getAllJobs,
-    handlePageChange,
-    totalPages,
-    currentPage,
-    filterLocation,
-    setFilterLocation,
-    filterService,
-    setFilterService,
-  } = useFetchJobs();
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearch(e.target.value);
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setCurrentPage(newPage);
+  };
+
+  const getAllJobs = async (q?: string) => {
+    const userId = currentUser?._id || "";
+    let url = `/jobs/fetch-all-jobs?page=${currentPage}&limit=10${
+      userId ? `&userId=${userId}` : ""
+    }`;
+
+    if (search || q) {
+      url += `&search=${search || q}`;
+    } else {
+      if (filterName) {
+        url += `&title=${filterName}`;
+      }
+      if (filterLocation) {
+        url += `&location=${filterLocation}`;
+      }
+      if (filterService) {
+        url += `&service=${filterService}`;
+      }
+    }
+    try {
+      const { data } = await axiosInstance.get(url);
+
+      const { jobs: newJobs, totalPages } = data?.data;
+      setAllJobs(newJobs);
+      setTotalPages(totalPages);
+    } catch (error: any) {
+      console.log("error fetching all product", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    getAllJobs(q);
+  }, [q]);
 
   return (
     <section className="padding-y padding-x">
@@ -67,7 +112,11 @@ const ListAllJobs = () => {
                 value={search}
                 onChange={handleChange}
               />
-              <button type="submit" className="text-xl" onClick={getAllJobs}>
+              <button
+                type="button"
+                className="text-xl"
+                onClick={() => getAllJobs()}
+              >
                 {" "}
                 <CiSearch />
               </button>
@@ -108,9 +157,9 @@ const ListAllJobs = () => {
             </div>
             <div className="flex justify-center items-center max-lg:hidden">
               <button
-                type="submit"
+                type="button"
                 className="text-primary-green text-center max-sm:text-sm font-semibold "
-                onClick={getAllJobs}
+                onClick={() => getAllJobs()}
               >
                 APPLY
               </button>
@@ -122,7 +171,7 @@ const ListAllJobs = () => {
             </p>
             <div className="flex-c justify-center">
               <button className="custom-btn mt-5">
-                <Link href="/register/expert">Get Started</Link>
+                <Link href="/login">Get Started</Link>
               </button>
             </div>
           </div>
@@ -135,90 +184,111 @@ const ListAllJobs = () => {
             <ListedHomeJobs />
           ) : (
             <>
-              <div className="w-full flex flex-col border-1">
-                {allJobs?.map((job: any) => (
-                  <div
-                    key={job._id}
-                    className="w-full p-4 border-b-1 hover:bg-gray-100 transition-all duration-300"
-                  >
-                    <div
-                      onClick={() => addClicks("job", job._id, userId || null)}
-                    >
-                      <div className="flex-c-b w-full ">
-                        <Link
-                          href={
-                            job?.type === "biddable"
-                              ? `/dashboard/job/info/biddable/${job._id}`
-                              : `/dashboard/job/info/regular/${job._id}`
+              {allJobs?.length > 0 ? (
+                <>
+                  <div className="w-full flex flex-col border-1">
+                    {allJobs?.map((job: any) => (
+                      <div
+                        key={job._id}
+                        className="w-full p-4 border-b-1 hover:bg-gray-100 transition-all duration-300"
+                      >
+                        <div
+                          onClick={() =>
+                            addClicks("job", job._id, userId || null)
                           }
-                          className="sm:text-lg font-semibold hover:text-primary-green"
                         >
-                          {job?.title && Capitalize(job?.title)}
-                        </Link>
-                        <div className="flex-c justify-end gap-3 max-sm:gap-2 ">
-                          <h6 className="text-sm font-msdium max-sm:text-xs">
-                            {job?.createdAt && formatCreatedAt(job.createdAt)}
-                          </h6>
+                          <div className="flex-c-b w-full ">
+                            <Link
+                              href={
+                                job?.type === "biddable"
+                                  ? `/dashboard/job/info/biddable/${job._id}`
+                                  : `/dashboard/job/info/regular/${job._id}`
+                              }
+                              className="sm:text-lg font-semibold hover:text-primary-green"
+                            >
+                              {job?.title && Capitalize(job?.title)}
+                            </Link>
+                            <div className="flex-c justify-end gap-3 max-sm:gap-2 ">
+                              <h6 className="text-sm font-msdium max-sm:text-xs">
+                                {job?.createdAt &&
+                                  formatCreatedAt(job.createdAt)}
+                              </h6>
+                            </div>
+                          </div>
+
+                          <div className="flex-c-b pt-5 text-[#737774]">
+                            <h6 className=" text-sm font-medium max-sm:text-xs">
+                              {job?.type === "biddable"
+                                ? "Max price"
+                                : "Budget"}
+                              : {job?.currency}{" "}
+                              {job?.budget && numberWithCommas(job?.budget)}
+                              {job?.maximumPrice &&
+                                numberWithCommas(job?.maximumPrice)}
+                            </h6>
+                            <h6 className="text-sm font-medium max-sm:text-xs">
+                              Duration: {job?.duration?.number}{" "}
+                              {job?.duration?.period}
+                            </h6>
+                          </div>
+                          <ReadMore
+                            text={job?.description}
+                            maxLength={300}
+                            style="font-medium text-sm py-2"
+                          />
+                          <p className="flex-c gap-1 whitespace-nowrap text-sm">
+                            {" "}
+                            <span className="text-lg">
+                              <MdLocationOn />
+                            </span>
+                            {job?.location}
+                          </p>
+                        </div>
+                        <div className="flex-c gap-8 flex-wrap max-sm:gap-4 max-sm:justify-between text-[#737774]  font-medium text-sm pt-4">
+                          <div className="flex-c justify-end gap-1  ">
+                            <span className="text-lg">
+                              <HiUser />
+                            </span>
+                            <p className=" whitespace-nowrap ">
+                              {job?.applications?.length &&
+                                numberWithCommas(
+                                  job?.applications?.length
+                                )}{" "}
+                              {job?.applications > 1
+                                ? "Applicants"
+                                : "Applicant"}
+                            </p>
+                          </div>
+                          <button
+                            className="flex-c gap-1  whitespace-nowrap cursor-pointer hover:text-primary-green transition-all duration-300"
+                            onClick={() => handleOpen(job._id, job?.type)}
+                          >
+                            <span className="text-xl">
+                              <TbShare3 />
+                            </span>
+                            Share
+                          </button>
                         </div>
                       </div>
-
-                      <div className="flex-c-b pt-5 text-[#737774]">
-                        <h6 className=" text-sm font-medium max-sm:text-xs">
-                          {job?.type === "biddable" ? "Max price" : "Budget"}:{" "}
-                          {job?.currency}{" "}
-                          {job?.budget && numberWithCommas(job?.budget)}
-                          {job?.maximumPrice &&
-                            numberWithCommas(job?.maximumPrice)}
-                        </h6>
-                        <h6 className="text-sm font-medium max-sm:text-xs">
-                          Duration: {job?.duration?.number}{" "}
-                          {job?.duration?.period}
-                        </h6>
-                      </div>
-                      <ReadMore
-                        text={job?.description}
-                        maxLength={300}
-                        style="font-medium text-sm py-2"
-                      />
-                      <p className="flex-c gap-1 whitespace-nowrap text-sm">
-                        {" "}
-                        <span className="text-lg">
-                          <MdLocationOn />
-                        </span>
-                        {job?.location}
-                      </p>
-                    </div>
-                    <div className="flex-c gap-8 flex-wrap max-sm:gap-4 max-sm:justify-between text-[#737774]  font-medium text-sm pt-4">
-                      <div className="flex-c justify-end gap-1  ">
-                        <span className="text-lg">
-                          <HiUser />
-                        </span>
-                        <p className=" whitespace-nowrap ">
-                          {job?.applications?.length &&
-                            numberWithCommas(job?.applications?.length)}{" "}
-                          {job?.applications > 1 ? "Applicants" : "Applicant"}
-                        </p>
-                      </div>
-                      <button
-                        className="flex-c gap-1  whitespace-nowrap cursor-pointer hover:text-primary-green transition-all duration-300"
-                        onClick={() => handleOpen(job._id, job?.type)}
-                      >
-                        <span className="text-xl">
-                          <TbShare3 />
-                        </span>
-                        Share
-                      </button>
-                    </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-              {totalPages > 1 && (
-                <Pagination
-                  current={currentPage}
-                  total={totalPages}
-                  onPageChange={handlePageChange}
-                  extraClassName="justify-content-start"
-                />
+                  {totalPages > 1 && (
+                    <Pagination
+                      current={currentPage}
+                      total={totalPages}
+                      onPageChange={handlePageChange}
+                      extraClassName="justify-content-start"
+                    />
+                  )}
+                </>
+              ) : (
+                <>
+                  {notFound ? (
+                    <p>No job matched criteria. Try something else</p>
+                  ) : (
+                    <p>No job listed</p>
+                  )}
+                </>
               )}
             </>
           )}
