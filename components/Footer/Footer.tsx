@@ -32,7 +32,7 @@ const Footer = () => {
               {title?.links?.map((link, index) => (
                 <li key={index}>
                   <Link
-                    href="/"
+                    href={link?.link}
                     className="font-medium hover:text-primary-green transition-all duration-300 capitalize max-sm:text-sm"
                   >
                     {link?.name}

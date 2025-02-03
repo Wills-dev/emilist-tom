@@ -62,7 +62,7 @@ export const footerLinks = [
     title: "Company",
     links: [
       { name: "About Us", link: "/about-us" },
-      { name: "Privacy Policy", link: "/privacy-policy" },
+      { name: "Privacy Policy", link: "/policy" },
       { name: "Terms of Use", link: "/terms" },
       { name: "Cookie Policy", link: "/cookie-policy" },
     ],
