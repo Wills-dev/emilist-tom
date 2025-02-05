@@ -52,10 +52,17 @@ export const useCloseContract = () => {
       toast.error(`Please fill all fields`, toastOptions);
       return;
     }
+    let isRecommendVendor =
+      recommendVendor === "Yes"
+        ? true
+        : recommendVendor === "No"
+        ? false
+        : null;
+
     setLoaingContract(true);
     try {
       const contractData = {
-        isRecommendVendor: recommendVendor,
+        isRecommendVendor,
         rating: rateServiceProvider,
         rateCommunication: rateServiceRendered,
         note: review,

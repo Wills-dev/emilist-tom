@@ -89,9 +89,9 @@ const CloseContractModal = ({
                 value={contractDetails.recommendVendor}
                 onChange={handleContractChange}
               >
-                <option>Yes</option>
-                <option>No</option>
-                <option>Maybe</option>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+                <option value="Maybe">Maybe</option>
               </select>
             </div>
           </div>
