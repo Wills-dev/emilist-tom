@@ -3193,16 +3193,16 @@ export const profileLinks = [
     name: "Personal Profile",
   },
   {
+    id: 4,
+    name: "Bank Details",
+  },
+  {
     id: 2,
     name: "Log In & Security",
   },
   {
     id: 3,
     name: "Message & Notification",
-  },
-  {
-    id: 4,
-    name: "Bank Details",
   },
 ];
 
