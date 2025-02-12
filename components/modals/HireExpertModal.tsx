@@ -115,6 +115,7 @@ const HireExpertModal = ({
                   <option value="Investigator">Investigator</option>
                   <option value="Supervisor">Supervisor</option>
                   <option value="Project Manager">Project Manager</option>
+                  <option value="Consultant">Consultant</option>
                 </select>
               </div>
             </div>

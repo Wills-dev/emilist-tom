@@ -56,7 +56,7 @@ const ExpertOptions = () => {
         </div>
         <div className="flex-1 flex flex-col gap-5">
           <h4 className="text-4xl font-bold  max-sm:text-xl max-md:hidden">
-            Investigator
+            Private Experts
           </h4>
           <p className="max-sm:text-sm  max-md:text-center">
             The success of your project starts with clarity and authentication
@@ -72,7 +72,7 @@ const ExpertOptions = () => {
           </div>
         </div>
       </div>
-      <div className="flex flex-row-reverse gap-6 pb-20 max-md:flex-col max-md:items-center">
+      {/* <div className="flex flex-row-reverse gap-6 pb-20 max-md:flex-col max-md:items-center">
         <h4 className="text-4xl font-bold  max-sm:text-xl md:hidden">
           Supervisor
         </h4>
@@ -131,7 +131,7 @@ const ExpertOptions = () => {
             </button>
           </div>
         </div>
-      </div>
+      </div> */}
     </section>
   );
 };
