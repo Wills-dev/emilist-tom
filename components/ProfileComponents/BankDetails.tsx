@@ -1,3 +1,4 @@
+import { asteriskAllExceptLastFour } from "@/helpers/asteriskAllNumbersExceptLastFour";
 import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 
 import { useAddBankDetails } from "@/hooks/useAddBankDetails";
@@ -28,7 +29,12 @@ const BankDetails = () => {
             </div>
             <div className="flex gap-2">
               <p className="font-bold">Account Number</p>
-              <p>{currentUser?.accountDetails?.number}</p>
+              <p>
+                {currentUser?.accountDetails?.number &&
+                  asteriskAllExceptLastFour(
+                    currentUser?.accountDetails?.number
+                  )}
+              </p>
             </div>
             <div className="flex gap-2">
               <p className="font-bold">Account Name</p>
