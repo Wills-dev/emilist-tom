@@ -164,6 +164,7 @@ const MessageTextarea = ({
                       />
                     </label>
                     <input
+                      style={{ fontSize: "16px" }}
                       type="file"
                       id="smiley"
                       className="invisible h-[1px] w-[1px]"
@@ -181,12 +182,14 @@ const MessageTextarea = ({
                       />
                     </label>
                     <input
+                      style={{ fontSize: "16px" }}
                       type="file"
                       id="smiley"
                       className="invisible h-[1px] w-[1px]"
                     />
                   </div>
                   <input
+                    style={{ fontSize: "16px" }}
                     type="text"
                     placeholder="Type your message"
                     className="flex-1 bg-transparent outline-none text-[#303632] text-[14px] ml-2"

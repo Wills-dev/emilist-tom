@@ -157,6 +157,7 @@ const RegistrationFormSix = () => {
                       name="businessImages"
                       multiple
                       className="hidden"
+                      style={{ fontSize: "16px" }}
                     />
                     <span>Add More</span>
                   </label>

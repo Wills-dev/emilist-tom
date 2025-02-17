@@ -111,6 +111,7 @@ const RegistrationFormThree = () => {
                           onChange={handleChange}
                           name="file"
                           className="invisible h-[1px] w-[1px]"
+                          style={{ fontSize: "16px" }}
                         />
                       </label>
                     )}

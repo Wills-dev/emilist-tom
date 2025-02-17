@@ -87,6 +87,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="name"
@@ -102,6 +103,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="category"
                         value={category}
@@ -124,6 +126,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                   <div className="w-full">
                     <div className=" expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="subCategory"
                         value={subCategory}
@@ -148,6 +151,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="brand"
@@ -163,6 +167,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                   </p>
                   <div className="w-full">
                     <textarea
+                      style={{ fontSize: "16px" }}
                       className=" min-w-full w-full  max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1  max-sm:text-sm"
                       rows={8}
                       name="description"
@@ -179,6 +184,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="availableQuantity"
@@ -202,6 +208,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                     Add product image
                   </label>
                   <input
+                    style={{ fontSize: "16px" }}
                     type="file"
                     id="attach-file"
                     className="h-0 w-0 invisible"
@@ -283,6 +290,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                   </p>
                   <div className="w-full grid grid-cols-3 gap-4">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="col-span-2 expert-reg-input"
                       name="price"
@@ -291,6 +299,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                     />
                     <div className="col-span-1 expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm"
                         name="currency"
                         value={editMaterialInfo.currency}
@@ -321,6 +330,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="storeName"
@@ -339,6 +349,7 @@ const EditMaterialInfoForm = ({ materialId }: EditMaterialInfoFormProps) => {
                       onPlacesChanged={handlePlacesChanged}
                     >
                       <input
+                        style={{ fontSize: "16px" }}
                         type="text"
                         className="expert-reg-input"
                         name="location"

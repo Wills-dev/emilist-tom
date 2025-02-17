@@ -89,6 +89,7 @@ const DashboardMaterialContent = () => {
               value={search}
               onChange={handleChange}
               className="focus:outline-none max-md:text-14 w-full bg-white"
+              style={{ fontSize: "16px" }}
             />
           </div>
         </div>

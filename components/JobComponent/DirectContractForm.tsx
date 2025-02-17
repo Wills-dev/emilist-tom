@@ -64,6 +64,7 @@ const DirectContractForm = () => {
           </p>
           <div className="w-full grid grid-cols-3 gap-4">
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
@@ -75,6 +76,7 @@ const DirectContractForm = () => {
             />
             <div className="col-span-1 expert-reg-input-div">
               <select
+                style={{ fontSize: "16px" }}
                 className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm"
                 value={milestone.durationType}
                 onChange={(e) =>
@@ -94,6 +96,7 @@ const DirectContractForm = () => {
           </p>
           <div className="w-full">
             <textarea
+              style={{ fontSize: "16px" }}
               className="min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm"
               rows={4}
               value={milestone.details}
@@ -115,6 +118,7 @@ const DirectContractForm = () => {
           </div>
           <div className="w-full">
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
@@ -163,6 +167,7 @@ const DirectContractForm = () => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className=" expert-reg-input"
                       name="invite"
@@ -178,6 +183,7 @@ const DirectContractForm = () => {
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="category"
                         value={createDirectContractJob.category}
@@ -210,6 +216,7 @@ const DirectContractForm = () => {
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="narrow"
                         value={createDirectContractJob.narrow}
@@ -240,6 +247,7 @@ const DirectContractForm = () => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="projectTitle"
@@ -254,6 +262,7 @@ const DirectContractForm = () => {
                   </p>
                   <div className="w-full">
                     <textarea
+                      style={{ fontSize: "16px" }}
                       className=" min-w-full w-full  max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm"
                       rows={4}
                       name="description"
@@ -282,6 +291,7 @@ const DirectContractForm = () => {
                     Attach a file
                   </label>
                   <input
+                    style={{ fontSize: "16px" }}
                     type="file"
                     id="attach-file"
                     className="h-0 w-0 invisible"
@@ -330,6 +340,7 @@ const DirectContractForm = () => {
                   </p>
                   <div className="w-full grid grid-cols-3 gap-4">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       onKeyDown={handleKeyDown}
                       onWheel={handleWheel}
@@ -340,6 +351,7 @@ const DirectContractForm = () => {
                     />
                     <div className="col-span-1  expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="projectDurationType"
                         value={createDirectContractJob.projectDurationType}
@@ -364,6 +376,7 @@ const DirectContractForm = () => {
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="currency"
                         value={createDirectContractJob.currency}
@@ -398,6 +411,7 @@ const DirectContractForm = () => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="budget"
@@ -419,6 +433,7 @@ const DirectContractForm = () => {
                       onPlacesChanged={handlePlacesChanged}
                     >
                       <input
+                        style={{ fontSize: "16px" }}
                         type="text"
                         className="expert-reg-input"
                         name="location"
@@ -474,6 +489,7 @@ const DirectContractForm = () => {
                   </p>
                   <div className="expert-reg-input-div">
                     <select
+                      style={{ fontSize: "16px" }}
                       className="bg-[#ececec] outline-none min-w-full w-full h-full max-w-full max-sm:text-sm"
                       name="milestonesnumber"
                       value={createDirectContractJob.milestonesnumber}

@@ -25,6 +25,7 @@ const PromoteModal = ({ isOpen, onCancel }: Props) => {
               className="object-contain w-6 h-6"
             />{" "}
             {/* <input
+                        style={{ fontSize: "16px" }}
                   type="radio"
                   id="Emi Preferred"
                   name="contact"
@@ -41,6 +42,7 @@ const PromoteModal = ({ isOpen, onCancel }: Props) => {
               className="object-contain w-6 h-6"
             />{" "}
             {/* <input
+                        style={{ fontSize: "16px" }}
                   type="radio"
                   id="Emi Preferred"
                   name="contact"
@@ -62,7 +64,11 @@ const PromoteModal = ({ isOpen, onCancel }: Props) => {
               Start Date
             </p>
             <div className="w-full">
-              <input type="date" className="expert-reg-input" />
+              <input
+                style={{ fontSize: "16px" }}
+                type="date"
+                className="expert-reg-input"
+              />
             </div>
           </div>
           <div className="w-full col-span-1 max-md:col-span-2">
@@ -70,7 +76,11 @@ const PromoteModal = ({ isOpen, onCancel }: Props) => {
               End Date
             </p>
             <div className="w-full">
-              <input type="date" className="expert-reg-input" />
+              <input
+                style={{ fontSize: "16px" }}
+                type="date"
+                className="expert-reg-input"
+              />
             </div>
           </div>
         </div>
@@ -87,6 +97,7 @@ const PromoteModal = ({ isOpen, onCancel }: Props) => {
             </p>
             <div className="w-full">
               <input
+                style={{ fontSize: "16px" }}
                 type="text"
                 className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-sm"
               />

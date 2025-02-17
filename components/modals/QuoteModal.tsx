@@ -81,6 +81,7 @@ const QuoteModal = ({
 
               <div className="w-full">
                 <input
+                  style={{ fontSize: "16px" }}
                   type="text"
                   className="expert-reg-input"
                   value={amount}
@@ -145,6 +146,7 @@ const QuoteModal = ({
                   </div>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       className="expert-reg-input"
                       type="text"
                       value={percentage[index]}

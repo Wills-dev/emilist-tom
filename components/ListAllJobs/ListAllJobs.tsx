@@ -106,6 +106,7 @@ const ListAllJobs = () => {
           <div className="flex lg:flex-col  gap-4">
             <div className=" flex-1 w-full border-1  border-[#b8b9b8] rounded-lg p-2 flex-c gap-2">
               <input
+                style={{ fontSize: "16px" }}
                 type="text"
                 placeholder="Search for jobs..."
                 className="flex-1 w-full max-md:text-sm bg-white outline-none"
@@ -126,6 +127,7 @@ const ListAllJobs = () => {
                 Filter by category
               </label>
               <select
+                style={{ fontSize: "16px" }}
                 name=""
                 id="filter"
                 className="border-1 border-[#b8b9b8] outline-none rounded-lg w-full max-md:text-sm p-2 bg-white"
@@ -148,6 +150,7 @@ const ListAllJobs = () => {
                 Filter by location
               </label>
               <input
+                style={{ fontSize: "16px" }}
                 type="text"
                 id="location"
                 className="border-1 border-[#b8b9b8] outline-none rounded-lg w-full max-sm:text-sm p-2 bg-white"

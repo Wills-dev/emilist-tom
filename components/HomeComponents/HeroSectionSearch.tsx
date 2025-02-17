@@ -44,6 +44,7 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
           <CiSearch />
         </span>
         <input
+          style={{ fontSize: "16px" }}
           type="text"
           placeholder="Enter Keyword"
           className="focus:outline-none max-sm:text-sm flex-1 bg-white"
@@ -57,6 +58,7 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
             <CiLocationOn />
           </span>
           <input
+            style={{ fontSize: "16px" }}
             type="text"
             placeholder="Enter Location"
             className="focus:outline-none max-sm:text-sm flex-1 bg-white h-full"

@@ -70,6 +70,7 @@ const ProfileSecurity = () => {
           </div>
           <div className="flex items-center gap-3 justify-between w-full border-b-1 border-[#CBD5E1] focus-within:border-primary-green">
             <input
+              style={{ fontSize: "16px" }}
               type={inputType}
               name="old"
               value={password.old}
@@ -121,6 +122,7 @@ const ProfileSecurity = () => {
           {edit && (
             <div className="flex items-center gap-3 justify-between w-full border-b-1 border-[#CBD5E1] focus-within:border-primary-green mt-10">
               <input
+                style={{ fontSize: "16px" }}
                 type={inputTypee}
                 name="new"
                 value={password.new}

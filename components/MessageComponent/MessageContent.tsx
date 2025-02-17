@@ -49,6 +49,7 @@ const MessageContent = () => {
                 type="text"
                 placeholder="search"
                 className="pl-2  bg-transparent w-[90%] outline-none text-[#304155] text-[14px] font-[600] max-sm:text-[12px]"
+                style={{ fontSize: "16px" }}
               />
             </div>
           </div>

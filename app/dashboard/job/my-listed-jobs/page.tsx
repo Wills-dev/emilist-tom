@@ -65,6 +65,7 @@ const MyListedJobs = () => {
               <form className="max-w-[350px] mt-5 md:hidden">
                 <div className="flex-1 flex-c px-4 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green max-sm:px-2 shadow-md gap-2">
                   <input
+                    style={{ fontSize: "16px" }}
                     type="text"
                     placeholder="Search"
                     className="focus:outline-none bg-white max-md:text-xs w-full flex-1"
@@ -222,6 +223,7 @@ const MyListedJobs = () => {
               <form className=" w-full mb-10 max-md:hidden">
                 <div className="flex-c px-4 py-2 rounded-lg  border-[#b8b9b8] border-1 focus-within:border-primary-green max-sm:px-2 max-sm:py-1 shadow-sm">
                   <input
+                    style={{ fontSize: "16px" }}
                     type="text"
                     placeholder="Search"
                     className="focus:outline-none text-sm  w-full bg-white"
@@ -240,6 +242,7 @@ const MyListedJobs = () => {
                 </h6>
                 <div className="mr-2">
                   <input
+                    style={{ fontSize: "16px" }}
                     type="text"
                     placeholder="Enter job title"
                     className="border-1 border-[#b8b9b8] rounded-lg w-full text-sm px-2 py-2 focus:outline-none bg-white focus:border-primary-green "
@@ -252,6 +255,7 @@ const MyListedJobs = () => {
                 </h6>
                 <div className="mr-2">
                   <select
+                    style={{ fontSize: "16px" }}
                     name=""
                     id="filter"
                     className="border-1 border-[#b8b9b8] rounded-lg w-full bg-white text-sm px-2 py-2  focus:outline-none focus:border-primary-green"
@@ -277,6 +281,7 @@ const MyListedJobs = () => {
                 </h6>
                 <div className="mr-2">
                   <input
+                    style={{ fontSize: "16px" }}
                     type="text"
                     className="border-1 border-[#b8b9b8] bg-white rounded-lg w-full text-sm px-2 py-2 mt-4 focus:outline-none focus:border-primary-green"
                     value={filterLocation}

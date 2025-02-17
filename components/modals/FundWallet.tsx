@@ -77,6 +77,7 @@ const FundWallet = ({ isOpen, onCancel }: FundWalletProps) => {
           </p>
           <div className="w-full">
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               name="amount"
               value={fundInfo?.amount}
@@ -117,6 +118,7 @@ const FundWallet = ({ isOpen, onCancel }: FundWalletProps) => {
               Attach payment proof
             </label>
             <input
+              style={{ fontSize: "16px" }}
               type="file"
               id="attach-file"
               className="h-0 w-0 invisible"

@@ -36,6 +36,7 @@ const AddMembershipModal = ({
           <p className="input-label">Organization</p>
           <div className="w-full">
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               className="expert-reg-input"
               name="organization"
@@ -65,6 +66,7 @@ const AddMembershipModal = ({
           <p className="input-label">State Date</p>
           <div className="w-full">
             <input
+              style={{ fontSize: "16px" }}
               type="date"
               className="expert-reg-input"
               name="startDate"
@@ -77,6 +79,7 @@ const AddMembershipModal = ({
           <p className="input-label">End Date</p>
           <div className="w-full">
             <input
+              style={{ fontSize: "16px" }}
               type="date"
               className="expert-reg-input"
               name="endDate"

@@ -118,6 +118,7 @@ const EditFormTwo = ({
                 </label>
                 <div className="w-full">
                   <input
+                    style={{ fontSize: "16px" }}
                     type="text"
                     className="expert-reg-input"
                     id="firstName"
@@ -133,6 +134,7 @@ const EditFormTwo = ({
                 </label>
                 <div className="w-full">
                   <input
+                    style={{ fontSize: "16px" }}
                     id="lastName"
                     type="text"
                     className="expert-reg-input"
@@ -146,6 +148,7 @@ const EditFormTwo = ({
                 <p className="input-label">Phone Number</p>
                 <div className="w-full">
                   <input
+                    style={{ fontSize: "16px" }}
                     type="number"
                     className=" expert-reg-input"
                     name="phoneNumber"
@@ -252,6 +255,7 @@ const EditFormTwo = ({
                     <div className="absolute right-0 w-full mt-1 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg">
                       <div className="p-2">
                         <input
+                          style={{ fontSize: "16px" }}
                           type="text"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
@@ -289,6 +293,7 @@ const EditFormTwo = ({
               <div className="input__container ">
                 <p className="input-label">State</p>
                 <input
+                  style={{ fontSize: "16px" }}
                   type="text"
                   className="expert-reg-input"
                   name="state"
@@ -302,6 +307,7 @@ const EditFormTwo = ({
                 <p className="input-label">City</p>
                 <div className="w-full">
                   <input
+                    style={{ fontSize: "16px" }}
                     type="text"
                     className="expert-reg-input"
                     name="city"
@@ -314,6 +320,7 @@ const EditFormTwo = ({
                 <p className="input-label">Address</p>
                 <div className="w-full">
                   <input
+                    style={{ fontSize: "16px" }}
                     type="text"
                     className="expert-reg-input"
                     name="address"
@@ -333,6 +340,7 @@ const EditFormTwo = ({
                   name="bio"
                   value={ownerProfile.bio}
                   onChange={handleChange}
+                  style={{ fontSize: "16px" }}
                 ></textarea>
               </div>
             </div>

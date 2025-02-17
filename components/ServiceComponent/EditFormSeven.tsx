@@ -76,6 +76,7 @@ const EditFormSeven = ({
                           e.target.value
                         )
                       }
+                      style={{ fontSize: "16px" }}
                     />
                   </div>
                 </div>

@@ -82,6 +82,7 @@ const ServiceCatalog = () => {
               <CiSearch />
             </button>
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               placeholder="Search"
               value={search}

@@ -90,6 +90,7 @@ const EditFormFour = ({
                   <p className="input-label">Business name</p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       value={businessData?.businessName}
@@ -102,6 +103,7 @@ const EditFormFour = ({
                   <p className="input-label">Year Founded</p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="number"
                       className="expert-reg-input"
                       name="yearFounded"
@@ -114,6 +116,7 @@ const EditFormFour = ({
                   <p className="input-label">Number of employees</p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="number"
                       className="expert-reg-input"
                       name="numberOfEmployee"
@@ -126,6 +129,7 @@ const EditFormFour = ({
                   <p className="input-label">Business address</p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="businessAddress"
@@ -138,6 +142,7 @@ const EditFormFour = ({
                   <p className="input-label">Business city</p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="businessCity"
@@ -150,6 +155,7 @@ const EditFormFour = ({
                   <p className="input-label">State</p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       value={businessData?.businessState}
@@ -189,6 +195,7 @@ const EditFormFour = ({
                       <div className="absolute right-0 w-full mt-1 origin-top-right bg-white border border-gray-200 rounded-md shadow-lg">
                         <div className="p-2">
                           <input
+                            style={{ fontSize: "16px" }}
                             type="text"
                             value={searchQuery}
                             onChange={(e) => setSearchQuery(e.target.value)}
@@ -227,6 +234,7 @@ const EditFormFour = ({
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="currency"
                         value={businessData?.currency}
@@ -254,6 +262,7 @@ const EditFormFour = ({
                   <p className="input-label">Your Start Price</p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="startingPrice"
@@ -267,6 +276,7 @@ const EditFormFour = ({
                   <div className="w-full">
                     <div className="expert-reg-input-div flex-c-b">
                       <input
+                        style={{ fontSize: "16px" }}
                         type="number"
                         name="noticePeriod"
                         className="h-full flex-1 outline-none bg-[#ececec] max-sm:text-[14px]"
