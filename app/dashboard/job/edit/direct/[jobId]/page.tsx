@@ -86,6 +86,7 @@ const page = ({ params }: any) => {
           </p>
           <div className="w-full grid grid-cols-3 gap-4">
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               className="col-span-2 expert-reg-input"
               name="number"
@@ -101,6 +102,7 @@ const page = ({ params }: any) => {
             />
             <div className="col-span-1 expert-reg-input-div">
               <select
+                style={{ fontSize: "16px" }}
                 className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                 name="period"
                 value={milestone?.timeFrame?.period}
@@ -126,6 +128,7 @@ const page = ({ params }: any) => {
           </p>
           <div className="w-full">
             <textarea
+              style={{ fontSize: "16px" }}
               className="min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm"
               rows={4}
               name="achievement"
@@ -146,6 +149,7 @@ const page = ({ params }: any) => {
           </div>
           <div className="w-full">
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               className="expert-reg-input"
               value={percentage[index] || 0}
@@ -200,6 +204,7 @@ const page = ({ params }: any) => {
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="category"
                         value={editJobDetails.category}
@@ -227,6 +232,7 @@ const page = ({ params }: any) => {
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="service"
                         value={editJobDetails.service}
@@ -252,6 +258,7 @@ const page = ({ params }: any) => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="title"
@@ -266,6 +273,7 @@ const page = ({ params }: any) => {
                   </p>
                   <div className="w-full">
                     <textarea
+                      style={{ fontSize: "16px" }}
                       className=" min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1  max-sm:text-sm"
                       rows={4}
                       name="description"
@@ -289,6 +297,7 @@ const page = ({ params }: any) => {
                     Attach a file
                   </label>
                   <input
+                    style={{ fontSize: "16px" }}
                     type="file"
                     id="attach-file"
                     className="h-0 w-0 invisible"
@@ -366,6 +375,7 @@ const page = ({ params }: any) => {
                   </p>
                   <div className="w-full grid grid-cols-3 gap-4">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="col-span-2 expert-reg-input"
                       name="duration"
@@ -374,6 +384,7 @@ const page = ({ params }: any) => {
                     />
                     <div className="col-span-1 expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="period"
                         value={editJobDetails?.duration?.period}
@@ -395,6 +406,7 @@ const page = ({ params }: any) => {
                     <div className="w-full">
                       <div className="expert-reg-input-div">
                         <select
+                          style={{ fontSize: "16px" }}
                           className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                           name="currency"
                           value={editJobDetails.currency}
@@ -424,6 +436,7 @@ const page = ({ params }: any) => {
                     </p>
                     <div className="w-full">
                       <input
+                        style={{ fontSize: "16px" }}
                         type="text"
                         className="expert-reg-input"
                         name="budget"
@@ -447,6 +460,7 @@ const page = ({ params }: any) => {
                       onPlacesChanged={handlePlacesChanged}
                     >
                       <input
+                        style={{ fontSize: "16px" }}
                         type="text"
                         className="expert-reg-input"
                         name="location"
@@ -503,6 +517,7 @@ const page = ({ params }: any) => {
                   </p>
                   <div className="expert-reg-input-div">
                     <select
+                      style={{ fontSize: "16px" }}
                       className="bg-[#ececec] outline-none min-w-full w-full h-full max-w-full max-sm:text-sm"
                       name="milestoneNumber"
                       value={editJobDetails.milestoneNumber}

@@ -152,6 +152,7 @@ const ApplyBiddableJobModal = ({
 
               <div className="w-full">
                 <input
+                  style={{ fontSize: "16px" }}
                   type="text"
                   className="expert-reg-input"
                   value={maxPrice}
@@ -216,6 +217,7 @@ const ApplyBiddableJobModal = ({
                   </div>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       className="expert-reg-input"
                       type="text"
                       value={percentage[index]}

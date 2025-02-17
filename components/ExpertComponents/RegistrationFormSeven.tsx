@@ -249,6 +249,7 @@ const RegistrationFormSeven = () => {
                       </div>
                     ) : (
                       <input
+                        style={{ fontSize: "16px" }}
                         type="file"
                         id="certificateImage"
                         name="certificateImage"
@@ -290,6 +291,7 @@ const RegistrationFormSeven = () => {
                       <p className="input-label">Issuing Organisation</p>
                       <div className="w-full">
                         <input
+                          style={{ fontSize: "16px" }}
                           type="text"
                           className=" expert-reg-input"
                           name="issuingOrganization"
@@ -308,6 +310,7 @@ const RegistrationFormSeven = () => {
                       <p className="input-label">Verification Number</p>
                       <div className="w-full">
                         <input
+                          style={{ fontSize: "16px" }}
                           type="text"
                           className=" expert-reg-input"
                           name="verificationNumber"
@@ -326,6 +329,7 @@ const RegistrationFormSeven = () => {
                       <p className="input-label">Issuing Date</p>
                       <div className="w-full">
                         <input
+                          style={{ fontSize: "16px" }}
                           type="date"
                           className=" expert-reg-input"
                           name="issuingDate"
@@ -351,6 +355,7 @@ const RegistrationFormSeven = () => {
                           />
                         ) : (
                           <input
+                            style={{ fontSize: "16px" }}
                             type="date"
                             className="expert-reg-input"
                             name="expiringDate"
@@ -367,6 +372,7 @@ const RegistrationFormSeven = () => {
                       </div>
                       <label className="flex-c w-fit py-2 gap-2">
                         <input
+                          style={{ fontSize: "16px" }}
                           type="checkbox"
                           className="h-0 w-0 invisible"
                           checked={certificate.doesNotExpire}
@@ -442,6 +448,7 @@ const RegistrationFormSeven = () => {
                     <p className="input-label">Organisation</p>
                     <div className="w-full">
                       <input
+                        style={{ fontSize: "16px" }}
                         type="text"
                         className=" expert-reg-input"
                         name="organization"
@@ -461,6 +468,7 @@ const RegistrationFormSeven = () => {
                     <div className="w-full">
                       <div className="  expert-reg-input">
                         <select
+                          style={{ fontSize: "16px" }}
                           className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                           value={membership.position}
                           onChange={(e) =>
@@ -484,6 +492,7 @@ const RegistrationFormSeven = () => {
                     <p className="input-label">State Date</p>
                     <div className="w-full">
                       <input
+                        style={{ fontSize: "16px" }}
                         type="date"
                         className=" expert-reg-input"
                         name="startDate"
@@ -509,6 +518,7 @@ const RegistrationFormSeven = () => {
                         />
                       ) : (
                         <input
+                          style={{ fontSize: "16px" }}
                           type="date"
                           className=" expert-reg-input"
                           name="endDate"
@@ -525,6 +535,7 @@ const RegistrationFormSeven = () => {
                     </div>
                     <label className="flex-c w-full py-2 gap-2">
                       <input
+                        style={{ fontSize: "16px" }}
                         type="checkbox"
                         className="h-0 w-0 invisible"
                         checked={membership.doesNotEnd}

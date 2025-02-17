@@ -97,6 +97,7 @@ const page = ({ params }: any) => {
                   e.target.value
                 )
               }
+              style={{ fontSize: "16px" }}
             />
             <div className="col-span-1 expert-reg-input-div">
               <select
@@ -111,6 +112,7 @@ const page = ({ params }: any) => {
                     e.target.value
                   )
                 }
+                style={{ fontSize: "16px" }}
               >
                 <option value="days">Day</option>
                 <option value="weeks">Week</option>
@@ -130,6 +132,7 @@ const page = ({ params }: any) => {
               name="achievement"
               value={milestone.achievement}
               onChange={(e) => handleMilestoneChange(index, e)}
+              style={{ fontSize: "16px" }}
             ></textarea>
           </div>
         </div>
@@ -152,6 +155,7 @@ const page = ({ params }: any) => {
                 handlePercentageChange(index, Number(e.target.value));
                 debounceValidation();
               }}
+              style={{ fontSize: "16px" }}
             />
           </div>
         </div>
@@ -232,6 +236,7 @@ const page = ({ params }: any) => {
                         name="service"
                         value={editJobDetails.service}
                         onChange={handleInputChange}
+                        style={{ fontSize: "16px" }}
                       >
                         <option defaultValue="">Select service</option>
                         {serviceList?.map((service, index) => (
@@ -258,6 +263,7 @@ const page = ({ params }: any) => {
                       name="title"
                       value={editJobDetails.title}
                       onChange={handleInputChange}
+                      style={{ fontSize: "16px" }}
                     />
                   </div>
                 </div>
@@ -272,6 +278,7 @@ const page = ({ params }: any) => {
                       name="description"
                       value={editJobDetails.description}
                       onChange={handleInputChange}
+                      style={{ fontSize: "16px" }}
                     ></textarea>
                   </div>
                 </div>
@@ -372,6 +379,7 @@ const page = ({ params }: any) => {
                       name="duration"
                       value={editJobDetails?.duration?.number}
                       onChange={handleInputChange}
+                      style={{ fontSize: "16px" }}
                     />
                     <div className="col-span-1 expert-reg-input-div">
                       <select
@@ -379,6 +387,7 @@ const page = ({ params }: any) => {
                         name="period"
                         value={editJobDetails?.duration?.period}
                         onChange={handleInputChange}
+                        style={{ fontSize: "16px" }}
                       >
                         <option value="days">Day</option>
                         <option value="weeks">Week</option>
@@ -400,6 +409,7 @@ const page = ({ params }: any) => {
                           name="currency"
                           value={editJobDetails.currency}
                           onChange={handleInputChange}
+                          style={{ fontSize: "16px" }}
                         >
                           <option defaultValue="">Select currency</option>
 
@@ -430,6 +440,7 @@ const page = ({ params }: any) => {
                         name="maximumPrice"
                         value={editJobDetails.maximumPrice}
                         onChange={handleInputChange}
+                        style={{ fontSize: "16px" }}
                       />
                     </div>
                   </div>
@@ -445,6 +456,7 @@ const page = ({ params }: any) => {
                         name="bidRange"
                         value={editJobDetails.bidRange}
                         onChange={handleInputChange}
+                        style={{ fontSize: "16px" }}
                       />
                     </div>
                   </div>
@@ -468,6 +480,7 @@ const page = ({ params }: any) => {
                         name="location"
                         value={editJobDetails.location}
                         onChange={handleInputChange}
+                        style={{ fontSize: "16px" }}
                       />
                     </StandaloneSearchBox>
                   </div>
@@ -523,6 +536,7 @@ const page = ({ params }: any) => {
                       name="milestoneNumber"
                       value={editJobDetails.milestoneNumber}
                       onChange={handleMilestoneNumberChange}
+                      style={{ fontSize: "16px" }}
                     >
                       <option value={1}>1</option>
                       <option value={2}>2</option>

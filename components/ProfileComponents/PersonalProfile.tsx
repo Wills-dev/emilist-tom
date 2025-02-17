@@ -71,6 +71,7 @@ const PersonalProfile = () => {
                     className="object-cover w-full h-full min-h-full min-w-full rounded-full"
                   />
                   <input
+                    style={{ fontSize: "16px" }}
                     type="file"
                     name="image"
                     id="profileImage"
@@ -161,6 +162,7 @@ const PersonalProfile = () => {
                   </div>
                   {editingField ? (
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       name="fullName"
                       id="fullName"
@@ -187,6 +189,7 @@ const PersonalProfile = () => {
                   </div>
                   {editingField ? (
                     <input
+                      style={{ fontSize: "16px" }}
                       type="number"
                       name="number1"
                       id="number1"
@@ -213,6 +216,7 @@ const PersonalProfile = () => {
                   </div>
                   {editingField ? (
                     <input
+                      style={{ fontSize: "16px" }}
                       type="number"
                       name="number2"
                       id="number2"
@@ -239,6 +243,7 @@ const PersonalProfile = () => {
                   </div>
                   {editingField ? (
                     <input
+                      style={{ fontSize: "16px" }}
                       type="number"
                       name="whatsAppNo"
                       id="whatsAppNo"
@@ -267,6 +272,7 @@ const PersonalProfile = () => {
                   </div>
                   {editingField ? (
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       name="location"
                       id="location"
@@ -294,6 +300,7 @@ const PersonalProfile = () => {
                   </div>
                   {editingField ? (
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       name="gender"
                       id="gender"
@@ -329,6 +336,7 @@ const PersonalProfile = () => {
                           bio: e.target.value,
                         })
                       }
+                      style={{ fontSize: "16px" }}
                       className="outline-none  border-b-1 border-green-300 px-2 bg-green-50"
                     ></textarea>
                   ) : (
@@ -345,6 +353,7 @@ const PersonalProfile = () => {
                   </div>
                   {editingField ? (
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       name="language"
                       id="language"

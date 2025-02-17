@@ -66,6 +66,7 @@ const ListNewJobForm = () => {
           </p>
           <div className="w-full grid grid-cols-3 gap-4">
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
@@ -77,6 +78,7 @@ const ListNewJobForm = () => {
             />
             <div className="col-span-1 expert-reg-input-div">
               <select
+                style={{ fontSize: "16px" }}
                 className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm"
                 value={milestone.durationType}
                 onChange={(e) =>
@@ -96,6 +98,7 @@ const ListNewJobForm = () => {
           </p>
           <div className="w-full">
             <textarea
+              style={{ fontSize: "16px" }}
               className="min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm"
               rows={4}
               value={milestone.details}
@@ -117,6 +120,7 @@ const ListNewJobForm = () => {
           </div>
           <div className="w-full">
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               onKeyDown={handleKeyDown}
               onWheel={handleWheel}
@@ -163,6 +167,7 @@ const ListNewJobForm = () => {
                   <div className="w-full">
                     <div className=" expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="category"
                         value={postJobDetails.category}
@@ -195,6 +200,7 @@ const ListNewJobForm = () => {
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="service"
                         value={postJobDetails.service}
@@ -227,6 +233,7 @@ const ListNewJobForm = () => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="projectTitle"
@@ -241,6 +248,7 @@ const ListNewJobForm = () => {
                   </p>
                   <div className="w-full">
                     <textarea
+                      style={{ fontSize: "16px" }}
                       className=" min-w-full w-full max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1  max-sm:text-sm"
                       rows={4}
                       name="description"
@@ -269,6 +277,7 @@ const ListNewJobForm = () => {
                     Attach a file
                   </label>
                   <input
+                    style={{ fontSize: "16px" }}
                     type="file"
                     id="attach-file"
                     className="h-0 w-0 invisible"
@@ -317,6 +326,7 @@ const ListNewJobForm = () => {
                   </p>
                   <div className="w-full grid grid-cols-3 gap-4">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       onKeyDown={handleKeyDown}
                       onWheel={handleWheel}
@@ -327,6 +337,7 @@ const ListNewJobForm = () => {
                     />
                     <div className="col-span-1 expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="projectDurationType"
                         value={postJobDetails.projectDurationType}
@@ -400,6 +411,7 @@ const ListNewJobForm = () => {
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="currency"
                         value={postJobDetails.currency}
@@ -436,6 +448,7 @@ const ListNewJobForm = () => {
                       </p>
                       <div className="w-full">
                         <input
+                          style={{ fontSize: "16px" }}
                           type="text"
                           onKeyDown={handleKeyDown}
                           onWheel={handleWheel}
@@ -453,6 +466,7 @@ const ListNewJobForm = () => {
                       </p>
                       <div className="w-full">
                         <input
+                          style={{ fontSize: "16px" }}
                           type="text"
                           className="expert-reg-input"
                           name="bidRange"
@@ -469,6 +483,7 @@ const ListNewJobForm = () => {
                     </p>
                     <div className="w-full">
                       <input
+                        style={{ fontSize: "16px" }}
                         type="text"
                         onKeyDown={handleKeyDown}
                         onWheel={handleWheel}
@@ -494,6 +509,7 @@ const ListNewJobForm = () => {
                       onPlacesChanged={handlePlacesChanged}
                     >
                       <input
+                        style={{ fontSize: "16px" }}
                         type="text"
                         className="expert-reg-input"
                         name="location"
@@ -548,6 +564,7 @@ const ListNewJobForm = () => {
                   </p>
                   <div className="expert-reg-input-div">
                     <select
+                      style={{ fontSize: "16px" }}
                       name="milestonesNumber"
                       className="bg-[#ececec] outline-none min-w-full w-full h-full max-w-full max-sm:text-sm"
                       value={postJobDetails.milestonesNumber}

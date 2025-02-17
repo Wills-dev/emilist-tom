@@ -72,6 +72,7 @@ const ListNewMaterialForm = () => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="product_name"
@@ -87,6 +88,7 @@ const ListNewMaterialForm = () => {
                   <div className="w-full">
                     <div className="expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="category"
                         onChange={handleCategoryChange}
@@ -108,6 +110,7 @@ const ListNewMaterialForm = () => {
                   <div className="w-full">
                     <div className=" expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm "
                         name="subCategory"
                         value={subCategory}
@@ -132,6 +135,7 @@ const ListNewMaterialForm = () => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="brand"
@@ -147,6 +151,7 @@ const ListNewMaterialForm = () => {
                   </p>
                   <div className="w-full">
                     <textarea
+                      style={{ fontSize: "16px" }}
                       className=" min-w-full w-full  max-w-full rounded-lg  p-2 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-1  max-sm:text-sm"
                       rows={8}
                       name="description"
@@ -163,6 +168,7 @@ const ListNewMaterialForm = () => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="quantity_available"
@@ -220,6 +226,7 @@ const ListNewMaterialForm = () => {
                       >
                         <h6 className="text-sm ">Drop image here</h6>
                         <input
+                          style={{ fontSize: "16px" }}
                           id="business-pic"
                           type="file"
                           accept="image/*"
@@ -239,6 +246,7 @@ const ListNewMaterialForm = () => {
                   </p>
                   <div className="w-full grid grid-cols-3 gap-4">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="col-span-2 expert-reg-input"
                       name="price"
@@ -247,6 +255,7 @@ const ListNewMaterialForm = () => {
                     />
                     <div className="col-span-1 expert-reg-input-div">
                       <select
+                        style={{ fontSize: "16px" }}
                         className="bg-[#ececec] outline-none  min-w-full w-full h-full max-w-full max-sm:text-sm"
                         value={currency}
                         onChange={(e) => setCurrency(e.target.value)}
@@ -276,6 +285,7 @@ const ListNewMaterialForm = () => {
                   </p>
                   <div className="w-full">
                     <input
+                      style={{ fontSize: "16px" }}
                       type="text"
                       className="expert-reg-input"
                       name="supplier"
@@ -294,6 +304,7 @@ const ListNewMaterialForm = () => {
                       onPlacesChanged={handlePlacesChanged}
                     >
                       <input
+                        style={{ fontSize: "16px" }}
                         type="text"
                         className="expert-reg-input"
                         name="location"

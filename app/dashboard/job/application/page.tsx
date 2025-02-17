@@ -56,6 +56,7 @@ const page = () => {
                     className="focus:outline-none bg-white max-md:text-xs w-full flex-1"
                     value={search}
                     onChange={handleChange}
+                    style={{ fontSize: "16px" }}
                   />
                   <button type="button" onClick={getAllJobs}>
                     {" "}
@@ -170,6 +171,7 @@ const page = () => {
                     className="focus:outline-none text-sm  w-full bg-white"
                     value={search}
                     onChange={handleChange}
+                    style={{ fontSize: "16px" }}
                   />
                   <button onClick={getAllJobs}>
                     {" "}
@@ -188,6 +190,7 @@ const page = () => {
                     className="border-1 border-[#b8b9b8] rounded-lg w-full text-sm px-2 py-2 focus:outline-none bg-white focus:border-primary-green "
                     value={filterName}
                     onChange={(e) => setFilterName(e.target.value)}
+                    style={{ fontSize: "16px" }}
                   />
                 </div>
                 <h6 className="text-lg font-semibold pt-4 max-sm:text-sm">
@@ -225,6 +228,7 @@ const page = () => {
                     className="border-1 border-[#b8b9b8] bg-white rounded-lg w-full text-sm px-2 py-2 mt-4 focus:outline-none focus:border-primary-green"
                     value={filterLocation}
                     onChange={(e) => setFilterLocation(e.target.value)}
+                    style={{ fontSize: "16px" }}
                   />
                   <div className="flex justify-center items-center">
                     <button

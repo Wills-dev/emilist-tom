@@ -83,6 +83,7 @@ const ServiceFilter = ({
        
 
             <input
+                        style={{ fontSize: "16px" }}
               type="range"
               name=""
               id=""
@@ -92,6 +93,7 @@ const ServiceFilter = ({
             />
 
             <input
+                        style={{ fontSize: "16px" }}
               type="range"
               name=""
               id=""
@@ -107,6 +109,7 @@ const ServiceFilter = ({
                 Min
               </label>
               <input
+                          style={{ fontSize: "16px" }}
                 id="min"
                 type="number"
                 className="border bg-white border-gray-300 rounded p-2 w-20 outline-none focus:border-primary-green"
@@ -120,6 +123,7 @@ const ServiceFilter = ({
                 Max
               </label>
               <input
+                          style={{ fontSize: "16px" }}
                 id="max"
                 type="number"
                 className="border bg-white border-gray-300 rounded p-2 w-20 outline-none focus:border-primary-green"
@@ -192,6 +196,7 @@ const ServiceFilter = ({
           <h6 className="text-lg font-semibold  max-sm:text-sm">Reviews</h6>
           <div className="">
             <input
+              style={{ fontSize: "16px" }}
               type="number"
               value={noOfReviews}
               onChange={(e) => setNoOfReviews(e.target.value)}
@@ -211,6 +216,7 @@ const ServiceFilter = ({
           <h6 className="text-lg font-semibold  max-sm:text-sm">Location</h6>
           <div className="">
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               value={location}
               onChange={(e) => setLocation(e.target.value)}

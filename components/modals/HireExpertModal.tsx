@@ -68,6 +68,7 @@ const HireExpertModal = ({
               Full name
             </p>
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               className="expert-reg-input"
               name="fullName"
@@ -80,6 +81,7 @@ const HireExpertModal = ({
               Phone number
             </p>
             <input
+              style={{ fontSize: "16px" }}
               type="text"
               className="expert-reg-input"
               name="phoneNumber"
@@ -92,6 +94,7 @@ const HireExpertModal = ({
               Email address
             </p>
             <input
+              style={{ fontSize: "16px" }}
               type="email"
               className="expert-reg-input"
               name="email"
@@ -106,6 +109,7 @@ const HireExpertModal = ({
             <div className="w-full">
               <div className=" min-w-full w-full  max-w-full rounded-lg h-14 px-2 bg-[#ececec] focus:outline-none focus-within:border-primary-green focus-within:border-1  max-sm:h-12">
                 <select
+                  style={{ fontSize: "16px" }}
                   className="bg-[#ececec] outline-none min-w-full w-full h-full max-w-full max-sm:text-sm "
                   name="privateExpertType"
                   value={hiringDetails?.privateExpertType}
@@ -126,6 +130,7 @@ const HireExpertModal = ({
             </p>
             <div className="w-full">
               <textarea
+                style={{ fontSize: "16px" }}
                 className=" min-w-full w-full  max-w-full rounded-lg  p-2 bg-[rgb(236,236,236)] focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm text-[#737774]"
                 rows={8}
                 name="jobDetails"
@@ -167,6 +172,7 @@ const HireExpertModal = ({
                 </p>
               </label>
               <input
+                style={{ fontSize: "16px" }}
                 id="file"
                 type="file"
                 onChange={handleFileChange}
@@ -182,6 +188,7 @@ const HireExpertModal = ({
             </p>
             <div className="w-full">
               <input
+                style={{ fontSize: "16px" }}
                 type="text"
                 className=" expert-reg-input"
                 name="location"
@@ -198,6 +205,7 @@ const HireExpertModal = ({
             {availability.map((entry, index) => (
               <div key={index} className="flex-c gap-2 mb-4 py-2">
                 <input
+                  style={{ fontSize: "16px" }}
                   type="date"
                   value={entry.date}
                   className="border rounded px-3 py-2 bg-[#ececec] focus:outline-none focus:border-primary-green"
@@ -206,6 +214,7 @@ const HireExpertModal = ({
                   max={formatDate(maxDate)}
                 />
                 <input
+                  style={{ fontSize: "16px" }}
                   type="time"
                   value={entry.time}
                   className="border rounded px-3 py-2 bg-[#ececec] focus:outline-none focus:border-primary-green"
@@ -227,6 +236,7 @@ const HireExpertModal = ({
                     Date:
                   </label>
                   <input
+                    style={{ fontSize: "16px" }}
                     type="date"
                     className="expert-reg-input"
                     onChange={(e) => {
@@ -256,6 +266,7 @@ const HireExpertModal = ({
                     Time:
                   </label>
                   <input
+                    style={{ fontSize: "16px" }}
                     type="time"
                     className="expert-reg-input"
                     onChange={(e) => {

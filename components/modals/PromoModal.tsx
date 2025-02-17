@@ -27,6 +27,7 @@ const PromoModal = ({ isOpen, onCancel }: PromoModalProps) => {
               className="object-contain w-[25px] h-[25px]"
             />{" "}
             {/* <input
+                        style={{ fontSize: "16px" }}
               type="radio"
               id="Emi Preferred"
               name="contact"
@@ -48,6 +49,7 @@ const PromoModal = ({ isOpen, onCancel }: PromoModalProps) => {
               className="object-contain w-[25px] h-[25px]"
             />{" "}
             {/* <input
+                        style={{ fontSize: "16px" }}
               type="radio"
               id="Emi Preferred"
               name="contact"
@@ -73,6 +75,7 @@ const PromoModal = ({ isOpen, onCancel }: PromoModalProps) => {
             </p>
             <div className="w-full">
               <input
+                style={{ fontSize: "16px" }}
                 type="date"
                 className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-[14px] text-[#737774]"
               />
@@ -84,6 +87,7 @@ const PromoModal = ({ isOpen, onCancel }: PromoModalProps) => {
             </p>
             <div className="w-full">
               <input
+                style={{ fontSize: "16px" }}
                 type="date"
                 className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-[14px] text-[#737774]"
               />
@@ -105,6 +109,7 @@ const PromoModal = ({ isOpen, onCancel }: PromoModalProps) => {
             </p>
             <div className="w-full">
               <input
+                style={{ fontSize: "16px" }}
                 type="text"
                 className=" min-w-full w-full  max-w-full rounded-[10px] h-[62px] px-4 bg-[#ececec] focus:outline-none focus:border-primary-green focus:border-[1px]  max-sm:h-[46px] max-sm:text-[14px]"
               />

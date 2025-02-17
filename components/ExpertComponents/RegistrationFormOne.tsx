@@ -154,6 +154,7 @@ const RegistrationFormOne = () => {
                             onChange={(e) => setCustomOption(e.target.value)}
                             placeholder="Specify your work"
                             className="w-full px-2 py-1 border border-gray-300 rounded focus:outline-none focus:border-primary-green bg-white"
+                            style={{ fontSize: "16px" }}
                           />
                           <button
                             onClick={handleAddCustomOption}

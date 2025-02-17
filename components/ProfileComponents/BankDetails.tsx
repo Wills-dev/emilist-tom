@@ -57,6 +57,7 @@ const BankDetails = () => {
                 onChange={handleChange}
                 className=" max-sm:text-sm bg-white outline-none justify-between w-full border-b-1 border-[#CBD5E1] focus-within:border-primary-green"
                 placeholder="Enter Bank Name"
+                style={{ fontSize: "16px" }}
               />
             </div>
             <div className="">
@@ -68,6 +69,7 @@ const BankDetails = () => {
                 onChange={handleChange}
                 className=" max-sm:text-sm bg-white outline-none justify-between w-full border-b-1 border-[#CBD5E1] focus-within:border-primary-green"
                 placeholder="Enter Account Number"
+                style={{ fontSize: "16px" }}
               />
             </div>
             <div className="">
@@ -79,6 +81,7 @@ const BankDetails = () => {
                 onChange={handleChange}
                 className=" max-sm:text-sm bg-white outline-none justify-between w-full border-b-1 border-[#CBD5E1] focus-within:border-primary-green"
                 placeholder="Enter Account Name"
+                style={{ fontSize: "16px" }}
               />
             </div>
             <div className="">
@@ -91,6 +94,7 @@ const BankDetails = () => {
                   className="outline-none flex-1 appearance-none bg-white"
                   value={bankDetails.password}
                   onChange={handleChange}
+                  style={{ fontSize: "16px" }}
                 />
                 {inputType === "password" ? (
                   <svg

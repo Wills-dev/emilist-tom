@@ -20,6 +20,7 @@ const InviteModal = ({ isOpen, onCancel }: InviteModalProps) => {
           onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter invitee email..."
           className="expert-reg-input"
+          style={{ fontSize: "16px" }}
         />
         <div className="flex-c justify-center">
           {isLoading ? (

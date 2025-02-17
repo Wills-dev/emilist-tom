@@ -60,6 +60,7 @@ export function DataTable({ columns, data, searchValue }: any) {
           onChange={(event) =>
             table?.getColumn(searchValue)?.setFilterValue(event.target.value)
           }
+                      style={{ fontSize: "16px" }}
           className="max-w-sm outline-none  focus-within:border-none bg-white  dark:bg-secondary-dark-bg"
         /> */}
         <div className="max-sm:hidden">

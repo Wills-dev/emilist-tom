@@ -117,6 +117,7 @@ const UserMaterialInfo = ({ materialId }: UserMaterialInfoProps) => {
                                 onChange={(e) =>
                                   setDiscountPrice(e.target.value)
                                 }
+                                style={{ fontSize: "16px" }}
                               />
                               {isLoading ? (
                                 <button

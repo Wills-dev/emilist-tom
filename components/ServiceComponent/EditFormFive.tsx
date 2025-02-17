@@ -149,6 +149,7 @@ const EditFormFive = ({
                     className="w-[216px] h-[210px] flex justify-center items-center bg-[#ECECEC] rounded-md cursor-pointer border-dashed border-1 border-gray-400"
                   >
                     <input
+                      style={{ fontSize: "16px" }}
                       id="business-pic"
                       type="file"
                       onChange={handleChange}

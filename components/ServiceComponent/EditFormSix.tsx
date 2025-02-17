@@ -221,6 +221,7 @@ const EditFormSix = ({
                           </div>
                         ) : (
                           <input
+                            style={{ fontSize: "16px" }}
                             type="file"
                             id="certificateImage"
                             name="certificateImage"
@@ -253,6 +254,7 @@ const EditFormSix = ({
                         <p className="input-label">Issuing Organisation</p>
                         <div className="w-full">
                           <input
+                            style={{ fontSize: "16px" }}
                             type="text"
                             className=" expert-reg-input"
                             name="issuingOrganisation"
@@ -271,6 +273,7 @@ const EditFormSix = ({
                         <p className="input-label">Verification Number</p>
                         <div className="w-full">
                           <input
+                            style={{ fontSize: "16px" }}
                             type="text"
                             className=" expert-reg-input"
                             name="verificationNumber"
@@ -289,6 +292,7 @@ const EditFormSix = ({
                         <p className="input-label">Issuing Date</p>
                         <div className="w-full">
                           <input
+                            style={{ fontSize: "16px" }}
                             type="date"
                             className=" expert-reg-input"
                             name="issuingDate"
@@ -317,6 +321,7 @@ const EditFormSix = ({
                             />
                           ) : (
                             <input
+                              style={{ fontSize: "16px" }}
                               type="date"
                               className="expert-reg-input"
                               name="expiringDate"
@@ -336,6 +341,7 @@ const EditFormSix = ({
                         </div>
                         <label className="flex-c w-fit py-2 gap-2">
                           <input
+                            style={{ fontSize: "16px" }}
                             type="checkbox"
                             className="h-0 w-0 invisible"
                             checked={certificate.isCertificateExpire}
@@ -402,6 +408,7 @@ const EditFormSix = ({
                     <p className="input-label">Organisation</p>
                     <div className="w-full">
                       <input
+                        style={{ fontSize: "16px" }}
                         type="text"
                         className=" expert-reg-input"
                         name="organisation"
@@ -431,6 +438,7 @@ const EditFormSix = ({
                             )
                           }
                           name="positionHeld"
+                          style={{ fontSize: "16px" }}
                         >
                           <option defaultValue="">Select</option>
                           <option value="Member">Member</option>
@@ -444,6 +452,7 @@ const EditFormSix = ({
                     <p className="input-label">State Date</p>
                     <div className="w-full">
                       <input
+                        style={{ fontSize: "16px" }}
                         type="date"
                         className=" expert-reg-input"
                         name="startDate"
@@ -472,6 +481,7 @@ const EditFormSix = ({
                         />
                       ) : (
                         <input
+                          style={{ fontSize: "16px" }}
                           type="date"
                           className=" expert-reg-input"
                           name="endDate"
@@ -488,6 +498,7 @@ const EditFormSix = ({
                     </div>
                     <label className="flex-c w-full py-2 gap-2">
                       <input
+                        style={{ fontSize: "16px" }}
                         type="checkbox"
                         className="h-0 w-0 invisible"
                         checked={membership.isMembershipExpire}

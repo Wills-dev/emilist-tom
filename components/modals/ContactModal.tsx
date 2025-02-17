@@ -179,6 +179,7 @@ const ContactModal = ({ isOpen, onCancel, user }: Props) => {
                     />
                   </label>
                   <input
+                    style={{ fontSize: "16px" }}
                     type="file"
                     id="smiley"
                     className="invisible h-0 w-0"
@@ -195,6 +196,7 @@ const ContactModal = ({ isOpen, onCancel, user }: Props) => {
                     />
                   </label>
                   <input
+                    style={{ fontSize: "16px" }}
                     type="file"
                     id="smiley"
                     className="invisible h-0 w-0"
@@ -203,6 +205,7 @@ const ContactModal = ({ isOpen, onCancel, user }: Props) => {
               </div>
               <div className="flex-1 px-3 max-sm:px-2 ">
                 <input
+                  style={{ fontSize: "16px" }}
                   type="text"
                   placeholder="Type your message here...."
                   value={message}

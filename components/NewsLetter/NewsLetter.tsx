@@ -23,6 +23,7 @@ const NewsLetter = () => {
         >
           <div className="flex-1 flex items-center px-2  rounded-l-lg border-light-gray border-1 focus-within:border-primary-green h-full  max-lg:h-12">
             <input
+              style={{ fontSize: "16px" }}
               type="email"
               placeholder="Enter Email Address"
               className="focus:outline-none max-md:text-sm w-full bg-white"

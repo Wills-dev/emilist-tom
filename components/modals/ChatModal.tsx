@@ -166,6 +166,7 @@ const ChatModal = ({ handleOpen, user }: Props) => {
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className="outline-none flex-1 bg-transparent px-1 "
+                  style={{ fontSize: "16px" }}
                 />
               </form>
             </div>
