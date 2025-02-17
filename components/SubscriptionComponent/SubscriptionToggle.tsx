@@ -6,14 +6,14 @@ type Props = {
 
 const subscriptionLinks = [
   {
-    id: 1,
-    name: "overview",
-    link: "/dashboard/subscription/overview",
-  },
-  {
     id: 2,
     name: "plans",
     link: "/dashboard/subscription/plans",
+  },
+  {
+    id: 1,
+    name: "overview",
+    link: "/dashboard/subscription/overview",
   },
 ];
 
