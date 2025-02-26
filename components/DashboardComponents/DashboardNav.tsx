@@ -218,7 +218,7 @@ const DashboardNav = () => {
             </button>
             <div className="flex-c sm:gap-6 gap-4">
               <div className="gap-3 flex items-center ">
-                <button className="p-2 hover:bg-green-100 duration-300 rounded-full max-xl:hidden">
+                <div className="p-2 hover:bg-green-100 duration-300 rounded-full max-xl:hidden">
                   <TooltipProvider>
                     <Tooltip>
                       <TooltipTrigger>
@@ -237,7 +237,7 @@ const DashboardNav = () => {
                       </TooltipContent>
                     </Tooltip>
                   </TooltipProvider>
-                </button>
+                </div>
                 <div className="relative p-2 hover:bg-green-100 duration-300 rounded-full max-xl:hidden">
                   <TooltipProvider>
                     <Tooltip>

@@ -171,12 +171,12 @@ const ComparePage = () => {
                           <Tooltip>
                             <TooltipTrigger>
                               {" "}
-                              <button
-                                className="text-red-500"
+                              <span
+                                className="text-red-500 cursor-pointer"
                                 onClick={() => compare(expert._id)}
                               >
                                 <RiDeleteBin6Line />
-                              </button>
+                              </span>
                             </TooltipTrigger>
                             <TooltipContent>
                               <p>Remove business</p>

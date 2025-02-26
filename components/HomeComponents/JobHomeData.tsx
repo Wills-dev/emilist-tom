@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import Link from "next/link";
 import { useContext } from "react";
 
@@ -26,6 +25,7 @@ const JobHomeData = () => {
     >
       {data?.map((job: any, i: number) => (
         <Link
+          key={i}
           href={
             job?.type === "biddable"
               ? `/dashboard/job/info/biddable/${job._id}`
