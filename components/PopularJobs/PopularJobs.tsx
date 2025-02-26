@@ -1,9 +1,10 @@
-import dynamic from "next/dynamic";
-import PopularSection from "../Skeleton/PopularSection";
 import Link from "next/link";
 
+import dynamic from "next/dynamic";
+import JobSkeleton from "../Skeleton/JobSkeleton";
+
 const JobHomeData = dynamic(() => import("../HomeComponents/JobHomeData"), {
-  loading: () => <PopularSection />,
+  loading: () => <JobSkeleton />,
 });
 
 const PopularJobs = () => {
