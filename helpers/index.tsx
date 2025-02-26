@@ -254,3 +254,22 @@ export const mapExpertLevel = (expertLevel: any): number | null => {
 
   return expertLevel ? expertLevelMap[expertLevel] || null : null;
 };
+
+export const hasInvoice = (milestones?: any): boolean => {
+  return (
+    milestones?.some((milestone: any) => milestone.invoice?.invoiceRaised) ||
+    false
+  );
+};
+
+export const showQuoteComponent = (
+  jobInfo?: any,
+  currentUser?: any
+): boolean => {
+  return (
+    jobInfo?.isRequestForQuote &&
+    jobInfo?.applications?.some(
+      (applicant: any) => applicant?.user?._id === currentUser?._id
+    )
+  );
+};

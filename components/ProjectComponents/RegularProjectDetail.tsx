@@ -3,10 +3,15 @@
 import Image from "next/image";
 import { useContext, useEffect, useState } from "react";
 
-import { convertDateFormat, numberWithCommas } from "@/helpers";
 import { getStatusClass } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
+import {
+  convertDateFormat,
+  hasInvoice,
+  numberWithCommas,
+  showQuoteComponent,
+} from "@/helpers";
 import { useUploadInvoiceForMilestone } from "@/hooks/useUploadInvoiceForMilestone";
 
 import AddQoute from "../JobComponent/AddQoute";
@@ -38,24 +43,17 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
     rerenderrrr,
     setOpenInvoice,
     openInvoice,
+    handleChange,
+    invoiceInfo,
   } = useUploadInvoiceForMilestone();
 
   const toggleUpdateStatus = () => {
     setUpdateStatus((prev) => !prev);
   };
 
-  const hasInvoice = jobInfo?.milestones?.some((obj: any) =>
-    obj.hasOwnProperty("accountDetails")
-  );
-
-  const showQuoteComponent = jobInfo?.applications?.some((applicant: any) => {
-    if (
-      applicant?.user?._id === currentUser?._id &&
-      jobInfo?.isRequestForQuote
-    ) {
-      return true;
-    } else return false;
-  });
+  const showPaymentDetails =
+    currentMilestone?.paymentStatus === "paid" ||
+    currentMilestone?.paymentStatus === "processing";
 
   useEffect(() => {
     getJobInfo(jobId);
@@ -70,7 +68,7 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
       ) : (
         <div className="grid grid-cols-12 py-10 gap-6">
           <AddQoute
-            showQuoteComponent={showQuoteComponent}
+            showQuoteComponent={showQuoteComponent(jobInfo, currentUser)}
             jobInfo={jobInfo}
             getJobInfo={getJobInfo}
             openModal={openModal}
@@ -78,7 +76,7 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
           />
           <ActiveProjectInfo jobInfo={jobInfo} jobId={jobId} />
           {/* invoice web view */}
-          {hasInvoice && (
+          {hasInvoice(jobInfo?.milestones) && (
             <div className="col-span-3 max-lg:hidden max-h-max">
               <MilestoneInvoice jobInfo={jobInfo} />
             </div>
@@ -205,7 +203,7 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
                   />
                 </div>
 
-                {!currentMilestone?.accountDetails && (
+                {!currentMilestone?.invoice?.invoiceRaised && (
                   <div className="py-8">
                     <button
                       className="bg-primary-green rounded-lg w-[148px] h-[52px] text-[#FCFEFD] font-bold max-sm:w-[120px] max-sm:h-[38px] max-sm:text-sm"
@@ -223,10 +221,12 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
                       milestoneAmount={currentMilestone.amount}
                       jobId={jobId}
                       currency={jobInfo?.currency}
+                      handleChange={handleChange}
+                      invoiceInfo={invoiceInfo}
                     />
                   </div>
                 )}
-                {currentMilestone?.paymentStatus === "paid" && (
+                {showPaymentDetails && (
                   <div className=" flex gap-4 py-6 text-[#282828]">
                     <div className="flex gap-4">
                       <img
@@ -235,7 +235,10 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
                         className="w-8 h-8"
                       />
                       <div className="">
-                        <h6 className="text-2xl font-bold">Paid</h6>
+                        <h6 className="text-2xl font-bold capitalize">
+                          {" "}
+                          {currentMilestone?.paymentStatus}
+                        </h6>
                         <p className="py-3">
                           {jobInfo?.currency}{" "}
                           {numberWithCommas(
@@ -264,7 +267,7 @@ const RegularProjectDetail = ({ jobId }: ProjectProjectDetailProps) => {
           </div>
 
           {/* invoice mobile view */}
-          {hasInvoice && (
+          {hasInvoice(jobInfo?.milestones) && (
             <div className="col-span-9 max-lg:col-span-12 lg:hidden max-h-max">
               <MilestoneInvoice jobInfo={jobInfo} />
             </div>

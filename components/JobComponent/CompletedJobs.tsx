@@ -37,7 +37,9 @@ const CompletedJobs = () => {
 
   const isAllPaid = (jobInfo: any) => {
     const isAllMilestonePaid = jobInfo?.milestones?.every(
-      (milestone: any) => milestone.paymentStatus === "paid"
+      (milestone: any) =>
+        milestone.paymentStatus === "paid" ||
+        milestone.paymentStatus === "processing"
     );
     return isAllMilestonePaid;
   };

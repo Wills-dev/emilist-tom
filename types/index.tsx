@@ -224,3 +224,8 @@ export interface Membershipp {
   endDate: string;
   isMembershipExpire: boolean;
 }
+
+export interface invoiceInfoType {
+  additionalAmount: string;
+  note: string;
+}
