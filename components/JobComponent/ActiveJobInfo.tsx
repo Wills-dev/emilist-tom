@@ -3,20 +3,20 @@
 import Image from "next/image";
 import React, { useContext, useEffect } from "react";
 
-import { convertDateFormat, numberWithCommas } from "@/helpers";
+import { getStatusClass } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
+import { useRequestQuote } from "@/hooks/useRequestQuote";
+import { useAcceptQuote } from "@/hooks/useAcceptQuote";
+import { useCloseContract } from "@/hooks/useCloseContract";
 import { useConfirmPayment } from "@/hooks/useConfirmPayment";
+import { convertDateFormat, hasInvoice, numberWithCommas } from "@/helpers";
 import { useUpdateApplicationStatus } from "@/hooks/useUpdateApplicationStatus";
 
 import PaymentModal from "../modals/PaymentModal";
 import ActiveJobInfoDetails from "./ActiveJobInfoDetails";
 import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
-import { getStatusClass } from "@/constants";
-import { useRequestQuote } from "@/hooks/useRequestQuote";
-import { useAcceptQuote } from "@/hooks/useAcceptQuote";
 import CloseContractModal from "../modals/CloseContractModal";
-import { useCloseContract } from "@/hooks/useCloseContract";
 import MilestoneInvoice from "./MilestoneInvoice";
 
 const ActiveJobInfo = ({ jobId }: any) => {
@@ -41,6 +41,8 @@ const ActiveJobInfo = ({ jobId }: any) => {
     setOpenPaymentModal,
     currency,
     setCurrency,
+    isAdditionalAmount,
+    setIsAdditionalAmount,
   } = useConfirmPayment();
 
   const {
@@ -65,10 +67,6 @@ const ActiveJobInfo = ({ jobId }: any) => {
     currentMilestone,
     setCurrentMilestone,
   } = useGetJobInfo();
-
-  const hasInvoice = jobInfo?.milestones?.some((obj: any) =>
-    obj.hasOwnProperty("accountDetails")
-  );
 
   const isAllMilestoneCompleted = jobInfo?.milestones?.every(
     (milestone: any) => milestone.status === "completed"
@@ -108,7 +106,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
             requestQuote={requestQuote}
             acceptQuote={acceptQuote}
           />
-          {hasInvoice && (
+          {hasInvoice(jobInfo?.milestones) && (
             <div className="col-span-3 max-lg:hidden max-h-max">
               <MilestoneInvoice jobInfo={jobInfo} />
             </div>
@@ -222,7 +220,8 @@ const ActiveJobInfo = ({ jobId }: any) => {
                 </div>
 
                 <>
-                  {currentMilestone?.paymentStatus === "paid" ? (
+                  {currentMilestone?.paymentStatus === "paid" ||
+                  currentMilestone?.paymentStatus === "processing" ? (
                     <div className=" flex gap-4 py-6 text-[#282828]">
                       <div className="flex gap-4">
                         <img
@@ -277,6 +276,12 @@ const ActiveJobInfo = ({ jobId }: any) => {
                         jobId={jobId}
                         amount={currentMilestone?.amount}
                         jobCurrency={jobInfo?.currency}
+                        additionalAmount={
+                          currentMilestone?.invoice?.additionalAmount
+                        }
+                        note={currentMilestone?.invoice?.note}
+                        isAdditionalAmount={isAdditionalAmount}
+                        setIsAdditionalAmount={setIsAdditionalAmount}
                       />
                     </div>
                   )}
@@ -317,7 +322,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
             )}
           </div>
           {/* invoice mobile view */}
-          {hasInvoice && (
+          {hasInvoice(jobInfo?.milestones) && (
             <div className="col-span-9 max-lg:col-span-12 lg:hidden max-h-max">
               <MilestoneInvoice jobInfo={jobInfo} />
             </div>

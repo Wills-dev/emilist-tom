@@ -5,6 +5,7 @@ import { Modal } from "antd";
 import { PaymentDetails } from "@/types";
 import { numberWithCommas } from "@/helpers";
 import { AuthContext } from "@/utils/AuthState";
+import Image from "next/image";
 
 type Props = {
   isOpen: boolean;
@@ -25,6 +26,10 @@ type Props = {
   currency: string;
   amount: number;
   jobCurrency: string;
+  additionalAmount: string;
+  note?: string;
+  isAdditionalAmount: boolean;
+  setIsAdditionalAmount: (isAdditionalAmount: boolean) => void;
 };
 
 const PaymentModal = ({
@@ -40,6 +45,10 @@ const PaymentModal = ({
   jobId,
   amount,
   jobCurrency,
+  additionalAmount,
+  note,
+  isAdditionalAmount,
+  setIsAdditionalAmount,
 }: Props) => {
   const { currentUser } = useContext(AuthContext);
 
@@ -58,6 +67,25 @@ const PaymentModal = ({
             {jobCurrency && jobCurrency} {amount && numberWithCommas(amount)}
           </div>
         </div>
+        <div className="w-full col-span-2   max-lg:col-span-4   ">
+          <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
+            Additional amount
+          </p>
+          <p className="w-full expert-reg-input-div opacity-40 flex-c">
+            {jobCurrency && jobCurrency}{" "}
+            {additionalAmount && numberWithCommas(additionalAmount)}
+          </p>
+        </div>
+        {note && (
+          <div className="w-full col-span-2   max-lg:col-span-4   ">
+            <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
+              Artisan note
+            </p>
+            <p className="w-full bg-lighter-gray p-2 rounded-lg opacity-40 flex-c">
+              {note && note}
+            </p>
+          </div>
+        )}
         <div className="w-full  ">
           <p className="text-[#5e625f] py-2 font-medium max-sm:text-sm">
             Payment method
@@ -139,6 +167,42 @@ const PaymentModal = ({
               value={paymentDetails.note}
               onChange={handlePaymentChange}
             ></textarea>
+            {additionalAmount && (
+              <div className="">
+                {isAdditionalAmount ? (
+                  <button
+                    type="button"
+                    onClick={() => setIsAdditionalAmount(false)}
+                    className="font-medium max-sm:text-sm flex items-center gap-2"
+                  >
+                    <Image
+                      src="/assets/icons/tick-square.svg"
+                      alt="menu"
+                      width={20}
+                      height={20}
+                      className="object-contain w-[20px] h-[20px] max-sm:w-[14px] max-sm:h-[14px] cursor-pointer "
+                    />
+
+                    <span> Reject additional payment</span>
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setIsAdditionalAmount(true)}
+                    className="font-medium max-sm:text-sm flex items-center gap-2"
+                  >
+                    <Image
+                      src="/assets/icons/checkbox.svg"
+                      alt="menu"
+                      width={20}
+                      height={20}
+                      className="object-contain w-[20px] h-[20px] max-sm:w-[14px] max-sm:h-[14px] cursor-pointer"
+                    />
+                    <span> Accept additional payment</span>
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
 
@@ -152,9 +216,6 @@ const PaymentModal = ({
           </button>
         )}
       </form>
-      <p className="text-xs text-primary-green text-center">
-        Ensure you enter the correct payment details
-      </p>
     </Modal>
   );
 };

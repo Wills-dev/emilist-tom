@@ -40,7 +40,7 @@ const ActiveJobInfoDetails = ({
   return (
     <>
       {openChat && (
-        <div className="absolute w-full h-full top-0 bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.2)]"></div>
+        <div className="absolute w-full h-full min-h-screen top-0 bottom-0 left-0 right-0 bg-[rgba(0,0,0,0.2)]"></div>
       )}
       <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-lg pb-10 max-h-fit">
         <div className="flex justify-end pt-4 pb-10  px-10 max-sm:px-5">

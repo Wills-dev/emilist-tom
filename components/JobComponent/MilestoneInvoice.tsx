@@ -24,11 +24,13 @@ const MilestoneInvoice = ({ jobInfo }: any) => {
         <div className=" flex flex-col  gap-4 ">
           {jobInfo?.milestones?.map((milestone: any, index: number) => (
             <div key={index}>
-              {milestone?.accountDetails && (
+              {milestone?.invoice?.invoiceRaised && (
                 <button
                   className={`w-full flex-c-b rounded-lg h-[48px] px-4 text-[#FCFEFD] text-sm font-medium ${
                     milestone?.paymentStatus === "paid"
                       ? "bg-[#054753]"
+                      : milestone?.paymentStatus === "processing"
+                      ? "bg-[#9ef769]"
                       : "bg-[#ff9933]"
                   }`}
                   onClick={() => handleOpenInvoiceDetails(milestone)}

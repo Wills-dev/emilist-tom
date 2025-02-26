@@ -21,54 +21,34 @@ const MilestoneInvoiceModal = ({
       <div className="px-6 max-sm:px-3 py-10 w-full">
         <h4 className="sm:text-lg  font-semibold">Milestone Invoice</h4>
         <div className="flex flex-col  mt-6 gap-8 w-full">
-          <div className="flex-c gap-8 flex-wrap">
-            <div className="flex items-center gap-3 flex-1">
-              {" "}
-              <h6 className=" font-medium max-sm:text-sm">Amount:</h6>
-              <p className=" text-[#303632] max-sm:text-sm">
-                {currency && currency}{" "}
-                {invoiceDetails?.amount &&
-                  numberWithCommas(invoiceDetails?.amount)}
-              </p>
-            </div>
+          <div className="flex items-center flex-wrap md:gap-3 gap-1 flex-1">
+            {" "}
+            <h6 className=" font-medium max-sm:text-sm whitespace-nowrap">
+              Amount:
+            </h6>
+            <p className=" text-[#303632] max-sm:text-sm">
+              {currency && currency}{" "}
+              {invoiceDetails?.amount &&
+                numberWithCommas(invoiceDetails?.amount)}
+            </p>
           </div>
-          <div className="flex-c gap-8 flex-wrap">
-            <div className="flex items-center gap-3 flex-1">
-              {" "}
-              <h6 className=" font-medium max-sm:text-sm">Payment Method:</h6>
-              <p className=" text-[#303632] max-sm:text-sm">
-                {invoiceDetails?.accountDetails?.paymentMethod}
-              </p>
-            </div>
-            <div className="flex items-center gap-3 flex-1">
-              {" "}
-              <h6 className=" font-medium max-sm:text-sm">Bank:</h6>
-              <p className=" text-[#303632] max-sm:text-sm">
-                {invoiceDetails?.accountDetails?.bank}
-              </p>
-            </div>
+          <div className="flex items-center flex-wrap md:gap-3 gap-1 flex-1">
+            {" "}
+            <h6 className=" font-medium max-sm:text-sm whitespace-nowrap">
+              Addintional amount:
+            </h6>
+            <p className=" text-[#303632] max-sm:text-sm">
+              {currency && currency}{" "}
+              {invoiceDetails?.invoice?.additionalAmount &&
+                numberWithCommas(invoiceDetails?.invoice?.additionalAmount)}
+            </p>
           </div>
-          <div className="flex-c gap-8 flex-wrap">
-            <div className="flex items-center gap-3 flex-1">
-              {" "}
-              <h6 className=" font-medium max-sm:text-sm">Account Number:</h6>
-              <p className=" text-[#303632] max-sm:text-sm">
-                {invoiceDetails?.accountDetails?.accountNumber}
-              </p>
-            </div>
-            <div className="flex items-center gap-3 flex-1">
-              {" "}
-              <h6 className=" font-medium max-sm:text-sm">Account Name:</h6>
-              <p className=" text-[#303632] max-sm:text-sm">
-                {invoiceDetails?.accountDetails?.accountName}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col md:gap-3 gap-1 flex-1">
+            {" "}
             <h6 className=" font-medium max-sm:text-sm">Note:</h6>
             <p className=" text-[#303632] max-sm:text-sm">
-              {invoiceDetails?.accountDetails?.note}
+              {" "}
+              {invoiceDetails?.invoice?.note}
             </p>
           </div>
         </div>

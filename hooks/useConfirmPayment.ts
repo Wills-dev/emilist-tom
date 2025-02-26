@@ -17,21 +17,15 @@ export const useConfirmPayment = () => {
 
   const { currentUser } = useContext(AuthContext);
 
-  // const [file, setFile] = useState<any>({});
   const [paymentRerender, setRerender] = useState(false);
-  // const [currentFile, setCurrentFile] = useState<any>(null);
   const [currency, setCurrency] = useState("");
   const [loadingPayment, setLoaingPayment] = useState(false);
   const [openPaymentModal, setOpenPaymentModal] = useState(false);
+  const [isAdditionalAmount, setIsAdditionalAmount] = useState(false);
   const [paymentDetails, setPaymentDetails] = useState<PaymentDetails>({
     paymentMethod: "",
     note: "",
   });
-
-  // const handleImageDelete = () => {
-  //   setCurrentFile(null);
-  //   setFile("");
-  // };
 
   const handlePaymentChange = (
     e: React.ChangeEvent<
@@ -44,21 +38,6 @@ export const useConfirmPayment = () => {
       [name]: value,
     }));
   };
-
-  // function handleChangeFile(event: any) {
-  //   const file = event.target.files[0];
-  //   if (file) {
-  //     if (file.size > 2 * 1024 * 1024) {
-  //       toast.error(
-  //         "File size exceeds 2MB. Please select a smaller file.",
-  //         toastOptions
-  //       );
-  //       return;
-  //     }
-  //     setFile(file);
-  //     setCurrentFile(URL.createObjectURL(file));
-  //   }
-  // }
 
   const onCancelPayment = () => {
     setOpenPaymentModal(false);
@@ -91,6 +70,7 @@ export const useConfirmPayment = () => {
         currency,
         paymentMethod,
         note,
+        isAdditionalAmount,
       };
 
       const { data } = await axiosInstance.post(
@@ -129,5 +109,7 @@ export const useConfirmPayment = () => {
     setOpenPaymentModal,
     currency,
     setCurrency,
+    isAdditionalAmount,
+    setIsAdditionalAmount,
   };
 };
