@@ -12,7 +12,7 @@ const TargetInfo = () => {
   const { loading, target } = useGetTarget();
 
   return (
-    <section className="py-28 padding-x">
+    <section className="mt-6">
       {loading ? (
         <div className="flex-c w-full min-h-[70vh] justify-center text-green-500 mt-6">
           <span className="loading loading-bars loading-lg"></span>
@@ -38,7 +38,7 @@ const TargetInfo = () => {
             </Link>{" "}
           </div> */}
           <div className="flex items-center overflow-x-scroll w-full py-4 gap-6">
-            <div className=" w-[294px] min-w-[254px] p-4 flex flex-col gap-3 rounded-lg shadow-md">
+            <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
               <h6 className="text-lg font-medium max-sm:text-sm">Jobs</h6>
               <p className="text-[16px] text-[#303632]  max-sm:text-sm">
                 Amet minim mollit non deserunt ullamco est sit .{" "}
@@ -53,12 +53,12 @@ const TargetInfo = () => {
                 </p>
                 <progress
                   className="progress w-full "
-                  value={target?.jobs?.percentage}
+                  value={target?.jobs?.percentage || 0}
                   max="100"
                 ></progress>
               </div>
             </div>
-            <div className=" w-[294px] min-w-[254px] p-4 flex flex-col gap-3 rounded-lg shadow-md">
+            <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
               <h6 className="text-lg font-medium max-sm:text-sm">Amount</h6>
               <p className="text-[16px] text-[#303632]  max-sm:text-sm">
                 Amet minim mollit non deserunt ullamco est sit .{" "}
@@ -74,12 +74,12 @@ const TargetInfo = () => {
                 </p>
                 <progress
                   className="progress progress-success w-full"
-                  value={target?.amount?.percentage}
+                  value={target?.amount?.percentage || 0}
                   max="100"
                 ></progress>
               </div>
             </div>
-            <div className=" w-[294px] min-w-[254px] p-4 flex flex-col gap-3 rounded-lg shadow-md">
+            <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
               <h6 className="text-lg font-medium max-sm:text-sm">
                 Customer Referral
               </h6>
@@ -96,12 +96,12 @@ const TargetInfo = () => {
                 </p>
                 <progress
                   className="progress progress-warning w-full "
-                  value={target?.referrals?.percentage}
+                  value={target?.referrals?.percentage || 0}
                   max="100"
                 ></progress>
               </div>
             </div>
-            <div className=" w-[294px] min-w-[254px] p-4 flex flex-col gap-3 rounded-lg shadow-md">
+            <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
               <h6 className="text-lg font-medium max-sm:text-sm">
                 Friends Invited
               </h6>
@@ -118,7 +118,7 @@ const TargetInfo = () => {
                 </p>
                 <progress
                   className="progress progress-error w-full"
-                  value={target?.invites?.percentage}
+                  value={target?.invites?.percentage || 0}
                   max="100"
                 ></progress>
               </div>

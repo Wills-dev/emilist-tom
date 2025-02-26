@@ -173,7 +173,7 @@ const DashboardCards = () => {
           </div>
           <div className="flex-c w-full justify-center max-sm:justify-start">
             <Link
-              href="/dashboard/service/target"
+              href="/dashboard/report"
               className="text-sm font-semibold text-primary-green max-sm:text-xs"
             >
               See More
