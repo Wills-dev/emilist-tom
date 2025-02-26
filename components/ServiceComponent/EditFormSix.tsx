@@ -403,7 +403,7 @@ const EditFormSix = ({
               </p>
 
               {membership.map((membership, index) => (
-                <>
+                <div key={index} className="col-span-4 grid grid-cols-4 gap-5">
                   <div className="w-full col-span-2   max-lg:col-span-4   ">
                     <p className="input-label">Organisation</p>
                     <div className="w-full">
@@ -526,7 +526,7 @@ const EditFormSix = ({
                       </label>
                     </label>
                   </div>
-                </>
+                </div>
               ))}
               <button
                 className="w-full flex items-center justify-end col-span-4"

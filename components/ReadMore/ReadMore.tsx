@@ -9,7 +9,7 @@ interface ReadMoreProps {
 const ReadMore = ({ text, maxLength, style }: ReadMoreProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
-  const shouldTruncate = text.length > maxLength;
+  const shouldTruncate = text?.length > maxLength;
 
   const toggleReadMore = () => {
     setIsExpanded((prev) => !prev);

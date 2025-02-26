@@ -84,7 +84,7 @@ const ReviewProfile = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <button>
+                <span className="cursor-pointer">
                   {!serviceInfo?.liked ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -116,7 +116,7 @@ const ReviewProfile = ({
                       <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
                     </svg>
                   )}
-                </button>
+                </span>
               </TooltipTrigger>
               <TooltipContent>
                 {!serviceInfo?.liked ? (
@@ -130,7 +130,10 @@ const ReviewProfile = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <button onClick={() => compare(serviceInfo?.business?._id)}>
+                <span
+                  className="cursor-pointer"
+                  onClick={() => compare(serviceInfo?.business?._id)}
+                >
                   {!serviceInfo?.isCompared ? (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
@@ -162,7 +165,7 @@ const ReviewProfile = ({
                       <path d="M10.5 10.5a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963 5.23 5.23 0 0 0-3.434-1.279h-1.875a.375.375 0 0 1-.375-.375V10.5Z" />
                     </svg>
                   )}
-                </button>
+                </span>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Compare business</p>
@@ -172,7 +175,7 @@ const ReviewProfile = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <button>
+                <span className="cursor-pointer">
                   <Popconfirm
                     placement="leftTop"
                     title="Blacklist business"
@@ -192,7 +195,7 @@ const ReviewProfile = ({
                       className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
                     />
                   </Popconfirm>
-                </button>
+                </span>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Blacklist business</p>
@@ -202,7 +205,7 @@ const ReviewProfile = ({
           <TooltipProvider>
             <Tooltip>
               <TooltipTrigger>
-                <button>
+                <span className="cursor-pointer">
                   <Image
                     src="/assets/icons/share.svg"
                     alt="menu"
@@ -211,7 +214,7 @@ const ReviewProfile = ({
                     className="object-contain w-6 h-6 max-sm:w-5 max-sm:h-5 "
                     onClick={handleOpen}
                   />
-                </button>
+                </span>
               </TooltipTrigger>
               <TooltipContent>
                 <p>Share business</p>

@@ -29,6 +29,7 @@ export const useEditService = () => {
       description: "",
     },
   ]);
+
   const [certificate, setCertificate] = useState([
     {
       certificate: "",
@@ -76,37 +77,38 @@ export const useEditService = () => {
       const { data } = await axiosInstance.get(
         `/business/fetch-single-business/${serviceId}`
       );
-      setBusinessData(data?.data);
-      setServices(data?.data?.services);
-      setOwnerCountry(data?.data?.country);
-      setOwnerLanguages(data?.data?.languages);
-      setProfilePicture(data?.data?.profileImage);
-      setBusinessCountry(data?.data?.businessCountry);
-      setBusinessDescription(data?.data?.businessDescription);
-      setCurrentBusinessFile(data?.data?.businessImages);
-      setMemberShip(data?.data?.membership);
-      setCertificate(data?.data?.certification);
-      setInsurance(data?.data?.insurance);
-      setCoverageArea(data?.data?.coverageArea);
+
+      setBusinessData(data?.data?.business);
+      setServices(data?.data?.business?.services);
+      setOwnerCountry(data?.data?.business?.country);
+      setOwnerLanguages(data?.data?.business?.languages);
+      setProfilePicture(data?.data?.business?.profileImage);
+      setBusinessCountry(data?.data?.business?.businessCountry);
+      setBusinessDescription(data?.data?.business?.businessDescription);
+      setCurrentBusinessFile(data?.data?.business?.businessImages);
+      setMemberShip(data?.data?.business?.membership);
+      setCertificate(data?.data?.business?.certification);
+      setInsurance(data?.data?.business?.insurance);
+      setCoverageArea(data?.data?.business?.coverageArea);
       setOwnerProfile({
-        firstName: data?.data?.firstName,
-        lastName: data?.data?.lastName,
-        phoneNumber: data?.data?.phoneNumber,
-        state: data?.data?.state,
-        city: data?.data?.city,
-        bio: data?.data?.bio,
-        address: data?.data?.address,
+        firstName: data?.data?.business?.firstName,
+        lastName: data?.data?.business?.lastName,
+        phoneNumber: data?.data?.business?.phoneNumber,
+        state: data?.data?.business?.state,
+        city: data?.data?.business?.city,
+        bio: data?.data?.business?.bio,
+        address: data?.data?.business?.address,
       });
       setBusinessData({
-        businessName: data?.data?.businessName,
-        yearFounded: data?.data?.yearFounded,
-        numberOfEmployee: data?.data?.numberOfEmployee,
-        businessAddress: data?.data?.businessAddress,
-        businessCity: data?.data?.businessCity,
-        businessState: data?.data?.businessState,
-        startingPrice: data?.data?.startingPrice,
-        noticePeriod: data?.data?.noticePeriod,
-        currency: data?.data?.currency,
+        businessName: data?.data?.business?.businessName,
+        yearFounded: data?.data?.business?.yearFounded,
+        numberOfEmployee: data?.data?.business?.numberOfEmployee,
+        businessAddress: data?.data?.business?.businessAddress,
+        businessCity: data?.data?.business?.businessCity,
+        businessState: data?.data?.business?.businessState,
+        startingPrice: data?.data?.business?.startingPrice,
+        noticePeriod: data?.data?.business?.noticePeriod,
+        currency: data?.data?.business?.currency,
       });
     } catch (error: any) {
       console.log("error getting service info", error);

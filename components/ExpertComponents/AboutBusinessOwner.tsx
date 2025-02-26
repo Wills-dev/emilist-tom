@@ -4,29 +4,28 @@ import StarRating from "../StarRating/StarRating";
 
 import { Capitalize, convertDateFormat } from "@/helpers";
 import { getLevelValue } from "@/helpers/getLevelValue";
+import ReadMore from "../ReadMore/ReadMore";
 
 type Props = {
   handleOpenModal: () => void;
   serviceInfo: any;
 };
 
-const AboutBusinessOwner = ({
-  handleOpenModal,
-  serviceInfo,
-}: Props) => {
+const AboutBusinessOwner = ({ handleOpenModal, serviceInfo }: Props) => {
   return (
     <section className="pt-10 sm:pb-10 pb-6">
       <h5 className="sm:text-xl font-semibold">About The Seller</h5>
       <div>
         <div className="flex w-full padding-y">
-          <Image
-            src={serviceInfo?.profileImage && serviceInfo?.profileImage}
-            alt="Owner profile picture"
-            width={30}
-            height={30}
-            className="object-cover w-[114px] h-[114px] max-sm:w-[70px] max-sm:h-[70px] rounded-full mr-4 max-sm:mr-1"
-          />
-
+          <div className="w-[114px] h-[114px] max-sm:w-[70px] max-sm:h-[70px] mr-4 max-sm:mr-1">
+            <Image
+              src={serviceInfo?.profileImage && serviceInfo?.profileImage}
+              alt="Owner profile picture"
+              width={30}
+              height={30}
+              className="object-cover w-full h-full rounded-full "
+            />
+          </div>
           <div className="flex-1 w-full">
             <div className="flex items-center">
               <h6 className="text-[24px] font-semibold max-sm:font-[700] mr-4">
@@ -103,9 +102,11 @@ const AboutBusinessOwner = ({
           </div>
         </div>
         <div className="py-10 max-sm:pb-6 grid grid-cols-5">
-          <p className="  text-[#303632] max-sm:text-xs col-span-3 max-sm:col-span-5">
-            {serviceInfo?.bio}
-          </p>
+          <ReadMore
+            text={serviceInfo?.bio}
+            maxLength={600}
+            style="text-[#303632] max-sm:text-xs col-span-3 max-sm:col-span-5"
+          />
         </div>
         <div className="flex flex-col gap-4 max-sm:gap-2">
           <div className="flex items-center  gap-8 max-sm:gap-2">
