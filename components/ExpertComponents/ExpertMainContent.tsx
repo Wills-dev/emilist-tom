@@ -1,6 +1,7 @@
 import { numberWithCommas } from "@/helpers";
 import ImageSlider from "./ImageSlider";
 import { getCurrencySign } from "@/helpers/getCurrencySign";
+import ReadMore from "../ReadMore/ReadMore";
 
 type Props = {
   handleOpenModal: () => void;
@@ -17,7 +18,11 @@ const ExpertMainContent = ({ handleOpenModal, serviceInfo }: Props) => {
             <h4 className="sm:text-xl font-bold mb-6 w-[85%]">
               ABOUT MY SERVICE
             </h4>
-            <p className=" mb-6  max-sm:text-sm">{serviceInfo?.bio}</p>
+            <ReadMore
+              style="mb-6  max-sm:text-sm"
+              text={serviceInfo?.businessDescription}
+              maxLength={600}
+            />
             <h6 className="sm:text-lg font-semibold mb-6 w-[85%]">
               MY AREA OF EXPERTIES
             </h6>

@@ -23,14 +23,14 @@ const InsightContent = () => {
   // } satisfies ChartConfig;
 
   return (
-    <section className="py-28 padding-x">
+    <section className="mt-6">
       {loading ? (
         <div className="flex item-center justify-center text-green-500 mt-6 h-[60vh]">
           <span className="loading loading-bars loading-lg"></span>
         </div>
       ) : (
         <div className="flex flex-wrap gap-1 w-full">
-          <div className="w-[505px] max-w-[505px] min-w-[505px] h-[285px] max-sm:h-[250px] max-sm:max-w-[450px] max-sm:w-[450px] shadow-md rounded-[10px] m-2 p-6 py-8">
+          <div className="w-[505px] bg-white max-w-[505px] min-w-[505px] h-[285px] max-sm:h-[250px] max-sm:max-w-[450px] max-sm:w-[450px] shadow-md rounded-[10px] m-2 p-6 py-8">
             <h2 className="font-bold text-xl max-sm: mb-6">Overview</h2>
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-2 flex gap-2 items-start">
@@ -114,7 +114,7 @@ const InsightContent = () => {
               </div>
             </div>
           </div>
-          <div className="w-[340px] max-w-[340px] min-w-[340px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
+          <div className="w-[340px] bg-white max-w-[340px] min-w-[340px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
             <h2 className="font-bold sm:text-xl max-sm: mb-10">
               Promotion Duration
             </h2>
@@ -137,7 +137,7 @@ const InsightContent = () => {
               </button>
             </div>
           </div>
-          <div className="w-[340px] max-w-[340px] min-w-[340px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
+          <div className="w-[340px] bg-white max-w-[340px] min-w-[340px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
             <h2 className="font-bold sm:text-xl max-sm: mb-10">Clicks</h2>
             <div className="w-full my-8">
               <div className="flex justify-between items-center w-full">

@@ -1,7 +1,13 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useContext } from "react";
+
+import { AuthContext } from "@/utils/AuthState";
 
 const RegistrationNav = () => {
+  const { currentUser } = useContext(AuthContext);
   return (
     <header className="padding-x  lg:py-8 fixed w-full bg-white backdrop-blur z-20 max-md:shadow">
       <div className="flex-c-b w-full max-lg:py-4">
@@ -16,7 +22,9 @@ const RegistrationNav = () => {
           />
         </Link>
         <div className="flex w-8 h-8 bg-slate-600 rounded-full flex-c justify-center text-white uppercase">
-          TW
+          {currentUser?.fullName
+            ? currentUser?.fullName[0].toUpperCase()
+            : currentUser?.userName[0].toUpperCase()}
         </div>
       </div>
     </header>

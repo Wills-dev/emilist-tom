@@ -24,7 +24,6 @@ export const useGetBusinessReviews = () => {
       });
       setReviews(data?.data);
       setTotalPages(data?.data?.totalPages);
-      console.log("data", data);
     } catch (error) {
       console.log("error getting reviews", error);
     } finally {
