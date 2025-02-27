@@ -68,8 +68,6 @@ const ListNewJobForm = () => {
             <input
               style={{ fontSize: "16px" }}
               type="text"
-              onKeyDown={handleKeyDown}
-              onWheel={handleWheel}
               className="col-span-2 expert-reg-input"
               value={milestone.duration}
               onChange={(e) =>
@@ -122,13 +120,11 @@ const ListNewJobForm = () => {
             <input
               style={{ fontSize: "16px" }}
               type="text"
-              onKeyDown={handleKeyDown}
-              onWheel={handleWheel}
               className="expert-reg-input"
               value={milestone.percentage}
-              onChange={(e) =>
-                updateMilestonesData(e.target.value, index, "percentage")
-              }
+              onChange={(e) => {
+                updateMilestonesData(e.target.value, index, "percentage");
+              }}
             />
           </div>
         </div>
@@ -328,8 +324,6 @@ const ListNewJobForm = () => {
                     <input
                       style={{ fontSize: "16px" }}
                       type="text"
-                      onKeyDown={handleKeyDown}
-                      onWheel={handleWheel}
                       className="col-span-2 expert-reg-input"
                       name="projectDuration"
                       value={postJobDetails.projectDuration}
@@ -450,8 +444,6 @@ const ListNewJobForm = () => {
                         <input
                           style={{ fontSize: "16px" }}
                           type="text"
-                          onKeyDown={handleKeyDown}
-                          onWheel={handleWheel}
                           className="expert-reg-input"
                           name="maximumPrice"
                           value={postJobDetails.maximumPrice}
@@ -485,8 +477,6 @@ const ListNewJobForm = () => {
                       <input
                         style={{ fontSize: "16px" }}
                         type="text"
-                        onKeyDown={handleKeyDown}
-                        onWheel={handleWheel}
                         className="expert-reg-input"
                         name="budget"
                         value={postJobDetails.budget}

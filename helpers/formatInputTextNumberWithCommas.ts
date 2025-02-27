@@ -19,5 +19,10 @@ export const formatInputTextNumberWithCommas = (value: string) => {
 };
 
 export const removeCommas = (value: string) => {
-  return value.replace(/,/g, "");
+  return value?.replace(/,/g, "");
+};
+
+export const formatInputTextNumber = (value: string) => {
+  // Remove all non-numeric characters
+  return value.replace(/\D/g, "");
 };

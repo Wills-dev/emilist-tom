@@ -12,6 +12,11 @@ import {
   promiseErrorFunction,
 } from "@/helpers";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
+import {
+  formatInputTextNumber,
+  formatInputTextNumberWithCommas,
+  removeCommas,
+} from "@/helpers/formatInputTextNumberWithCommas";
 
 export const useListNewJob = () => {
   const router = useRouter();
@@ -55,17 +60,50 @@ export const useListNewJob = () => {
     index: number,
     field: keyof MilestonePer
   ) => {
-    const updatedMilestones: any = [...milestonesData];
-    updatedMilestones[index][field] = value;
+    let updatedMilestones: any = [...milestonesData];
+    // updatedMilestones[index][field] = value;
 
-    // Update amount based on percentage
-    if (field === "percentage") {
+    // // Update amount based on percentage
+    // if (field === "percentage") {
+    //   updatedMilestones[index].amount = parseFloat(
+    //     (
+    //       ((value as number) / 100) *
+    //       (postJobDetails.maximumPrice || postJobDetails.budget)
+    //     ).toFixed(2)
+    //   );
+    // }
+
+    if (field === "duration") {
+      // Ensure only numeric values
+      const numericValue = formatInputTextNumber(value.toString());
+
+      updatedMilestones[index].duration = numericValue;
+    } else if (field === "percentage") {
+      // Convert value to number and remove non-numeric characters
+      let numericValue = Number(value);
+
+      // Prevent non-numeric input
+      if (isNaN(numericValue)) return;
+
+      // Check if value exceeds 100
+      if (numericValue > 100) {
+        toast.error("Percentage can't exceed 100", toastOptions);
+        return;
+      }
+
+      updatedMilestones[index].percentage = numericValue;
+
+      const maximumPrice = Number(removeCommas(postJobDetails.maximumPrice));
+      const budget = Number(removeCommas(postJobDetails.budget));
+      // Update amount based on percentage
       updatedMilestones[index].amount = parseFloat(
         (
-          ((value as number) / 100) *
-          (postJobDetails.maximumPrice || postJobDetails.budget)
+          (numericValue / 100) *
+          (projectType === "biddable" ? maximumPrice : budget)
         ).toFixed(2)
       );
+    } else {
+      updatedMilestones[index][field] = value;
     }
 
     setMilestonesData(updatedMilestones);
@@ -73,14 +111,15 @@ export const useListNewJob = () => {
   };
 
   const validateMilestoneAmounts = (milestones: MilestonePer[]) => {
-    const totalAmount = milestones.reduce(
-      (total, milestone) => total + milestone.amount,
-      0
-    );
-    const limit =
-      projectType === "biddable"
-        ? postJobDetails.maximumPrice
-        : postJobDetails.budget;
+    const totalAmount = milestones.reduce((total, milestone) => {
+      const amount = Number(milestone.amount);
+      return total + (isNaN(amount) ? 0 : amount);
+    }, 0);
+
+    const maximumPrice = Number(removeCommas(postJobDetails.maximumPrice));
+    const budget = Number(removeCommas(postJobDetails.budget));
+
+    const limit = projectType === "biddable" ? maximumPrice : budget;
 
     if (totalAmount !== limit) {
       return false;
@@ -94,9 +133,11 @@ export const useListNewJob = () => {
     setPostJobDetails({
       ...postJobDetails,
       [name]:
-        name === "milestonesNumber" ||
-        name === "maximumPrice" ||
-        name === "budget"
+        name === "maximumPrice" || name === "budget" || name === "bidRange"
+          ? formatInputTextNumberWithCommas(value)
+          : name === "projectDuration"
+          ? formatInputTextNumber(value)
+          : name === "milestonesNumber"
           ? Number(value)
           : value,
     });
@@ -155,18 +196,19 @@ export const useListNewJob = () => {
     projectDuration: any,
     milestones: MilestonePer[]
   ): boolean {
+    const overallProjectDuration = Number(projectDuration?.durationNumber);
     // Convert project duration to days
     let projectDurationDays: number;
 
     switch (projectDuration.durationType) {
       case "day":
-        projectDurationDays = projectDuration?.durationNumber;
+        projectDurationDays = overallProjectDuration;
         break;
       case "week":
-        projectDurationDays = projectDuration?.durationNumber * 7;
+        projectDurationDays = overallProjectDuration * 7;
         break;
       case "month":
-        projectDurationDays = projectDuration?.durationNumber * 30;
+        projectDurationDays = overallProjectDuration * 30;
         break;
       default:
         throw new Error("Invalid project duration type");
@@ -175,15 +217,16 @@ export const useListNewJob = () => {
     // Calculate total duration of milestones
     let totalMilestoneDurationDays = 0;
     for (const milestone of milestones) {
+      const milestoneDuration = Number(milestone?.duration);
       switch (milestone.durationType) {
         case "day":
-          totalMilestoneDurationDays += Number(milestone?.duration);
+          totalMilestoneDurationDays += milestoneDuration;
           break;
         case "week":
-          totalMilestoneDurationDays += Number(milestone?.duration) * 7;
+          totalMilestoneDurationDays += milestoneDuration * 7;
           break;
         case "month":
-          totalMilestoneDurationDays += Number(milestone?.duration) * 30;
+          totalMilestoneDurationDays += milestoneDuration * 30;
           break;
         default:
           throw new Error("Invalid milestone duration type");
@@ -267,8 +310,11 @@ export const useListNewJob = () => {
 
   const handleSubmitPostJob: FormEventHandler<HTMLFormElement> = async (e) => {
     e.preventDefault();
+    const actualProjectDuration = removeCommas(
+      postJobDetails?.projectDuration.toString()
+    );
     const projectDuration = {
-      durationNumber: postJobDetails?.projectDuration,
+      durationNumber: actualProjectDuration,
       durationType: postJobDetails?.projectDurationType,
     };
 
@@ -345,16 +391,18 @@ export const useListNewJob = () => {
           period: projectDurationType + "s",
         };
 
+        const actualBidRange = removeCommas(bidRange.toString());
+
         const payload: any = {
           title: projectTitle,
           category: category,
           service: service,
           location: location,
           description: description,
-          maximumPrice: maximumPrice,
-          bidRange: Number(bidRange),
+          maximumPrice: removeCommas(maximumPrice),
+          bidRange: Number(actualBidRange),
           currency: currency,
-          budget: budget,
+          budget: removeCommas(budget),
           expertLevel: expertLevel,
           duration: properProjectDuration,
           milestones: transformedData,

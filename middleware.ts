@@ -16,6 +16,7 @@ export const config = {
   matcher: [
     "/dashboard/:path*",
     "/compare",
+    "/expert/register",
     "/expert/register/:path*",
     "/material/compare",
   ],
