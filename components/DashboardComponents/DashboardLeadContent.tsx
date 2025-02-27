@@ -13,37 +13,33 @@ import Pagination from "react-responsive-pagination";
 import DashboardLinks from "./DashboardLinks";
 
 import { useSaveJob } from "@/hooks/useSaveJob";
+import { useGetLeads } from "@/hooks/useGetLeads";
 import { useUnsaveJob } from "@/hooks/useUnSaveJob";
 import { useBlackListJob } from "@/hooks/useBlackListJob";
-import { useFetchJobs } from "@/hooks/useFetchJobs";
-import { useGetUserSavedJobs } from "@/hooks/useGetUserSavedJobs";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 
 const DashboardLeadContent = () => {
   const { handleSaveJob, rerender } = useSaveJob();
   const { handleUnsaveJob, unsaveRerenderr } = useUnsaveJob();
   const { handleBlackListJob, rerenderrr } = useBlackListJob();
-  const { saveLoading, allUserSavedJobs, getAllUserSavedJobs } =
-    useGetUserSavedJobs();
 
   const {
     isLoading,
-    allJobs,
+    leads,
     search,
     handleChange,
+    getLeads,
     handlePageChange,
     totalPages,
     currentPage,
-    getAllJobs,
-  } = useFetchJobs();
+  } = useGetLeads();
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
     console.log(e);
   };
 
   useEffect(() => {
-    getAllJobs();
-    getAllUserSavedJobs();
+    getLeads();
   }, [rerender, unsaveRerenderr, rerenderrr]);
 
   return (
@@ -56,7 +52,7 @@ const DashboardLeadContent = () => {
       <div className="flex flex-col w-full gap-4 border-b-1 border-[#B8B9B8]">
         <div className="flex-c-b w-full mt-6 gap-2">
           <DashboardLinks />
-          {allJobs?.length > 1 && <p>{allJobs?.length} recommended jobs</p>}
+          {leads?.length > 1 && <p>{leads?.length} recommended jobs</p>}
         </div>
         <div className="flex justify-between w-full sm:gap-8 gap-4 pb-6 max-md:flex-col">
           <div className="flex-1">
@@ -82,23 +78,23 @@ const DashboardLeadContent = () => {
         </div>
       </div>
       <>
-        {isLoading || saveLoading ? (
+        {isLoading ? (
           <div className="flex item-center justify-center text-green-500 mt-6 h-[30vh]">
             <span className="loading loading-bars loading-lg"></span>
           </div>
         ) : (
           <>
-            {allJobs?.length < 1 ? (
+            {leads?.length < 1 ? (
               <p className="py-2">No job listed</p>
             ) : (
               <>
-                {allJobs?.length < 1 && search ? (
+                {leads?.length < 1 && search ? (
                   <p className="py-2">
                     No result found, try searching for something else
                   </p>
                 ) : (
                   <>
-                    {allJobs?.map((job: any, index: number) => (
+                    {leads?.map((job: any, index: number) => (
                       <div
                         className="w-full py-4  border-b-1 border-[#B8B9B8]"
                         key={index}
