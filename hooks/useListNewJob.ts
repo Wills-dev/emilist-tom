@@ -61,17 +61,6 @@ export const useListNewJob = () => {
     field: keyof MilestonePer
   ) => {
     let updatedMilestones: any = [...milestonesData];
-    // updatedMilestones[index][field] = value;
-
-    // // Update amount based on percentage
-    // if (field === "percentage") {
-    //   updatedMilestones[index].amount = parseFloat(
-    //     (
-    //       ((value as number) / 100) *
-    //       (postJobDetails.maximumPrice || postJobDetails.budget)
-    //     ).toFixed(2)
-    //   );
-    // }
 
     if (field === "duration") {
       // Ensure only numeric values
