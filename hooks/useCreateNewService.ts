@@ -41,7 +41,7 @@ export const useCreateNewService = () => {
 
   const expertServices: string[] = readCookie("expertServices");
   const expertProfile = readCookie("EmilistExpertProfile");
-  const language = readCookie("EmilistSelectedLanguage");
+  const languages = readCookie("EmilistSelectedLanguage");
   const country = readCookie("EmilistSelectedCountry");
 
   const profilePicFile = localStorage.getItem("EmilistExpertProfilePicture");
@@ -158,7 +158,7 @@ export const useCreateNewService = () => {
         firstName,
         lastName,
         phoneNumber,
-        language,
+        languages,
         address,
         city,
         state,
@@ -308,13 +308,17 @@ export const useCreateNewService = () => {
         }
       });
 
+      formData.append("profileImage", profilePics);
+
       for (let i = 0; i < businessPictures.length; i++) {
         formData.append("businessImages", businessPictures[i]);
       }
-      formData.append("profileImage", profilePics);
+
       if (certificateFilee) {
         formData.append("certificate", certificateFilee);
       }
+
+      console.log("formData", formData);
 
       await axiosInstance.post(`/business/register-business`, formData, {
         headers: {

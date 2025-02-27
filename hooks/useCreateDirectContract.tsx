@@ -18,6 +18,11 @@ import {
   promiseErrorFunction,
   toastOptions,
 } from "@/helpers";
+import {
+  formatInputTextNumber,
+  formatInputTextNumberWithCommas,
+  removeCommas,
+} from "@/helpers/formatInputTextNumberWithCommas";
 
 export const useCreateDirectContract = () => {
   const router = useRouter();
@@ -59,14 +64,31 @@ export const useCreateDirectContract = () => {
     const updatedMilestones: any = [...milestonesData];
     updatedMilestones[index][field] = value;
 
-    // Update amount based on percentage
-    if (field === "percentage") {
+    if (field === "duration") {
+      // Ensure only numeric values
+      const numericValue = formatInputTextNumber(value.toString());
+
+      updatedMilestones[index].duration = numericValue;
+    } else if (field === "percentage") {
+      let numericValue = Number(value);
+
+      // Prevent non-numeric input
+      if (isNaN(numericValue)) return;
+
+      // Check if value exceeds 100
+      if (numericValue > 100) {
+        toast.error("Percentage can't exceed 100", toastOptions);
+        return;
+      }
+
+      updatedMilestones[index].percentage = numericValue;
+      const budget = removeCommas(createDirectContractJob.budget);
+
       updatedMilestones[index].amount = parseFloat(
-        (
-          ((value as number) / 100) *
-          Number(createDirectContractJob.budget)
-        ).toFixed(2)
+        ((numericValue / 100) * Number(budget)).toFixed(2)
       );
+    } else {
+      updatedMilestones[index][field] = value;
     }
 
     setMilestonesData(updatedMilestones);
@@ -74,11 +96,12 @@ export const useCreateDirectContract = () => {
   };
 
   const validateMilestoneAmounts = (milestones: MilestonePer[]) => {
-    const totalAmount = milestones.reduce(
-      (total, milestone) => total + milestone.amount,
-      0
-    );
-    const limit = Number(createDirectContractJob.budget);
+    const totalAmount = milestones.reduce((total, milestone) => {
+      const amount = Number(milestone.amount);
+      return total + (isNaN(amount) ? 0 : amount);
+    }, 0);
+    const budget = Number(removeCommas(createDirectContractJob.budget));
+    const limit = Number(budget);
 
     if (totalAmount !== limit) {
       return false;
@@ -92,9 +115,11 @@ export const useCreateDirectContract = () => {
     setCreateDirectContractJob({
       ...createDirectContractJob,
       [name]:
-        name === "milestonesnumber" ||
-        name === "maximumPrice" ||
         name === "budget"
+          ? formatInputTextNumberWithCommas(value)
+          : name === "projectDuration"
+          ? formatInputTextNumber(value)
+          : name === "milestonesnumber"
           ? Number(value)
           : value,
     });
@@ -153,18 +178,19 @@ export const useCreateDirectContract = () => {
     projectDuration: any,
     milestones: MilestonePer[]
   ): boolean {
+    const overallProjectDuration = Number(projectDuration?.durationNumber);
     // Convert project duration to days
     let projectDurationDays: number;
 
     switch (projectDuration.durationType) {
       case "day":
-        projectDurationDays = projectDuration?.durationNumber;
+        projectDurationDays = overallProjectDuration;
         break;
       case "week":
-        projectDurationDays = projectDuration?.durationNumber * 7;
+        projectDurationDays = overallProjectDuration * 7;
         break;
       case "month":
-        projectDurationDays = projectDuration?.durationNumber * 30;
+        projectDurationDays = overallProjectDuration * 30;
         break;
       default:
         throw new Error("Invalid project duration type");
@@ -173,15 +199,16 @@ export const useCreateDirectContract = () => {
     // Calculate total duration of milestones
     let totalMilestoneDurationDays = 0;
     for (const milestone of milestones) {
+      const milestoneDuration = Number(milestone?.duration);
       switch (milestone.durationType) {
         case "day":
-          totalMilestoneDurationDays += Number(milestone?.duration);
+          totalMilestoneDurationDays += milestoneDuration;
           break;
         case "week":
-          totalMilestoneDurationDays += Number(milestone?.duration) * 7;
+          totalMilestoneDurationDays += milestoneDuration * 7;
           break;
         case "month":
-          totalMilestoneDurationDays += Number(milestone?.duration) * 30;
+          totalMilestoneDurationDays += milestoneDuration * 30;
           break;
         default:
           throw new Error("Invalid milestone duration type");
@@ -347,7 +374,7 @@ export const useCreateDirectContract = () => {
           location: location,
           description: description,
           currency: currency,
-          budget: budget,
+          budget: Number(removeCommas(budget)),
           expertLevel: expertLevel,
           duration: properProjectDuration,
           milestones: transformedData,
@@ -368,14 +395,7 @@ export const useCreateDirectContract = () => {
         formData.append("type", "direct");
         formData.append("achievementDetails", payload.achievementDetails);
         formData.append("currency", payload.currency);
-
-        const emailPattern = /^[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/;
-
-        if (emailPattern.test(payload.invite)) {
-          formData.append("email", payload?.invite);
-        } else {
-          formData.append("userName", payload?.invite);
-        }
+        formData.append("artisan", payload?.invite);
 
         payload.milestones.forEach((milestone: any, index: number) => {
           formData.append(

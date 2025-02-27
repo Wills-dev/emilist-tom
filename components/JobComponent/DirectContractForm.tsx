@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useJsApiLoader, StandaloneSearchBox } from "@react-google-maps/api";
 
 import { category, levels, serviceList } from "@/constants";
-import { handleKeyDown, handleWheel } from "@/helpers";
+import { handleKeyDown, handleWheel, numberWithCommas } from "@/helpers";
 import { useCreateDirectContract } from "@/hooks/useCreateDirectContract";
 
 const DirectContractForm = () => {
@@ -136,7 +136,7 @@ const DirectContractForm = () => {
           </p>
           <div className="w-full">
             <p className="min-w-full w-full  max-w-full rounded-lg min-h-12 px-4 bg-[#ececec] py-5 max-sm:text-sm">
-              {milestone.amount || 0}
+              {milestone.amount ? numberWithCommas(milestone.amount) : 0}
             </p>
           </div>
         </div>
