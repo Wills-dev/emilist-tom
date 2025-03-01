@@ -17,7 +17,7 @@ type Props = {
 const PopularMaterials = ({ bgColor }: Props) => {
   return (
     <section className={`${bgColor} padding-y`}>
-      <div className=" padding-l">
+      <div className=" padding-l-ctn">
         <div className="flex-c-b pr-6">
           <h2 className="text-3xl text-gray-900 font-bold max-md:text-xl ">
             Materials you may need

@@ -100,7 +100,7 @@ const ListAllJobs = () => {
   }, [q]);
 
   return (
-    <section className="padding-y padding-x">
+    <section className="padding-y padding-ctn">
       <div className="grid grid-cols-10 gap-6 pt-28">
         <div className="col-span-2 max-xl:col-span-3 max-md:col-span-10 pt-10">
           <div className="flex lg:flex-col  gap-4">

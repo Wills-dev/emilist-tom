@@ -2,7 +2,7 @@ import Image from "next/image";
 
 import StarRating from "../StarRating/StarRating";
 
-import { Capitalize, convertDateFormat } from "@/helpers";
+import { Capitalize, convertDateFormat, numberWithCommas } from "@/helpers";
 import { getLevelValue } from "@/helpers/getLevelValue";
 import ReadMore from "../ReadMore/ReadMore";
 
@@ -113,25 +113,41 @@ const AboutBusinessOwner = ({ handleOpenModal, serviceInfo }: Props) => {
             <h4 className="  text-[#303632] max-sm:text-sm w-[137px]">
               Total Jobs:
             </h4>
-            <p className="font-bold max-sm:text-sm ">51</p>
+            <p className="font-bold max-sm:text-sm ">
+              {serviceInfo?.totalJobs &&
+                numberWithCommas(serviceInfo?.totalJobs)}
+            </p>
           </div>
           <div className="flex items-center  gap-8 max-sm:gap-2">
             <h4 className="  text-[#303632] max-sm:text-sm w-[137px]">
               Successful jobs:
             </h4>
-            <p className="font-bold max-sm:text-sm ">51</p>
+            <p className="font-bold max-sm:text-sm ">
+              {" "}
+              {serviceInfo?.successfulJobs &&
+                numberWithCommas(serviceInfo?.successfulJobs)}
+            </p>
           </div>
           <div className="flex items-center  gap-8 max-sm:gap-2">
             <h4 className="  text-[#303632] max-sm:text-sm w-[137px]">
               Unsuccessful jobs:
             </h4>
-            <p className="font-bold max-sm:text-sm ">0</p>
+            <p className="font-bold max-sm:text-sm ">
+              {" "}
+              {serviceInfo?.unsuccessfulJobs &&
+                numberWithCommas(serviceInfo?.unsuccessfulJobs)}
+            </p>
           </div>
           <div className="flex items-center  gap-8 max-sm:gap-2">
             <h4 className="  text-[#303632] max-sm:text-sm w-[137px]">
               Job sucess rate:
             </h4>
-            <p className="font-bold max-sm:text-sm ">100%</p>
+            <p className="font-bold max-sm:text-sm ">
+              {" "}
+              {serviceInfo?.successRate &&
+                numberWithCommas(serviceInfo?.successRate)}
+              %
+            </p>
           </div>
         </div>
         <div className="pt-20 max-sm:pt-10">

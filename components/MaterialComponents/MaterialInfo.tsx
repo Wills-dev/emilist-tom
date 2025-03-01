@@ -67,7 +67,7 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
   }, []);
 
   return (
-    <div className="gap-8 pt-28 pb-4 padding-x">
+    <div className="gap-8 pt-28 pb-4 padding-ctn">
       {cartLoading && (
         <div className="absolute top-0 left-0 w-full min-h-screen bg-white h-full z-50 opacity-40" />
       )}

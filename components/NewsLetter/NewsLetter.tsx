@@ -6,7 +6,7 @@ const NewsLetter = () => {
   const { loading, setEmail, email, handleSubmit } = useSubscribeNewsLetter();
 
   return (
-    <section className=" padding-x mb-8">
+    <section className=" padding-ctn mb-8">
       <h4 className="text-gray-900 text-3xl font-semibold mb-3  max-sm:text-2xl">
         Subscribe to Our Newsletter
       </h4>

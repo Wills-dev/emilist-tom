@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const EmilistExpertSection = () => {
   return (
-    <div className="padding-x">
+    <div className="padding-ctn">
       <section className="relative w-full flex justify-center items-center max-xl:flex-col sm:gap-6  sm:pb-14">
         <h2 className="text-3xl font-bold max-md:text-lg xl:hidden max-xl:max-w-[770px]">
           EmiList Private expert

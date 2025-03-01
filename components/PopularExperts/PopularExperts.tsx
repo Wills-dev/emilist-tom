@@ -13,7 +13,7 @@ const ExpertHomeData = dynamic(
 const PopularExperts = () => {
   return (
     <section className="padding-y no-scroll">
-      <div className=" padding-l">
+      <div className="padding-l-ctn">
         <div className="flex-c-b pr-6">
           <h2 className="text-3xl text-gray-900 font-bold max-md:text-xl ">
             Popular services around you
