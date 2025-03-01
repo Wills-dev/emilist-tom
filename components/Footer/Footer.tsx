@@ -5,7 +5,7 @@ import { footerLinks } from "@/constants";
 
 const Footer = () => {
   return (
-    <footer className="padding-x">
+    <footer className="padding-ctn">
       <div className="flex-c-b gap-12 w-full flex-wrap sm:py-10 py-6 border-y-1 border-gray-300">
         <div className="sm:max-w-80 w-full flex flex-col gap-6">
           <Link href="/">

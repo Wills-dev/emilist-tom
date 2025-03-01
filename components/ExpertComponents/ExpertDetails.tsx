@@ -67,7 +67,7 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
           <span className="loading loading-bars loading-lg"></span>
         </div>
       ) : (
-        <div className="padding-x py-28">
+        <div className="padding-ctn py-28">
           {compareServices.length > 0 && (
             <CompareSearch title="businesses" link="/compare" />
           )}

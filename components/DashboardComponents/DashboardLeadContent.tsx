@@ -85,7 +85,7 @@ const DashboardLeadContent = () => {
         ) : (
           <>
             {leads?.length < 1 ? (
-              <p className="py-2">No job listed</p>
+              <p className="py-2">No lead listed</p>
             ) : (
               <>
                 {leads?.length < 1 && search ? (
