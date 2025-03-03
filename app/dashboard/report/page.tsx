@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import {
   Select,
@@ -24,7 +25,11 @@ import FinanceReport from "@/components/DashboardComponents/FinanceReport";
 import TargetInfo from "@/components/ServiceComponent/TargetInfo";
 
 const Report = () => {
-  const [currentLink, setCurrentLink] = useState("Jobs");
+  const searchParams = useSearchParams();
+
+  const report = searchParams.get("r");
+
+  const [currentLink, setCurrentLink] = useState(report || "Jobs");
   const {
     isLoading,
     jobAnalytics,

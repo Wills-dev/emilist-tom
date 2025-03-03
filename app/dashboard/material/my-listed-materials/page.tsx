@@ -115,7 +115,7 @@ const MyListMaterials = () => {
                                 </div>
 
                                 <Link
-                                  href="/dashboard/report/insights"
+                                  href="/dashboard/report?r=Insights"
                                   className="view-btn max-sm:text-sm"
                                 >
                                   view Insight

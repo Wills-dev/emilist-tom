@@ -170,7 +170,7 @@ const DirectJobInfo = ({ jobId }: DirectJobInfoProps) => {
               {currentUser?._id === jobInfo?.userId?._id && (
                 <div className="flex items-center gap-3">
                   <Link
-                    href="/dashboard/report/insights"
+                    href="/dashboard/report?r=Insights"
                     className="text-primary-green  font-medium max-sm:text-sm py-2 underline"
                   >
                     Insight
