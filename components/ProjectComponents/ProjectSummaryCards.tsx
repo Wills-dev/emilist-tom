@@ -13,7 +13,7 @@ const ProjectSummaryCards = () => {
 
   return (
     <ScrollArea className="w-full overflow-x-auto whitespace-nowrap">
-      <div className="flex gap-4 py-4 w-max">
+      <div className="flex w-full gap-4 py-4 max-w-full flex-wrap">
         {loadingAnalytics ? (
           <SummaryCardsSkeleton />
         ) : (

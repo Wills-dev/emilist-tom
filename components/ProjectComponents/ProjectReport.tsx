@@ -9,20 +9,52 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { ChartConfig } from "@/components/ui/chart";
 
 import ProjectSummaryCards from "./ProjectSummaryCards";
 
+import { BarCharts } from "../Charts/BarChart";
 import { useProjectAnalytics } from "@/hooks/useProjectAnalytics";
-import { ProjectMultipleLineChart } from "../ReportComponents/ProjectMultipleLineChart";
+
+const chartConfigNew = {
+  totalProjects: {
+    label: "New projects",
+    color: "#25C269",
+  },
+} satisfies ChartConfig;
+
+const chartConfigActive = {
+  totalActiveProjects: {
+    label: "Active projects",
+    color: "#25C269",
+  },
+} satisfies ChartConfig;
+
+const chartConfigPaused = {
+  totalPausedProjects: {
+    label: "Paused  projects",
+    color: "#25C269",
+  },
+} satisfies ChartConfig;
+
+const chartConfigOverdue = {
+  totalOverdueProjects: {
+    label: "Overdue projects",
+    color: "#25C269",
+  },
+} satisfies ChartConfig;
+
+const chartConfigCompleted = {
+  totalCompletedProjects: {
+    label: "Completed projects",
+    color: "#25C269",
+  },
+} satisfies ChartConfig;
 
 const ProjectReport = () => {
   const {
     isLoading,
     projectAnalytics,
-    setEndDate,
-    setStateDate,
-    startDate,
-    endDate,
     handleGetJobAnalytics,
     setMonth,
     setYear,
@@ -83,7 +115,38 @@ const ProjectReport = () => {
           </SelectContent>
         </Select>
       </div>
-      <ProjectMultipleLineChart chartData={projectAnalytics} />
+      <div className="flex w-full gap-4 py-4 max-w-full flex-wrap">
+        <BarCharts
+          chartData={projectAnalytics}
+          title="New Projects"
+          chartConfig={chartConfigNew}
+          dataKey="totalProjects"
+        />
+        <BarCharts
+          chartData={projectAnalytics}
+          title="Active Projects"
+          chartConfig={chartConfigActive}
+          dataKey="totalActiveProjects"
+        />
+        <BarCharts
+          chartData={projectAnalytics}
+          title="Paused Projects"
+          chartConfig={chartConfigPaused}
+          dataKey="totalPausedProjects"
+        />
+        <BarCharts
+          chartData={projectAnalytics}
+          title="Overdue Projects"
+          chartConfig={chartConfigOverdue}
+          dataKey="totalOverdueProjects"
+        />
+        <BarCharts
+          chartData={projectAnalytics}
+          title="Completed Projects"
+          chartConfig={chartConfigCompleted}
+          dataKey="totalCompletedProjects"
+        />
+      </div>
     </>
   );
 };
