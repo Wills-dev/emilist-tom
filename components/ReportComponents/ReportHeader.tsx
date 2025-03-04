@@ -19,6 +19,7 @@ const ReportHeader = ({ currentLink, setCurrentLink }: ReportHeaderProps) => {
           <ul className="flex-c gap-4 overflow-x-auto hide-scrollbar">
             {reportLinks?.map((link) => (
               <li
+                key={link?.name}
                 className={`cursor-pointer ${
                   currentLink === link.name
                     ? "text-primary-green  border-b-primary-green border-b-1"

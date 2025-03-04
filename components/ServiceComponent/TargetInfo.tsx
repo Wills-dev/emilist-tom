@@ -12,7 +12,7 @@ const TargetInfo = () => {
   const { loading, target } = useGetTarget();
 
   return (
-    <section className="mt-6">
+    <section className="mt-6 w-full max-w-full">
       {loading ? (
         <div className="flex-c w-full min-h-[70vh] justify-center text-green-500 mt-6">
           <span className="loading loading-bars loading-lg"></span>
@@ -37,96 +37,112 @@ const TargetInfo = () => {
               <p className="text-primary-green max-sm:text-sm">Edit</p>
             </Link>{" "}
           </div> */}
-          <div className="flex items-center overflow-x-scroll w-full py-4 gap-6">
-            <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
-              <h6 className="text-lg font-medium max-sm:text-sm">Jobs</h6>
-              <p className="text-[16px] text-[#303632]  max-sm:text-sm">
-                Amet minim mollit non deserunt ullamco est sit .{" "}
-              </p>
-              <div className="flex flex-col items-end gap-1">
-                <p className="text-xl text-[#737774] font-semibold max-sm:text-sm">
-                  {target?.jobs?.current &&
-                    numberWithCommas(target?.jobs?.current)}
-                  /
-                  {target?.jobs?.target &&
-                    numberWithCommas(target?.jobs?.target)}
-                </p>
-                <progress
-                  className="progress w-full "
-                  value={target?.jobs?.percentage || 0}
-                  max="100"
-                ></progress>
+
+          {target === "No target set!" ? (
+            <p>
+              No target set.{" "}
+              <Link
+                href="/dashboard/service/set-up-target"
+                className="text-primary-green hover:underline transition-all duration-300"
+              >
+                Click here
+              </Link>{" "}
+              to set target
+            </p>
+          ) : (
+            <>
+              <div className="flex items-center flex-wrap max-w-full w-full py-4 gap-6">
+                <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
+                  <h6 className="text-lg font-medium max-sm:text-sm">Jobs</h6>
+                  <p className="text-[16px] text-[#303632]  max-sm:text-sm">
+                    Amet minim mollit non deserunt ullamco est sit .{" "}
+                  </p>
+                  <div className="flex flex-col items-end gap-1">
+                    <p className="text-xl text-[#737774] font-semibold max-sm:text-sm">
+                      {target?.jobs?.current &&
+                        numberWithCommas(target?.jobs?.current)}
+                      /
+                      {target?.jobs?.target &&
+                        numberWithCommas(target?.jobs?.target)}
+                    </p>
+                    <progress
+                      className="progress w-full "
+                      value={target?.jobs?.percentage || 0}
+                      max="100"
+                    ></progress>
+                  </div>
+                </div>
+                <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
+                  <h6 className="text-lg font-medium max-sm:text-sm">Amount</h6>
+                  <p className="text-[16px] text-[#303632]  max-sm:text-sm">
+                    Amet minim mollit non deserunt ullamco est sit .{" "}
+                  </p>
+                  <div className="flex flex-col items-end gap-1">
+                    <p className="text-xl text-[#737774] font-semibold max-sm:text-sm">
+                      {target?.currency && getCurrencySign(target?.currency)}
+                      {target?.amount?.current &&
+                        numberWithCommas(target?.amount?.current)}
+                      /{target?.currency && getCurrencySign(target?.currency)}
+                      {target?.amount?.target &&
+                        numberWithCommas(target?.amount?.target)}
+                    </p>
+                    <progress
+                      className="progress progress-success w-full"
+                      value={target?.amount?.percentage || 0}
+                      max="100"
+                    ></progress>
+                  </div>
+                </div>
+                <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
+                  <h6 className="text-lg font-medium max-sm:text-sm">
+                    Customer Referral
+                  </h6>
+                  <p className="text-[16px] text-[#303632]  max-sm:text-sm">
+                    Amet minim mollit non deserunt ullamco est sit .{" "}
+                  </p>
+                  <div className="flex flex-col items-end gap-1">
+                    <p className="text-xl text-[#737774] font-semibold max-sm:text-sm">
+                      {target?.referrals?.current &&
+                        numberWithCommas(target?.referrals?.current)}
+                      /
+                      {target?.referrals?.target &&
+                        numberWithCommas(target?.referrals?.target)}
+                    </p>
+                    <progress
+                      className="progress progress-warning w-full "
+                      value={target?.referrals?.percentage || 0}
+                      max="100"
+                    ></progress>
+                  </div>
+                </div>
+                <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
+                  <h6 className="text-lg font-medium max-sm:text-sm">
+                    Friends Invited
+                  </h6>
+                  <p className="text-[16px] text-[#303632]  max-sm:text-sm">
+                    Amet minim mollit non deserunt ullamco est sit .{" "}
+                  </p>
+                  <div className="flex flex-col items-end gap-1">
+                    <p className="text-xl text-[#737774] font-semibold max-sm:text-sm">
+                      {target?.invites?.current &&
+                        numberWithCommas(target?.invites?.current)}
+                      /
+                      {target?.invites?.target &&
+                        numberWithCommas(target?.invites?.target)}
+                    </p>
+                    <progress
+                      className="progress progress-error w-full"
+                      value={target?.invites?.percentage || 0}
+                      max="100"
+                    ></progress>
+                  </div>
+                </div>
               </div>
-            </div>
-            <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
-              <h6 className="text-lg font-medium max-sm:text-sm">Amount</h6>
-              <p className="text-[16px] text-[#303632]  max-sm:text-sm">
-                Amet minim mollit non deserunt ullamco est sit .{" "}
-              </p>
-              <div className="flex flex-col items-end gap-1">
-                <p className="text-xl text-[#737774] font-semibold max-sm:text-sm">
-                  {target?.currency && getCurrencySign(target?.currency)}
-                  {target?.amount?.current &&
-                    numberWithCommas(target?.amount?.current)}
-                  /{target?.currency && getCurrencySign(target?.currency)}
-                  {target?.amount?.target &&
-                    numberWithCommas(target?.amount?.target)}
-                </p>
-                <progress
-                  className="progress progress-success w-full"
-                  value={target?.amount?.percentage || 0}
-                  max="100"
-                ></progress>
+              <div className="w-full flex-c justify-center py-10 flex-col">
+                <RadialChart percentage={target?.totalTargetPercentage} />
               </div>
-            </div>
-            <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
-              <h6 className="text-lg font-medium max-sm:text-sm">
-                Customer Referral
-              </h6>
-              <p className="text-[16px] text-[#303632]  max-sm:text-sm">
-                Amet minim mollit non deserunt ullamco est sit .{" "}
-              </p>
-              <div className="flex flex-col items-end gap-1">
-                <p className="text-xl text-[#737774] font-semibold max-sm:text-sm">
-                  {target?.referrals?.current &&
-                    numberWithCommas(target?.referrals?.current)}
-                  /
-                  {target?.referrals?.target &&
-                    numberWithCommas(target?.referrals?.target)}
-                </p>
-                <progress
-                  className="progress progress-warning w-full "
-                  value={target?.referrals?.percentage || 0}
-                  max="100"
-                ></progress>
-              </div>
-            </div>
-            <div className=" w-[294px] min-w-[254px] bg-white p-4 flex flex-col gap-3 rounded-lg shadow-md">
-              <h6 className="text-lg font-medium max-sm:text-sm">
-                Friends Invited
-              </h6>
-              <p className="text-[16px] text-[#303632]  max-sm:text-sm">
-                Amet minim mollit non deserunt ullamco est sit .{" "}
-              </p>
-              <div className="flex flex-col items-end gap-1">
-                <p className="text-xl text-[#737774] font-semibold max-sm:text-sm">
-                  {target?.invites?.current &&
-                    numberWithCommas(target?.invites?.current)}
-                  /
-                  {target?.invites?.target &&
-                    numberWithCommas(target?.invites?.target)}
-                </p>
-                <progress
-                  className="progress progress-error w-full"
-                  value={target?.invites?.percentage || 0}
-                  max="100"
-                ></progress>
-              </div>
-            </div>
-          </div>
-          <div className="w-full flex-c justify-center py-10 flex-col">
-            <RadialChart percentage={target?.totalTargetPercentage} />
-          </div>
+            </>
+          )}
         </>
       )}
     </section>

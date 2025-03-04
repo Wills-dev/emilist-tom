@@ -29,8 +29,8 @@ const InsightContent = () => {
           <span className="loading loading-bars loading-lg"></span>
         </div>
       ) : (
-        <div className="flex flex-wrap gap-1 w-full">
-          <div className="w-[505px] bg-white max-w-[505px] min-w-[505px] h-[285px] max-sm:h-[250px] max-sm:max-w-[450px] max-sm:w-[450px] shadow-md rounded-[10px] m-2 p-6 py-8">
+        <div className="flex flex-wrap gap-4 w-full">
+          <div className=" h-[285px] max-sm:h-[250px] max-w-[450px] w-full shadow-md rounded-[10px] p-6 py-8 bg-white">
             <h2 className="font-bold text-xl max-sm: mb-6">Overview</h2>
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-2 flex gap-2 items-start">
@@ -114,7 +114,7 @@ const InsightContent = () => {
               </div>
             </div>
           </div>
-          <div className="w-[340px] bg-white max-w-[340px] min-w-[340px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
+          <div className="w-[270px] bg-white max-w-[270px] min-w-[270px] h-[285px] max-sm:max-w-full max-sm:h-[250px] max-sm:w-full shadow-md rounded-[10px] p-6 py-8">
             <h2 className="font-bold sm:text-xl max-sm: mb-10">
               Promotion Duration
             </h2>
@@ -137,7 +137,7 @@ const InsightContent = () => {
               </button>
             </div>
           </div>
-          <div className="w-[340px] bg-white max-w-[340px] min-w-[340px] h-[285px] max-sm:max-w-[320px] max-sm:h-[250px] max-sm:w-[320px] shadow-md rounded-[10px] m-2 p-6 py-8">
+          <div className="w-[270px] bg-white max-w-[270px] min-w-[270px] h-[285px] max-sm:max-w-full max-sm:h-[250px] max-sm:w-full shadow-md rounded-[10px] p-6 py-8">
             <h2 className="font-bold sm:text-xl max-sm: mb-10">Clicks</h2>
             <div className="w-full my-8">
               <div className="flex justify-between items-center w-full">
@@ -165,7 +165,7 @@ const InsightContent = () => {
       {/* <div className="flex flex-wrap gap-10 mt-10">
         <div className="flex flex-col gap-4 justify-center">
           <p className="text-gray-700 font-semibold font-xl max-sm:text-sm text-center">
-            Reached
+            Reache4
           </p>
           <div className="">
             <InsightRadialChart

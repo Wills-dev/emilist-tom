@@ -16,7 +16,7 @@ const SummaryCard = ({
 }: SummaryCardProps) => {
   return (
     <Link href={cardLink}>
-      <div className="w-[193px] max-w-[193px] min-w-[193px] border-1 border-[#B8B9B8] rounded-lg p-4 max-sm:max-w-[192px] max-sm:min-w-[192px] max-sm:w-[192px] bg-white">
+      <div className="w-[340px] max-w-[340px] min-w-[340px] border-1 border-[#B8B9B8] rounded-lg p-4 max-sm:max-w-full max-sm:min-w-[300px] max-sm:w-[340px] bg-white">
         <Image
           src={cardIcon && cardIcon}
           alt="menu"

@@ -1,7 +1,5 @@
 "use client";
 
-import { ScrollArea, ScrollBar } from "../ui/scroll-area";
-
 import SummaryCard from "../DashboardComponents/SummaryCard";
 import SummaryCardsSkeleton from "../Skeleton/SummaryCardsSkeleton";
 
@@ -12,8 +10,8 @@ const JobSummaryCards = () => {
   const { loadingAnalytics, jobAnalytics } = useGetJobSummary();
 
   return (
-    <ScrollArea className="w-full overflow-x-auto whitespace-nowrap hide-scrollbar">
-      <div className="flex gap-4 py-4 w-max">
+    <div className="w-full">
+      <div className="flex w-full gap-4 py-4 max-w-full flex-wrap">
         {loadingAnalytics ? (
           <SummaryCardsSkeleton />
         ) : (
@@ -21,7 +19,7 @@ const JobSummaryCards = () => {
             <SummaryCard
               cardIcon="/assets/icons/leadIcon.svg"
               cardLink="/dashboard/job/lead"
-              cardSum={3}
+              cardSum={0}
               cardTitle="Lead"
             />
             <SummaryCard
@@ -72,9 +70,7 @@ const JobSummaryCards = () => {
           </>
         )}
       </div>
-
-      <ScrollBar orientation="horizontal" />
-    </ScrollArea>
+    </div>
   );
 };
 

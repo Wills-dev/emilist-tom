@@ -1,7 +1,6 @@
 "use client";
 
-import { TrendingUp } from "lucide-react";
-import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
+import { Bar, BarChart, CartesianGrid, XAxis, YAxis } from "recharts";
 
 import {
   Card,
@@ -18,59 +17,51 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
+interface BarChartsProps {
+  chartData: any;
+  title: string;
+  chartConfig: any;
+  dataKey: string;
+}
+
 export const description = "A multiple bar chart";
 
-const chartData = [
-  { month: "January", spent: 186, earned: 80 },
-  { month: "February", spent: 305, earned: 200 },
-  { month: "March", spent: 237, earned: 120 },
-  { month: "April", spent: 73, earned: 190 },
-  { month: "May", spent: 209, earned: 130 },
-  { month: "June", spent: 214, earned: 140 },
-  { month: "July", spent: 204, earned: 120 },
-  { month: "August", spent: 224, earned: 140 },
-  { month: "September", spent: 304, earned: 240 },
-  { month: "October", spent: 200, earned: 400 },
-  { month: "November", spent: 100, earned: 400 },
-  { month: "December", spent: 200, earned: 300 },
-];
-
-const chartConfig = {
-  spent: {
-    label: "Amount spent",
-    color: "#FF5D7A",
-  },
-  earned: {
-    label: "Amount earned",
-    color: "#25C269",
-  },
-} satisfies ChartConfig;
-
-export function BarCharts() {
+export function BarCharts({
+  chartData,
+  title,
+  chartConfig,
+  dataKey,
+}: BarChartsProps) {
   return (
     <Card className="mt-6">
       <CardHeader>
-        <CardTitle className="sm:text-2xl text-lg">
-          Earnings Statistics
-        </CardTitle>
+        <CardTitle className="sm:text-lg">{title}</CardTitle>
       </CardHeader>
-      <CardContent>
-        <ChartContainer config={chartConfig} className="w-full h-[50vh]">
+      <CardContent className="p-0">
+        <ChartContainer
+          config={chartConfig}
+          className="w-[340px] max-w-[340px] min-w-[340px] p-4"
+        >
           <BarChart accessibilityLayer data={chartData}>
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="period"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
               tickFormatter={(value) => value.slice(0, 3)}
             />
+            <YAxis
+              tickLine={false}
+              axisLine={false}
+              tickMargin={8}
+              tickCount={3}
+            />
             <ChartTooltip
               cursor={false}
               content={<ChartTooltipContent indicator="dashed" />}
             />
-            <Bar dataKey="spent" fill="#FF5D7A" radius={4} />
-            <Bar dataKey="earned" fill="#25C269" radius={4} />
+            <Bar dataKey={dataKey} fill="#25C269" />
           </BarChart>
         </ChartContainer>
       </CardContent>
