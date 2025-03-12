@@ -112,22 +112,30 @@ const SavedMaterials = () => {
                                   </div>
                                 </div>
                                 <div className="flex-c-b sm:py-2">
-                                  <div className="flex-c gap-2">
-                                    <Image
-                                      src="/assets/dummyImages/profilePic.png"
-                                      width={50}
-                                      height={50}
-                                      alt="profile-pic"
-                                      className="object-cover h-8 w-8 rounded-full"
-                                    />
-                                    <h6 className="sm:text-sm text-xs">
-                                      Victor Kings
-                                      {/* {material?.firstname &&
-                                Capitalize(material?.firstname)}{" "}
-                              {material?.lastname &&
-                                Capitalize(material?.lastname)} */}
+                                  <Link
+                                    href={`/profile/about/${material?.userId?._id}`}
+                                    className="flex-c gap-2"
+                                  >
+                                    {material?.userId?.profileImage ? (
+                                      <Image
+                                        src={material?.userId?.profileImage}
+                                        width={50}
+                                        height={50}
+                                        alt="profile-pic"
+                                        className="object-cover h-8 w-8 rounded-full"
+                                      />
+                                    ) : (
+                                      <p className="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center font-bold">
+                                        {material?.userId?.fullName
+                                          ? material?.userId?.fullName[0].toUpperCase()
+                                          : material?.userId?.userName[0].toUpperCase()}
+                                      </p>
+                                    )}
+                                    <h6 className="sm:text-sm text-xs  group-hover:text-primary-green duration-300 transition-all">
+                                      {material?.userId?.fullName ||
+                                        material?.userId?.userName}
                                     </h6>
-                                  </div>
+                                  </Link>
                                 </div>
                               </div>
                               <div className="flex-c md:flex-col md:items-end justify-between">

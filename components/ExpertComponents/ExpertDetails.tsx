@@ -63,7 +63,7 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
   return (
     <div className="py-8">
       {loading ? (
-        <div className="flex item-center justify-center text-green-500 mt-6 h-[70vh]">
+        <div className="flex item-center justify-center text-green-500 mt-6 h-[80vh]">
           <span className="loading loading-bars loading-lg"></span>
         </div>
       ) : (
@@ -123,6 +123,7 @@ const ExpertDetails = ({ businessId }: ExpertDetailsProps) => {
             link={`https://emilist.com/expert/info/${businessId}`}
             title="Share business"
             textToCopy="Check out this business on Emilist"
+            id={businessId}
           />
         </div>
       )}

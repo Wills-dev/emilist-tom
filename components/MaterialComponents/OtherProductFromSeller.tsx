@@ -1,21 +1,29 @@
+import { useEffect } from "react";
+
 import ProductCard from "./ProductCard";
+import SimilarMaterialSkeleton from "../Skeleton/SimilarMaterialSkeleton";
 
 import { useSaveMaterials } from "@/hooks/useSaveMaterials";
+import { useUnsaveMaterial } from "@/hooks/useUnsaveMaterial";
 import { useAddMaterialToCart } from "@/hooks/useAddMaterialToCart";
+import { useGetOtherMaterialsFromSeller } from "@/hooks/useGetOtherMaterialsFromSeller";
 
-const OtherProductFromSeller = () => {
+const OtherProductFromSeller = ({ supplierInfo }: { supplierInfo: any }) => {
   const { handleSaveMaterial, rerender } = useSaveMaterials();
   const { addMaterialToCart, cartLoading } = useAddMaterialToCart();
+  const { handleUnsaveMaterial, unsaveRerenderr } = useUnsaveMaterial();
+  const {
+    loading,
+    data,
+    getAllOtherMaterialsByUser,
+    handleHorizontalScroll,
+    containerRef,
+    hasMore,
+  } = useGetOtherMaterialsFromSeller();
 
-  const material = {
-    _id: "2",
-    Id: "2",
-    ProductName: "Dangote",
-    productName: "Dangote",
-    description:
-      "   Lorem ipsum dolor sit amet consectetur, adipisicing elit. Nulla, velit eligendi laboriosam fugit, consequatur id eum architecto suscipit obcaecati aspernatur nostrum rem deserunt nemo minima deleniti enim ipsam quod quasi ad veniam praesentium voluptates itaque. Quidem aperiam qui provident minima illo! Iusto ex tenetur vero autem dicta explicabo fugit porro.",
-    price: 30000,
-  };
+  useEffect(() => {
+    getAllOtherMaterialsByUser(supplierInfo?._id);
+  }, [supplierInfo?._id, rerender, unsaveRerenderr]);
 
   return (
     <section className="w-full py-8">
@@ -23,19 +31,45 @@ const OtherProductFromSeller = () => {
         <div className="absolute top-0 left-0 w-full min-h-screen bg-white h-full z-50 opacity-40" />
       )}
       <h5 className="sm:text-3xl text-lg font-bold py-6">
-        Other proddutcs from Victor Falade
+        Other products from{" "}
+        {supplierInfo?.fullName
+          ? supplierInfo?.fullName
+          : supplierInfo?.userName}
       </h5>
-      <div className="flex sm:gap-4 gap-2 overflow-x-auto py-4">
-        <ProductCard
-          material={material}
-          addMaterialToCart={addMaterialToCart}
-          handleSaveMaterial={handleSaveMaterial}
-        />
-        <ProductCard
-          material={material}
-          addMaterialToCart={addMaterialToCart}
-          handleSaveMaterial={handleSaveMaterial}
-        />
+      <div
+        ref={containerRef}
+        onScroll={handleHorizontalScroll}
+        className="flex sm:gap-4 gap-2 overflow-x-auto py-4 hide-scrollbar"
+      >
+        {data.length > 0 ? (
+          <>
+            {data?.map((material, i) => (
+              <ProductCard
+                key={i}
+                material={material}
+                addMaterialToCart={addMaterialToCart}
+                handleSaveMaterial={handleSaveMaterial}
+                handleUnsaveMaterial={handleUnsaveMaterial}
+              />
+            ))}
+            {loading && <SimilarMaterialSkeleton />}
+            {!hasMore && data?.length > 10 && (
+              <div className=" flex items-center justify-center pr-5">
+                <p className="text-gray-500 text-center whitespace-nowrap">
+                  {" "}
+                  No more materials
+                </p>
+              </div>
+            )}
+          </>
+        ) : (
+          <p>
+            No other material from{" "}
+            {supplierInfo?.fullName
+              ? supplierInfo?.fullName
+              : supplierInfo?.userName}
+          </p>
+        )}
       </div>
     </section>
   );

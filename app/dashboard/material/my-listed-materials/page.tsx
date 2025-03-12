@@ -11,6 +11,7 @@ import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import { Capitalize, numberWithCommas } from "@/helpers";
 import { useGetUserMaterials } from "@/hooks/useGetUserMaterials";
 import { getCurrencySign } from "@/helpers/getCurrencySign";
+import ReadMore from "@/components/ReadMore/ReadMore";
 
 const MyListMaterials = () => {
   const {
@@ -79,27 +80,18 @@ const MyListMaterials = () => {
                                 >
                                   {material?.name && Capitalize(material?.name)}
                                 </Link>
-                                {material?.description &&
-                                material?.description.length > 200 ? (
-                                  <p className="max-sm:text-sm">
-                                    {material?.description.slice(0, 100)}...
-                                    <Link
-                                      href={`/dashboard/material/info/${material._id}`}
-                                      className="underline text-primary-green text-xs"
-                                    >
-                                      Read more
-                                    </Link>
-                                  </p>
-                                ) : (
-                                  <p className="max-sm:text-sm">
-                                    {material?.description}
-                                  </p>
-                                )}
+                                <ReadMore
+                                  text={material?.description || ""}
+                                  maxLength={180}
+                                  style="max-sm:text-sm"
+                                />
                                 <div className="flex-c-b  sm:gap-4 gap-2 flex-wrap">
                                   <div className="flex-c gap-1 max-sm:text-sm ">
-                                    <StarRating rating={4} />{" "}
+                                    <StarRating
+                                      rating={material?.averageRating || 0}
+                                    />{" "}
                                     <span className="sm:text-sm text-xs">
-                                      (51)
+                                      ({material?.totalReviews || 0})
                                     </span>
                                   </div>
                                 </div>

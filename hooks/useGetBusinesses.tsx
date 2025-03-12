@@ -1,11 +1,4 @@
-import {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  ChangeEvent,
-  useContext,
-} from "react";
+import { useState, useEffect, useRef, ChangeEvent, useContext } from "react";
 
 import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
@@ -31,13 +24,16 @@ export const useGetBusinesses = () => {
     setCurrentPage(newPage);
   };
 
-  const fetchBusinesses = useCallback(async () => {
+  const fetchBusinesses = async () => {
     if (!hasMore) return;
 
     const userId = currentUser?._id || "";
     let url = `/business/fetch-all-business?page=${currentPage}&limit=10${
       userId ? `&userId=${userId}` : ""
     }`;
+    if (search) {
+      url += `&search=${search}`;
+    }
 
     try {
       const { data } = await axiosInstance.get(url);
@@ -55,7 +51,7 @@ export const useGetBusinesses = () => {
     } finally {
       setLoading(false);
     }
-  }, [currentPage, loading, totalPages]);
+  };
 
   useEffect(() => {
     fetchBusinesses();
@@ -89,5 +85,6 @@ export const useGetBusinesses = () => {
     handleChange,
     handlePageChange,
     fetchBusinesses,
+    setLoading,
   };
 };
