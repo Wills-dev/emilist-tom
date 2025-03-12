@@ -84,7 +84,7 @@ const UserMaterialInfo = ({ materialId }: UserMaterialInfoProps) => {
                         Capitalize(materialInfo?.product?.name)}
                     </h1>
                     <Link
-                      href={`/dashboard/report/insights`}
+                      href="/dashboard/report?r=Insights"
                       className="max-sm:text-sm font-semibold text-primary-green p"
                     >
                       View Insights

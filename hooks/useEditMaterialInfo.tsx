@@ -13,6 +13,10 @@ import {
   promiseErrorFunction,
   toastOptions,
 } from "@/helpers";
+import {
+  formatInputTextNumberWithCommas,
+  removeCommas,
+} from "@/helpers/formatInputTextNumberWithCommas";
 
 export const useEditMaterialInfo = () => {
   const router = useRouter();
@@ -69,7 +73,10 @@ export const useEditMaterialInfo = () => {
     const { name, value } = e.target;
     setEditMaterialInfo((prevJob: any) => ({
       ...prevJob,
-      [name]: value,
+      [name]:
+        name === "price" || name === "availableQuantity"
+          ? formatInputTextNumberWithCommas(value)
+          : value,
     }));
   };
 
@@ -195,8 +202,8 @@ export const useEditMaterialInfo = () => {
         name,
         brand,
         description,
-        availableQuantity,
-        price,
+        availableQuantity: removeCommas(availableQuantity.toString()),
+        price: removeCommas(price.toString()),
         storeName,
         location,
         subCategory,

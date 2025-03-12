@@ -19,5 +19,6 @@ export const config = {
     "/expert/register",
     "/expert/register/:path*",
     "/material/compare",
+    "/dashboard/transactions/status",
   ],
 };

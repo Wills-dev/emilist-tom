@@ -207,7 +207,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                       Promote
                     </button>
                     <Link
-                      href="/dashboard/report/insights"
+                      href="/dashboard/report?r=Insights"
                       className="text-primary-green  font-medium max-sm:text-sm py-2 underline"
                     >
                       Insight
