@@ -77,5 +77,6 @@ export const useGetAllJobByAUser = () => {
     setFilterName,
     setFilterService,
     getAllUserJobs,
+    setLoading,
   };
 };

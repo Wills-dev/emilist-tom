@@ -68,6 +68,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
     setMilestones,
     setPercentage,
     percentage,
+    handleChange,
   } = useApplyForBiddableJob();
 
   const toggleActionButton = () => {
@@ -301,6 +302,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                           setMilestones={setMilestones}
                           setPercentage={setPercentage}
                           percentage={percentage}
+                          handleChange={handleChange}
                         />
 
                         {/* chat modal */}

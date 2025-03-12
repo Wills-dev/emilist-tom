@@ -101,5 +101,6 @@ export const useFetchJobs = () => {
     data,
     containerRef,
     hasMore,
+    setIsLoading,
   };
 };

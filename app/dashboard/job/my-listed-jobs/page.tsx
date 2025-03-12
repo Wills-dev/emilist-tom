@@ -47,6 +47,13 @@ const MyListedJobs = () => {
     setLink(url);
   };
 
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+    await getAllUserJobs();
+  };
+
   return (
     <main className="relative">
       <DashboardNav />
@@ -62,7 +69,10 @@ const MyListedJobs = () => {
           <div className="grid grid-cols-3 gap-10">
             <div className="col-span-2 max-md:col-span-3 flex flex-col w-full gap-6">
               {/* search for mobile  */}
-              <form className="max-w-[350px] mt-5 md:hidden">
+              <form
+                onSubmit={handleSubmit}
+                className="max-w-[350px] mt-5 md:hidden"
+              >
                 <div className="flex-1 flex-c px-4 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green max-sm:px-2 shadow-md gap-2">
                   <input
                     style={{ fontSize: "16px" }}
@@ -72,7 +82,7 @@ const MyListedJobs = () => {
                     value={search}
                     onChange={handleChange}
                   />
-                  <button type="button" onClick={getAllUserJobs}>
+                  <button type="submit">
                     {" "}
                     <CiSearch />
                   </button>
@@ -220,7 +230,10 @@ const MyListedJobs = () => {
             </div>
             <div className="col-span-1  max-md:hidden">
               {/* search for web  */}
-              <form className=" w-full mb-10 max-md:hidden">
+              <form
+                onSubmit={handleSubmit}
+                className=" w-full mb-10 max-md:hidden"
+              >
                 <div className="flex-c px-4 py-2 rounded-lg  border-[#b8b9b8] border-1 focus-within:border-primary-green max-sm:px-2 max-sm:py-1 shadow-sm">
                   <input
                     style={{ fontSize: "16px" }}
@@ -230,7 +243,7 @@ const MyListedJobs = () => {
                     value={search}
                     onChange={handleChange}
                   />
-                  <button onClick={getAllUserJobs}>
+                  <button type="submit">
                     {" "}
                     <CiSearch />
                   </button>

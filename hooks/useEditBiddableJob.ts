@@ -13,6 +13,11 @@ import {
 } from "@/helpers";
 import { JobDetails, Milestone, TimeFrame } from "@/types";
 import { validateMilestoneTimeFrames } from "@/types/validateTimeFrame";
+import {
+  formatInputTextNumber,
+  formatInputTextNumberWithCommas,
+  removeCommas,
+} from "@/helpers/formatInputTextNumberWithCommas";
 
 export const useEditBiddableJob = () => {
   const { currentUser } = useContext(AuthContext);
@@ -87,13 +92,16 @@ export const useEditBiddableJob = () => {
           ...prevJob,
           duration: {
             ...prevJob.duration,
-            [name]: name === "number" ? parseInt(value) : value,
+            [name]: name === "number" ? formatInputTextNumber(value) : value,
           },
         };
       }
       return {
         ...prevJob,
-        [name]: value,
+        [name]:
+          name === "maximumPrice" || name === "bidRange"
+            ? formatInputTextNumberWithCommas(value)
+            : value,
       };
     });
   };
@@ -112,7 +120,8 @@ export const useEditBiddableJob = () => {
           ...newMilestones[index],
           [parentField]: {
             ...(newMilestones[index][parentField] as TimeFrame),
-            [childField]: value,
+            [childField]:
+              childField === "number" ? formatInputTextNumber(value) : value,
           },
         };
       }
@@ -160,9 +169,10 @@ export const useEditBiddableJob = () => {
     setEditJobDetails((prevJob) => {
       const updatedMilestones = [...prevJob.milestones];
       const maximumPrice = prevJob.maximumPrice ?? 0;
+      const maxPrice = removeCommas(maximumPrice.toString());
       updatedMilestones[index] = {
         ...updatedMilestones[index],
-        amount: (newPercentage / 100) * maximumPrice,
+        amount: (newPercentage / 100) * Number(maxPrice),
       };
       return {
         ...prevJob,
@@ -332,6 +342,8 @@ export const useEditBiddableJob = () => {
         return;
       }
     }
+    const maxPrice = maximumPrice || 0;
+    const bid = bidRange || 0;
     setLoad(true);
     try {
       const payload: any = {
@@ -340,11 +352,11 @@ export const useEditBiddableJob = () => {
         service,
         location,
         description,
-        type: "regular",
+        type: "biddable",
         expertLevel,
         duration,
-        bidRange,
-        maximumPrice,
+        bidRange: removeCommas(bid.toString()),
+        maximumPrice: removeCommas(maxPrice.toString()),
         milestones,
         currency,
       };

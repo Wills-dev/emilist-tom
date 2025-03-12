@@ -34,6 +34,13 @@ const page = () => {
   const checkAll =
     search || filterLocation || filterName || filterService || "";
 
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+    await getAllJobs();
+  };
+
   return (
     <main className="relative">
       {" "}
@@ -48,7 +55,10 @@ const page = () => {
           <div className="grid grid-cols-3 gap-10">
             <div className="col-span-2 max-md:col-span-3 flex flex-col w-full gap-6">
               {/* search for mobile  */}
-              <form className="max-w-[350px] mt-5 md:hidden">
+              <form
+                onSubmit={handleSubmit}
+                className="max-w-[350px] mt-5 md:hidden"
+              >
                 <div className="flex-1 flex-c px-4 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green max-sm:px-2 shadow-md gap-2">
                   <input
                     type="text"
@@ -58,8 +68,7 @@ const page = () => {
                     onChange={handleChange}
                     style={{ fontSize: "16px" }}
                   />
-                  <button type="button" onClick={getAllJobs}>
-                    {" "}
+                  <button type="submit">
                     <CiSearch />
                   </button>
                 </div>
@@ -163,7 +172,10 @@ const page = () => {
             </div>
             <div className="col-span-1  max-md:hidden">
               {/* search for web  */}
-              <form className=" w-full mb-10 max-md:hidden">
+              <form
+                onSubmit={handleSubmit}
+                className=" w-full mb-10 max-md:hidden"
+              >
                 <div className="flex-c px-4 py-2 rounded-lg  border-[#b8b9b8] border-1 focus-within:border-primary-green max-sm:px-2 max-sm:py-1 shadow-sm">
                   <input
                     type="text"
@@ -173,7 +185,7 @@ const page = () => {
                     onChange={handleChange}
                     style={{ fontSize: "16px" }}
                   />
-                  <button onClick={getAllJobs}>
+                  <button type="submit">
                     {" "}
                     <CiSearch />
                   </button>

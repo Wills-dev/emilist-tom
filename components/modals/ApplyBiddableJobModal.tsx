@@ -1,10 +1,11 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 
 import { Toaster } from "react-hot-toast";
 import { Modal } from "antd";
 import { AuthContext } from "@/utils/AuthState";
 import Link from "next/link";
 import Image from "next/image";
+import { numberWithCommas } from "@/helpers";
 
 interface Milestone {
   milestoneId: string;
@@ -26,6 +27,7 @@ interface Props {
   setMilestones: React.Dispatch<React.SetStateAction<Milestone[]>>;
   setPercentage: React.Dispatch<React.SetStateAction<number[]>>;
   percentage: number[];
+  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const ApplyBiddableJobModal = ({
@@ -42,6 +44,7 @@ const ApplyBiddableJobModal = ({
   handleCancelBidModal,
   openBidModal,
   jobInfo,
+  handleChange,
 }: Props) => {
   const { currentUser } = useContext(AuthContext);
   const [service, setService] = useState("");
@@ -130,12 +133,12 @@ const ApplyBiddableJobModal = ({
           </div>
 
           <>
-            <div className="w-full opacity-45">
+            <div className="w-full ">
               <p className="text-[#5e625f] py-2  font-[500] max-sm:text-sm">
                 Project duration
               </p>
 
-              <p className="expert-reg-input-div flex-c">
+              <p className="expert-reg-input-div flex-c opacity-45">
                 {jobInfo?.duration.number && jobInfo?.duration.number}{" "}
                 {jobInfo?.duration.period && jobInfo?.duration.period}
               </p>
@@ -156,7 +159,7 @@ const ApplyBiddableJobModal = ({
                   type="text"
                   className="expert-reg-input"
                   value={maxPrice}
-                  onChange={(e) => setMaxPrice(e.target.value)}
+                  onChange={handleChange}
                   required
                 />
               </div>
@@ -166,7 +169,7 @@ const ApplyBiddableJobModal = ({
                 Milestone
               </p>
               <div className="w-full">
-                <p className="expert-reg-input-div flex-c">
+                <p className="expert-reg-input-div flex-c opacity-45">
                   {jobInfo?.milestones?.length && jobInfo?.milestones?.length}{" "}
                 </p>
               </div>
@@ -234,7 +237,9 @@ const ApplyBiddableJobModal = ({
                   </p>
                   <div className="w-full">
                     <p className="expert-reg-input-div flex-c">
-                      {milestones[index]?.amount || 0}
+                      {milestones[index]?.amount
+                        ? numberWithCommas(milestones[index]?.amount)
+                        : 0}
                     </p>
                   </div>
                 </div>

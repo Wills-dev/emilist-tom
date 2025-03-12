@@ -12,6 +12,7 @@ import { useDeleteJobImage } from "@/hooks/useDeleteJobImage";
 
 import DashboardNav from "@/components/DashboardComponents/DashboardNav";
 import LoadingOverlay from "@/components/LoadingOverlay/LoadingOverlay";
+import { numberWithCommas } from "@/helpers";
 
 const page = ({ params }: any) => {
   const { currentUser } = useContext(AuthContext);
@@ -167,16 +168,8 @@ const page = ({ params }: any) => {
           </p>
           <div className="w-full">
             <p className=" min-w-full w-full  max-w-full rounded-lg min-h-10 px-2 bg-[#ececec] h-10 max-sm:text-sm flex items-center ">
-              {milestone.amount || 0}
+              {milestone.amount ? numberWithCommas(milestone.amount) : 0}
             </p>
-            {/* <input
-              type="text"
-              className="expert-reg-input"
-       
-              name="amount"
-              value={milestone.amount}
-              onChange={(e) => handleMilestoneChange(index, e)}
-            /> */}
           </div>
         </div>
       </div>
@@ -378,7 +371,7 @@ const page = ({ params }: any) => {
                       style={{ fontSize: "16px" }}
                       type="text"
                       className="col-span-2 expert-reg-input"
-                      name="duration"
+                      name="number"
                       value={editJobDetails?.duration?.number}
                       onChange={handleInputChange}
                     />
