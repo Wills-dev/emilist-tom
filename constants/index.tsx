@@ -3178,7 +3178,7 @@ export const reportLinks = [
   {
     id: 4,
     name: "Insights",
-    link: "/dashboard/report/insights",
+    link: "/dashboard/report?r=Insight",
   },
   {
     id: 5,

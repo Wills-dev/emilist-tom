@@ -8,6 +8,10 @@ import { buildingMaterials } from "@/constants";
 import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
+import {
+  formatInputTextNumberWithCommas,
+  removeCommas,
+} from "@/helpers/formatInputTextNumberWithCommas";
 
 export const useListNewMaterial = () => {
   const router = useRouter();
@@ -36,7 +40,10 @@ export const useListNewMaterial = () => {
     const { name, value } = e.target;
     setMaterialsDetails({
       ...materialDetails,
-      [name]: value,
+      [name]:
+        name === "price" || name === "quantity_available"
+          ? formatInputTextNumberWithCommas(value)
+          : value,
     });
   };
 
@@ -164,8 +171,8 @@ export const useListNewMaterial = () => {
         subCategory,
         brand,
         description,
-        availableQuantity: quantity_available,
-        price,
+        availableQuantity: removeCommas(quantity_available.toString()),
+        price: removeCommas(price.toString()),
         storeName: supplier,
         location,
         currency,
