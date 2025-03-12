@@ -1,11 +1,15 @@
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useRef, useState } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
 
 import toast from "react-hot-toast";
 
 import { AuthContext } from "@/utils/AuthState";
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction, toastOptions } from "@/helpers";
+import {
+  formatInputTextNumberWithCommas,
+  removeCommas,
+} from "@/helpers/formatInputTextNumberWithCommas";
 
 interface Milestone {
   milestoneId: string;
@@ -34,6 +38,12 @@ export const useApplyForBiddableJob = () => {
 
   const handleCancelBidModal = () => {
     setOpenBidModal(false);
+  };
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const maximumPrice = formatInputTextNumberWithCommas(value);
+    setMaxPrice(maximumPrice);
   };
 
   // Debounce check function
@@ -72,10 +82,12 @@ export const useApplyForBiddableJob = () => {
     const updatedPercentages = [...percentage];
     updatedPercentages[index] = value;
 
+    const maximumPrice = removeCommas(maxPrice.toString());
+
     setMilestones((prevMilestones) =>
       prevMilestones.map((milestone, i) =>
         i === index
-          ? { ...milestone, amount: (value / 100) * Number(maxPrice) }
+          ? { ...milestone, amount: (value / 100) * Number(maximumPrice) }
           : milestone
       )
     );
@@ -116,11 +128,12 @@ export const useApplyForBiddableJob = () => {
     }
 
     setBidLoading(true);
+    const maximumPrice = removeCommas(maxPrice.toString());
     try {
       const applyJobPayload = {
         jobId,
         type: "biddable",
-        maximumPrice: Number(maxPrice),
+        maximumPrice: Number(maximumPrice),
         milestones,
         businessId,
       };
@@ -151,5 +164,6 @@ export const useApplyForBiddableJob = () => {
     setMilestones,
     setPercentage,
     percentage,
+    handleChange,
   };
 };

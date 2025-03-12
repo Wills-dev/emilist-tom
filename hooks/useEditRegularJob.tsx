@@ -13,6 +13,11 @@ import {
 } from "@/helpers";
 import { JobDetails, Milestone, TimeFrame } from "@/types";
 import { validateMilestoneTimeFrames } from "@/types/validateTimeFrame";
+import {
+  formatInputTextNumber,
+  formatInputTextNumberWithCommas,
+  removeCommas,
+} from "@/helpers/formatInputTextNumberWithCommas";
 
 export const useEditRegularJob = () => {
   const { currentUser } = useContext(AuthContext);
@@ -86,13 +91,14 @@ export const useEditRegularJob = () => {
           ...prevJob,
           duration: {
             ...prevJob.duration,
-            [name]: name === "number" ? parseInt(value) : value,
+            [name]: name === "number" ? formatInputTextNumber(value) : value,
           },
         };
       }
       return {
         ...prevJob,
-        [name]: value,
+        [name]:
+          name === "budget" ? formatInputTextNumberWithCommas(value) : value,
       };
     });
   };
@@ -111,7 +117,8 @@ export const useEditRegularJob = () => {
           ...newMilestones[index],
           [parentField]: {
             ...(newMilestones[index][parentField] as TimeFrame),
-            [childField]: value,
+            [childField]:
+              childField === "number" ? formatInputTextNumber(value) : value,
           },
         };
       }
@@ -159,9 +166,10 @@ export const useEditRegularJob = () => {
     setEditJobDetails((prevJob) => {
       const updatedMilestones = [...prevJob.milestones];
       const budget = prevJob.budget ?? 0;
+      const actualBudget = removeCommas(budget.toString());
       updatedMilestones[index] = {
         ...updatedMilestones[index],
-        amount: (newPercentage / 100) * budget,
+        amount: (newPercentage / 100) * Number(actualBudget),
       };
       return {
         ...prevJob,
@@ -330,7 +338,7 @@ export const useEditRegularJob = () => {
         return;
       }
     }
-
+    const actualBudget = budget || 0;
     setLoad(true);
     try {
       const payload: any = {
@@ -342,7 +350,7 @@ export const useEditRegularJob = () => {
         type: "regular",
         expertLevel,
         duration,
-        budget,
+        budget: removeCommas(actualBudget.toString()),
         milestones,
         currency,
       };

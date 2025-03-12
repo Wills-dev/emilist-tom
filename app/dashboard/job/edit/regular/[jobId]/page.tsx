@@ -377,7 +377,7 @@ const page = ({ params }: any) => {
                       style={{ fontSize: "16px" }}
                       type="text"
                       className="col-span-2 expert-reg-input"
-                      name="duration"
+                      name="number"
                       value={editJobDetails?.duration?.number}
                       onChange={handleInputChange}
                     />

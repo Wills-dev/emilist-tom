@@ -10,6 +10,7 @@ import { Popconfirm, PopconfirmProps } from "antd";
 
 import Pagination from "react-responsive-pagination";
 
+import ReadMore from "../ReadMore/ReadMore";
 import DashboardLinks from "./DashboardLinks";
 
 import { AuthContext } from "@/utils/AuthState";
@@ -20,7 +21,6 @@ import { useBlackListJob } from "@/hooks/useBlackListJob";
 import { useFetchJobs } from "@/hooks/useFetchJobs";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 import { getCurrencySign } from "@/helpers/getCurrencySign";
-import ReadMore from "../ReadMore/ReadMore";
 
 const DashboardJobContent = () => {
   const { currentUser } = useContext(AuthContext);
@@ -40,6 +40,7 @@ const DashboardJobContent = () => {
     totalPages,
     currentPage,
     getAllJobs,
+    setIsLoading,
   } = useFetchJobs();
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
@@ -49,6 +50,14 @@ const DashboardJobContent = () => {
   useEffect(() => {
     getAllJobs();
   }, [rerender, unsaveRerenderr, rerenderrr]);
+
+  const handleSubmit = async (
+    e: React.FormEvent<HTMLFormElement>
+  ): Promise<void> => {
+    e.preventDefault();
+    setIsLoading(true);
+    await getAllJobs();
+  };
 
   return (
     <div className="col-span-7 max-lg:col-span-10 w-full bg-white p-6 rounded-lg max-sm:px-3">
@@ -71,8 +80,11 @@ const DashboardJobContent = () => {
               amet sint.
             </p>
           </div>
-          <div className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green  max-sm:py-1 shadow-lg">
-            <button type="submit" className="text-xl" onClick={getAllJobs}>
+          <form
+            onSubmit={handleSubmit}
+            className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green  max-sm:py-1 shadow-lg"
+          >
+            <button type="submit" className="text-xl">
               {" "}
               <CiSearch />
             </button>
@@ -84,7 +96,7 @@ const DashboardJobContent = () => {
               className="focus:outline-none max-md:text-14 w-full bg-white"
               style={{ fontSize: "16px" }}
             />
-          </div>
+          </form>
         </div>
       </div>
       <>

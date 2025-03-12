@@ -13,6 +13,11 @@ import {
 } from "@/helpers";
 import { JobDetails, Milestone, TimeFrame } from "@/types";
 import { validateMilestoneTimeFrames } from "@/types/validateTimeFrame";
+import {
+  formatInputTextNumber,
+  formatInputTextNumberWithCommas,
+  removeCommas,
+} from "@/helpers/formatInputTextNumberWithCommas";
 
 export const useEditDirectJob = () => {
   const { currentUser } = useContext(AuthContext);
@@ -77,10 +82,22 @@ export const useEditDirectJob = () => {
     >
   ) => {
     const { name, value } = e.target;
-    setEditJobDetails((prevJob: any) => ({
-      ...prevJob,
-      [name]: value,
-    }));
+    setEditJobDetails((prevJob) => {
+      if (name === "number" || name === "period") {
+        return {
+          ...prevJob,
+          duration: {
+            ...prevJob.duration,
+            [name]: name === "number" ? formatInputTextNumber(value) : value,
+          },
+        };
+      }
+      return {
+        ...prevJob,
+        [name]:
+          name === "budget" ? formatInputTextNumberWithCommas(value) : value,
+      };
+    });
   };
 
   const handleMilestoneInputChange = (
@@ -97,7 +114,8 @@ export const useEditDirectJob = () => {
           ...newMilestones[index],
           [parentField]: {
             ...(newMilestones[index][parentField] as TimeFrame),
-            [childField]: value,
+            [childField]:
+              childField === "number" ? formatInputTextNumber(value) : value,
           },
         };
       }
@@ -145,9 +163,10 @@ export const useEditDirectJob = () => {
     setEditJobDetails((prevJob) => {
       const updatedMilestones = [...prevJob.milestones];
       const budget = prevJob.budget ?? 0;
+      const actualBudget = removeCommas(budget.toString());
       updatedMilestones[index] = {
         ...updatedMilestones[index],
-        amount: (newPercentage / 100) * budget,
+        amount: (newPercentage / 100) * Number(actualBudget),
       };
       return {
         ...prevJob,
@@ -316,7 +335,7 @@ export const useEditDirectJob = () => {
         return;
       }
     }
-
+    const actualBudget = budget || 0;
     setLoad(true);
     try {
       const payload: any = {
@@ -328,7 +347,7 @@ export const useEditDirectJob = () => {
         type: "direct",
         expertLevel,
         duration,
-        budget,
+        budget: removeCommas(actualBudget.toString()),
         milestones,
         currency,
       };
