@@ -127,5 +127,6 @@ export const useFetchMaterials = () => {
     noOfReviews,
     setNoOfReviews,
     totalProducts,
+    setLoading,
   };
 };

@@ -87,6 +87,7 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
             link={`https://emilist.com/material/info/${materialId}`}
             textToCopy={link}
             title="Share material"
+            id={materialId}
           />
           <div className="flex-c sm:gap-8 gap-5 justify-end pb-5">
             <TooltipProvider>
@@ -140,7 +141,7 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger>
-                  <button onClick={() => compareMaterial(materialId)}>
+                  <span onClick={() => compareMaterial(materialId)}>
                     {!materialInfo?.isCompared ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -172,7 +173,7 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
                         <path d="M10.5 10.5a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963 5.23 5.23 0 0 0-3.434-1.279h-1.875a.375.375 0 0 1-.375-.375V10.5Z" />
                       </svg>
                     )}
-                  </button>
+                  </span>
                 </TooltipTrigger>
                 <TooltipContent>
                   <p>Compare material</p>
@@ -311,8 +312,10 @@ const MaterialInfo = ({ materialId }: MaterialInfoProps) => {
               )}
             </div>
           </section>
-          <OtherProductFromSeller />
-          <SimillarProducts />
+          <OtherProductFromSeller
+            supplierInfo={materialInfo?.product?.userId}
+          />
+          <SimillarProducts materialId={materialId} />
         </div>
       )}
     </div>

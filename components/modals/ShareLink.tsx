@@ -1,4 +1,7 @@
+import { useAddClicks } from "@/hooks/useAddClicks";
+import { AuthContext } from "@/utils/AuthState";
 import { Modal } from "antd";
+import { useContext } from "react";
 
 import {
   WhatsappShareButton,
@@ -19,6 +22,7 @@ interface ShareLinkProps {
   link: string;
   textToCopy: string;
   title: string;
+  id?: string;
 }
 
 const ShareLink = ({
@@ -27,7 +31,13 @@ const ShareLink = ({
   link,
   textToCopy,
   title,
+  id,
 }: ShareLinkProps) => {
+  const { currentUser } = useContext(AuthContext);
+  const userId = currentUser?._id;
+
+  const { addClicks } = useAddClicks();
+
   return (
     <Modal
       title={title}
@@ -37,24 +47,37 @@ const ShareLink = ({
     >
       <div className="py-4 share-referral">
         <EmailShareButton url={link} title={textToCopy}>
-          <button> Share on</button>
+          <span onClick={() => addClicks("shared", id || "", userId || null)}>
+            {" "}
+            Share on
+          </span>
           <EmailIcon />
         </EmailShareButton>
 
         <FacebookShareButton url={link} title={textToCopy}>
-          <button> Share on </button>
+          <span onClick={() => addClicks("shared", id || "", userId || null)}>
+            {" "}
+            Share on{" "}
+          </span>
           <FacebookIcon />
         </FacebookShareButton>
         <TwitterShareButton url={link} title={textToCopy}>
-          <button> Share on</button>
+          <span onClick={() => addClicks("shared", id || "", userId || null)}>
+            {" "}
+            Share on
+          </span>
           <TwitterIcon />
         </TwitterShareButton>
         <WhatsappShareButton url={link} title={textToCopy}>
-          <button>Share on</button>
+          <span onClick={() => addClicks("shared", id || "", userId || null)}>
+            Share on
+          </span>
           <WhatsappIcon />
         </WhatsappShareButton>
         <LinkedinShareButton url={link} title={textToCopy}>
-          <button>Share on</button>
+          <span onClick={() => addClicks("shared", id || "", userId || null)}>
+            Share on
+          </span>
           <LinkedinIcon />
         </LinkedinShareButton>
       </div>
