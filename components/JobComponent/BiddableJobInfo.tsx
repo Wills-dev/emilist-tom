@@ -12,6 +12,7 @@ import { useDeleteJob } from "@/hooks/useDeleteJob";
 import { useAcceptQuote } from "@/hooks/useAcceptQuote";
 import { useGetJobInfo } from "@/hooks/useGetJobInfo";
 import { useRequestQuote } from "@/hooks/useRequestQuote";
+import { getLevelValue } from "@/helpers/getLevelValue";
 import { useWithdrawApplication } from "@/hooks/useWithdrawApplication";
 import { useApplyForBiddableJob } from "@/hooks/useApplyForBiddableJob";
 import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
@@ -26,7 +27,6 @@ import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ApplyBiddableJobModal from "../modals/ApplyBiddableJobModal";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
-import { getLevelValue } from "@/helpers/getLevelValue";
 
 interface BiddableJobInfoProps {
   jobId: string;
