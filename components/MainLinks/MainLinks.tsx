@@ -6,8 +6,21 @@ import { CiSearch } from "react-icons/ci";
 
 import { landingPageLinks } from "@/constants";
 import { useActivePath } from "@/helpers/useActivePath";
+import { ChangeEvent } from "react";
 
-const MainLinks = () => {
+interface MainLinksProps {
+  search: string;
+  handleChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  title: string;
+  handleSubmit: (e: React.FormEvent<HTMLFormElement>) => Promise<void>;
+}
+
+const MainLinks = ({
+  search,
+  handleChange,
+  handleSubmit,
+  title,
+}: MainLinksProps) => {
   return (
     <section className="pt-28 w-full">
       <div className="padding-ctn  w-full">
@@ -33,7 +46,7 @@ const MainLinks = () => {
         <div className="flex md:items-end gap-10 max-md:flex-col">
           <div className="flex flex-col gap-4 flex-1">
             <h2 className="sm:text-4xl font-bold text-lg capitalize">
-              Explore Services Providers
+              {title}
             </h2>
             <p className="max-sm:text-sm">
               Amet minim mollit non deserunt ullamco est sit aliqua dolor do
@@ -41,7 +54,10 @@ const MainLinks = () => {
             </p>
           </div>
           <div className="flex-1 w-full flex justify-end">
-            <form className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green  max-sm:py-1 shadow-lg max-w-[500px]">
+            <form
+              onSubmit={handleSubmit}
+              className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green  max-sm:py-1 shadow-lg max-w-[500px]"
+            >
               <button type="submit" className="text-xl">
                 {" "}
                 <CiSearch />
@@ -50,8 +66,8 @@ const MainLinks = () => {
                 style={{ fontSize: "16px" }}
                 type="text"
                 placeholder="Search"
-                // value={search}
-                // onChange={handleChange}
+                value={search}
+                onChange={handleChange}
                 className="focus:outline-none max-md:text-14 w-full bg-white"
               />
             </form>
