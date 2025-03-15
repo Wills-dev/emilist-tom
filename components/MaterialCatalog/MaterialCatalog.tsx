@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 
 import { CiSearch } from "react-icons/ci";
-import { FaHeart, FaRegHeart } from "react-icons/fa";
 import Pagination from "react-responsive-pagination";
 
 import { Capitalize, numberWithCommas } from "@/helpers";
@@ -17,6 +16,7 @@ import { useUnsaveMaterial } from "@/hooks/useUnsaveMaterial";
 
 import StarRating from "../StarRating/StarRating";
 import MaterialFilter from "../MaterialFilter/MaterialFilter";
+import ReadMore from "../ReadMore/ReadMore";
 
 const MaterialCatalog = () => {
   const searchParams = useSearchParams();
@@ -139,22 +139,11 @@ const MaterialCatalog = () => {
                         >
                           {material?.name && Capitalize(material?.name)}
                         </Link>
-                        {material?.description &&
-                        material?.description.length > 200 ? (
-                          <p className="max-sm:text-sm">
-                            {material?.description.slice(0, 200)}...
-                            <Link
-                              href={`/material/info/${material.Id}`}
-                              className="underline text-primary-green text-xs"
-                            >
-                              Read more
-                            </Link>
-                          </p>
-                        ) : (
-                          <p className="max-sm:text-sm">
-                            {material?.description}
-                          </p>
-                        )}
+                        <ReadMore
+                          text={material?.description}
+                          maxLength={200}
+                          style="max-sm:text-sm"
+                        />
                         <div className="flex-c-b  sm:gap-4 gap-2 flex-wrap">
                           <div className="flex-c gap-1 max-sm:text-sm ">
                             <StarRating rating={4} />{" "}
@@ -213,14 +202,34 @@ const MaterialCatalog = () => {
                             className="block text-xl text-[#054753] cursor-pointer"
                             onClick={() => handleUnsaveMaterial(material._id)}
                           >
-                            <FaHeart />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              viewBox="0 0 24 24"
+                              fill="#054753"
+                              className="size-6"
+                            >
+                              <path d="m11.645 20.91-.007-.003-.022-.012a15.247 15.247 0 0 1-.383-.218 25.18 25.18 0 0 1-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.688 3A5.5 5.5 0 0 1 12 5.052 5.5 5.5 0 0 1 16.313 3c2.973 0 5.437 2.322 5.437 5.25 0 3.925-2.438 7.111-4.739 9.256a25.175 25.175 0 0 1-4.244 3.17 15.247 15.247 0 0 1-.383.219l-.022.012-.007.004-.003.001a.752.752 0 0 1-.704 0l-.003-.001Z" />
+                            </svg>
                           </span>
                         ) : (
                           <span
                             className="block text-xl cursor-pointer"
                             onClick={() => handleSaveMaterial(material._id)}
                           >
-                            <FaRegHeart />
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="#5E625F"
+                              className="size-6"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M21 8.25c0-2.485-2.099-4.5-4.688-4.5-1.935 0-3.597 1.126-4.312 2.733-.715-1.607-2.377-2.733-4.313-2.733C5.1 3.75 3 5.765 3 8.25c0 7.22 9 12 9 12s9-4.78 9-12Z"
+                              />
+                            </svg>
                           </span>
                         )}
                         <p className="sm:text-sm text-xs">Favourite</p>
