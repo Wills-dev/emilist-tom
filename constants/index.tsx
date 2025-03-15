@@ -90,17 +90,17 @@ export const footerLinks = [
 export const landingPageLinks = [
   {
     id: 1,
-    name: "Hire Workers",
+    name: "Service Providers",
     link: "/hire-experts",
   },
   {
     id: 2,
-    name: "Find Jobs",
+    name: "Job Opportunities",
     link: "/find-job",
   },
   {
     id: 3,
-    name: "Buy Materials",
+    name: "Materials",
     link: "/buy-materials",
   },
 ];
