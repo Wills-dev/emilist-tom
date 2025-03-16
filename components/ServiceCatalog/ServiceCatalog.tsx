@@ -70,6 +70,11 @@ const ServiceCatalog = () => {
     unsaveRerenderr,
   ]);
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await fetchBusinesses();
+  };
+
   return (
     <section className="py-28 max-lg:py-24 padding-x">
       <div className="flex md:items-end gap-10 max-md:flex-col">
@@ -83,17 +88,11 @@ const ServiceCatalog = () => {
           </p>
         </div>
         <div className="flex-1 w-full flex justify-end">
-          <div className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green  max-sm:py-1 shadow-lg max-w-[500px]">
-            <button
-              type="submit"
-              className="text-xl"
-              onClick={() => {
-                if (!search) {
-                  return;
-                }
-                fetchBusinesses();
-              }}
-            >
+          <form
+            onSubmit={handleSubmit}
+            className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green  max-sm:py-1 shadow-lg max-w-[500px]"
+          >
+            <button type="submit" className="text-xl">
               {" "}
               <CiSearch />
             </button>
@@ -105,7 +104,7 @@ const ServiceCatalog = () => {
               onChange={handleChange}
               className="focus:outline-none max-md:text-14 w-full bg-white"
             />
-          </div>
+          </form>
         </div>
       </div>
       {compareServices?.length > 0 && (
@@ -136,7 +135,7 @@ const ServiceCatalog = () => {
             setNoticePeriod={setNoticePeriod}
             fetchBusinesses={fetchBusinesses}
           />
-          <div className="col-span-7 pl-6">
+          <div className="col-span-7 max-lg:col-span-10 pl-6">
             {totalBuinesses > 0 ? (
               <h6 className="text-[#737774] text-sm mb-4">
                 {totalBuinesses} results found

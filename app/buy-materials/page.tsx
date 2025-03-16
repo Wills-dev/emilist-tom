@@ -80,7 +80,7 @@ const BuyMaterials = () => {
               setNoOfReviews={setNoOfReviews}
               getAllMaterials={getAllMaterials}
             />
-            <div className="col-span-7 pl-6">
+            <div className="col-span-7 pl-6 max-lg:col-span-10 ">
               {totalProducts > 0 ? (
                 <h6 className="text-[#737774] text-sm mb-4">
                   {totalProducts} results found
