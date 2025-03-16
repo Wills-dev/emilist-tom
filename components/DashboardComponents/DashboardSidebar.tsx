@@ -95,6 +95,11 @@ const DashboardSidebar = ({
                     </Link>
                   </li>
                   <li className="hover:text-green-600 duration-300 ">
+                    <Link href="/dashboard/job/direct-contract">
+                      Direct Contract
+                    </Link>
+                  </li>
+                  <li className="hover:text-green-600 duration-300 ">
                     <Link href="/dashboard/job">All listed jobs</Link>
                   </li>
                   <li className="hover:text-green-600 duration-300 ">
@@ -226,10 +231,10 @@ const DashboardSidebar = ({
             </AnimatePresence>
             <div>
               <Link
-                href="/dashboard/job/direct-contract"
+                href="/dashboard/planned-maintenance"
                 className="font-medium px-5 hover:text-green-600 duration-300 max-sm:text-sm flex-c gap-2"
               >
-                Direct Contract
+                Planned Maintenance
               </Link>
             </div>
           </div>

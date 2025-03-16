@@ -205,10 +205,10 @@ const DashboardNav = () => {
                 </div>
                 <div>
                   <Link
-                    href="/dashboard/job/direct-contract"
+                    href="/dashboard/planned-maintenance"
                     className="font-medium px-5 sm:py-2 py-1 home-nav max-sm:text-sm"
                   >
-                    Direct Contract
+                    Planned Maintenance
                   </Link>
                 </div>
               </div>

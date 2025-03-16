@@ -10,9 +10,9 @@ import ImageSix from "../../public/assets/images/Vector 264 (1).png";
 const MainSection = () => {
   return (
     <section className="pt-28 relative w-full">
-      <div className="w-full padding-ctn pt-6">
+      <div className="w-full padding-ctn">
         <div className="flex justify-between max-lg:flex-col md:gap-10 gap-6 md:border-1 md:p-6 border-gray-300 rounded-2xl">
-          <div className="flex lg:flex-col max-lg:justify-between gap-2">
+          <div className="flex lg:flex-col max-lg:justify-between max-lg:gap-2">
             <div className="">
               <Image
                 src={ImageOne}
@@ -73,7 +73,7 @@ const MainSection = () => {
               </div>
             </div>
           </div>
-          <div className="flex lg:flex-col max-lg:justify-between gap-2">
+          <div className="flex lg:flex-col max-lg:justify-between max-lg:gap-2">
             <div className="">
               <Image
                 src={ImageTwo}

@@ -27,6 +27,14 @@ const JobDropdown = ({ handleJobDropDown }: JobDropdownProps) => {
           </Link>
         </li>
         <li className="capitalize hover:text-primary-green duration-300">
+          <Link
+            href="/dashboard/job/direct-contract"
+            onClick={handleJobDropDown}
+          >
+            Direct contract
+          </Link>
+        </li>
+        <li className="capitalize hover:text-primary-green duration-300">
           <Link href="/dashboard/job" onClick={handleJobDropDown}>
             All listed jobs
           </Link>
