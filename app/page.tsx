@@ -1,14 +1,16 @@
-import EmilistExpertSection from "@/components/EmilistExpertSection/EmilistExpertSection";
-import HeroSection from "@/components/HeroSection/HeroSection";
 import MainLayout from "@/components/MainLayout/MainLayout";
-import PopularMaterials from "@/components/PopularMaterials/PopularMaterials";
-import PopularExperts from "@/components/PopularExperts/PopularExperts";
 import PopularJobs from "@/components/PopularJobs/PopularJobs";
+import MainSection from "@/components/MainSection/MainSection";
+import PopularExperts from "@/components/PopularExperts/PopularExperts";
+import MainCategories from "@/components/MainCategories/MainCategories";
+import PopularMaterials from "@/components/PopularMaterials/PopularMaterials";
+import EmilistExpertSection from "@/components/EmilistExpertSection/EmilistExpertSection";
 
 export default function Home() {
   return (
     <MainLayout>
-      <HeroSection currentLink={0} />
+      <MainSection />
+      <MainCategories />
       <PopularExperts />
       <PopularMaterials bgColor="bg-[#F7F7F7]" />
       <PopularJobs />
