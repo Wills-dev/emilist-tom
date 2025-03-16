@@ -1,4 +1,9 @@
 import { LevelType } from "@/types";
+import IconOne from "../public/assets/icons/Group 26932.svg";
+import IconTwo from "../public/assets/icons/Group 26932 (1).svg";
+import IconThree from "../public/assets/icons/Group 26932 (2).svg";
+import IconFour from "../public/assets/icons/Group 26932 (3).svg";
+import IconFive from "../public/assets/icons/Group 26932 (4).svg";
 
 export const category = [
   "Agriculture",
@@ -102,6 +107,39 @@ export const landingPageLinks = [
     id: 3,
     name: "Materials",
     link: "/buy-materials",
+  },
+];
+
+export const mainCategoriesLinks = [
+  {
+    id: 1,
+    name: "Service Providers",
+    link: "/hire-experts",
+    icon: IconOne,
+  },
+  {
+    id: 2,
+    name: "Job Opportunities",
+    link: "/find-job",
+    icon: IconTwo,
+  },
+  {
+    id: 3,
+    name: "Materials",
+    link: "/buy-materials",
+    icon: IconThree,
+  },
+  {
+    id: 4,
+    name: "Customized Service Request",
+    link: "/",
+    icon: IconFour,
+  },
+  {
+    id: 5,
+    name: "Planned Maintenance",
+    link: "/dashboard/planned-maintenance",
+    icon: IconFive,
   },
 ];
 

@@ -16,7 +16,7 @@ const PopularExperts = () => {
       <div className="padding-l-ctn">
         <div className="flex-c-b pr-6">
           <h2 className="text-3xl text-gray-900 font-bold max-md:text-xl ">
-            Popular services around you
+            Services around you
           </h2>
           <Link
             href="/dashboard/expert"
