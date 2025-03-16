@@ -5,7 +5,7 @@ import { mainCategoriesLinks } from "@/constants";
 
 const MainCategories = () => {
   return (
-    <section className="py-10 padding-ctn">
+    <section className="py-8 padding-ctn">
       <div className="flex-c justify-center">
         <div className="flex gap-4 overflow-x-auto hide-scrollbar">
           {mainCategoriesLinks?.map((data) => (
