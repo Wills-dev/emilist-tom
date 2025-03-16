@@ -72,7 +72,7 @@ const ServiceFilter = ({
   };
 
   return (
-    <div className="col-span-3 border-r-1">
+    <div className="col-span-3 border-r-1 max-lg:hidden">
       <h4 className="sm:text-2xl font-semibold pb-1 border-b-1 w-full">
         Filter
       </h4>

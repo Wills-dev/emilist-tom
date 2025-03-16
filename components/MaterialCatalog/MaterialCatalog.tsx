@@ -51,6 +51,11 @@ const MaterialCatalog = () => {
     getAllMaterials(material, locationQuery);
   }, [rerender, unsaveRerenderr, material, locationQuery]);
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    await getAllMaterials();
+  };
+
   return (
     <section className="py-28 max-lg:py-24 padding-x">
       {cartLoading && (
@@ -67,17 +72,11 @@ const MaterialCatalog = () => {
           </p>
         </div>
         <div className="flex-1 w-full flex justify-end">
-          <div className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green  max-sm:py-1 shadow-lg max-w-[500px]">
-            <button
-              type="submit"
-              className="text-xl"
-              onClick={() => {
-                if (!search) {
-                  return;
-                }
-                getAllMaterials();
-              }}
-            >
+          <form
+            onSubmit={handleSubmit}
+            className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green  max-sm:py-1 shadow-lg max-w-[500px]"
+          >
+            <button type="submit" className="text-xl">
               {" "}
               <CiSearch />
             </button>
@@ -89,7 +88,7 @@ const MaterialCatalog = () => {
               className="focus:outline-none max-md:text-14 w-full bg-white"
               style={{ fontSize: "16px" }}
             />
-          </div>
+          </form>
         </div>
       </div>
       {loading ? (
@@ -109,7 +108,7 @@ const MaterialCatalog = () => {
             setNoOfReviews={setNoOfReviews}
             getAllMaterials={getAllMaterials}
           />
-          <div className="col-span-7 pl-6">
+          <div className="col-span-7 max-lg:col-span-10 pl-6">
             {totalProducts > 0 ? (
               <h6 className="text-[#737774] text-sm mb-4">
                 {totalProducts} results found

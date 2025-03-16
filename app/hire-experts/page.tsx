@@ -98,7 +98,7 @@ const HireExperts = () => {
               setNoticePeriod={setNoticePeriod}
               fetchBusinesses={fetchBusinesses}
             />
-            <div className="col-span-7 pl-6">
+            <div className="col-span-7 max-lg:col-span-10 pl-6">
               {totalBuinesses > 0 ? (
                 <h6 className="text-[#737774] text-sm mb-4">
                   {totalBuinesses} results found
