@@ -109,7 +109,7 @@ const ListAllJobs = () => {
   return (
     <>
       <MainLinks
-        title="Explore Job Opportunities"
+        title={q || "Explore Job Opportunities"}
         search={search}
         handleChange={handleChange}
         handleSubmit={handleSubmit}

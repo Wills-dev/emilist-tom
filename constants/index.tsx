@@ -132,7 +132,7 @@ export const mainCategoriesLinks = [
   {
     id: 4,
     name: "Customized Service Request",
-    link: "/",
+    link: "/expert/private-expert",
     icon: IconFour,
   },
   {
