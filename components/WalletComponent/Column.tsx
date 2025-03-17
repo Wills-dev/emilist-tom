@@ -3,6 +3,9 @@ import { Button } from "@/components/ui/button";
 import { createColumnHelper } from "@tanstack/react-table";
 
 import { convertDateFormat, numberWithCommas } from "@/helpers";
+import { useContext } from "react";
+import { AuthContext } from "@/utils/AuthState";
+import { getCurrencySign } from "@/helpers/getCurrencySign";
 
 const columnHelper = createColumnHelper();
 
@@ -21,7 +24,7 @@ export const Column = [
     },
     cell: ({ row }) => {
       const date: Date = row.getValue("createdAt");
-      const formatted = convertDateFormat(date);
+      const formatted = date ? convertDateFormat(date) : "";
       return <div className="">{formatted}</div>;
     },
   }),
@@ -42,24 +45,38 @@ export const Column = [
     },
     cell: ({ row }) => {
       const state = row.getValue("type");
-      if (state === "CREDIT") {
-        return <div className=" text-green-400">{state}</div>;
+      const artisanId: any = (row?.original as any)?.recieverId;
+      const transactionType: any = (row?.original as any)?.serviceType;
+      const { currentUser } = useContext(AuthContext);
+      const userId = currentUser?._id;
+      if (userId === artisanId && transactionType === "Job") {
+        return <div className=" text-center text-green-400">CREDIT</div>;
+      } else if (state === "CREDIT") {
+        return (
+          <div className="text-center text-green-400">{state && state}</div>
+        );
       } else if (state === "DEBIT") {
-        return <div className=" text-red-400">{state}</div>;
+        return (
+          <div className=" text-center text-red-400">{state && state}</div>
+        );
       }
     },
   }),
-  columnHelper.accessor("currency", {
+  columnHelper.accessor("serviceType", {
     header: ({ column }) => {
       return (
         <Button
           variant="ghost"
           onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
         >
-          Currency
+          Service type
           <ArrowUpDown className="ml-2 h-4 w-4" />
         </Button>
       );
+    },
+    cell: ({ row }) => {
+      const type: any = row.getValue("serviceType");
+      return <div className="font-medium text-center">{type && type}</div>;
     },
   }),
   columnHelper.accessor("amount", {
@@ -76,27 +93,15 @@ export const Column = [
     },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
+      const currency: any = (row?.original as any)?.currency;
+      const currencySign = currency ? getCurrencySign(currency) : "";
       const formatted = numberWithCommas(amount);
-      return <div className="font-medium">{formatted}</div>;
-    },
-  }),
-
-  columnHelper.accessor("balanceAfter", {
-    header: ({ column }) => {
       return (
-        <Button
-          variant="ghost"
-          onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-        >
-          Balance After
-          <ArrowUpDown className="ml-2 h-4 w-4" />
-        </Button>
+        <div className="font-medium text-center">
+          {currencySign && currencySign}
+          {formatted && formatted}
+        </div>
       );
-    },
-    cell: ({ row }) => {
-      const amount = parseFloat(row.getValue("balanceAfter"));
-      const formatted = numberWithCommas(amount);
-      return <div className="font-medium">{formatted}</div>;
     },
   }),
 
