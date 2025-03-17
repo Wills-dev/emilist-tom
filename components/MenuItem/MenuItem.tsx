@@ -1,10 +1,24 @@
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { motion } from "framer-motion";
-
-import { category, privateExpert, serviceList } from "@/constants";
+import { category, serviceList } from "@/constants";
 
 const MenuItem = () => {
+  const router = useRouter();
+
+  const handleSearch = (service: string, type: string) => {
+    // Build the query string dynamically
+    const query = new URLSearchParams({
+      ...(service && { q: service.trim() }),
+    }).toString();
+    if (type === "service") {
+      router.push(`/catalog/services?${query}`);
+    } else {
+      router.push(`/find-job?${query}`);
+    }
+  };
+
   return (
     <motion.div
       initial={{ y: 20 }}
@@ -18,9 +32,12 @@ const MenuItem = () => {
         <ul className="flex flex-col gap-4">
           {category?.map((category, index) => (
             <li key={index} className="">
-              <Link href="/" className="text text-light-gray">
+              <span
+                className="text text-light-gray"
+                onClick={() => handleSearch(category, "job")}
+              >
                 {category}
-              </Link>
+              </span>
             </li>
           ))}
         </ul>
@@ -30,9 +47,12 @@ const MenuItem = () => {
         <ul className="flex flex-col gap-4">
           {serviceList?.map((service, index) => (
             <li key={index} className="">
-              <Link href="/" className="text text-light-gray">
+              <span
+                className="text text-light-gray"
+                onClick={() => handleSearch(service, "service")}
+              >
                 {service}
-              </Link>
+              </span>
             </li>
           ))}
         </ul>
@@ -40,13 +60,14 @@ const MenuItem = () => {
       <div className="flex flex-col gap-4 py-4">
         <h2 className="font-bold text-lighter-gray text-lg">Private Expert</h2>
         <ul className="flex flex-col gap-4">
-          {privateExpert?.map((expert, index) => (
-            <li key={index} className="">
-              <Link href={expert.url} className="text text-light-gray">
-                {expert.title}
-              </Link>
-            </li>
-          ))}
+          <li className="">
+            <Link
+              href="/expert/private-expert"
+              className="text text-light-gray"
+            >
+              Private expert
+            </Link>
+          </li>
         </ul>
       </div>
     </motion.div>

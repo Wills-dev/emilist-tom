@@ -24,7 +24,7 @@ const MainLinks = ({
   return (
     <section className="pt-28 w-full">
       <div className="padding-ctn  w-full">
-        <ul className="flex items-center w-full gap-6 my-5">
+        <ul className="flex items-center w-full sm:gap-6 gap-3 my-5">
           {landingPageLinks.map((link) => {
             const isActive = useActivePath(link?.link);
             return (
@@ -33,9 +33,9 @@ const MainLinks = ({
                   href={link.link}
                   className={`${
                     isActive
-                      ? "text-primary-green  border-b-primary-green border-b-1"
+                      ? "text-primary-green  border-b-primary-green border-b-1 "
                       : "text-gray-400"
-                  }  font-semibold hover:text-primary-green transition-all duration-300`}
+                  }  font-semibold hover:text-primary-green transition-all duration-300 max-sm:text-sm`}
                 >
                   {link.name}
                 </Link>

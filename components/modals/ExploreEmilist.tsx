@@ -1,11 +1,11 @@
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { Modal } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 
-import { category, serviceList } from "@/constants";
 import { fadeIn } from "@/anim";
-import { useRouter } from "next/navigation";
+import { category, serviceList } from "@/constants";
 
 interface ExploreEmilistProps {
   isOpen: boolean;

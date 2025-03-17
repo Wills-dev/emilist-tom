@@ -108,9 +108,9 @@ export const useHirePrivateExpert = () => {
         formData.append("image", selectedImage);
       }
 
-      availability?.forEach((entry) => {
-        formData.append(`availability[time]`, entry?.time);
-        formData.append(`availability[date]`, entry?.date);
+      availability?.forEach((entry, index) => {
+        formData.append(`availability[${index}][time]`, entry?.time);
+        formData.append(`availability[${index}][date]`, entry?.date);
       });
 
       await axiosInstance.post(`/expert/create-private-expert`, formData, {
