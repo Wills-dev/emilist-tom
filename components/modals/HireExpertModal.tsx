@@ -203,12 +203,12 @@ const HireExpertModal = ({
             </h2>
 
             {availability.map((entry, index) => (
-              <div key={index} className="flex-c gap-2 mb-4 py-2">
+              <div key={index} className="flex-c flex-wrap gap-2 mb-4 py-2">
                 <input
                   style={{ fontSize: "16px" }}
                   type="date"
                   value={entry.date}
-                  className="border rounded px-3 py-2 bg-[#ececec] focus:outline-none focus:border-primary-green"
+                  className="border rounded px-3 py-2 bg-gray-500 text-gray-100 focus:outline-none focus:border-primary-green"
                   onChange={(e) => handleInputChange(e, "date", index)}
                   min={formatDate(today)}
                   max={formatDate(maxDate)}
@@ -217,7 +217,7 @@ const HireExpertModal = ({
                   style={{ fontSize: "16px" }}
                   type="time"
                   value={entry.time}
-                  className="border rounded px-3 py-2 bg-[#ececec] focus:outline-none focus:border-primary-green"
+                  className="border rounded px-3 py-2 bg-gray-500 text-gray-100 focus:outline-none focus:border-primary-green"
                   onChange={(e) => handleInputChange(e, "time", index)}
                 />
                 <button
@@ -238,7 +238,7 @@ const HireExpertModal = ({
                   <input
                     style={{ fontSize: "16px" }}
                     type="date"
-                    className="expert-reg-input"
+                    className="expert-dark-reg-input"
                     onChange={(e) => {
                       const date = e.target.value;
                       if (!date) return;
@@ -268,7 +268,7 @@ const HireExpertModal = ({
                   <input
                     style={{ fontSize: "16px" }}
                     type="time"
-                    className="expert-reg-input"
+                    className="expert-dark-reg-input"
                     onChange={(e) => {
                       const time = e.target.value;
                       if (!time) return;

@@ -79,6 +79,10 @@ body {
   .expert-reg-input {
     @apply min-w-full w-full  max-w-full rounded-lg h-10 px-2 bg-lighter-gray focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm;
   }
+
+  .expert-dark-reg-input {
+    @apply min-w-full w-full  max-w-full rounded-lg h-10 px-2 text-gray-100 bg-gray-500 focus:outline-none focus:border-primary-green focus:border-1 max-sm:text-sm;
+  }
   .expert-reg-title {
     @apply text-3xl font-bold max-sm:text-2xl;
   }
