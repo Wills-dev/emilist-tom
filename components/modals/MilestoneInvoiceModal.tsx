@@ -19,6 +19,7 @@ const MilestoneInvoiceModal = ({
   return (
     <Modal open={isOpen} onCancel={onCancel} centered width={620} footer={null}>
       <div className="px-6 max-sm:px-3 py-10 w-full">
+        <div className="flex-c-b"></div>
         <h4 className="sm:text-lg  font-semibold">Milestone Invoice</h4>
         <div className="flex flex-col  mt-6 gap-8 w-full">
           <div className="flex items-center flex-wrap md:gap-3 gap-1 flex-1">

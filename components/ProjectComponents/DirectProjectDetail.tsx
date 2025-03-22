@@ -51,6 +51,8 @@ const DirectProjectDetail = ({ jobId }: DirectProjectDetailProps) => {
     setUpdateStatus((prev) => !prev);
   };
 
+  const isJobOwner = currentUser?._id === jobInfo?.userId?._id;
+
   const showPaymentDetails =
     currentMilestone?.paymentStatus === "paid" ||
     currentMilestone?.paymentStatus === "processing";
@@ -77,7 +79,7 @@ const DirectProjectDetail = ({ jobId }: DirectProjectDetailProps) => {
           {/* invoice web view */}
           {hasInvoice(jobInfo?.milestones) && (
             <div className="col-span-3 max-lg:hidden max-h-max">
-              <MilestoneInvoice jobInfo={jobInfo} />
+              <MilestoneInvoice jobInfo={jobInfo} isJobOwner={isJobOwner} />
             </div>
           )}
           <div className="col-span-9 max-lg:col-span-12 flex flex-col w-full bg-white rounded-lg py-10 ">
@@ -268,7 +270,7 @@ const DirectProjectDetail = ({ jobId }: DirectProjectDetailProps) => {
           {/* invoice mobile view */}
           {hasInvoice(jobInfo?.milestones) && (
             <div className="col-span-9 max-lg:col-span-12 lg:hidden max-h-max">
-              <MilestoneInvoice jobInfo={jobInfo} />
+              <MilestoneInvoice jobInfo={jobInfo} isJobOwner={isJobOwner} />
             </div>
           )}
         </div>

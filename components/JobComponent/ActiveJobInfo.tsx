@@ -76,6 +76,8 @@ const ActiveJobInfo = ({ jobId }: any) => {
     (milestone: any) => milestone.paymentStatus === "paid"
   );
 
+  const isJobOwner = currentUser?._id === jobInfo?.userId?._id;
+
   useEffect(() => {
     getJobInfo(jobId);
   }, [
@@ -109,7 +111,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
             />
             {hasInvoice(jobInfo?.milestones) && (
               <div className="col-span-3 max-lg:hidden max-h-max">
-                <MilestoneInvoice jobInfo={jobInfo} />
+                <MilestoneInvoice jobInfo={jobInfo} isJobOwner={isJobOwner} />
               </div>
             )}
             <div className="col-span-9 max-lg:col-span-12 flelx flex-col w-full bg-white rounded-[10px] py-10 ">
@@ -328,7 +330,7 @@ const ActiveJobInfo = ({ jobId }: any) => {
             {/* invoice mobile view */}
             {hasInvoice(jobInfo?.milestones) && (
               <div className="col-span-9 max-lg:col-span-12 lg:hidden max-h-max">
-                <MilestoneInvoice jobInfo={jobInfo} />
+                <MilestoneInvoice jobInfo={jobInfo} isJobOwner={isJobOwner} />
               </div>
             )}
           </div>

@@ -6,7 +6,7 @@ export const createCookie = (cookieName: string, cookieValue: any): void => {
   cookies.set(cookieName, cookieValue, {
     expires,
     path: "/",
-    sameSite: "strict",
+    sameSite: "lax",
     secure: true,
   });
 };
