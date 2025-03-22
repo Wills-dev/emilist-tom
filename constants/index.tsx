@@ -3253,6 +3253,8 @@ export const getStatusClass = (status: string) => {
       return "text-green-400 bg-green-100";
     case "rejected":
       return "text-red-400 bg-red-100";
+    case "processing":
+      return "text-blue-400 bg-blue-100";
     case "active":
       return "text-green-400 bg-green-100";
     case "paused":
