@@ -2,7 +2,6 @@ import { motion } from "framer-motion";
 
 import { DataTable } from "../DashboardComponents/DataTable";
 import { Column } from "./Column";
-import { allData } from "@/constants/dummy";
 
 interface WalletHistoryProps {
   loading: boolean;

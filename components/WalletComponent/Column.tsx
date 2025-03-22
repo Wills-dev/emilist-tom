@@ -118,20 +118,37 @@ export const Column = [
       );
     },
     cell: ({ row }) => {
-      const status = row.getValue("status");
-      if (status === "completed") {
-        return (
-          <div className="rounded-full text-green-400 bg-green-50 px-3 py-1 text-center w-32">
-            {status}
-          </div>
-        );
-      } else if (status === "pending") {
-        return (
-          <div className="rounded-full text-yellow-400 bg-yellow-50 px-3 py-1 text-center w-32">
-            {status}
-          </div>
-        );
-      }
+      const status = row.getValue("status") as string;
+      const artisanId = (row?.original as any)?.recieverId;
+      const transactionType = (row?.original as any)?.serviceType;
+      const { currentUser } = useContext(AuthContext);
+      const userId = currentUser?._id;
+
+      const statusStyles: Record<string, string> = {
+        completed: "text-green-400 bg-green-50",
+        pending: "text-yellow-400 bg-yellow-50",
+        processing:
+          transactionType === "Job" && userId !== artisanId
+            ? "text-green-400 bg-green-50"
+            : "text-blue-400 bg-blue-50",
+      };
+      console.log("status", status);
+      const displayText =
+        status === "processing" &&
+        transactionType === "Job" &&
+        userId !== artisanId
+          ? "completed"
+          : status || "pending";
+
+      return (
+        <div
+          className={`rounded-full px-3 py-1 text-center w-32 ${
+            statusStyles[status] || "text-yellow-400 bg-yellow-50"
+          }`}
+        >
+          {displayText}
+        </div>
+      );
     },
   }),
 
