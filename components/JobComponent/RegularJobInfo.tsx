@@ -18,14 +18,14 @@ import { Capitalize, formatCreatedAt, numberWithCommas } from "@/helpers";
 import { useUpdateApplicationStatus } from "@/hooks/useUpdateApplicationStatus";
 
 import AboutJobOwner from "./AboutJobOwner";
-import QuoteModal from "../modals/QuoteModal";
-import PromoteModal from "../modals/PromoteModal";
 import RegularApplicants from "./RegularApplicants";
 import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
 import AddQoute from "./AddQoute";
 import RegularServiceModal from "../modals/RegularServiceModal";
+import { usePromote } from "@/hooks/usePromote";
+import PromoModal from "../modals/PromoModal";
 
 interface RegularJobInfoProps {
   jobId: string;
@@ -37,7 +37,6 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [openServiceModal, setOpenServiceModal] = useState(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
-  const [isPromoModalOpen, setIsPromoModalOpen] = useState<boolean>(false);
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -52,6 +51,21 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
     isWithdrawLoading,
     handleWithdrawApplicationFofJob,
   } = useWithdrawApplication();
+
+  const {
+    expectedClicks,
+    setExpectedClicks,
+    target,
+    setTarget,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    isLoad,
+    handlePromote,
+    isOpen,
+    setIsOpen,
+  } = usePromote();
 
   const { updateApplicationStatus, loadingAccept, acceptRerender } =
     useUpdateApplicationStatus();
@@ -89,7 +103,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
   );
 
   const onCancelPromoModal = () => {
-    setIsPromoModalOpen(false);
+    setIsOpen(false);
   };
 
   useEffect(() => {
@@ -202,7 +216,7 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                   <div className="flex items-center gap-3">
                     <button
                       className="text-primary-green  font-medium max-sm:text-sm py-2 underline"
-                      onClick={() => setIsPromoModalOpen(true)}
+                      onClick={() => setIsOpen(true)}
                     >
                       Promote
                     </button>
@@ -212,9 +226,21 @@ const RegularJobInfo = ({ jobId }: RegularJobInfoProps) => {
                     >
                       Insight
                     </Link>
-                    <PromoteModal
-                      isOpen={isPromoModalOpen}
+                    <PromoModal
                       onCancel={onCancelPromoModal}
+                      isOpen={isOpen}
+                      expectedClicks={expectedClicks}
+                      setExpectedClicks={setExpectedClicks}
+                      target={target}
+                      setTarget={setTarget}
+                      startDate={startDate}
+                      setStartDate={setStartDate}
+                      endDate={endDate}
+                      setEndDate={setEndDate}
+                      isLoad={isLoad}
+                      handlePromote={handlePromote}
+                      type="job"
+                      id={jobId}
                     />
                   </div>
                 )}

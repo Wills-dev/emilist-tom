@@ -32,6 +32,7 @@ const DashboardLeadContent = () => {
     handlePageChange,
     totalPages,
     currentPage,
+    errMsg,
   } = useGetLeads();
 
   const cancel: PopconfirmProps["onCancel"] = (e) => {
@@ -85,7 +86,22 @@ const DashboardLeadContent = () => {
         ) : (
           <>
             {leads?.length < 1 ? (
-              <p className="py-2">No lead listed</p>
+              <>
+                {errMsg ? (
+                  <p className="py-2">
+                    Upgrade you plan{" "}
+                    <Link
+                      href="/dashboard/subscription/plans"
+                      className="text-primary-green"
+                    >
+                      Here
+                    </Link>{" "}
+                    to access leads.
+                  </p>
+                ) : (
+                  <p className="py-2">No lead listed</p>
+                )}
+              </>
             ) : (
               <>
                 {leads?.length < 1 && search ? (

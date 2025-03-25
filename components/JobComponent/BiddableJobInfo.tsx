@@ -27,6 +27,8 @@ import LoadingOverlay from "../LoadingOverlay/LoadingOverlay";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import ApplyBiddableJobModal from "../modals/ApplyBiddableJobModal";
 import ActionDropdown from "../DashboardComponents/ActionDropdown";
+import PromoModal from "../modals/PromoModal";
+import { usePromote } from "@/hooks/usePromote";
 
 interface BiddableJobInfoProps {
   jobId: string;
@@ -38,7 +40,6 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
   const [openChat, setOpenChat] = useState(false);
   const [openModal, setOpenModal] = useState<boolean>(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
-  const [isPromoModalOpen, setIsPromoModalOpen] = useState<boolean>(false);
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
 
   const { handleDeleteJob, isDeleteLoading } = useDeleteJob();
@@ -70,6 +71,21 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
     percentage,
     handleChange,
   } = useApplyForBiddableJob();
+
+  const {
+    expectedClicks,
+    setExpectedClicks,
+    target,
+    setTarget,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    isLoad,
+    handlePromote,
+    isOpen,
+    setIsOpen,
+  } = usePromote();
 
   const toggleActionButton = () => {
     setShowActionDropdown((prev) => !prev);
@@ -103,7 +119,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
   );
 
   const onCancelPromoModal = () => {
-    setIsPromoModalOpen(false);
+    setIsOpen(false);
   };
 
   const handleOpen = () => {
@@ -206,7 +222,7 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                     <div className="flex-c gap-3">
                       <button
                         className="text-primary-green font-medium max-sm:text-sm py-2  underline"
-                        onClick={() => setIsPromoModalOpen(true)}
+                        onClick={() => setIsOpen(true)}
                       >
                         Promote
                       </button>
@@ -216,9 +232,21 @@ const BiddableJobInfo = ({ jobId }: BiddableJobInfoProps) => {
                       >
                         Insight
                       </Link>
-                      <PromoteModal
-                        isOpen={isPromoModalOpen}
+                      <PromoModal
                         onCancel={onCancelPromoModal}
+                        isOpen={isOpen}
+                        expectedClicks={expectedClicks}
+                        setExpectedClicks={setExpectedClicks}
+                        target={target}
+                        setTarget={setTarget}
+                        startDate={startDate}
+                        setStartDate={setStartDate}
+                        endDate={endDate}
+                        setEndDate={setEndDate}
+                        isLoad={isLoad}
+                        handlePromote={handlePromote}
+                        type="job"
+                        id={jobId}
                       />
                     </div>
                   )}

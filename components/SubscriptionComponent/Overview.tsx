@@ -8,6 +8,8 @@ import SubscriptionToggle from "./SubscriptionToggle";
 
 import { convertDateFormat, numberWithCommas } from "@/helpers";
 import { useGetUserSubscriptionPlan } from "@/hooks/useGetUserSubscriptionPlan";
+import { DataTable } from "../DashboardComponents/DataTable";
+import { Column } from "@/app/dashboard/subscription/overview/Column";
 
 const reviewWorkers = [1, 2, 3, 4, 5];
 
@@ -121,6 +123,9 @@ const Overview = () => {
           </div>
           <div className="w-full mt-6">
             <h6 className="sm:text-lg font-semibold">Invoice</h6>
+            {/* <div className="w-full">
+              <DataTable columns={Column} data={reviewWorkers} searchValue="" />
+            </div> */}
             <div className="flex flex-col gap-6 w-full mt-4">
               {reviewWorkers.slice(0, 5).map((star, index) => (
                 <div
