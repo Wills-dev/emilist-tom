@@ -57,6 +57,9 @@ export const useCreatePlannedMaintenance = () => {
     milestonesnumber: 1,
     maintenanceFrequency: "",
     numberOfTimes: 1,
+    frequency: "",
+    stateDate: "",
+    endDate: "",
   });
 
   const updateMilestonesData = (
@@ -441,6 +444,9 @@ export const useCreatePlannedMaintenance = () => {
           milestonesnumber: 1,
           maintenanceFrequency: "",
           numberOfTimes: 1,
+          frequency: "",
+          stateDate: "",
+          endDate: "",
         });
         setLocation("");
         setSelectedImageFiles([]);

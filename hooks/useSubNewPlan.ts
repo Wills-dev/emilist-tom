@@ -51,9 +51,7 @@ export const useSubNewPlan = () => {
       }
 
       if (payload.paymentMethod === "Wallet" && data?.message === "success") {
-        router.push(
-          "https://emilist-tom.netlify.app/dashboard/transactions/status?status=success"
-        );
+        router.push("https://emilist-tom.netlify.app/status?status=success");
       }
     } catch (error) {
       console.log("error creating subscrip[tion plan", error);
