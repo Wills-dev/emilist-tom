@@ -132,7 +132,7 @@ export const Column = [
             ? "text-green-400 bg-green-50"
             : "text-blue-400 bg-blue-50",
       };
-      console.log("status", status);
+
       const displayText =
         status === "processing" &&
         transactionType === "Job" &&
