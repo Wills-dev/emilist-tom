@@ -34,6 +34,10 @@ export const useCreatePlannedMaintenance = () => {
   const [debouncedValue, setDebouncedValue] = useState<string>("");
   const [selectedImages, setSelectedImages] = useState<string[]>([]);
   const [selectedImageFiles, setSelectedImageFiles] = useState<File[]>([]);
+  const [reminders, setReminders] = useState<number[]>([1]);
+  const [startDate, setStartDate] = useState<string>("");
+  const [endDate, setEndDate] = useState<string>("");
+  const [frequency, setFrequency] = useState("");
   const [milestonesData, setMilestonesData] = useState<MilestonePer[]>([
     {
       duration: "",
@@ -57,10 +61,36 @@ export const useCreatePlannedMaintenance = () => {
     milestonesnumber: 1,
     maintenanceFrequency: "",
     numberOfTimes: 1,
-    frequency: "",
-    stateDate: "",
-    endDate: "",
   });
+
+  const handleReminderChange = (index: number, value: number) => {
+    if (reminders.includes(value)) {
+      toast.error("Day has already been selected!", toastOptions);
+      return;
+    }
+    const updatedReminders = [...reminders];
+    updatedReminders[index] = value;
+    setReminders(updatedReminders);
+  };
+
+  const addReminder = () => {
+    if (reminders.length < 3) {
+      setReminders([...reminders, 1]);
+    }
+  };
+
+  const removeReminder = (index: number) => {
+    if (reminders.length > 1) {
+      setReminders(reminders.filter((_, i) => i !== index));
+    }
+  };
+
+  const handleStartDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setStartDate(e.target.value);
+    if (endDate && new Date(e.target.value) > new Date(endDate)) {
+      setEndDate("");
+    }
+  };
 
   const updateMilestonesData = (
     value: string | number,
@@ -253,7 +283,10 @@ export const useCreatePlannedMaintenance = () => {
       !plannedMaintenance.budget ||
       !location ||
       !plannedMaintenance.expertLevel ||
-      !plannedMaintenance.milestonesnumber
+      !plannedMaintenance.milestonesnumber ||
+      !frequency ||
+      !startDate ||
+      !endDate
     ) {
       return true;
     }
@@ -385,6 +418,10 @@ export const useCreatePlannedMaintenance = () => {
           duration: properProjectDuration,
           milestones: transformedData,
           achievementDetails: "gg",
+          frequency,
+          startDate,
+          endDate,
+          reminderDates: reminders,
         };
 
         const formData = new FormData();
@@ -398,10 +435,12 @@ export const useCreatePlannedMaintenance = () => {
         formData.append("location", payload.location);
         formData.append("expertLevel", payload.expertLevel);
         formData.append("budget", payload.budget);
-        formData.append("type", "direct");
         formData.append("achievementDetails", payload.achievementDetails);
         formData.append("currency", payload.currency);
         formData.append("artisan", payload?.invite);
+        formData.append("frequency", payload?.frequency);
+        formData.append("startDate", payload?.startDate);
+        formData.append("endDate", payload?.endDate);
 
         payload.milestones.forEach((milestone: any, index: number) => {
           formData.append(
@@ -419,11 +458,15 @@ export const useCreatePlannedMaintenance = () => {
           formData.append(`milestones[${index}][amount]`, milestone.amount);
         });
 
+        payload?.reminderDates.forEach((reminder: any, index: number) => {
+          formData.append(`reminderDates[${index}][day]`, reminder);
+        });
+
         for (let i = 0; i < selectedImageFiles.length; i++) {
           formData.append("files", selectedImageFiles[i]);
         }
 
-        await axiosInstance.post(`/jobs/create-job`, formData, {
+        await axiosInstance.post(`/jobs/create-recurring-job`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -444,10 +487,8 @@ export const useCreatePlannedMaintenance = () => {
           milestonesnumber: 1,
           maintenanceFrequency: "",
           numberOfTimes: 1,
-          frequency: "",
-          stateDate: "",
-          endDate: "",
         });
+        setFrequency("");
         setLocation("");
         setSelectedImageFiles([]);
         setSelectedImages([]);
@@ -485,5 +526,15 @@ export const useCreatePlannedMaintenance = () => {
     setLocation,
     nextPage,
     setNextPage,
+    handleStartDateChange,
+    removeReminder,
+    addReminder,
+    handleReminderChange,
+    endDate,
+    setEndDate,
+    startDate,
+    reminders,
+    frequency,
+    setFrequency,
   };
 };

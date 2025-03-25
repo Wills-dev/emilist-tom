@@ -86,9 +86,7 @@ export const useConfirmPayment = () => {
         paymentData.paymentMethod === "Wallet" &&
         data?.message === "success"
       ) {
-        router.push(
-          "https://emilist-tom.netlify.app/status?status=success"
-        );
+        router.push("https://emilist-tom.netlify.app/status?status=success");
       }
       setOpenPaymentModal(false);
     } catch (error: any) {
