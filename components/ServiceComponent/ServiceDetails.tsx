@@ -13,15 +13,29 @@ import { useDeleteService } from "@/hooks/useDeleteService";
 import ConfirmAction from "../DashboardComponents/ConfirmAction";
 import PromoModal from "../modals/PromoModal";
 import { getCurrencySign } from "@/helpers/getCurrencySign";
+import { usePromote } from "@/hooks/usePromote";
 
 interface ServiceDetailsProps {
   serviceId: string;
 }
 
 const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
-  const [isOpen, setIsOpen] = useState(false);
   const [showActionDropdown, setShowActionDropdown] = useState(false);
   const [openConfirmActionModal, setOpenConfirmActionModal] = useState(false);
+  const {
+    expectedClicks,
+    setExpectedClicks,
+    target,
+    setTarget,
+    startDate,
+    setStartDate,
+    endDate,
+    setEndDate,
+    isLoad,
+    handlePromote,
+    isOpen,
+    setIsOpen,
+  } = usePromote();
 
   const { loading, getServiceInfo, serviceInfo } = useGetServiceInfo();
   const { handleDeleteService, isDeleteLoading } = useDeleteService();
@@ -102,7 +116,22 @@ const ServiceDetails = ({ serviceId }: ServiceDetailsProps) => {
                 >
                   Promote
                 </button>
-                <PromoModal onCancel={onCancel} isOpen={isOpen} />
+                <PromoModal
+                  onCancel={onCancel}
+                  isOpen={isOpen}
+                  expectedClicks={expectedClicks}
+                  setExpectedClicks={setExpectedClicks}
+                  target={target}
+                  setTarget={setTarget}
+                  startDate={startDate}
+                  setStartDate={setStartDate}
+                  endDate={endDate}
+                  setEndDate={setEndDate}
+                  isLoad={isLoad}
+                  handlePromote={handlePromote}
+                  type="service"
+                  id={serviceId}
+                />
               </div>
             </div>
             <div className="w-full border-b-1 border-[#B8B9B8] px-10 max-sm:px-5 py-6 ">

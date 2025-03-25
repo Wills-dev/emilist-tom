@@ -1,10 +1,11 @@
-import { ChangeEvent, useEffect, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import { axiosInstance } from "@/axiosInstance/baseUrls";
 import { promiseErrorFunction } from "@/helpers";
 
 export const useGetLeads = () => {
   const [leads, setLeads] = useState<any>([]);
+  const [errMsg, setErrMsg] = useState(false);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -46,8 +47,15 @@ export const useGetLeads = () => {
 
       setTotalPages(totalPages);
     } catch (error: any) {
+      if (
+        error?.response?.data?.message ===
+        "Basic subscription does not include the ability to fetch leads."
+      ) {
+        setErrMsg(true);
+        return;
+      }
       promiseErrorFunction(error);
-      console.log("error fetching all product", error);
+      console.log("error fetching all leads", error);
     } finally {
       setIsLoading(false);
     }
@@ -68,5 +76,6 @@ export const useGetLeads = () => {
     filterService,
     setFilterName,
     setFilterService,
+    errMsg,
   };
 };
