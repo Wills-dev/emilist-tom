@@ -8,6 +8,7 @@ import { useJsApiLoader, StandaloneSearchBox } from "@react-google-maps/api";
 import { category, levels, serviceList } from "@/constants";
 import { handleKeyDown, handleWheel, numberWithCommas } from "@/helpers";
 import { useCreatePlannedMaintenance } from "@/hooks/useCreatePlannedMaintenance";
+
 import RecurringSchedule from "../RecurringShedule/RecurringSchedule";
 
 const PlannedMaintenanceForm = () => {
@@ -27,6 +28,16 @@ const PlannedMaintenanceForm = () => {
     setLocation,
     nextPage,
     setNextPage,
+    handleStartDateChange,
+    removeReminder,
+    addReminder,
+    handleReminderChange,
+    endDate,
+    setEndDate,
+    startDate,
+    reminders,
+    frequency,
+    setFrequency,
   } = useCreatePlannedMaintenance();
 
   const googleMapsApiKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_API_KEY;
@@ -570,9 +581,16 @@ const PlannedMaintenanceForm = () => {
             {nextPage === 2 && (
               <RecurringSchedule
                 loading={loading}
-                setPlannedMaintenance={setPlannedMaintenance}
-                plannedMaintenance={PlannedMaintenanceForm}
-                handleChange={handleChange}
+                handleStartDateChange={handleStartDateChange}
+                removeReminder={removeReminder}
+                addReminder={addReminder}
+                handleReminderChange={handleReminderChange}
+                endDate={endDate}
+                setEndDate={setEndDate}
+                startDate={startDate}
+                reminders={reminders}
+                frequency={frequency}
+                setFrequency={setFrequency}
               />
             )}
           </form>
