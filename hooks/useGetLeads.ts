@@ -23,8 +23,7 @@ export const useGetLeads = () => {
   };
 
   const getLeads = async () => {
-    let url = `/jobs/leads?page=${currentPage}&limit=10
-    }`;
+    let url = `/jobs/leads?page=${currentPage}&limit=10`;
 
     if (search) {
       url += `&search=${search}`;
