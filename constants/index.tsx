@@ -113,7 +113,7 @@ export const landingPageLinks = [
 export const mainCategoriesLinks = [
   {
     id: 1,
-    name: "Service Providers",
+    name: "Hire Workers",
     link: "/hire-experts",
     icon: IconOne,
   },
@@ -125,7 +125,7 @@ export const mainCategoriesLinks = [
   },
   {
     id: 3,
-    name: "Materials",
+    name: "Buy Materials",
     link: "/buy-materials",
     icon: IconThree,
   },
