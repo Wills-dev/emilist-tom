@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import SpeechRecognition, { useSpeechRecognition } from "react-speech-recognition";
 import "./VoiceSearch.css";
+import Image from "next/image";
 
 interface VoiceSearchProps {
   onResult: (query: string) => void;
@@ -26,7 +27,11 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
 }) => {
   const [isListening, setIsListening] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const statusRef = useRef<HTMLDivElement>(null);
+  const processingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const silenceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastTranscriptRef = useRef<string>("");
   
   const {
     transcript,
@@ -39,7 +44,30 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
   useEffect(() => {
     if (!browserSupportsSpeechRecognition) {
       console.error("Browser doesn't support speech recognition");
+      showStatus("Your browser doesn't support speech recognition", 3000);
+      return;
     }
+
+    navigator.mediaDevices.getUserMedia({ audio: true })
+      .then(() => {
+        setHasPermission(true);
+        startContinuousListening();
+      })
+      .catch((error) => {
+        console.error("Microphone permission error:", error);
+        setHasPermission(false);
+        showStatus("Please allow microphone access for voice search", 5000);
+      });
+
+    return () => {
+      if (processingTimeoutRef.current) {
+        clearTimeout(processingTimeoutRef.current);
+      }
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+      }
+      SpeechRecognition.stopListening();
+    };
   }, [browserSupportsSpeechRecognition]);
 
   useEffect(() => {
@@ -48,14 +76,8 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     }
   }, [listening, isListening]);
 
-  const startListening = async () => {
-    if (!browserSupportsSpeechRecognition) {
-      showStatus("Your browser doesn't support speech recognition", 3000);
-      return;
-    }
-
-    if (!isMicrophoneAvailable) {
-      showStatus("Microphone access is denied. Please enable it in your browser settings.", 3000);
+  const startContinuousListening = async () => {
+    if (!browserSupportsSpeechRecognition || !hasPermission) {
       return;
     }
 
@@ -64,7 +86,11 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     showStatus("Listening...");
     
     try {
-      await SpeechRecognition.startListening({ continuous: false, language: "en-US" });
+      await SpeechRecognition.startListening({ 
+        continuous: true, 
+        language: "en-US" 
+      });
+      console.log("Started continuous listening");
     } catch (error) {
       console.error("Error starting voice recognition:", error);
       showStatus("Error starting voice recognition", 3000);
@@ -86,15 +112,26 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       }, duration);
     }
   };
-
+  
   useEffect(() => {
-    if (!listening && transcript) {
-      processTranscript(transcript);
+    if (transcript && transcript !== lastTranscriptRef.current) {
+      lastTranscriptRef.current = transcript;
+      
+      if (silenceTimeoutRef.current) {
+        clearTimeout(silenceTimeoutRef.current);
+      }
+      
+      silenceTimeoutRef.current = setTimeout(() => {
+        processTranscript(transcript);
+      }, 1500); // 1.5 second silence threshold
     }
-  }, [listening, transcript]);
+  }, [transcript]);
 
   const processTranscript = async (text: string) => {
     if (!text.trim()) return;
+    
+    resetTranscript();
+    lastTranscriptRef.current = "";
     
     showStatus("Processing your search...");
     
@@ -131,6 +168,10 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       if (isEmiCommand && data.isEmiCommand && data.detectedCategory && onEmiCommand) {
         onEmiCommand(enhancedQuery, data.detectedCategory);
         showStatus(`Processing command for ${data.detectedCategory}...`, 3000);
+        
+        setTimeout(() => {
+          startContinuousListening();
+        }, 5000);
         return;
       }
       
@@ -144,6 +185,10 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       onResult(enhancedQuery);
       
       showStatus(`Searching for: ${enhancedQuery}`, 3000);
+      
+      setTimeout(() => {
+        startContinuousListening();
+      }, 5000);
     } catch (error) {
       console.error("Error enhancing search query:", error);
       
@@ -157,25 +202,31 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       onResult(text);
       
       showStatus(`Searching for: ${text}`, 3000);
+      
+      setTimeout(() => {
+        startContinuousListening();
+      }, 5000);
     }
   };
 
   return (
     <>
-      <button
-        className={`voice-search-button ${isListening ? "listening" : ""}`}
-        onClick={isListening ? stopListening : startListening}
-        aria-label="Search by voice"
-        title="Search by voice"
+      <div
+        className={`voice-search-indicator ${isListening ? "listening" : ""}`}
+        aria-label="Voice search is active"
+        title="Voice search is active"
         style={{
-          backgroundColor: isListening ? activeColor : buttonColor,
+          backgroundColor: isListening ? activeColor : "transparent",
         }}
       >
-        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white">
-          <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z"/>
-          <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z"/>
-        </svg>
-      </button>
+        <Image
+          src="/assets/icons/Group 26929.svg"
+          width={32}
+          height={32}
+          alt="AI assistant"
+          className="bot-icon"
+        />
+      </div>
       
       {statusMessage && (
         <div 
@@ -183,6 +234,12 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
           className="voice-search-status"
         >
           {statusMessage}
+        </div>
+      )}
+      
+      {hasPermission === false && (
+        <div className="permission-prompt">
+          Allow microphone access for voice search
         </div>
       )}
     </>
