@@ -1,9 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 import { CiLocationOn, CiSearch } from "react-icons/ci";
+import VoiceSearch from "../VoiceSearch/VoiceSearch";
 
 interface HeroSectionSearchProps {
   currentLink: number;
@@ -13,6 +14,7 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
   const [location, setLocation] = useState<string>("");
   const [serviceName, setServiceName] = useState<string>("");
   const router = useRouter();
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   const handleSearch = (e: any) => {
     e.preventDefault();
@@ -34,9 +36,25 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
       router.push(`/catalog/services?${query}`);
     }
   };
+  
+  const handleVoiceSearchResult = (result: string) => {
+    setServiceName(result);
+    if (result.trim()) {
+      const query = new URLSearchParams({
+        q: result.trim(),
+        ...(location && { location: location.trim() }),
+      }).toString();
+
+      if (currentLink === 3) {
+        router.push(`/catalog/materials?${query}`);
+      } else {
+        router.push(`/catalog/services?${query}`);
+      }
+    }
+  };
   return (
     <form
-      className="w-full max-w-full flex-c-b mb-10 shadow-lg max-lg:max-w-[770px] h-12"
+      className="w-full max-w-full flex-c-b mb-10 shadow-lg max-lg:max-w-[770px] h-12 relative"
       onSubmit={(e) => handleSearch(e)}
     >
       <div className="gap-2 flex-1 flex-c px-2 rounded-l-lg  border-light-gray border-1 focus-within:border-primary-green h-full  max-lg:h-12 ">
@@ -44,6 +62,7 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
           <CiSearch />
         </span>
         <input
+          ref={searchInputRef}
           style={{ fontSize: "16px" }}
           type="text"
           placeholder="Enter Keyword"
@@ -67,6 +86,13 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
           />
         </div>
       </div>
+      
+      <VoiceSearch 
+        onResult={handleVoiceSearchResult}
+        searchInputRef={searchInputRef}
+        buttonColor="#4caf50"
+        activeColor="#ea4335"
+      />
 
       <button
         type="submit"
