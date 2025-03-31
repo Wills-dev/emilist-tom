@@ -1,7 +1,22 @@
 import { NextRequest, NextResponse } from "next/server";
 
-function localEnhanceQuery(query: string, categories: string[]) {
+function localEnhanceQuery(query: string, categories: string[], isEmiCommand: boolean = false) {
   const q = query.toLowerCase();
+  
+  const emiCommandRegex = /(?:emi|emmy|emmi)(?:,)?\s+(?:look|search|find|get)\s+(?:for|me)?\s+(?:a|an)?\s+(.+)/i;
+  const matches = q.match(emiCommandRegex);
+  
+  if (isEmiCommand || matches) {
+    const serviceType = matches ? matches[1].trim() : q;
+    
+    const detectedCategory = extractServiceType(serviceType) || detectServiceCategory(serviceType, categories);
+    
+    return {
+      enhancedQuery: serviceType,
+      isEmiCommand: true,
+      detectedCategory
+    };
+  }
   
   const fillerWords = [
     'um', 'uh', 'like', 'so', 'basically', 'actually', 
@@ -23,7 +38,23 @@ function localEnhanceQuery(query: string, categories: string[]) {
     enhancedQuery = `${detectedCategory} ${enhancedQuery}`;
   }
   
-  return enhancedQuery;
+  return {
+    enhancedQuery,
+    isEmiCommand,
+    detectedCategory: detectedCategory || extractServiceType(enhancedQuery)
+  };
+}
+
+function extractServiceType(query: string): string | null {
+  const commonServices = ['mechanic', 'plumber', 'electrician', 'carpenter', 'painter', 'gardener', 'cleaner'];
+  
+  for (const service of commonServices) {
+    if (query.toLowerCase().includes(service)) {
+      return service;
+    }
+  }
+  
+  return null;
 }
 
 function detectServiceCategory(query: string, categories: string[]) {
@@ -42,7 +73,7 @@ function detectServiceCategory(query: string, categories: string[]) {
   
   for (const category of categories) {
     if (query.includes(category)) {
-      return null; // Category already in query
+      return category; // Return the category if it's already in the query
     }
   }
   
@@ -59,7 +90,7 @@ function detectServiceCategory(query: string, categories: string[]) {
 
 export async function POST(request: NextRequest) {
   try {
-    const { query, categories = [] } = await request.json();
+    const { query, categories = [], isEmiCommand = false } = await request.json();
     
     if (!query) {
       return NextResponse.json(
@@ -68,9 +99,13 @@ export async function POST(request: NextRequest) {
       );
     }
     
-    const enhancedQuery = localEnhanceQuery(query, categories);
+    const result = localEnhanceQuery(query, categories, isEmiCommand);
     
-    return NextResponse.json({ enhancedQuery });
+    return NextResponse.json({
+      enhancedQuery: result.enhancedQuery,
+      isEmiCommand: result.isEmiCommand,
+      detectedCategory: result.detectedCategory
+    });
   } catch (error) {
     console.error("Error processing search query:", error);
     return NextResponse.json(

@@ -10,6 +10,7 @@ interface VoiceSearchProps {
   buttonColor?: string;
   activeColor?: string;
   serviceCategories?: string[];
+  onEmiCommand?: (command: string, serviceType: string) => void;
 }
 
 const VoiceSearch: React.FC<VoiceSearchProps> = ({
@@ -21,6 +22,7 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     "plumber", "electrician", "carpenter", "mechanic", "painter", "gardener", 
     "cleaner", "locksmith", "roofer", "hvac", "appliance repair"
   ],
+  onEmiCommand,
 }) => {
   const [isListening, setIsListening] = useState(false);
   const [statusMessage, setStatusMessage] = useState("");
@@ -97,14 +99,25 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     showStatus("Processing your search...");
     
     try {
+      const emiCommandRegex = /(?:emi|emmy|emmi)(?:,)?\s+(?:look|search|find|get)\s+(?:for|me)?\s+(?:a|an)?\s+(.+)/i;
+      const matches = text.match(emiCommandRegex);
+      
+      const isEmiCommand = !!matches;
+      const searchTerm = matches ? matches[1].trim() : text;
+      
+      if (isEmiCommand) {
+        showStatus(`Looking for ${searchTerm}...`);
+      }
+      
       const response = await fetch("/api/enhance-search", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          query: text,
-          categories: serviceCategories
+          query: searchTerm,
+          categories: serviceCategories,
+          isEmiCommand
         }),
       });
 
@@ -113,7 +126,13 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       }
 
       const data = await response.json();
-      const enhancedQuery = data.enhancedQuery || text;
+      const enhancedQuery = data.enhancedQuery || searchTerm;
+      
+      if (isEmiCommand && data.isEmiCommand && data.detectedCategory && onEmiCommand) {
+        onEmiCommand(enhancedQuery, data.detectedCategory);
+        showStatus(`Processing command for ${data.detectedCategory}...`, 3000);
+        return;
+      }
       
       if (searchInputRef && searchInputRef.current) {
         searchInputRef.current.value = enhancedQuery;
