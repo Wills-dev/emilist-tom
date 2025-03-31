@@ -222,14 +222,8 @@ const MainSection = () => {
                       activeColor="#ea4335"
                       onEmiCommand={handleEmiCommand}
                     />
-                    <button type="submit">
-                      <Image
-                        src="/assets/icons/Group 26929.svg"
-                        width={20}
-                        height={20}
-                        alt="submit icon"
-                        className="object-contain w-8 h-8"
-                      />
+                    <button type="submit" className="px-3">
+                      Search
                     </button>
                   </form>
                 </div>

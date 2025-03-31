@@ -188,9 +188,6 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
         onSubmit={(e) => handleSearch(e)}
       >
         <div className="gap-2 flex-1 flex-c px-2 rounded-l-lg  border-light-gray border-1 focus-within:border-primary-green h-full  max-lg:h-12 ">
-          <span className="text-xl">
-            <CiSearch />
-          </span>
           <input
             ref={searchInputRef}
             style={{ fontSize: "16px" }}

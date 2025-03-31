@@ -44,19 +44,23 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
   useEffect(() => {
     if (!browserSupportsSpeechRecognition) {
       console.error("Browser doesn't support speech recognition");
-      showStatus("Your browser doesn't support speech recognition", 3000);
+      showStatus("Your browser doesn't support speech recognition", 0); // Keep visible permanently
       return;
     }
 
+    console.log("Requesting microphone permission for voice search");
+    showStatus("Initializing voice search...");
+    
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then(() => {
+        console.log("Microphone permission granted, starting continuous listening");
         setHasPermission(true);
         startContinuousListening();
       })
       .catch((error) => {
         console.error("Microphone permission error:", error);
         setHasPermission(false);
-        showStatus("Please allow microphone access for voice search", 5000);
+        showStatus("Please allow microphone access for voice search", 0); // Keep visible until granted
       });
 
     return () => {
@@ -78,23 +82,30 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
 
   const startContinuousListening = async () => {
     if (!browserSupportsSpeechRecognition || !hasPermission) {
+      console.warn("Cannot start listening: browser support or permission missing");
       return;
     }
 
     resetTranscript();
     setIsListening(true);
-    showStatus("Listening...");
+    showStatus("Listening...", 0); // Keep status visible while listening
+    console.log("Starting continuous listening mode");
     
     try {
       await SpeechRecognition.startListening({ 
         continuous: true, 
         language: "en-US" 
       });
-      console.log("Started continuous listening");
+      console.log("Started continuous listening successfully");
     } catch (error) {
       console.error("Error starting voice recognition:", error);
-      showStatus("Error starting voice recognition", 3000);
+      showStatus("Error starting voice recognition. Please refresh the page.", 0);
       setIsListening(false);
+      
+      setTimeout(() => {
+        console.log("Attempting to restart voice recognition after error");
+        startContinuousListening();
+      }, 5000);
     }
   };
 
@@ -115,25 +126,35 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
   
   useEffect(() => {
     if (transcript && transcript !== lastTranscriptRef.current) {
+      console.log("Transcript received:", transcript);
       lastTranscriptRef.current = transcript;
       
       if (silenceTimeoutRef.current) {
         clearTimeout(silenceTimeoutRef.current);
       }
       
+      if (transcript.length > 5) {
+        showStatus(`Heard: "${transcript}"`, 0);
+      }
+      
       silenceTimeoutRef.current = setTimeout(() => {
+        console.log("Silence detected, processing transcript:", transcript);
         processTranscript(transcript);
       }, 1500); // 1.5 second silence threshold
     }
   }, [transcript]);
 
   const processTranscript = async (text: string) => {
-    if (!text.trim()) return;
+    if (!text.trim()) {
+      console.log("Empty transcript, ignoring");
+      return;
+    }
     
     resetTranscript();
     lastTranscriptRef.current = "";
     
-    showStatus("Processing your search...");
+    showStatus("Processing your search...", 0);
+    console.log("Processing transcript:", text);
     
     try {
       const emiCommandRegex = /(?:emi|emmy|emmi)(?:,)?\s+(?:look|search|find|get)\s+(?:for|me)?\s+(?:a|an)?\s+(.+)/i;
@@ -143,7 +164,8 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       const searchTerm = matches ? matches[1].trim() : text;
       
       if (isEmiCommand) {
-        showStatus(`Looking for ${searchTerm}...`);
+        console.log("Emi command detected:", searchTerm);
+        showStatus(`Looking for ${searchTerm}...`, 0);
       }
       
       const response = await fetch("/api/enhance-search", {
@@ -159,6 +181,7 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       });
 
       if (!response.ok) {
+        console.error(`API error: Server responded with status: ${response.status}`);
         throw new Error(`Server responded with status: ${response.status}`);
       }
 
@@ -166,10 +189,12 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       const enhancedQuery = data.enhancedQuery || searchTerm;
       
       if (isEmiCommand && data.isEmiCommand && data.detectedCategory && onEmiCommand) {
+        console.log("Executing Emi command for category:", data.detectedCategory);
         onEmiCommand(enhancedQuery, data.detectedCategory);
-        showStatus(`Processing command for ${data.detectedCategory}...`, 3000);
+        showStatus(`Processing command for ${data.detectedCategory}...`, 5000);
         
         setTimeout(() => {
+          console.log("Restarting listening after Emi command execution");
           startContinuousListening();
         }, 5000);
         return;
@@ -213,10 +238,10 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     <>
       <div
         className={`voice-search-indicator ${isListening ? "listening" : ""}`}
-        aria-label="Voice search is active"
-        title="Voice search is active"
+        aria-label={isListening ? "Voice search is listening" : "Voice search is active"}
+        title={isListening ? "Emi is listening. Say 'Emi, look for a mechanic'" : "Voice search is active"}
         style={{
-          backgroundColor: isListening ? activeColor : "transparent",
+          backgroundColor: isListening ? `rgba(${parseInt(activeColor.slice(1, 3), 16)}, ${parseInt(activeColor.slice(3, 5), 16)}, ${parseInt(activeColor.slice(5, 7), 16)}, 0.1)` : "#e8f5e9",
         }}
       >
         <Image
@@ -239,7 +264,25 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       
       {hasPermission === false && (
         <div className="permission-prompt">
-          Allow microphone access for voice search
+          <strong>Microphone access required</strong>
+          <p>Please allow microphone access in your browser to use voice search</p>
+          <button 
+            onClick={() => {
+              console.log("Requesting microphone permission again");
+              navigator.mediaDevices.getUserMedia({ audio: true })
+                .then(() => {
+                  console.log("Microphone permission granted on retry");
+                  setHasPermission(true);
+                  startContinuousListening();
+                })
+                .catch(error => {
+                  console.error("Microphone permission denied again:", error);
+                });
+            }}
+            className="retry-permission-button"
+          >
+            Try Again
+          </button>
         </div>
       )}
     </>
