@@ -251,14 +251,6 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     }
   };
 
-  const handleTestSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (testInput.trim()) {
-      console.log("Processing test input:", testInput);
-      processTranscript(testInput);
-      setTestInput("");
-    }
-  };
 
   return (
     <>
@@ -290,18 +282,38 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       
       {testMode && (
         <div className="test-mode-container">
-          <form onSubmit={handleTestSubmit} className="test-input-form">
+          <div className="test-input-form">
             <input
               type="text"
               value={testInput}
               onChange={(e) => setTestInput(e.target.value)}
               placeholder="Try: Emi, look for a mechanic"
               className="test-input-field"
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  if (testInput.trim()) {
+                    console.log("Processing test input:", testInput);
+                    processTranscript(testInput);
+                    setTestInput("");
+                  }
+                }
+              }}
             />
-            <button type="submit" className="test-submit-button">
+            <button 
+              type="button" 
+              className="test-submit-button"
+              onClick={() => {
+                if (testInput.trim()) {
+                  console.log("Processing test input:", testInput);
+                  processTranscript(testInput);
+                  setTestInput("");
+                }
+              }}
+            >
               Test Voice Command
             </button>
-          </form>
+          </div>
           <div className="test-mode-instructions">
             <p>Test Mode: Enter voice commands like "Emi, look for a mechanic"</p>
             <p>This simulates the voice recognition for testing purposes.</p>
@@ -311,11 +323,8 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
                 type="button" 
                 className="example-command"
                 onClick={() => {
-                  setTestInput("Emi, look for a mechanic");
-                  setTimeout(() => {
-                    const form = document.querySelector('.test-input-form') as HTMLFormElement;
-                    if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
-                  }, 100);
+                  console.log("Example command: Emi, look for a mechanic");
+                  processTranscript("Emi, look for a mechanic");
                 }}
               >
                 Emi, look for a mechanic
@@ -324,11 +333,8 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
                 type="button" 
                 className="example-command"
                 onClick={() => {
-                  setTestInput("Emi, look for a plumber");
-                  setTimeout(() => {
-                    const form = document.querySelector('.test-input-form') as HTMLFormElement;
-                    if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
-                  }, 100);
+                  console.log("Example command: Emi, look for a plumber");
+                  processTranscript("Emi, look for a plumber");
                 }}
               >
                 Emi, look for a plumber
@@ -337,11 +343,8 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
                 type="button" 
                 className="example-command"
                 onClick={() => {
-                  setTestInput("Emi, find an electrician");
-                  setTimeout(() => {
-                    const form = document.querySelector('.test-input-form') as HTMLFormElement;
-                    if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
-                  }, 100);
+                  console.log("Example command: Emi, find an electrician");
+                  processTranscript("Emi, find an electrician");
                 }}
               >
                 Emi, find an electrician
