@@ -104,3 +104,83 @@
 .retry-permission-button:hover {
   background-color: #5a171d;
 }
+
+/* Test Mode Styles */
+.test-mode-container {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  padding: 16px;
+  width: 90%;
+  max-width: 600px;
+  z-index: 1000;
+  border: 2px solid #4caf50;
+}
+
+.test-input-form {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.test-input-field {
+  flex: 1;
+  padding: 10px 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 16px;
+}
+
+.test-submit-button {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 10px 16px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.test-submit-button:hover {
+  background-color: #3d8b40;
+}
+
+.test-mode-instructions {
+  background-color: #f5f5f5;
+  border-radius: 4px;
+  padding: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.test-mode-instructions p {
+  margin: 4px 0;
+}
+
+/* Example commands */
+.example-commands {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.example-command {
+  background-color: #e8f5e9;
+  color: #4caf50;
+  border: 1px solid #c8e6c9;
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.example-command:hover {
+  background-color: #c8e6c9;
+}

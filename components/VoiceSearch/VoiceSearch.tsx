@@ -41,10 +41,20 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     isMicrophoneAvailable
   } = useSpeechRecognition();
 
+  const [testMode, setTestMode] = useState(false);
+  const [testInput, setTestInput] = useState("");
+  
   useEffect(() => {
+    const isPreviewEnvironment = 
+      process.env.NEXT_PUBLIC_PREVIEW === 'true' || 
+      (typeof window !== 'undefined' && 
+        (window.location.hostname.includes('devinapps.com') || 
+         window.location.hostname.includes('localhost')));
+    
     if (!browserSupportsSpeechRecognition) {
       console.error("Browser doesn't support speech recognition");
-      showStatus("Your browser doesn't support speech recognition", 0); // Keep visible permanently
+      showStatus("Your browser doesn't support speech recognition", 0);
+      setTestMode(isPreviewEnvironment);
       return;
     }
 
@@ -60,7 +70,14 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       .catch((error) => {
         console.error("Microphone permission error:", error);
         setHasPermission(false);
-        showStatus("Please allow microphone access for voice search", 0); // Keep visible until granted
+        
+        if (isPreviewEnvironment) {
+          console.log("Enabling test mode for preview environment");
+          setTestMode(true);
+          showStatus("Test mode enabled. Use the test input below.", 0);
+        } else {
+          showStatus("Please allow microphone access for voice search", 0);
+        }
       });
 
     return () => {
@@ -234,6 +251,15 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     }
   };
 
+  const handleTestSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (testInput.trim()) {
+      console.log("Processing test input:", testInput);
+      processTranscript(testInput);
+      setTestInput("");
+    }
+  };
+
   return (
     <>
       <div
@@ -262,7 +288,70 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
         </div>
       )}
       
-      {hasPermission === false && (
+      {testMode && (
+        <div className="test-mode-container">
+          <form onSubmit={handleTestSubmit} className="test-input-form">
+            <input
+              type="text"
+              value={testInput}
+              onChange={(e) => setTestInput(e.target.value)}
+              placeholder="Try: Emi, look for a mechanic"
+              className="test-input-field"
+            />
+            <button type="submit" className="test-submit-button">
+              Test Voice Command
+            </button>
+          </form>
+          <div className="test-mode-instructions">
+            <p>Test Mode: Enter voice commands like "Emi, look for a mechanic"</p>
+            <p>This simulates the voice recognition for testing purposes.</p>
+            
+            <div className="example-commands">
+              <button 
+                type="button" 
+                className="example-command"
+                onClick={() => {
+                  setTestInput("Emi, look for a mechanic");
+                  setTimeout(() => {
+                    const form = document.querySelector('.test-input-form') as HTMLFormElement;
+                    if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
+                  }, 100);
+                }}
+              >
+                Emi, look for a mechanic
+              </button>
+              <button 
+                type="button" 
+                className="example-command"
+                onClick={() => {
+                  setTestInput("Emi, look for a plumber");
+                  setTimeout(() => {
+                    const form = document.querySelector('.test-input-form') as HTMLFormElement;
+                    if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
+                  }, 100);
+                }}
+              >
+                Emi, look for a plumber
+              </button>
+              <button 
+                type="button" 
+                className="example-command"
+                onClick={() => {
+                  setTestInput("Emi, find an electrician");
+                  setTimeout(() => {
+                    const form = document.querySelector('.test-input-form') as HTMLFormElement;
+                    if (form) form.dispatchEvent(new Event('submit', { cancelable: true }));
+                  }, 100);
+                }}
+              >
+                Emi, find an electrician
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {hasPermission === false && !testMode && (
         <div className="permission-prompt">
           <strong>Microphone access required</strong>
           <p>Please allow microphone access in your browser to use voice search</p>
