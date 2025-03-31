@@ -22,10 +22,16 @@ const EmiCommandHandler: React.FC<EmiCommandHandlerProps> = ({
   useEffect(() => {
     const fetchExperts = async () => {
       try {
-        const response = await fetch(`/api/experts?serviceType=${serviceType}&limit=5`);
+        const url = new URL('/api/experts', window.location.origin);
+        url.searchParams.append('serviceType', serviceType);
+        url.searchParams.append('limit', '5');
+        
+        const response = await fetch(url.toString().replace(/\/\/.*?@/, '//'));
         if (response.ok) {
           const data = await response.json();
           setExperts(data.experts || []);
+        } else {
+          console.error("Error response from experts API:", response.status);
         }
       } catch (error) {
         console.error("Error fetching experts:", error);

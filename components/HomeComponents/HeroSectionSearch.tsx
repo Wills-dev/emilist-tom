@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 
 import { CiLocationOn, CiSearch } from "react-icons/ci";
 import VoiceSearch from "../VoiceSearch/VoiceSearch";
@@ -29,9 +29,30 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
   const router = useRouter();
   const searchInputRef = useRef<HTMLInputElement>(null);
 
+  const [processingEmiCommand, setProcessingEmiCommand] = useState(false);
+  
+  useEffect(() => {
+    const handleEmiCommandEvent = (event: any) => {
+      console.log("Received emiCommand event:", event.detail);
+      const { command, serviceType } = event.detail;
+      handleEmiCommand(command, serviceType);
+    };
+    
+    document.addEventListener('emiCommand', handleEmiCommandEvent);
+    
+    return () => {
+      document.removeEventListener('emiCommand', handleEmiCommandEvent);
+    };
+  }, []);
+
   const handleSearch = async (e: any) => {
     e.preventDefault();
     console.log("Form submitted with:", serviceName);
+    
+    if (processingEmiCommand || showEmiHandler) {
+      console.log("Emi command is being processed, preventing form submission");
+      return;
+    }
     
     // Validation: Ensure at least one input is provided
     if (!location.trim() && !serviceName.trim()) {
@@ -45,6 +66,9 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
     if (matches) {
       const serviceTypeText = matches[1].trim();
       console.log("Service type extracted:", serviceTypeText);
+      
+      setProcessingEmiCommand(true);
+      
       try {
         console.log("Sending to enhance-search API");
         const response = await fetch("/api/enhance-search", {
@@ -71,7 +95,11 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
         }
       } catch (error) {
         console.error("Error processing Emi command:", error);
+      } finally {
+        setProcessingEmiCommand(false);
       }
+      
+      return;
     }
 
     console.log("Proceeding with regular search");
@@ -100,6 +128,8 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
     if (matches) {
       const serviceTypeText = matches[1].trim();
       console.log("Service type extracted:", serviceTypeText);
+      setProcessingEmiCommand(true);
+      
       try {
         console.log("Sending to enhance-search API");
         const response = await fetch("/api/enhance-search", {
@@ -119,6 +149,7 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
           if (data.isEmiCommand && data.detectedCategory) {
             console.log("Handling Emi command for category:", data.detectedCategory);
             handleEmiCommand(serviceTypeText, data.detectedCategory);
+            setProcessingEmiCommand(false);
             return;
           }
         } else {
@@ -126,7 +157,11 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
         }
       } catch (error) {
         console.error("Error processing Emi command:", error);
+      } finally {
+        setProcessingEmiCommand(false);
       }
+      
+      return;
     }
     
     console.log("Proceeding with regular search");
@@ -143,8 +178,19 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
   };
   
   const handleEmiCommand = (command: string, detectedServiceType: string) => {
+    console.log("handleEmiCommand called with:", command, detectedServiceType);
     setServiceType(detectedServiceType);
     setShowEmiHandler(true);
+    
+    setTimeout(() => {
+      console.log("EmiHandler should be visible now");
+      if (!showEmiHandler) {
+        console.log("Forcing EmiHandler visibility");
+        setShowEmiHandler(true);
+      }
+    }, 100);
+    
+    return true;
   };
   
   const handleJobAccepted = (expertId: string) => {
@@ -183,10 +229,7 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
   
   return (
     <>
-      <form
-        className="w-full max-w-full flex-c-b mb-10 shadow-lg max-lg:max-w-[770px] h-12 relative"
-        onSubmit={(e) => handleSearch(e)}
-      >
+      <div className="w-full max-w-full flex-c-b mb-10 shadow-lg max-lg:max-w-[770px] h-12 relative">
         <div className="gap-2 flex-1 flex-c px-2 rounded-l-lg  border-light-gray border-1 focus-within:border-primary-green h-full  max-lg:h-12 ">
           <input
             ref={searchInputRef}
@@ -223,12 +266,19 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
         />
 
         <button
-          type="submit"
+          onClick={(e) => {
+            e.preventDefault();
+            if (!processingEmiCommand && !showEmiHandler) {
+              handleSearch(e);
+            } else {
+              console.log("Preventing search while Emi command is active");
+            }
+          }}
           className="bg-primary-green w-full h-full border-primary-green border-1 rounded-r-lg text-white  max-sm:text-sm"
         >
           Search
         </button>
-      </form>
+      </div>
       
       {showEmiHandler && (
         <EmiCommandHandler

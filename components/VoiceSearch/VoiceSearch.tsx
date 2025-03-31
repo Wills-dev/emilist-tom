@@ -173,6 +173,8 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     showStatus("Processing your search...", 0);
     console.log("Processing transcript:", text);
     
+    let enhancedQuery = text;
+    
     try {
       const emiCommandRegex = /(?:emi|emmy|emmi)(?:,)?\s+(?:look|search|find|get)\s+(?:for|me)?\s+(?:a|an)?\s+(.+)/i;
       const matches = text.match(emiCommandRegex);
@@ -185,48 +187,92 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
         showStatus(`Looking for ${searchTerm}...`, 0);
       }
       
-      const response = await fetch("/api/enhance-search", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: searchTerm,
-          categories: serviceCategories,
-          isEmiCommand
-        }),
+      console.log("Making API call to enhance-search with:", {
+        query: searchTerm,
+        categories: serviceCategories,
+        isEmiCommand
       });
-
-      if (!response.ok) {
-        console.error(`API error: Server responded with status: ${response.status}`);
-        throw new Error(`Server responded with status: ${response.status}`);
-      }
-
-      const data = await response.json();
-      const enhancedQuery = data.enhancedQuery || searchTerm;
       
-      if (isEmiCommand && data.isEmiCommand && data.detectedCategory && onEmiCommand) {
-        console.log("Executing Emi command for category:", data.detectedCategory);
-        onEmiCommand(enhancedQuery, data.detectedCategory);
-        showStatus(`Processing command for ${data.detectedCategory}...`, 5000);
+      try {
+        const response = await fetch("/api/enhance-search", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            query: searchTerm,
+            categories: serviceCategories,
+            isEmiCommand
+          }),
+        });
+
+        console.log("API response status:", response.status);
         
-        setTimeout(() => {
-          console.log("Restarting listening after Emi command execution");
-          startContinuousListening();
-        }, 5000);
+        if (!response.ok) {
+          console.error(`API error: Server responded with status: ${response.status}`);
+          throw new Error(`Server responded with status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("API response data:", data);
+        
+        enhancedQuery = data.enhancedQuery || searchTerm;
+        
+        if (isEmiCommand && data.isEmiCommand && data.detectedCategory && onEmiCommand) {
+          console.log("Executing Emi command for category:", data.detectedCategory);
+          console.log("Calling onEmiCommand with:", enhancedQuery, data.detectedCategory);
+          
+          const emiEvent = new CustomEvent('emiCommand', {
+            detail: {
+              command: enhancedQuery,
+              serviceType: data.detectedCategory
+            },
+            bubbles: true
+          });
+          
+          console.log("Dispatching emiCommand event for", data.detectedCategory);
+          document.dispatchEvent(emiEvent);
+          
+          if (onEmiCommand) {
+            onEmiCommand(enhancedQuery, data.detectedCategory);
+          }
+          
+          console.log("Emi command processed, preventing default search");
+          showStatus(`Processing command for ${data.detectedCategory}...`, 5000);
+          
+          setTimeout(() => {
+            console.log("Restarting listening after Emi command execution");
+            startContinuousListening();
+          }, 5000);
+          return;
+        }
+        
+        console.log("Not executing Emi command, conditions not met:", {
+          isEmiCommand,
+          dataIsEmiCommand: data.isEmiCommand,
+          detectedCategory: data.detectedCategory,
+          hasOnEmiCommand: !!onEmiCommand
+        });
+      } catch (error) {
+        console.error("Error in API call:", error);
+        console.log("Continuing with original text due to API error");
+      }
+      
+      if (!isEmiCommand) {
+        if (searchInputRef && searchInputRef.current) {
+          searchInputRef.current.value = enhancedQuery;
+          
+          const inputEvent = new Event("input", { bubbles: true });
+          searchInputRef.current.dispatchEvent(inputEvent);
+        }
+        
+        onResult(enhancedQuery);
+        
+        showStatus(`Searching for: ${enhancedQuery}`, 3000);
+      } else {
+        console.log("Emi command detected but not processed, preventing default search");
         return;
       }
-      
-      if (searchInputRef && searchInputRef.current) {
-        searchInputRef.current.value = enhancedQuery;
-        
-        const inputEvent = new Event("input", { bubbles: true });
-        searchInputRef.current.dispatchEvent(inputEvent);
-      }
-      
-      onResult(enhancedQuery);
-      
-      showStatus(`Searching for: ${enhancedQuery}`, 3000);
       
       setTimeout(() => {
         startContinuousListening();
@@ -234,16 +280,22 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     } catch (error) {
       console.error("Error enhancing search query:", error);
       
-      if (searchInputRef && searchInputRef.current) {
-        searchInputRef.current.value = text;
+      const emiCommandRegex = /(?:emi|emmy|emmi)(?:,)?\s+(?:look|search|find|get)\s+(?:for|me)?\s+(?:a|an)?\s+(.+)/i;
+      if (!emiCommandRegex.test(text)) {
+        if (searchInputRef && searchInputRef.current) {
+          searchInputRef.current.value = text;
+          
+          const inputEvent = new Event("input", { bubbles: true });
+          searchInputRef.current.dispatchEvent(inputEvent);
+        }
         
-        const inputEvent = new Event("input", { bubbles: true });
-        searchInputRef.current.dispatchEvent(inputEvent);
+        onResult(text);
+        
+        showStatus(`Searching for: ${text}`, 3000);
+      } else {
+        console.log("Emi command detected but error occurred, preventing default search");
+        return;
       }
-      
-      onResult(text);
-      
-      showStatus(`Searching for: ${text}`, 3000);
       
       setTimeout(() => {
         startContinuousListening();
@@ -322,9 +374,21 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
               <button 
                 type="button" 
                 className="example-command"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  
                   console.log("Example command: Emi, look for a mechanic");
-                  processTranscript("Emi, look for a mechanic");
+                  if (onEmiCommand) {
+                    console.log("Directly calling onEmiCommand with mechanic");
+                    onEmiCommand("Emi, look for a mechanic", "mechanic");
+                    showStatus("Processing command for mechanic...", 5000);
+                  } else {
+                    console.log("onEmiCommand not available, using processTranscript");
+                    processTranscript("Emi, look for a mechanic");
+                  }
+                  
+                  showStatus("Processing command for mechanic...", 5000);
                 }}
               >
                 Emi, look for a mechanic
@@ -332,9 +396,18 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
               <button 
                 type="button" 
                 className="example-command"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   console.log("Example command: Emi, look for a plumber");
-                  processTranscript("Emi, look for a plumber");
+                  if (onEmiCommand) {
+                    console.log("Directly calling onEmiCommand with plumber");
+                    onEmiCommand("Emi, look for a plumber", "plumber");
+                    showStatus("Processing command for plumber...", 5000);
+                  } else {
+                    console.log("onEmiCommand not available, using processTranscript");
+                    processTranscript("Emi, look for a plumber");
+                  }
                 }}
               >
                 Emi, look for a plumber
@@ -342,9 +415,18 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
               <button 
                 type="button" 
                 className="example-command"
-                onClick={() => {
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
                   console.log("Example command: Emi, find an electrician");
-                  processTranscript("Emi, find an electrician");
+                  if (onEmiCommand) {
+                    console.log("Directly calling onEmiCommand with electrician");
+                    onEmiCommand("Emi, find an electrician", "electrician");
+                    showStatus("Processing command for electrician...", 5000);
+                  } else {
+                    console.log("onEmiCommand not available, using processTranscript");
+                    processTranscript("Emi, find an electrician");
+                  }
                 }}
               >
                 Emi, find an electrician
