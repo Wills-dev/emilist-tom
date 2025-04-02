@@ -87,7 +87,7 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "5");
     const isPreview = process.env.NEXT_PUBLIC_PREVIEW === 'true' || 
                       typeof process !== 'undefined' && 
-                      request.url.includes('devinapps.com');
+                      (request.url.includes('devinapps.com') || request.url.includes('netlify.app'));
     
     if (isPreview) {
       console.log("Using mock data for experts API in preview mode");

@@ -49,6 +49,7 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       process.env.NEXT_PUBLIC_PREVIEW === 'true' || 
       (typeof window !== 'undefined' && 
         (window.location.hostname.includes('devinapps.com') || 
+         window.location.hostname.includes('netlify.app') ||
          window.location.hostname.includes('localhost')));
     
     if (!browserSupportsSpeechRecognition) {
