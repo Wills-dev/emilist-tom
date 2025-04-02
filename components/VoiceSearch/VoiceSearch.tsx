@@ -40,9 +40,6 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     browserSupportsSpeechRecognition,
     isMicrophoneAvailable
   } = useSpeechRecognition();
-
-  const [testMode, setTestMode] = useState(false);
-  const [testInput, setTestInput] = useState("");
   
   useEffect(() => {
     const isPreviewEnvironment = 
@@ -52,17 +49,9 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
          window.location.hostname.includes('netlify.app') ||
          window.location.hostname.includes('localhost')));
     
-    if (isPreviewEnvironment) {
-      console.log("Preview environment detected, enabling test mode by default");
-      setTestMode(true);
-      showStatus("Test mode enabled. Use the test input below to simulate voice commands.", 0);
-      return;
-    }
-    
     if (!browserSupportsSpeechRecognition) {
       console.error("Browser doesn't support speech recognition");
       showStatus("Your browser doesn't support speech recognition", 0);
-      setTestMode(true);
       return;
     }
 
@@ -78,13 +67,17 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       .catch((error) => {
         console.error("Microphone permission error:", error);
         setHasPermission(false);
+        showStatus("Please allow microphone access for voice search", 0);
         
         if (isPreviewEnvironment) {
-          console.log("Enabling test mode for preview environment");
-          setTestMode(true);
-          showStatus("Test mode enabled. Use the test input below.", 0);
-        } else {
-          showStatus("Please allow microphone access for voice search", 0);
+          console.log("Preview environment detected, simulating voice commands");
+          
+          setTimeout(() => {
+            if (onEmiCommand) {
+              console.log("Simulating Emi command for mechanic");
+              onEmiCommand("Emi, look for a mechanic", "mechanic");
+            }
+          }, 5000);
         }
       });
 
@@ -104,6 +97,13 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       setIsListening(listening);
     }
   }, [listening, isListening]);
+  
+  useEffect(() => {
+    if (hasPermission === true && !isListening) {
+      console.log("Auto-starting continuous listening");
+      startContinuousListening();
+    }
+  }, [hasPermission, isListening]);
 
   const startContinuousListening = async () => {
     if (!browserSupportsSpeechRecognition || !hasPermission) {
@@ -316,34 +316,12 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
     <>
       <div
         className={`voice-search-indicator ${isListening ? "listening" : ""}`}
-        aria-label={isListening ? "Voice search is listening" : "Voice search is active"}
-        title={isListening ? "Emi is listening. Say 'Emi, look for a mechanic'" : "Voice search is active"}
+        aria-label={isListening ? "Emi is listening" : "Emi is active"}
+        title={isListening ? "Emi is listening. Say 'Emi, look for a mechanic'" : "Emi is active"}
         style={{
           backgroundColor: isListening ? `rgba(${parseInt(activeColor.slice(1, 3), 16)}, ${parseInt(activeColor.slice(3, 5), 16)}, ${parseInt(activeColor.slice(5, 7), 16)}, 0.1)` : "#e8f5e9",
-        }}
-        onClick={() => {
-          if (testMode) {
-            showStatus("Please use the test input below to simulate voice commands", 3000);
-          } else if (hasPermission) {
-            if (isListening) {
-              stopListening();
-              showStatus("Voice search paused", 2000);
-            } else {
-              startContinuousListening();
-            }
-          } else {
-            navigator.mediaDevices.getUserMedia({ audio: true })
-              .then(() => {
-                setHasPermission(true);
-                startContinuousListening();
-              })
-              .catch(error => {
-                console.error("Microphone permission denied:", error);
-                setHasPermission(false);
-                setTestMode(true);
-                showStatus("Test mode enabled. Use the test input below.", 0);
-              });
-          }
+          boxShadow: isListening ? "0 0 10px rgba(76, 175, 80, 0.5)" : "none",
+          cursor: "default"
         }}
       >
         <Image
@@ -364,199 +342,7 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
         </div>
       )}
       
-      {testMode && (
-        <div className="test-mode-container">
-          <h3 style={{ 
-            fontSize: '18px', 
-            fontWeight: 'bold', 
-            marginBottom: '12px', 
-            color: '#4caf50',
-            textAlign: 'center'
-          }}>
-            Voice Command Test Mode
-          </h3>
-          <div className="test-input-form">
-            <input
-              type="text"
-              value={testInput}
-              onChange={(e) => setTestInput(e.target.value)}
-              placeholder="Try: Emi, look for a mechanic"
-              className="test-input-field"
-              onKeyDown={(e) => {
-                if (e.key === 'Enter') {
-                  e.preventDefault();
-                  if (testInput.trim()) {
-                    console.log("Processing test input:", testInput);
-                    processTranscript(testInput);
-                    setTestInput("");
-                  }
-                }
-              }}
-            />
-            <button 
-              type="button" 
-              className="test-submit-button"
-              onClick={() => {
-                if (testInput.trim()) {
-                  console.log("Processing test input:", testInput);
-                  processTranscript(testInput);
-                  setTestInput("");
-                }
-              }}
-            >
-              Test Voice Command
-            </button>
-          </div>
-          <div className="test-mode-instructions">
-            <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>
-              Quick Test: Click any example below to try it immediately
-            </p>
-            
-            <div className="example-commands">
-              <button 
-                type="button" 
-                className="example-command"
-                style={{ 
-                  fontSize: '14px', 
-                  padding: '8px 16px',
-                  backgroundColor: '#e8f5e9',
-                  border: '2px solid #4caf50',
-                  borderRadius: '20px',
-                  margin: '5px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold'
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  
-                  console.log("Example command: Emi, look for a mechanic");
-                  console.log("Example command clicked: Emi, look for a mechanic");
-                  console.log("onEmiCommand available:", !!onEmiCommand);
-                  
-                  const emiEvent = new CustomEvent('emiCommand', {
-                    detail: {
-                      command: "Emi, look for a mechanic",
-                      serviceType: "mechanic"
-                    },
-                    bubbles: true
-                  });
-                  document.dispatchEvent(emiEvent);
-                  
-                  if (onEmiCommand) {
-                    console.log("Directly calling onEmiCommand with mechanic");
-                    onEmiCommand("Emi, look for a mechanic", "mechanic");
-                  }
-                  
-                  console.log("Also using processTranscript as fallback");
-                  processTranscript("Emi, look for a mechanic");
-                  
-                  showStatus("Processing command for mechanic...", 5000);
-                  
-                  showStatus("Processing command for mechanic...", 5000);
-                }}
-              >
-                Emi, look for a mechanic
-              </button>
-              <button 
-                type="button" 
-                className="example-command"
-                style={{ 
-                  fontSize: '14px', 
-                  padding: '8px 16px',
-                  backgroundColor: '#e8f5e9',
-                  border: '2px solid #4caf50',
-                  borderRadius: '20px',
-                  margin: '5px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold'
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  console.log("Example command: Emi, look for a plumber");
-                  console.log("Example command clicked: Emi, look for a plumber");
-                  console.log("onEmiCommand available:", !!onEmiCommand);
-                  
-                  const emiEvent = new CustomEvent('emiCommand', {
-                    detail: {
-                      command: "Emi, look for a plumber",
-                      serviceType: "plumber"
-                    },
-                    bubbles: true
-                  });
-                  document.dispatchEvent(emiEvent);
-                  
-                  if (onEmiCommand) {
-                    console.log("Directly calling onEmiCommand with plumber");
-                    onEmiCommand("Emi, look for a plumber", "plumber");
-                  }
-                  
-                  console.log("Also using processTranscript as fallback");
-                  processTranscript("Emi, look for a plumber");
-                  
-                  showStatus("Processing command for plumber...", 5000);
-                }}
-              >
-                Emi, look for a plumber
-              </button>
-              <button 
-                type="button" 
-                className="example-command"
-                style={{ 
-                  fontSize: '14px', 
-                  padding: '8px 16px',
-                  backgroundColor: '#e8f5e9',
-                  border: '2px solid #4caf50',
-                  borderRadius: '20px',
-                  margin: '5px',
-                  cursor: 'pointer',
-                  fontWeight: 'bold'
-                }}
-                onClick={(e) => {
-                  e.preventDefault();
-                  e.stopPropagation();
-                  console.log("Example command: Emi, find an electrician");
-                  console.log("Example command clicked: Emi, find an electrician");
-                  console.log("onEmiCommand available:", !!onEmiCommand);
-                  
-                  const emiEvent = new CustomEvent('emiCommand', {
-                    detail: {
-                      command: "Emi, find an electrician",
-                      serviceType: "electrician"
-                    },
-                    bubbles: true
-                  });
-                  document.dispatchEvent(emiEvent);
-                  
-                  if (onEmiCommand) {
-                    console.log("Directly calling onEmiCommand with electrician");
-                    onEmiCommand("Emi, find an electrician", "electrician");
-                  }
-                  
-                  console.log("Also using processTranscript as fallback");
-                  processTranscript("Emi, find an electrician");
-                  
-                  showStatus("Processing command for electrician...", 5000);
-                }}
-              >
-                Emi, find an electrician
-              </button>
-            </div>
-            <p style={{ 
-              marginTop: '10px', 
-              fontSize: '13px', 
-              color: '#666',
-              textAlign: 'center',
-              fontStyle: 'italic'
-            }}>
-              This simulates voice commands for testing in preview environments
-            </p>
-          </div>
-        </div>
-      )}
-      
-      {hasPermission === false && !testMode && (
+      {hasPermission === false && (
         <div className="permission-prompt">
           <strong>Microphone access required</strong>
           <p>Please allow microphone access in your browser to use voice search</p>
@@ -575,7 +361,7 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
             }}
             className="retry-permission-button"
           >
-            Try Again
+            Allow Microphone
           </button>
         </div>
       )}
