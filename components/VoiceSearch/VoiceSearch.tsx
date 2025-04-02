@@ -431,14 +431,27 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
                   e.stopPropagation();
                   
                   console.log("Example command: Emi, look for a mechanic");
+                  console.log("Example command clicked: Emi, look for a mechanic");
+                  console.log("onEmiCommand available:", !!onEmiCommand);
+                  
+                  const emiEvent = new CustomEvent('emiCommand', {
+                    detail: {
+                      command: "Emi, look for a mechanic",
+                      serviceType: "mechanic"
+                    },
+                    bubbles: true
+                  });
+                  document.dispatchEvent(emiEvent);
+                  
                   if (onEmiCommand) {
                     console.log("Directly calling onEmiCommand with mechanic");
                     onEmiCommand("Emi, look for a mechanic", "mechanic");
-                    showStatus("Processing command for mechanic...", 5000);
-                  } else {
-                    console.log("onEmiCommand not available, using processTranscript");
-                    processTranscript("Emi, look for a mechanic");
                   }
+                  
+                  console.log("Also using processTranscript as fallback");
+                  processTranscript("Emi, look for a mechanic");
+                  
+                  showStatus("Processing command for mechanic...", 5000);
                   
                   showStatus("Processing command for mechanic...", 5000);
                 }}
@@ -462,14 +475,27 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
                   e.preventDefault();
                   e.stopPropagation();
                   console.log("Example command: Emi, look for a plumber");
+                  console.log("Example command clicked: Emi, look for a plumber");
+                  console.log("onEmiCommand available:", !!onEmiCommand);
+                  
+                  const emiEvent = new CustomEvent('emiCommand', {
+                    detail: {
+                      command: "Emi, look for a plumber",
+                      serviceType: "plumber"
+                    },
+                    bubbles: true
+                  });
+                  document.dispatchEvent(emiEvent);
+                  
                   if (onEmiCommand) {
                     console.log("Directly calling onEmiCommand with plumber");
                     onEmiCommand("Emi, look for a plumber", "plumber");
-                    showStatus("Processing command for plumber...", 5000);
-                  } else {
-                    console.log("onEmiCommand not available, using processTranscript");
-                    processTranscript("Emi, look for a plumber");
                   }
+                  
+                  console.log("Also using processTranscript as fallback");
+                  processTranscript("Emi, look for a plumber");
+                  
+                  showStatus("Processing command for plumber...", 5000);
                 }}
               >
                 Emi, look for a plumber
@@ -491,14 +517,27 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
                   e.preventDefault();
                   e.stopPropagation();
                   console.log("Example command: Emi, find an electrician");
+                  console.log("Example command clicked: Emi, find an electrician");
+                  console.log("onEmiCommand available:", !!onEmiCommand);
+                  
+                  const emiEvent = new CustomEvent('emiCommand', {
+                    detail: {
+                      command: "Emi, find an electrician",
+                      serviceType: "electrician"
+                    },
+                    bubbles: true
+                  });
+                  document.dispatchEvent(emiEvent);
+                  
                   if (onEmiCommand) {
                     console.log("Directly calling onEmiCommand with electrician");
                     onEmiCommand("Emi, find an electrician", "electrician");
-                    showStatus("Processing command for electrician...", 5000);
-                  } else {
-                    console.log("onEmiCommand not available, using processTranscript");
-                    processTranscript("Emi, find an electrician");
                   }
+                  
+                  console.log("Also using processTranscript as fallback");
+                  processTranscript("Emi, find an electrician");
+                  
+                  showStatus("Processing command for electrician...", 5000);
                 }}
               >
                 Emi, find an electrician
