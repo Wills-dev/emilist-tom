@@ -1,0 +1,82 @@
+/* Voice Search Button Styles */
+.voice-search-container {
+  position: relative;
+  display: inline-block;
+}
+
+.voice-search-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  position: relative;
+  z-index: 1;
+}
+
+.voice-search-button:hover {
+  background-color: #f5f5f5;
+}
+
+.voice-search-button.listening {
+  animation: pulse 1.5s infinite;
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+.voice-search-status {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 10;
+  white-space: nowrap;
+}
+
+.permission-prompt {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background-color: #f8d7da;
+  color: #721c24;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  z-index: 10;
+  width: 220px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.retry-permission-button {
+  background-color: #721c24;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  margin-top: 5px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.retry-permission-button:hover {
+  background-color: #5a171d;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.4);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 0 5px rgba(76, 175, 80, 0);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
+  }
+}

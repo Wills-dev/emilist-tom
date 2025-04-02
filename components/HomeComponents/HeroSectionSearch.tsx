@@ -4,11 +4,13 @@ import { useRouter } from "next/navigation";
 import { useRef, useState, useEffect } from "react";
 
 import { CiLocationOn, CiSearch } from "react-icons/ci";
-import VoiceSearch from "../VoiceSearch/VoiceSearch";
+import { MdMic } from "react-icons/md";
+import EnhancedVoiceSearch from "../VoiceSearch/EnhancedVoiceSearch";
 import EmiCommandHandler from "../VoiceSearch/EmiCommandHandler";
 import JobAcceptance from "../VoiceSearch/JobAcceptance";
 import PaymentProcessor from "../VoiceSearch/PaymentProcessor";
 import ProjectTracking from "../VoiceSearch/ProjectTracking";
+import VoiceSearchButton from "../VoiceSearchButton/VoiceSearchButton";
 
 interface HeroSectionSearchProps {
   currentLink: number;
@@ -230,16 +232,35 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
   return (
     <>
       <div className="w-full max-w-full flex-c-b mb-10 shadow-lg max-lg:max-w-[770px] h-12 relative">
-        <div className="gap-2 flex-1 flex-c px-2 rounded-l-lg  border-light-gray border-1 focus-within:border-primary-green h-full  max-lg:h-12 ">
+        <div className="gap-2 flex-1 flex-c px-2 rounded-l-lg  border-light-gray border-1 focus-within:border-primary-green h-full  max-lg:h-12 relative">
           <input
             ref={searchInputRef}
             style={{ fontSize: "16px" }}
             type="text"
-            placeholder="Enter Keyword"
+            placeholder="Ask AI anything"
             className="focus:outline-none max-sm:text-sm flex-1 bg-white"
             value={serviceName}
             onChange={(e) => setServiceName(e.target.value)}
           />
+          <button
+            type="button"
+            onClick={() => {
+              if (searchInputRef.current) {
+                searchInputRef.current.focus();
+                const button = document.querySelector('.voice-search-button');
+                if (button) {
+                  (button as HTMLButtonElement).click();
+                }
+              }
+            }}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-[#4caf50] flex items-center justify-center w-10 h-10 rounded-full"
+            style={{ 
+              boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+              zIndex: 10
+            }}
+          >
+            <MdMic style={{ color: 'white', fontSize: '20px' }} />
+          </button>
         </div>
         <div className=" sm:flex-c-b w-full h-full max-lg:h-12 flex-1 hidden">
           <div className="flex-c gap-2 flex-1 px-2 border-y-1 border-light-gray focus-within:border-primary-green focus-within:border-1 w-full h-full">
@@ -257,27 +278,60 @@ const HeroSectionSearch = ({ currentLink }: HeroSectionSearchProps) => {
           </div>
         </div>
         
-        <VoiceSearch 
-          onResult={handleVoiceSearchResult}
-          searchInputRef={searchInputRef}
-          buttonColor="#4caf50"
-          activeColor="#ea4335"
-          onEmiCommand={handleEmiCommand}
-        />
 
-        <button
-          onClick={(e) => {
-            e.preventDefault();
-            if (!processingEmiCommand && !showEmiHandler) {
-              handleSearch(e);
-            } else {
-              console.log("Preventing search while Emi command is active");
-            }
-          }}
-          className="bg-primary-green w-full h-full border-primary-green border-1 rounded-r-lg text-white  max-sm:text-sm"
-        >
-          Search
-        </button>
+
+        <div className="flex items-center">
+          <button
+            type="button"
+            onClick={() => {
+              if (searchInputRef.current) {
+                searchInputRef.current.focus();
+                const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+                if (SpeechRecognition) {
+                  const recognition = new SpeechRecognition();
+                  recognition.lang = 'en-US';
+                  recognition.continuous = false;
+                  recognition.interimResults = false;
+                  
+                  recognition.onresult = (event: any) => {
+                    const transcript = event.results[0][0].transcript;
+                    console.log("Voice recognition result:", transcript);
+                    setServiceName(transcript);
+                    
+                    setTimeout(() => {
+                      handleVoiceSearchResult(transcript);
+                    }, 500);
+                  };
+                  
+                  recognition.onerror = (event: any) => {
+                    console.error("Speech recognition error", event.error);
+                  };
+                  
+                  recognition.start();
+                } else {
+                  console.error("Speech Recognition not supported in this browser");
+                }
+              }
+            }}
+            className="bg-[#4caf50] flex items-center justify-center w-12 h-full border-[#4caf50] border-1 text-white"
+            style={{ borderRight: '1px solid #fff' }}
+          >
+            <MdMic style={{ color: 'white', fontSize: '24px' }} />
+          </button>
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+              if (!processingEmiCommand && !showEmiHandler) {
+                handleSearch(e);
+              } else {
+                console.log("Preventing search while Emi command is active");
+              }
+            }}
+            className="bg-primary-green w-full h-full border-primary-green border-1 rounded-r-lg text-white max-sm:text-sm"
+          >
+            Search
+          </button>
+        </div>
       </div>
       
       {showEmiHandler && (

@@ -10,7 +10,7 @@ import ImageThree from "../../public/assets/images/Vector 263.png";
 import ImageFour from "../../public/assets/images/Vector 263 (1).png";
 import ImageFive from "../../public/assets/images/Vector 264.png";
 import ImageSix from "../../public/assets/images/Vector 264 (1).png";
-import VoiceSearch from "../VoiceSearch/VoiceSearch";
+import EnhancedVoiceSearch from "../VoiceSearch/EnhancedVoiceSearch";
 import EmiCommandHandler from "../VoiceSearch/EmiCommandHandler";
 import JobAcceptance from "../VoiceSearch/JobAcceptance";
 import PaymentProcessor from "../VoiceSearch/PaymentProcessor";
@@ -205,23 +205,26 @@ const MainSection = () => {
                     onSubmit={handleSearch}
                     className="max-w-96 w-full flex px-3 h-12 border-1 border-gray-400 rounded-lg focus-within:border-primary-green relative"
                   >
-                    <input
-                      ref={searchInputRef}
-                      type="search"
-                      name="search"
-                      id="search"
-                      placeholder="Ask AI anything"
-                      className="flex-1 bg-inherit outline-none"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                    />
-                    <VoiceSearch 
-                      onResult={handleVoiceSearchResult}
-                      searchInputRef={searchInputRef}
-                      buttonColor="#4caf50"
-                      activeColor="#ea4335"
-                      onEmiCommand={handleEmiCommand}
-                    />
+                    <div className="flex-1 flex items-center relative">
+                      <input
+                        ref={searchInputRef}
+                        type="search"
+                        name="search"
+                        id="search"
+                        placeholder="Ask AI anything"
+                        className="w-full bg-inherit outline-none"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                      />
+                      <EnhancedVoiceSearch 
+                        onResult={handleVoiceSearchResult}
+                        searchInputRef={searchInputRef}
+                        serviceCategories={[
+                          "plumber", "electrician", "carpenter", "mechanic", "painter", "gardener", 
+                          "cleaner", "locksmith", "roofer", "hvac", "appliance repair"
+                        ]}
+                      />
+                    </div>
                     <button type="submit" className="px-3">
                       Search
                     </button>

@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-
 import { CiSearch } from "react-icons/ci";
-
 import { landingPageLinks } from "@/constants";
 import { useActivePath } from "@/helpers/useActivePath";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useState } from "react";
+import VoiceSearchButton from "../VoiceSearchButton/VoiceSearchButton";
 
 interface MainLinksProps {
   search: string;
@@ -21,9 +20,26 @@ const MainLinks = ({
   handleSubmit,
   title,
 }: MainLinksProps) => {
+  const [localSearch, setLocalSearch] = useState(search);
+  
+  const handleTranscriptChange = (transcript: string) => {
+    setLocalSearch(transcript);
+    const syntheticEvent = {
+      target: { value: transcript }
+    } as ChangeEvent<HTMLInputElement>;
+    handleChange(syntheticEvent);
+  };
+  
+  const handleTranscriptComplete = () => {
+    const formElement = document.querySelector('form') as HTMLFormElement;
+    if (formElement) {
+      formElement.dispatchEvent(new Event('submit', { cancelable: true }));
+    }
+  };
+  
   return (
     <section className="pt-28 w-full">
-      <div className="padding-ctn  w-full">
+      <div className="padding-ctn w-full">
         <ul className="flex items-center w-full sm:gap-6 gap-3 my-5">
           {landingPageLinks.map((link) => {
             const isActive = useActivePath(link?.link);
@@ -33,9 +49,9 @@ const MainLinks = ({
                   href={link.link}
                   className={`${
                     isActive
-                      ? "text-primary-green  border-b-primary-green border-b-1 "
+                      ? "text-primary-green border-b-primary-green border-b-1 "
                       : "text-gray-400"
-                  }  font-semibold hover:text-primary-green transition-all duration-300 max-sm:text-sm`}
+                  } font-semibold hover:text-primary-green transition-all duration-300 max-sm:text-sm`}
                 >
                   {link.name}
                 </Link>
@@ -56,10 +72,9 @@ const MainLinks = ({
           <div className="flex-1 w-full flex justify-end">
             <form
               onSubmit={handleSubmit}
-              className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green  max-sm:py-1 shadow-lg max-w-[500px]"
+              className="flex-1 flex-c gap-2 px-2 py-3 rounded-lg border-[#737774] border-1 focus-within:border-primary-green max-sm:py-1 shadow-lg max-w-[500px]"
             >
               <button type="submit" className="text-xl">
-                {" "}
                 <CiSearch />
               </button>
               <input
@@ -69,6 +84,10 @@ const MainLinks = ({
                 value={search}
                 onChange={handleChange}
                 className="focus:outline-none max-md:text-14 w-full bg-white"
+              />
+              <VoiceSearchButton 
+                onTranscriptChange={handleTranscriptChange}
+                onTranscriptComplete={handleTranscriptComplete}
               />
             </form>
           </div>
