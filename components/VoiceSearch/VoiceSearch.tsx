@@ -52,10 +52,17 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
          window.location.hostname.includes('netlify.app') ||
          window.location.hostname.includes('localhost')));
     
+    if (isPreviewEnvironment) {
+      console.log("Preview environment detected, enabling test mode by default");
+      setTestMode(true);
+      showStatus("Test mode enabled. Use the test input below to simulate voice commands.", 0);
+      return;
+    }
+    
     if (!browserSupportsSpeechRecognition) {
       console.error("Browser doesn't support speech recognition");
       showStatus("Your browser doesn't support speech recognition", 0);
-      setTestMode(isPreviewEnvironment);
+      setTestMode(true);
       return;
     }
 
@@ -314,6 +321,30 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
         style={{
           backgroundColor: isListening ? `rgba(${parseInt(activeColor.slice(1, 3), 16)}, ${parseInt(activeColor.slice(3, 5), 16)}, ${parseInt(activeColor.slice(5, 7), 16)}, 0.1)` : "#e8f5e9",
         }}
+        onClick={() => {
+          if (testMode) {
+            showStatus("Please use the test input below to simulate voice commands", 3000);
+          } else if (hasPermission) {
+            if (isListening) {
+              stopListening();
+              showStatus("Voice search paused", 2000);
+            } else {
+              startContinuousListening();
+            }
+          } else {
+            navigator.mediaDevices.getUserMedia({ audio: true })
+              .then(() => {
+                setHasPermission(true);
+                startContinuousListening();
+              })
+              .catch(error => {
+                console.error("Microphone permission denied:", error);
+                setHasPermission(false);
+                setTestMode(true);
+                showStatus("Test mode enabled. Use the test input below.", 0);
+              });
+          }
+        }}
       >
         <Image
           src="/assets/icons/Group 26929.svg"
@@ -335,6 +366,15 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
       
       {testMode && (
         <div className="test-mode-container">
+          <h3 style={{ 
+            fontSize: '18px', 
+            fontWeight: 'bold', 
+            marginBottom: '12px', 
+            color: '#4caf50',
+            textAlign: 'center'
+          }}>
+            Voice Command Test Mode
+          </h3>
           <div className="test-input-form">
             <input
               type="text"
@@ -368,13 +408,24 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
             </button>
           </div>
           <div className="test-mode-instructions">
-            <p>Test Mode: Enter voice commands like "Emi, look for a mechanic"</p>
-            <p>This simulates the voice recognition for testing purposes.</p>
+            <p style={{ fontWeight: 'bold', marginBottom: '8px' }}>
+              Quick Test: Click any example below to try it immediately
+            </p>
             
             <div className="example-commands">
               <button 
                 type="button" 
                 className="example-command"
+                style={{ 
+                  fontSize: '14px', 
+                  padding: '8px 16px',
+                  backgroundColor: '#e8f5e9',
+                  border: '2px solid #4caf50',
+                  borderRadius: '20px',
+                  margin: '5px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -397,6 +448,16 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
               <button 
                 type="button" 
                 className="example-command"
+                style={{ 
+                  fontSize: '14px', 
+                  padding: '8px 16px',
+                  backgroundColor: '#e8f5e9',
+                  border: '2px solid #4caf50',
+                  borderRadius: '20px',
+                  margin: '5px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -416,6 +477,16 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
               <button 
                 type="button" 
                 className="example-command"
+                style={{ 
+                  fontSize: '14px', 
+                  padding: '8px 16px',
+                  backgroundColor: '#e8f5e9',
+                  border: '2px solid #4caf50',
+                  borderRadius: '20px',
+                  margin: '5px',
+                  cursor: 'pointer',
+                  fontWeight: 'bold'
+                }}
                 onClick={(e) => {
                   e.preventDefault();
                   e.stopPropagation();
@@ -433,6 +504,15 @@ const VoiceSearch: React.FC<VoiceSearchProps> = ({
                 Emi, find an electrician
               </button>
             </div>
+            <p style={{ 
+              marginTop: '10px', 
+              fontSize: '13px', 
+              color: '#666',
+              textAlign: 'center',
+              fontStyle: 'italic'
+            }}>
+              This simulates voice commands for testing in preview environments
+            </p>
           </div>
         </div>
       )}
