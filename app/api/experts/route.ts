@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 
+export const dynamic = 'force-dynamic';
+
 type Expert = {
   _id: string;
   firstName: string;
@@ -62,9 +64,8 @@ const mockExperts = {
 
 export async function GET(request: NextRequest) {
   try {
-    const searchParams = new URL(request.url).searchParams;
-    const serviceType = searchParams.get("serviceType") || "";
-    const limit = parseInt(searchParams.get("limit") || "5");
+    const serviceType = request.nextUrl.searchParams.get("serviceType") || "";
+    const limit = parseInt(request.nextUrl.searchParams.get("limit") || "5");
     
     let experts: Expert[] = [];
     const serviceTypeLower = serviceType.toLowerCase();
