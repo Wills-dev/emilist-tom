@@ -6,6 +6,7 @@ import ImageThree from "../../public/assets/images/Vector 263.png";
 import ImageFour from "../../public/assets/images/Vector 263 (1).png";
 import ImageFive from "../../public/assets/images/Vector 264.png";
 import ImageSix from "../../public/assets/images/Vector 264 (1).png";
+import MainSearch from "../MainSearch/MainSearch";
 
 const MainSection = () => {
   return (
@@ -49,27 +50,7 @@ const MainSection = () => {
                 for renovations, custom-builds, and repairs.
               </p>
               <div className="w-full flex justify-center pt-5">
-                <form
-                  action=""
-                  className="max-w-96 w-full flex px-3 h-12 border-1 border-gray-400 rounded-lg focus-within:border-primary-green"
-                >
-                  <input
-                    type="search"
-                    name="search"
-                    id="search"
-                    placeholder="Ask AI anything"
-                    className="flex-1 bg-inherit outline-none"
-                  />
-                  <button type="submit">
-                    <Image
-                      src="/assets/icons/Group 26929.svg"
-                      width={20}
-                      height={20}
-                      alt="submit icon"
-                      className="object-contain w-8 h-8"
-                    />
-                  </button>
-                </form>
+                <MainSearch />
               </div>
             </div>
           </div>
