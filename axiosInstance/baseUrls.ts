@@ -2,7 +2,7 @@ import axios from "axios";
 
 import { readAuthCookie } from "@/helpers";
 
-const baseUrl = "https://emilist-be-server-uxb5.onrender.com/api/v1";
+const baseUrl = "https://emilist-be-server-05kc.onrender.com/api/v1";
 
 export const axiosInstance = axios.create({
   //create instance
