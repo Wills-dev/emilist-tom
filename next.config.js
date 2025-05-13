@@ -2,6 +2,14 @@
 const nextConfig = {
   images: {
     domains: ["emilistapi.vercel.app", "res.cloudinary.com"],
+    unoptimized: true,
+  },
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+    };
+    return config;
   },
 };
 
